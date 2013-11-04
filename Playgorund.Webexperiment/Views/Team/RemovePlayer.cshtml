@@ -1,0 +1,29 @@
+﻿@model Playground.Model.TeamPlayer
+
+@{
+    ViewBag.Title = "RemovePlayer";
+}
+
+<h2>RemovePlayer from team @Html.DisplayFor(model => model.Team.Name)</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>TeamPlayer</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Player)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Player.Name)
+        (@Html.DisplayFor(model => model.Player.User.FirstName) @Html.DisplayFor(model => model.Player.User.LastName))
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.TeamID)
+    @Html.HiddenFor(model => model.PlayerID)
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

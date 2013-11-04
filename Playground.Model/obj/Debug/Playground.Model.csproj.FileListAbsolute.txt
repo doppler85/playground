@@ -1,0 +1,6 @@
+C:\Projects\Playground\Playground.Model\bin\Debug\Playground.Model.dll.config
+C:\Projects\Playground\Playground.Model\bin\Debug\Playground.Model.dll
+C:\Projects\Playground\Playground.Model\bin\Debug\Playground.Model.pdb
+C:\Projects\Playground\Playground.Model\obj\Debug\Playground.Model.dll
+C:\Projects\Playground\Playground.Model\obj\Debug\Playground.Model.pdb
+C:\Projects\Playground\Playground.Model\obj\Debug\Playground.Model.csprojResolveAssemblyReference.cache

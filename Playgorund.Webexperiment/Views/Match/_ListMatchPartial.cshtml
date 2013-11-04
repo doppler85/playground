@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Playground.Model.Match>
+
+@helper DisplayScore(List<Playground.Model.CompetitorScore> scores) {
+    
+    if (scores.Count == 0) {
+        return;
+    }
+    
+    string playersStr = "";
+    string scoresStr = "";    
+    
+    foreach (Playground.Model.CompetitorScore score in scores) {
+        playersStr += " - " + score.Competitor.Name;
+        scoresStr += " : " + score.Score.ToString("0.");
+    }
+    playersStr = playersStr.Substring(2);
+    scoresStr = scoresStr.Substring(2);
+
+    @playersStr
+    <br />
+    @scoresStr
+}
+
+<table>
+    <tr>
+        <th>
+            Date 
+        </th>
+        <th>
+            Game
+        </th>
+        <th>
+            Competition type
+        </th>
+        <th>
+            Winner
+        </th>
+        <th>
+            Score
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Game.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompetitionType.CompetitorType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Winner.Name)
+        </td>
+        <td>
+            @DisplayScore(item.Scores)
+        </td>
+    </tr>
+}
+</table>

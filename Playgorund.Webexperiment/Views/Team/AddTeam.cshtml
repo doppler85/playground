@@ -1,0 +1,60 @@
+﻿@model Playground.Model.Team
+
+@{
+    ViewBag.Title = "AddTeam";
+}
+
+<h2>AddTeam</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Team</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CreatorID)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreatorID)
+            @Html.ValidationMessageFor(model => model.CreatorID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.GameID)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.GameID, (List<SelectListItem>)ViewBag.Games)
+            @Html.ValidationMessageFor(model => model.GameID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PictureSource)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PictureSource)
+            @Html.ValidationMessageFor(model => model.PictureSource)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

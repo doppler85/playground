@@ -1,0 +1,44 @@
+﻿@model Playground.Model.Match
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+    <fieldset>
+        <legend>Match</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Game)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.GameID, (List<SelectListItem>)ViewBag.Games, new { disabled = true })
+            @Html.ValidationMessageFor(model => model.GameID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CompetitionType)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.CompetitionTypeID, (List<SelectListItem>)ViewBag.CompetitionTypes)
+            @Html.ValidationMessageFor(model => model.CompetitionTypeID)
+        </div>
+        <p>
+            <a href="javascript:;" id="nextbtn">next</a>
+        </p>
+    </fieldset>
+
+@section Scripts {
+    <script type="text/javascript">   
+        $(function() {
+            $(document).on('click', '#nextbtn', function () {
+                var gameID = $('#GameID').val();
+                var competitionTypeID = $('#CompetitionTypeID').val();
+                if (competitionTypeID !== '') {
+                    window.location.href = "/Match/Create?GameId=" + gameID + '&competitionTypeID=' + competitionTypeID;
+                }
+            });
+        });
+    </script>    
+}

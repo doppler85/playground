@@ -1,0 +1,29 @@
+﻿@model Playground.Model.Game
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Game</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Category.Title)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Category.Title)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Title)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Title)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.GameID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
