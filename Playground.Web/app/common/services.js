@@ -1,5 +1,5 @@
 ﻿'use strict';
-Playground.service('PlantDemo.services', ['ngResource', 'ngSanitize', function () {
+Playground.service('Playground.services', ['ngResource', 'ngSanitize', function () {
     var PlaygroundServices = {};
     PlaygroundServices.version = '@VERSION@';
 
