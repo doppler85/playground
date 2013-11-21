@@ -1,0 +1,44 @@
+/// <reference path="lib/angular/angular.js" />
+'use strict';
+var Playground = angular.module('Playground', [
+    'ngRoute',
+    'Playground.home'
+    ]);
+
+Playground.
+    config([
+        '$stateProvider',
+        '$urlRouterProvider',
+        '$routeProvider',
+        '$httpProvider',
+        '$locationProvider',
+        function ($stateProvider, $urlRouterProvider, $routeProvider, $httpProvider, $locationProvider) {
+            $locationProvider.html5Mode(false).hashPrefix('!');
+            delete $httpProvider.defaults.headers.common["X-Requested-With"];
+            $urlRouterProvider.otherwise('/home');
+        }]).
+    config([
+        '$compileProvider',
+        function ($compileProvider) {
+        }]).
+    run([
+        '$rootScope',
+        '$location',
+        function ($rootScope, location) { //*** Bootstrap the app, init config etc.
+            $rootScope.ShowTitle = true;
+            $rootScope.ShowMenu = true;
+
+            $rootScope.IsActive = function (path) {
+                return path === location.path();
+            }
+        }]).
+    controller('AppCtrl', [
+        '$scope',
+        '$location',
+        function AppCtrl($scope, $location) {
+            $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+                if (angular.isDefined(toState.data.pageTitle)) {
+                    $scope.pageTitle = toState.data.pageTitle + ' | ngBoilerplate';
+                }
+            });
+        }]);
