@@ -10,7 +10,7 @@ Playground.service('Playground.services', ['ngResource', 'ngSanitize', function 
 factory('ChatResource', ['$resource', function (resource) {
     return resource('api/chat/:actionname/:id', {}, {
         get: { method: 'GET' },
-        post: {
+        post: { 
             method: 'POST',
             params: {
                 actionname: 'postinfo',

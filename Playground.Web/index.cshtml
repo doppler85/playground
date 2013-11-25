@@ -1,0 +1,146 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js ie6"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js ie7"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0" />
+
+		<title>Playground</title>
+		<meta name="description" content="">
+
+		<link href='http://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
+
+        @Styles.Render("~/Content/css")
+
+        @Scripts.Render("~/bundles/modernizr")
+
+	</head>
+<body data-ng-app="Playground" id="ng-app">
+
+	<div class="container">
+		<header class="header">
+			<div class="wrapper">
+				<nav class="main-nav">
+					<ul>
+						<li>
+							<a href="javascript:;" data-ng-class="{active: IsActive('/home')}" data-ng-click="changeLocation('home')">
+								Home
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" data-ng-class="{active: IsActive('/games')}" data-ng-click="changeLocation('games')">
+								Games
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;">
+								Item 3
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;">
+								Item 4
+							</a>
+						</li>
+					</ul>
+				</nav>
+				<ul class="user-logged-in">
+					<li>
+						<a href="javascript:;" alt="Go to your profile" title="Go to your profile">
+							<span class="img-holder">
+								<img src="content/assets/img/content/dragan-kojic.png" alt="" />
+							</span>
+							<span class="username">
+								Dragan Kojic Keba
+							</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;" class="show-notifications" alt="Notifications" title="Notifications">
+							<i class="ico notifications-grey"></i>
+						</a>
+						<ul class="notifications-list">
+							<li>
+								<a href="javascript:;">
+									Cupcake ipsum dolor sit amet cupcake gummi bears apple pie.
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;">
+									Candy canes dessert apple pie cotton candy dessert gummies sweet oat cake cake.
+								</a>
+							</li>
+							<li class="last">
+								<a href="javascript:;">
+									OBear claw gummies macaroon pudding.
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;" alt="Log Out" title="Log Out">
+							<i class="ico logout-grey"></i>
+						</a>
+					</li>
+				</ul>
+				<ul class="user-login" style="display: none;">
+					<li>
+						<a href="javascript:;">
+							Login
+						</a>
+					</li>
+					<li>
+						/
+					</li>
+					<li>
+						<a href="javascript:;">
+							Register
+						</a>
+					</li>
+				</ul>
+			</div>
+		</header>
+        <!-- #main -->
+    	<section class="content" data-ui-view="">
+
+		</section>
+
+		<footer class="footer">
+			<h1>I am footer</h1>
+		</footer>
+	</div>
+
+    <!-- SCRIPTS -->
+    <script type="text/javascript" src="app/lib/jQuery/jquery-2.0.3.js"></script>
+
+    <script type="text/javascript" src="app/lib/angular/angular.js"></script>
+    <script type="text/javascript" src="app/lib/angular/angular-route.js"></script>
+    <script type="text/javascript" src="app/lib/angular/angular-ui.js"></script>
+    <script type="text/javascript" src="app/lib/angular/angular-ui-router.js"></script>
+    <script type="text/javascript" src="app/lib/angular/angular-resource.js"></script>
+
+    <script type="text/javascript" src="app/app.js"></script>
+
+@*    <script type="text/javascript" src="app/lib/angular/angular-ui.js"></script>
+    <script type="text/javascript" src="app/lib/angular/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="app/lib/angular/angular-resource.min.js"></script>*@
+
+    <!-- Modules -->
+    <script type="text/javascript" src="app/home/home.js"></script>
+    <script type="text/javascript" src="app/games/games.js"></script>
+
+
+<!-- javascript -->
+
+@*<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">window.jQuery || document.write("<script src='content/assets/scripts/main/jquery-1.8.3.min.js'>\x3C/script>")</script>
+<script type="text/javascript" src="content/assets/scripts/main/default.js"></script>*@
+
+<!--[if lt IE 7]><p class="chromeframe">Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+</body>
+</html>

@@ -20,6 +20,11 @@ namespace Playground.Data
             get { return GetStandardRepo<GameCategory>(); }
         }
 
+        public IRepository<Game> Games
+        {
+            get { return GetStandardRepo<Game>(); }
+        }
+
         public PlaygroundUow(IRepositoryProvider repositoryProvider)
         {
             CreateDbContext();

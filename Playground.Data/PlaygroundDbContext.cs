@@ -13,11 +13,13 @@ namespace Playground.Data
     public class PlaygroundDbContext : DbContext
     {
         public PlaygroundDbContext()
-            : base(nameOrConnectionString: "PlayGround") { }
+            : base(nameOrConnectionString: "PlayGround") { 
+        }
 
         static PlaygroundDbContext()
         {
             Database.SetInitializer(new PlaygroundDataInitializer());
+
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

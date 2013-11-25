@@ -1,0 +1,21 @@
+/*----------  layout
+------------------------------------------------------------------------------*/
+
+html, body {
+	height: 100%;
+	@include font-smoothing(antialiased);
+}
+body {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	background: $white;
+	color: #3a3a3a;
+}
+.container {
+	width: 100%;
+	float: left;
+}
+.wrapper {
+	width: 960px;
+	margin: 0 auto;
+}

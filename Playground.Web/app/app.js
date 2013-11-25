@@ -2,7 +2,8 @@
 'use strict';
 var Playground = angular.module('Playground', [
     'ngRoute',
-    'Playground.home'
+    'Playground.home',
+    'Playground.games'
     ]);
 
 Playground.
@@ -24,13 +25,19 @@ Playground.
     run([
         '$rootScope',
         '$location',
-        function ($rootScope, location) { //*** Bootstrap the app, init config etc.
+        '$state',
+        function ($rootScope, $location, $state) { //*** Bootstrap the app, init config etc.
             $rootScope.ShowTitle = true;
             $rootScope.ShowMenu = true;
 
             $rootScope.IsActive = function (path) {
-                return path === location.path();
+                return path === $location.path();
             }
+
+            $rootScope.changeLocation = function (path) {
+                $state.transitionTo(path);
+            }
+
         }]).
     controller('AppCtrl', [
         '$scope',

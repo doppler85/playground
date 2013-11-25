@@ -9,6 +9,7 @@ namespace Playground.Data.Contracts
     public interface IRepository<T> where T : class
     {
         IQueryable<T> GetAll();
+        IQueryable<T> GetAll(string include);
         T GetById(int id);
         T GetById(long id);
         void Add(T entity);

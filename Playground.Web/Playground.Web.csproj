@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +40,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
@@ -51,6 +56,10 @@
     <Reference Include="Microsoft.Practices.Unity.Configuration">
       <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -59,6 +68,10 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.2\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -68,9 +81,6 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
@@ -93,9 +103,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Optimization">
-      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Providers">
       <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.1\lib\net40\System.Web.Providers.dll</HintPath>
     </Reference>
@@ -115,13 +122,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="WebGrease">
-      <Private>True</Private>
-      <HintPath>..\packages\WebGrease.1.1.0\lib\WebGrease.dll</HintPath>
-    </Reference>
-    <Reference Include="Antlr3.Runtime">
-      <Private>True</Private>
-      <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +138,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ApiBaseController.cs" />
     <Compile Include="Controllers\GameCategoryController.cs" />
+    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -145,11 +149,101 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\common\services.js" />
+    <Content Include="app\games\games.js" />
+    <Content Include="app\games\games.tpl.html" />
+    <Content Include="app\home\home.js" />
+    <Content Include="app\home\home.tpl.html" />
+    <Content Include="app\lib\angular\angular-ui-router.js" />
+    <Content Include="app\lib\angular\angular-ui-router.min.js" />
+    <Content Include="app\lib\angular\angular-ui.js" />
+    <Content Include="app\menu\manufacturing-menu.js" />
+    <Content Include="Content\assets\css\style.css" />
+    <Content Include="Content\assets\img\bg_direction_nav.png" />
+    <Content Include="Content\assets\img\content\dara-bubamara.png" />
+    <Content Include="Content\assets\img\content\dobrivoje-topalovic.png" />
+    <Content Include="Content\assets\img\content\dragan-kojic.png" />
+    <Content Include="Content\assets\img\content\grand.png" />
+    <Content Include="Content\assets\img\content\juzni-vetar.png" />
+    <Content Include="Content\assets\img\content\mitar-miric.png" />
+    <Content Include="Content\assets\img\content\sinan-sakic.png" />
+    <Content Include="Content\assets\img\content\slide1.jpg" />
+    <Content Include="Content\assets\img\content\slide2.jpg" />
+    <Content Include="Content\assets\img\content\slide3.jpg" />
+    <Content Include="Content\assets\img\content\slide4.jpg" />
+    <Content Include="Content\assets\img\content\transparent-box-bg.png" />
+    <Content Include="Content\assets\img\content\vesna-zmijanac.png" />
+    <Content Include="Content\assets\img\fancybox\blank.gif" />
+    <Content Include="Content\assets\img\fancybox\fancybox-x.png" />
+    <Content Include="Content\assets\img\fancybox\fancybox-y.png" />
+    <Content Include="Content\assets\img\fancybox\fancybox.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_close.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_loading.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_nav_left.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_nav_right.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_shadow_e.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_shadow_n.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_shadow_ne.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_shadow_nw.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_shadow_s.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_shadow_se.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_shadow_sw.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_shadow_w.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_title_left.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_title_main.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_title_over.png" />
+    <Content Include="Content\assets\img\fancybox\fancy_title_right.png" />
+    <Content Include="Content\assets\img\hall-of-fame.png" />
+    <Content Include="Content\assets\img\hall-of-shame.png" />
+    <Content Include="Content\assets\img\icons-s34589325b2.png" />
+    <Content Include="Content\assets\img\icons2x-s8fe1a7253a.png" />
+    <Content Include="Content\assets\img\icons2x\eye.png" />
+    <Content Include="Content\assets\img\icons2x\star.png" />
+    <Content Include="Content\assets\img\icons\ico-basketball.png" />
+    <Content Include="Content\assets\img\icons\ico-darts.png" />
+    <Content Include="Content\assets\img\icons\ico-logout-grey.png" />
+    <Content Include="Content\assets\img\icons\ico-logout-white.png" />
+    <Content Include="Content\assets\img\icons\ico-notifications-grey.png" />
+    <Content Include="Content\assets\img\icons\ico-notifications-white.png" />
+    <Content Include="Content\assets\img\icons\ico-snooker.png" />
+    <Content Include="Content\assets\img\icons\ico-table-tennis.png" />
+    <Content Include="Content\assets\img\logo.png" />
+    <Content Include="Content\assets\img\rgbapng\0000007f-5.png" />
+    <Content Include="Content\assets\img\rgbapng\000000b3-5.png" />
+    <Content Include="Content\assets\img\rgbapng\000000e5-5.png" />
+    <Content Include="Content\assets\img\rgbapng\a401f97f-5.png" />
+    <Content Include="Content\assets\img\rgbapng\a401f97f.png" />
+    <Content Include="Content\assets\img\rgbapng\a401f9b3-5.png" />
+    <Content Include="Content\assets\img\rgbapng\a401f9b3.png" />
+    <Content Include="Content\assets\scripts\libs\jquery.fancybox-1.3.4.pack.js" />
+    <Content Include="Content\assets\scripts\libs\jquery.flexslider-min.js" />
+    <Content Include="Content\assets\scripts\main\default.js" />
+    <Content Include="Content\assets\scripts\main\jquery-1.8.3.min.js" />
+    <Content Include="Content\assets\scripts\main\modernizr-2.6.2.min.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="index.cshtml" />
+    <Content Include="Content\sass\base\_layout.scss" />
+    <Content Include="Content\sass\base\_typography.scss" />
+    <Content Include="Content\sass\config\_reset.scss" />
+    <Content Include="Content\sass\config\_variables.scss" />
+    <Content Include="Content\sass\helpers\_helpers.scss" />
+    <Content Include="Content\sass\helpers\_ie.scss" />
+    <Content Include="Content\sass\layout\_buttons.scss" />
+    <Content Include="Content\sass\layout\_forms.scss" />
+    <Content Include="Content\sass\layout\_icons.scss" />
+    <Content Include="Content\sass\layout\_lists.scss" />
+    <Content Include="Content\sass\mixins\_breakpoint.scss" />
+    <Content Include="Content\sass\mixins\_font-smoothing.scss" />
+    <Content Include="Content\sass\mixins\_ie-gradient.scss" />
+    <Content Include="Content\sass\mixins\_retina-sprite.scss" />
+    <Content Include="Content\sass\partials\_footer.scss" />
+    <Content Include="Content\sass\partials\_header.scss" />
+    <Content Include="Content\sass\style.scss" />
     <Content Include="app\lib\angular\angular-animate.js" />
     <Content Include="app\lib\angular\angular-animate.min.js" />
     <Content Include="app\lib\angular\angular-cookies.js" />
     <Content Include="app\lib\angular\angular-cookies.min.js" />
-    <Content Include="app\lib\angular\angular-google-maps.js" />
+    <Content Include="app\lib\angular\angular-csp.css" />
     <Content Include="app\lib\angular\angular-loader.js" />
     <Content Include="app\lib\angular\angular-loader.min.js" />
     <Content Include="app\lib\angular\angular-mocks.js" />
@@ -162,105 +256,21 @@
     <Content Include="app\lib\angular\angular-scenario.js" />
     <Content Include="app\lib\angular\angular-touch.js" />
     <Content Include="app\lib\angular\angular-touch.min.js" />
-    <Content Include="app\lib\angular\angular-ui-router.js" />
-    <Content Include="app\lib\angular\angular-ui-router.min.js" />
-    <Content Include="app\lib\angular\angular-ui.js" />
     <Content Include="app\lib\angular\angular.js" />
     <Content Include="app\lib\angular\angular.min.js" />
-    <Content Include="app\lib\angular\angular.regular.js" />
-    <Content Include="app\lib\angular\angular.treeview.js" />
-    <Content Include="app\lib\angular\angular.treeview.min.js" />
-    <Content Include="app\lib\angular\ng-grid-2.0.7.debug.js" />
-    <Content Include="app\lib\angular\ng-grid-2.0.7.min.js" />
-    <Content Include="app\lib\async.js" />
-    <Content Include="app\lib\jQuery\jquery-1.10.1.min.js" />
-    <Content Include="app\lib\jQuery\jquery-1.10.2.min.js" />
-    <Content Include="app\lib\jQuery\jquery-1.8.3.min.js" />
-    <Content Include="app\lib\jQuery\jquery.signalR-2.0.0.js" />
-    <Content Include="app\lib\jQuery\jquery.signalR-2.0.0.min.js" />
-    <Content Include="app\lib\json3.js" />
-    <Content Include="app\lib\modernizr-2.6.2-respond-1.1.0.min.js" />
-    <Content Include="app\lib\modernizr-2.6.2.min.js" />
-    <Content Include="app\lib\plugins\alexSlider.js" />
-    <Content Include="app\lib\plugins\colorpicker.js" />
-    <Content Include="app\lib\plugins\customInput.jquery.js" />
-    <Content Include="app\lib\plugins\jquery.fancybox-1.3.4.pack.js" />
-    <Content Include="app\lib\plugins\jQuery.fileinput.js" />
-    <Content Include="app\lib\plugins\jquery.flexslider-min.js" />
-    <Content Include="app\lib\plugins\jquery.stylish-select.min.js" />
-    <Content Include="app\menu\manufacturing-menu.js" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\base\jquery-ui.css" />
-    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
-    <Content Include="Content\themes\base\jquery.ui.all.css" />
-    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
-    <Content Include="Content\themes\base\jquery.ui.base.css" />
-    <Content Include="Content\themes\base\jquery.ui.button.css" />
-    <Content Include="Content\themes\base\jquery.ui.core.css" />
-    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
-    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
-    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
-    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
-    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
-    <Content Include="Content\themes\base\jquery.ui.slider.css" />
-    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
-    <Content Include="Content\themes\base\jquery.ui.theme.css" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
-    <Content Include="favicon.ico" />
-    <Content Include="Global.asax" />
-    <Content Include="app\lib\jQuery\jquery-1.10.2.min.map" />
-    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
-    <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\knockout-2.3.0.debug.js" />
-    <Content Include="Scripts\knockout-2.3.0.js" />
-    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="app\lib\angular\errors.json" />
+    <Content Include="app\lib\angular\angular-touch.min.js.map" />
+    <Content Include="app\lib\angular\angular-sanitize.min.js.map" />
+    <Content Include="app\lib\angular\angular-route.min.js.map" />
+    <Content Include="app\lib\angular\angular-resource.min.js.map" />
+    <Content Include="app\lib\angular\angular-loader.min.js.map" />
+    <Content Include="app\lib\angular\angular-cookies.min.js.map" />
+    <Content Include="app\lib\angular\angular-animate.min.js.map" />
+    <Content Include="app\lib\angular\angular.min.js.map" />
+    <None Include="app\lib\jQuery\jquery-2.0.3.intellisense.js" />
+    <Content Include="app\lib\jQuery\jquery-2.0.3.js" />
+    <Content Include="app\lib\jQuery\jquery-2.0.3.min.js" />
+    <Content Include="app\lib\jQuery\jquery-2.0.3.min.map" />
     <None Include="Web.config_ggg">
       <SubType>Designer</SubType>
     </None>
@@ -291,7 +301,8 @@
     <Content Include="Images\orderedList7.png" />
     <Content Include="Images\orderedList8.png" />
     <Content Include="Images\orderedList9.png" />
-    <Content Include="Scripts\_references.js" />
+    <Content Include="app\lib\modernizr-2.6.2.js" />
+    <Content Include="app\lib\angular\_references.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -300,7 +311,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\assets\fonts\" />
+    <Folder Include="Content\assets\scripts\pages\" />
     <Folder Include="Models\" />
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -337,7 +351,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>49620</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:51929/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

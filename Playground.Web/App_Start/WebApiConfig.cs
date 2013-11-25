@@ -11,6 +11,11 @@ namespace Playground.Web
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(
+                name: "ControllerOnly",
+                routeTemplate: "api/{controller}"
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional },
@@ -38,8 +43,18 @@ namespace Playground.Web
             json.SerializerSettings.ContractResolver =
                 new CamelCasePropertyNamesContractResolver();
 
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
+                = Newtonsoft.Json.ReferenceLoopHandling.Ignore; 
+
+            //config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling 
+            //    = Newtonsoft.Json.ReferenceLoopHandling.Serialize; 
+
+            //config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling 
+            //    = Newtonsoft.Json.PreserveReferencesHandling.Objects; 
+
             // todo add validation action
             // config.Filters.Add(new ValidationActionFilter());
+
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Playground.Data.Contracts
 
         // Repositories
         IRepository<GameCategory> GameCategories { get; }
+        IRepository<Game> Games { get; }
 
     }
 }

@@ -1,0 +1,164 @@
+/*----------  header
+------------------------------------------------------------------------------*/
+
+.header {
+	width: 100%;
+	float: left;
+	@include background(linear-gradient($black, #2e2e2e)); 
+	@include filter-gradient($black, #2e2e2e);
+	@include box-shadow(0 4px 8px $black);
+	.wrapper {
+		height: 50px;
+	}
+	.user-login {
+		float: right;
+		li {
+			display: block;
+			float: left;
+			height: 50px;
+			line-height: 50px;
+			color: $text-light;
+			margin-left: 8px;
+			a {
+				color: $text-light;
+				&:hover {
+					color: $white;
+				}
+			}
+		}
+	}
+	.user-logged-in {
+		float: right;
+		li {
+			display: block;
+			float: left;
+			position: relative;
+			height: 50px;
+			line-height: 50px;
+			a {
+				color: $text-light;
+				display: block;
+				cursor: pointer;
+				height: 50px;
+				padding: 0 10px;
+				.img-holder {
+					width: 44px;
+					height: 44px;
+					display: block;
+					float: left;
+					margin: 3px 5px 0 0;
+					img {
+						width: 100%;
+						display: block;
+						float: left;
+					}
+				}
+				.username {
+					color: $text-light;
+					font-weight: bold;
+					font-size: 13px;
+				}
+				&:hover,
+				&.active {
+					background: #252525;
+					cursor: pointer;
+					.username,
+					a {
+						color: $white;
+						.ico,
+						span {
+							cursor: pointer;
+						}
+					}
+					.ico {
+						&.logout-grey {
+							@include sprite('ico-logout-white');
+						}
+						&.notifications-grey {
+							@include sprite('ico-notifications-white');
+						}
+					}
+					&.show-notifications {
+						background: #252525 !important;
+						span,
+						a {
+							color: $white !important;
+							.ico,
+							span {
+								cursor: pointer;
+							}
+						}
+						.ico {
+							&.logout-grey {
+								@include sprite('ico-logout-white');
+							}
+							&.notifications-grey {
+								@include sprite('ico-notifications-white');
+							}
+						}
+					}
+				}
+			}
+			.notifications-list {
+				display: none;
+				position: absolute;
+				top: 50px;
+				left: -80px;
+				background: $white;
+				width: 200px;
+				@include box-shadow(0 4px 8px #7C7C7C);
+				z-index: 8888;
+				li {
+					height: auto;
+					line-height: 16px;
+					width: 100%;
+					color: $text;
+					border-bottom: 1px dotted $grey-lighter;
+					background: none;
+					&:hover {
+						background: none;
+					}
+					&.last {
+						border-bottom: 0;
+					}
+					a {
+						height: auto;
+						display: inline-block !important;
+						float: none;
+						color: $text;
+						padding: 0;
+						padding: 10px;
+						@include box-sizing(border-box);
+						width: 100%;
+						&:hover {
+							background: $green-light;
+						}
+					}
+				}
+			}
+		}
+	}
+	.main-nav {
+		float: left;
+		ul {
+			float: left;
+			li {
+				display: block;
+				float: left;
+				a {
+					display: block;
+					float: left;
+					height: 50px;
+					line-height: 50px;
+					color: $text-light;
+					font-size: 14px;
+					padding: 0 13px;
+					&:hover,
+					&.active {
+						background: #2e2e2e;
+					}
+				}
+			}
+		}
+	}
+}

@@ -21,17 +21,9 @@ namespace Playground.Web.App_Start
 
             unityContainer.RegisterType<IPlaygroundUow, PlaygroundUow>();
 
-            // RepositoryFactories repositoryFactories = new RepositoryFactories();
-            
-            // unityContainer.RegisterInstance<RepositoryFactories>(repositoryFactories);
-
             unityContainer.RegisterInstance<RepositoryFactories>(new RepositoryFactories(), new ContainerControlledLifetimeManager());
 
             unityContainer.RegisterInstance<IHttpControllerActivator>(new UnityHttpControllerActivator(unityContainer));
-
-            // unityContainer.RegisterType<RepositoryFactories, RepositoryFactories>();
-
-            // unityContainer.RegisterType<IPla
 
             config.DependencyResolver = new IoCContainer(unityContainer);
         }

@@ -26,6 +26,11 @@ namespace Playground.Data
             return DbSet;
         }
 
+        public virtual IQueryable<T> GetAll(string include)
+        {
+            return DbSet.Include(include);
+        }
+
         public virtual T GetById(int id)
         {
             return DbSet.Find(id);
