@@ -12,5 +12,33 @@ angular.module('Playground.games', ['ngResource', 'ui.router']).
     '$scope',
     '$stateParams',
     '$rootScope',
-    function ($scope, $stateParams, $rootScope) {
+    'GameCategoryResource',
+    function ($scope, $stateParams, $rootScope, GameCategoryResource) {
+        $scope.gameCategories = {};
+        $scope.addingcategory = false;
+        $scope.newCategory = {
+            title: ''
+        };
+
+        $scope.loadGameCategories = function () {
+            GameCategoryResource.getall(function (data) {
+                $scope.gameCategories = data;
+            });
+        };
+
+        $scope.loadGameCategories();
+
+        $scope.toggleAddCategory = function (show) {
+            $scope.addingcategory = show;
+            if (!show) {
+                $scope.newCategory.title = '';
+            }
+        };
+
+        $scope.addCategory = function() {
+            GameCategoryResource.add($scope.newCategory, function () {
+                $scope.newCategory.title = '';
+                $scope.loadGameCategories();
+            });
+        };
     }]);

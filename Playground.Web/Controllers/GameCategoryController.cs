@@ -18,9 +18,10 @@ namespace Playground.Web.Controllers
         }
 
         // api/gamecategory
-        public IEnumerable<GameCategory> Get()
+        [HttpGet]
+        public List<GameCategory> Get()
         {
-            return Uow.GameCategories.GetAll().OrderBy(gc => gc.Title);
+            return Uow.GameCategories.GetAll("Games").OrderBy(gc => gc.Title).ToList();
         }
 
         // // api/gamecategory/5
@@ -31,7 +32,8 @@ namespace Playground.Web.Controllers
 
         // Create a new Session
         // POST /api/session
-        public HttpResponseMessage Post(GameCategory gameCategory)
+        [HttpPost]
+        public HttpResponseMessage AddGameCategory(GameCategory gameCategory)
         {
             Uow.GameCategories.Add(gameCategory);
             Uow.Commit();

@@ -1,3 +1,30 @@
-<div class="panel panel-primary">
-    This is games test test test games
-</div>	
+<div class="page-title">
+    <div class="wrapper">
+        <h2>Games</h2>
+    </div>
+</div>
+<div class="last-players">
+    <div class="wrapper">
+        <div class="game-category" data-ng-repeat="gameCategory in gameCategories">
+            <h2>{{gameCategory.title}}</h2>
+            <ul>
+                <li data-ng-repeat="game in gameCategory.games">
+                    <div class="img-holder">
+                        <img src="content/assets/img/content/mitar-miric.png" alt="" />
+                    </div>
+                    <a href="javascript:;">{{game.title}}</a>
+                    <span class="time">about an hour ago</span>
+                </li>
+            </ul>
+        </div>
+        <div class="add-gamecategory-wrapp">
+            <div class="add-category" data-ng-show="addingcategory"> 
+                <label>Title</label>
+                <input type="text" placeholder="Category title" data-ng-model="newCategory.title"/>
+                <a href="javascript:;" data-ng-click="addCategory()">save</a>
+                <a href="javascript:;" data-ng-click="toggleAddCategory(false)">cancel</a>
+            </div>
+            <button data-ng-click="toggleAddCategory(true)" data-ng-hide="addingcategory">add new category</button>
+        </div>
+    </div>
+</div>

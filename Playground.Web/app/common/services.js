@@ -4,6 +4,12 @@ Playground.service('Playground.services', ['ngResource', 'ngSanitize', function 
     PlaygroundServices.version = '@VERSION@';
 
     return PlaygroundServices;
+}]).
+factory('GameCategoryResource', ['$resource', function (resource) {
+    return resource('api/gamecategory/:actionname/:id', {}, {
+        getall: { method: 'GET', isArray: true },
+        add: { method: 'POST' }
+    });
 }]);
 // examples
 /*
