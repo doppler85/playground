@@ -30,8 +30,8 @@ namespace Playground.Web.Controllers
             return Uow.GameCategories.GetById(id);
         }
 
-        // Create a new Session
-        // POST /api/session
+        // Create a new Game category
+        // POST /api/gamecategory
         [HttpPost]
         public HttpResponseMessage AddGameCategory(GameCategory gameCategory)
         {

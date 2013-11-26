@@ -10,6 +10,11 @@ factory('GameCategoryResource', ['$resource', function (resource) {
         getall: { method: 'GET', isArray: true },
         add: { method: 'POST' }
     });
+}]).
+factory('GameResource', ['$resource', function (resource) {
+    return resource('api/game/:actionname/:id', {}, {
+        add: { method: 'POST' }
+    });
 }]);
 // examples
 /*

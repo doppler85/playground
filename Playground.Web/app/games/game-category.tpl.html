@@ -3,7 +3,7 @@
         <h2>Games</h2>
     </div>
 </div>
-<div class="last-players">
+<div class="last-players" data-ng-init="loadGameCategories()" >
     <div class="wrapper">
         <div class="game-category" data-ng-repeat="gameCategory in gameCategories">
             <h2>{{gameCategory.title}}</h2>
@@ -13,18 +13,27 @@
                         <img src="content/assets/img/content/mitar-miric.png" alt="" />
                     </div>
                     <a href="javascript:;">{{game.title}}</a>
-                    <span class="time">about an hour ago</span>
+                    <a href="javascript:;">delete</a>
                 </li>
             </ul>
+            <div class="add-game-wrapp" data-ng-controller="GameController">
+                <div class="add-category" data-ng-show="addinggame"> 
+                    <label>Title</label>
+                    <input type="text" placeholder="Game title" data-ng-model="newGame.title"/>
+                    <a href="javascript:;" data-ng-click="addGame()">save</a>
+                    <a href="javascript:;" data-ng-click="toggleAddGame(false)">cancel</a>
+                </div>
+                <button data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</button>
+            </div>
         </div>
-        <div class="add-gamecategory-wrapp">
+        <div class="add-gamecategory-wrap">
             <div class="add-category" data-ng-show="addingcategory"> 
                 <label>Title</label>
                 <input type="text" placeholder="Category title" data-ng-model="newCategory.title"/>
                 <a href="javascript:;" data-ng-click="addCategory()">save</a>
                 <a href="javascript:;" data-ng-click="toggleAddCategory(false)">cancel</a>
             </div>
-            <button data-ng-click="toggleAddCategory(true)" data-ng-hide="addingcategory">add new category</button>
+            <button data-ng-click="toggleAddCategory(true)" data-ng-hide="addingcategory">add category</button>
         </div>
     </div>
 </div>

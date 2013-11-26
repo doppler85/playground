@@ -1,14 +1,14 @@
 'use strict';
-angular.module('Playground.games', ['ngResource', 'ui.router']).
+angular.module('Playground.game-category', ['ngResource', 'ui.router']).
     config(['$stateProvider', function config($stateProvider) {
-        $stateProvider.state('games', {
-            url: '/games',
-            templateUrl: 'app/games/games.tpl.html',
-            controller: 'GameController',
+        $stateProvider.state('game-categories', {
+            url: '/game-categories',
+            templateUrl: 'app/games/game-category.tpl.html',
+            controller: 'GameCategoryController',
             data: { pageTitle: 'Games' }
         });
     }]).
-    controller('GameController', [
+    controller('GameCategoryController', [
     '$scope',
     '$stateParams',
     '$rootScope',
@@ -26,7 +26,7 @@ angular.module('Playground.games', ['ngResource', 'ui.router']).
             });
         };
 
-        $scope.loadGameCategories();
+        // $scope.loadGameCategories();
 
         $scope.toggleAddCategory = function (show) {
             $scope.addingcategory = show;

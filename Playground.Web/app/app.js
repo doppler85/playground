@@ -3,7 +3,8 @@
 var Playground = angular.module('Playground', [
     'ngRoute',
     'Playground.home',
-    'Playground.games'
+    'Playground.game-category',
+    'Playground.game'
     ]);
 
 Playground.

@@ -22,5 +22,25 @@ namespace Playground.Web.Controllers
             List<GameCategory> games = Uow.GameCategories.GetAll("Games").ToList();
             return games;
         }
+
+        // Create a new Game
+        // POST /api/Game
+        [HttpPost]
+        public HttpResponseMessage AddGame(Game game)
+        {
+            Uow.Games.Add(game);
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, game);
+
+            // Compose location header that tells how to get this game 
+            // e.g. ~/api/game/5
+
+            response.Headers.Location =
+                new Uri(Url.Link(RouteConfig.ControllerAndId, new { id = game.GameID }));
+
+            return response;
+        }
+
     }
 }

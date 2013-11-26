@@ -149,8 +149,10 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\common\services.js" />
-    <Content Include="app\games\games.js" />
-    <Content Include="app\games\games.tpl.html" />
+    <Content Include="app\games\game.js" />
+    <Content Include="app\games\game.tpl.html" />
+    <Content Include="app\games\game-category.js" />
+    <Content Include="app\games\game-category.tpl.html" />
     <Content Include="app\home\home.js" />
     <Content Include="app\home\home.tpl.html" />
     <Content Include="app\lib\angular\angular-ui-router.js" />
