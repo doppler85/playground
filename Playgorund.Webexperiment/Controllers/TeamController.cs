@@ -45,7 +45,7 @@ namespace Playgorund.Webexperiment.Controllers
             }
 
             List<SelectListItem> games = new List<SelectListItem>();
-            List<Game> teamGames = db.Games.Where(g => g.CompetitionTypes.Any(ct => ct.CompetitorType == CompetitorType.Team)).ToList();
+            List<Game> teamGames = db.Games.Where(g => g.CompetitionTypes.Any(ct => ct.CompetitionType.CompetitorType == CompetitorType.Team)).ToList();
             foreach (Game g in teamGames)
             {
                 games.Add(new SelectListItem()

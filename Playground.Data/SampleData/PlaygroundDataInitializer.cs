@@ -19,6 +19,8 @@ namespace Playground.Data.SampleData
 
             AddGameCategories(context);
 
+            AddCompetitionTypes(context);
+
             AddGames(context);
 
             AddUsers(context);
@@ -45,70 +47,94 @@ namespace Playground.Data.SampleData
             context.SaveChanges();
         }
 
+        private void AddCompetitionTypes(PlaygroundDbContext context)
+        {
+            context.CompetitionTypes.Add(new CompetitionType()
+            {
+                Name = "Single",
+                CompetitorType = Model.CompetitorType.Individual,
+                CompetitorsCount = 2
+            });
+            context.CompetitionTypes.Add(new CompetitionType()
+            {
+                Name = "Double",
+                CompetitorType = Model.CompetitorType.Team,
+                CompetitorsCount = 2
+            });
+
+            context.SaveChanges();
+        }
+
         private void AddGames(PlaygroundDbContext context) 
         {
             GameCategory category = context.GameCategories.FirstOrDefault(c => c.Title == "Foozball");
+            CompetitionType singleCompetitionType = context.CompetitionTypes.First(ct => ct.Name == "Single");
+            CompetitionType doubleCompetitionType = context.CompetitionTypes.First(ct => ct.Name == "Double");
 
-            context.Games.Add(new Game()
+            Game foozballGame = new Game()
             {
                 GameCategoryID = category.GameCategoryID,
                 Title = "Foozball",
-                CompetitionTypes = new List<CompetitionType>()
-                {
-                    new CompetitionType() {
-                        Name = "Single",
-                        CompetitorType = Model.CompetitorType.Individual,
-                        CompetitorsCount = 2
-                    },
+                CompetitionTypes = new List<GameCompetitionType>()
+            };
+            context.Games.Add(foozballGame);
+            context.SaveChanges();
 
-                    new CompetitionType() {
-                        Name = "Double",
-                        CompetitorType = Model.CompetitorType.Team,
-                        CompetitorsCount = 2
-                    }
-                }
+            foozballGame.CompetitionTypes.Add(new GameCompetitionType() {
+                CompetitionTypeID = singleCompetitionType.CompetitionTypeID,
+                GameID = foozballGame.GameID
             });
+            foozballGame.CompetitionTypes.Add(new GameCompetitionType()
+            {
+                CompetitionTypeID = doubleCompetitionType.CompetitionTypeID,
+                GameID = foozballGame.GameID
+            });
+            context.SaveChanges();
+            // context.Games.Add(foozballGame);
 
             category = context.GameCategories.FirstOrDefault(c => c.Title == "Pool");
-            context.Games.Add(new Game()
+            Game poolGame = new Game()
             {
                 GameCategoryID = category.GameCategoryID,
                 Title = "Pool",
-                CompetitionTypes = new List<CompetitionType>()
-                {
-                    new CompetitionType() {
-                        Name = "Single",
-                        CompetitorType = Model.CompetitorType.Individual,
-                        CompetitorsCount = 2
-                    },
+                CompetitionTypes = new List<GameCompetitionType>()
+            };
+            context.Games.Add(poolGame);
+            context.SaveChanges();
 
-                    new CompetitionType() {
-                        Name = "Double",
-                        CompetitorType = Model.CompetitorType.Team,
-                        CompetitorsCount = 2
-                    }
-                }
+            poolGame.CompetitionTypes.Add(new GameCompetitionType()
+            {
+                CompetitionTypeID = singleCompetitionType.CompetitionTypeID,
+                GameID = poolGame.GameID
             });
-            context.Games.Add(new Game()
+            poolGame.CompetitionTypes.Add(new GameCompetitionType()
+            {
+                CompetitionTypeID = doubleCompetitionType.CompetitionTypeID,
+                GameID = poolGame.GameID
+            });
+       
+            context.SaveChanges();
+            // context.Games.Add(poolGame);
+
+            Game snookerGame = new Game()
             {
                 GameCategoryID = category.GameCategoryID,
                 Title = "Snooker",
-                CompetitionTypes = new List<CompetitionType>()
-                {
-                    new CompetitionType() {
-                        Name = "Single",
-                        CompetitorType = Model.CompetitorType.Individual,
-                        CompetitorsCount = 2
-                    },
+                CompetitionTypes = new List<GameCompetitionType>()
+            };
+            context.Games.Add(snookerGame);
+            context.SaveChanges();
 
-                    new CompetitionType() {
-                        Name = "Double",
-                        CompetitorType = Model.CompetitorType.Team,
-                        CompetitorsCount = 2
-                    }
-                }
+            snookerGame.CompetitionTypes.Add(new GameCompetitionType()
+            {
+                CompetitionTypeID = singleCompetitionType.CompetitionTypeID,
+                GameID = snookerGame.GameID
             });
-
+            snookerGame.CompetitionTypes.Add(new GameCompetitionType()
+            {
+                CompetitionTypeID = doubleCompetitionType.CompetitionTypeID,
+                GameID = snookerGame.GameID
+            });
             context.SaveChanges();
         }
 
@@ -265,8 +291,8 @@ namespace Playground.Data.SampleData
             Team teamZakivaci = context.Competitors.OfType<Team>().FirstOrDefault(t => t.Name == "Zabagreli Zakivaci" && t.Game.Title == "Foozball");
 
             Game game = context.Games.FirstOrDefault(g => g.Title == "Foozball");
-            CompetitionType competitionSingle = game.CompetitionTypes.FirstOrDefault(ct => ct.Name == "Single" && ct.CompetitorType == CompetitorType.Individual);
-            CompetitionType competitionDouble = game.CompetitionTypes.FirstOrDefault(ct => ct.Name == "Double" && ct.CompetitorType == CompetitorType.Team);
+            CompetitionType competitionSingle = game.CompetitionTypes.FirstOrDefault(ct => ct.CompetitionType.Name == "Single" && ct.CompetitionType.CompetitorType == CompetitorType.Individual).CompetitionType;
+            CompetitionType competitionDouble = game.CompetitionTypes.FirstOrDefault(ct => ct.CompetitionType.Name == "Double" && ct.CompetitionType.CompetitorType == CompetitorType.Team).CompetitionType;
 
             List<Match> matches = new List<Match>() {
                 new Match()

@@ -43,7 +43,7 @@ namespace Playgorund.Webexperiment.Controllers
                 player.UserID = currentUser.UserID;
             }
             List<SelectListItem> games = new List<SelectListItem>();
-            List<Game> individualGames = db.Games.Where(g => g.CompetitionTypes.Any(ct => ct.CompetitorType == CompetitorType.Individual)).ToList();
+            List<Game> individualGames = db.Games.Where(g => g.CompetitionTypes.Any(ct => ct.CompetitionType.CompetitorType == CompetitorType.Individual)).ToList();
             foreach (Game g in individualGames)
             {
                 games.Add(new SelectListItem()

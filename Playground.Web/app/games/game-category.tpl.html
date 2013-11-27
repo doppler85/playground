@@ -12,11 +12,11 @@
                     <div class="img-holder">
                         <img src="content/assets/img/content/mitar-miric.png" alt="" />
                     </div>
-                    <a href="javascript:;">{{game.title}}</a>
+                    <a data-ui-sref="game-edit({id: game.gameID})">{{game.title}}</a>
                     <a href="javascript:;">delete</a>
                 </li>
             </ul>
-            <div class="add-game-wrapp" data-ng-controller="GameController">
+            <div class="add-game-wrapp" data-ng-controller="ListGameController">
                 <div class="add-category" data-ng-show="addinggame"> 
                     <label>Title</label>
                     <input type="text" placeholder="Game title" data-ng-model="newGame.title"/>
@@ -26,6 +26,8 @@
                 <button data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</button>
             </div>
         </div>
+        <br />
+        <br />
         <div class="add-gamecategory-wrap">
             <div class="add-category" data-ng-show="addingcategory"> 
                 <label>Title</label>

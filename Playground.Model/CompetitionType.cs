@@ -18,5 +18,7 @@ namespace Playground.Model
         public CompetitorType CompetitorType { get; set; }
         public string Name { get; set; }
         public int CompetitorsCount { get; set; }
+
+        public virtual List<GameCompetitionType> Games { get; set; }
     }
 }

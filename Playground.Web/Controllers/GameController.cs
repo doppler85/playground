@@ -17,11 +17,25 @@ namespace Playground.Web.Controllers
         }
 
         [HttpGet]
-        public List<GameCategory> Categories()
+        [ActionName("details")]
+        public Game GameDetails(int id)
         {
-            List<GameCategory> games = Uow.GameCategories.GetAll("Games").ToList();
-            return games;
+            Game retVal = Uow.Games.GetById(id);
+            retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
+            retVal.CompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(retVal.GameID).ToList();
+
+            return retVal;
         }
+
+        [HttpGet]
+        [ActionName("availablecomptypes")]
+        public List<CompetitionType> AvailableCompetitionTypes(int id)
+        {
+            List<CompetitionType> retVal = Uow.CompetitionTypes.GetAvailableByGameId(id).ToList();
+            
+            return retVal;
+        }
+
 
         // Create a new Game
         // POST /api/Game
@@ -42,5 +56,31 @@ namespace Playground.Web.Controllers
             return response;
         }
 
+        // Create a new Game
+        // POST /api/Game/SaveGame
+        [HttpPut]
+        [ActionName("savegame")]
+        public HttpResponseMessage SaveGame(Game game)
+        {
+            // clear prvious competition types
+            List<GameCompetitionType> currentCompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(game.GameID).ToList();
+            foreach (GameCompetitionType ct in currentCompetitionTypes)
+            {
+                Uow.GameCompetitionTypes.Delete(ct);
+            }
+            foreach (GameCompetitionType ct in game.CompetitionTypes)
+            {
+                ct.GameID = game.GameID;
+                Uow.GameCompetitionTypes.Add(ct);
+            }
+
+            Uow.Games.Update(game);
+
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, game);
+
+            return response;
+        }
     }
 }

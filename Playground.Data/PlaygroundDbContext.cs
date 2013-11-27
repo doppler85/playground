@@ -31,6 +31,7 @@ namespace Playground.Data
             modelBuilder.Configurations.Add(new AutomaticMatchConfirmationConfiguration());
             modelBuilder.Configurations.Add(new TeamPlayerConfiguration());
             modelBuilder.Configurations.Add(new MatchConfiguration());
+            modelBuilder.Configurations.Add(new GameCompetitionTypeConfiguration());
         }
 
 

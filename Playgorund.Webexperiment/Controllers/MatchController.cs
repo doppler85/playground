@@ -102,7 +102,7 @@ namespace Playgorund.Webexperiment.Controllers
                 {
                     competitionTypes.Add(new SelectListItem()
                     {
-                        Text = ct.Name,
+                        Text = ct.CompetitionType.Name,
                         Value = ct.CompetitionTypeID.ToString()
                     });
                 }
@@ -112,7 +112,7 @@ namespace Playgorund.Webexperiment.Controllers
             CompetitionType selectedCompetitionType = null;
             if (competitionTypeID.HasValue)
             {
-                selectedCompetitionType = selectedGame.CompetitionTypes.First(ct => ct.CompetitionTypeID == competitionTypeID.Value);
+                selectedCompetitionType = selectedGame.CompetitionTypes.First(ct => ct.CompetitionType.CompetitionTypeID == competitionTypeID.Value).CompetitionType;
             }
 
             if (selectedGame != null && selectedCompetitionType != null)

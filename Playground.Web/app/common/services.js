@@ -13,6 +13,26 @@ factory('GameCategoryResource', ['$resource', function (resource) {
 }]).
 factory('GameResource', ['$resource', function (resource) {
     return resource('api/game/:actionname/:id', {}, {
+        details: {
+            method: 'GET',
+            isArray: false,
+            params: {
+                actionname: 'details'
+            }
+        },
+        availablecomptypes: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'availablecomptypes'
+            }
+        },
+        add: { method: 'POST' },
+        save: { method: 'PUT' }
+    });
+}]).
+factory('CompetitionTypeResource', ['$resource', function (resource) {
+    return resource('api/competitiontype/:actionname/:id', {}, {
         add: { method: 'POST' }
     });
 }]);

@@ -1,0 +1,54 @@
+<div class="page-title">
+    <div class="wrapper">
+        <h2>{{game.category.title}}</h2>
+    </div>
+</div>
+<div class="last-players">
+    <div class="wrapper">
+        <div class="game-edit">
+            <img src="content/assets/img/content/mitar-miric.png" alt="" style="width:50px; height:50px;" /><br />
+            Title: <input type="text" data-ng-model="game.title"><br /><br />
+            <h2>Competition types</h2>
+            <ul>
+                <li data-ng-repeat="competitionType in game.competitionTypes">
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            value="competitionType.competitionType.competitionTypeId" 
+                            data-ng-checked="true"
+                            data-ng-click="toggleCompetitionType(competitionType.competitionType)"/> 
+                        {{competitionType.competitionType.name}} {{competitionTypes[competitionType.competitionType.competitorType]}} ({{competitionType.competitionType.competitorsCount}})
+                    </label>
+                </li>
+                <li data-ng-repeat="competitionType in availableCompetitionTypes">
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            value="competitionType.competitionTypeId" 
+                            data-ng-checked="false"
+                            data-ng-click="toggleCompetitionType(competitionType)"/> 
+                        {{competitionType.name}}  {{competitionTypes[competitionType.competitorType]}} ({{competitionType.competitorsCount}}) 
+                    </label>
+                </li>
+            </ul>
+            <div class="add-competitiontype-wrapp">
+                <div class="add-competitiontype" data-ng-show="addingCompetitionType"> 
+                    <label>Title</label>
+                    <input type="text" placeholder="Title" data-ng-model="newCompetitionType.name"/>
+                    <select 
+                        data-ng-model="newCompetitionType.competitorType" 
+                        data-ng-options="k as v for (k, v) in competitionTypes" />
+                    <input type="text" placeholder="1" data-ng-model="newCompetitionType.competitorsCount"/>
+                    <a href="javascript:;" data-ng-click="addCompetitionType()">save</a>
+                    <a href="javascript:;" data-ng-click="toggleAddCompetitorType(false)">cancel</a>
+                </div>
+                <button data-ng-click="toggleAddCompetitorType(true)" data-ng-hide="addingCompetitionType">add</button>
+            </div>
+            <br />
+            <br />
+            <div class="update-game-wrapp">
+                <a href="javascript:;" data-ng-click="saveGame()">save game</a>
+            </div>
+        </div> 
+    </div>
+</div>

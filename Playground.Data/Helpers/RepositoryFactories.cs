@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Playground.Data.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace Playground.Data.Helpers
             return new Dictionary<Type, Func<DbContext, object>> 
             { 
                 // add facty methods for creating non standard repositories
+                {typeof(IGameCompetitionTypeRepository), dbContext =>  new GameCompetitionTypeRepository(dbContext)},
+                {typeof(ICompetitionTypeRepository), dbContext =>  new CompetitionTypeRepository(dbContext)}
                 // {typeof(IAttendanceRepository), dbContext => new AttendanceRepository(dbContext)},
                 // { typeof(Ig
             };

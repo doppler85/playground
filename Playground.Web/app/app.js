@@ -5,7 +5,12 @@ var Playground = angular.module('Playground', [
     'Playground.home',
     'Playground.game-category',
     'Playground.game'
-    ]);
+]);
+
+Playground.constant('settingss', {
+}).constant('enums', {
+    competitionType: { 0: 'Individual', 1: 'Team' }
+});
 
 Playground.
     config([

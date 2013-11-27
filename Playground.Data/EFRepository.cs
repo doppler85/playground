@@ -1,6 +1,7 @@
 ﻿using Playground.Data.Contracts;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -54,14 +55,34 @@ namespace Playground.Data
             }
         }
 
-        public virtual void Update(T entity)
+        private object GetPrimaryKey(DbEntityEntry entry)
+        {
+            var myObject = entry.Entity;
+            var property =
+                myObject.GetType()
+                     .GetProperties().FirstOrDefault(prop => Attribute.IsDefined(prop, typeof(KeyAttribute)));
+            return property.GetValue(myObject, null);
+        }
+
+        public virtual void Update(T entity) 
         {
             DbEntityEntry dbEntityEntry = DbContext.Entry(entity);
+            var key = GetPrimaryKey(dbEntityEntry);
+
             if (dbEntityEntry.State == EntityState.Detached)
             {
-                DbSet.Attach(entity);
+                var attachetEntity = DbSet.Find(key);
+                if (attachetEntity != null)
+                {
+                    var attachedEntry = DbContext.Entry(attachetEntity);
+                    attachedEntry.CurrentValues.SetValues(entity);
+                }
+                else
+                {
+                    DbSet.Attach(entity);
+                    dbEntityEntry.State = EntityState.Modified;
+                }
             }
-            dbEntityEntry.State = EntityState.Modified;
         }
 
         public virtual void Delete(T entity)

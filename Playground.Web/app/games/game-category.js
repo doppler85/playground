@@ -36,9 +36,9 @@ angular.module('Playground.game-category', ['ngResource', 'ui.router']).
         };
 
         $scope.addCategory = function() {
-            GameCategoryResource.add($scope.newCategory, function () {
+            GameCategoryResource.add($scope.newCategory, function (data, status, headers, config) {
                 $scope.newCategory.title = '';
-                $scope.loadGameCategories();
+                $scope.gameCategories.push(data);
             });
         };
     }]);

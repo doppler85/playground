@@ -137,6 +137,7 @@
     <Compile Include="App_Start\UnityHttpControllerActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ApiBaseController.cs" />
+    <Compile Include="Controllers\CompetitionTypeController.cs" />
     <Compile Include="Controllers\GameCategoryController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -149,8 +150,9 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\common\services.js" />
+    <Content Include="app\games\game-details.tpl.html" />
     <Content Include="app\games\game.js" />
-    <Content Include="app\games\game.tpl.html" />
+    <Content Include="app\games\game-edit.tpl.html" />
     <Content Include="app\games\game-category.js" />
     <Content Include="app\games\game-category.tpl.html" />
     <Content Include="app\home\home.js" />

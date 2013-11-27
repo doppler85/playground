@@ -25,14 +25,22 @@ namespace Playground.Data
             get { return GetStandardRepo<Game>(); }
         }
 
+        public IGameCompetitionTypeRepository GameCompetitionTypes
+        {
+            get { return GetRepo<IGameCompetitionTypeRepository>(); }
+        }
+
+        public ICompetitionTypeRepository CompetitionTypes
+        {
+            get { return GetRepo<ICompetitionTypeRepository>(); }
+        }
+
         public PlaygroundUow(IRepositoryProvider repositoryProvider)
         {
             CreateDbContext();
-
             repositoryProvider.DbContext = DbContext;
             RepositoryProvider = repositoryProvider;
         }
-
 
         public void Commit()
         {
