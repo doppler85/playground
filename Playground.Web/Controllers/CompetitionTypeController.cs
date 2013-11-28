@@ -16,6 +16,13 @@ namespace Playground.Web.Controllers
             this.Uow = uow;
         }
 
+        // GET /api/competitiontype
+        [HttpGet]
+        public List<CompetitionType> GetAll()
+        {
+            return Uow.CompetitionTypes.GetAll().OrderBy(ct => ct.CompetitorType).ThenBy(ct => ct.Name).ToList();
+        }
+
         // Create a new Game
         // POST /api/competitiontype
         [HttpPost]

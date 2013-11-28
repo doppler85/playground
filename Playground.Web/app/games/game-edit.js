@@ -1,48 +1,13 @@
 'use strict';
-angular.module('Playground.game', ['ngResource', 'ui.router']).
+angular.module('Playground.game-edit', ['ngResource', 'ui.router']).
     config(['$stateProvider', function config($stateProvider) {
         $stateProvider
-            .state('game', {
-                    url: '/game',
-                    controller: 'ListGameController',
-                    data: { pageTitle: 'Games' }
-            }).state('game-edit', {
+            .state('game-edit', {
                         url: '/game/edit/:id',
                         templateUrl: 'app/games/game-edit.tpl.html',
                         controller: 'EditGameController',
                         data: { pageTitle: 'Edit Game' }
-            }).state('game-details', {
-                url: '/game/details/:id',
-                templateUrl: 'app/games/game-details.tpl.html',
-                controller: 'DetailsGameController',
-                data: { pageTitle: 'Game details' }
             });
-    }]).
-    controller('ListGameController', [
-    '$scope',
-    '$stateParams',
-    '$rootScope',
-    'GameResource',
-    function ($scope, $stateParams, $rootScope, GameResource) {
-        $scope.addinggame = false;
-        $scope.newGame = {
-            gameCategoryID: $scope.gameCategory.gameCategoryID,
-            title: ''
-        };
-
-        $scope.toggleAddGame = function (show) {
-            $scope.addinggame = show;
-            if (!show) {
-                $scope.newGame.title = '';
-            }
-        };
-
-        $scope.addGame = function() {
-            GameResource.add($scope.newGame, function (data, status, headers, config) {
-                $scope.newGame.title = '';
-                $scope.gameCategory.games.push(data);
-            });
-        };
     }]).
     controller('EditGameController', [
     '$scope',
@@ -55,34 +20,62 @@ angular.module('Playground.game', ['ngResource', 'ui.router']).
         $scope.competitionTypes = enums.competitionType;
         $scope.selectedCompetitionTypes = [];
 
+        $scope.selectedCompetitionTypes.indexOf = function (obj) {
+            var index = -1;
+            if (obj == null || obj.competitionTypeID == null || obj.gameID == null) {
+                return index;
+            }
+            for (var i = 0, imax = this.length; i < imax; i++) {
+                if (this[i].competitionTypeID === obj.competitionTypeID && this[i].gameID === obj.gameID) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        };
+
         GameResource.details({ id: $stateParams.id }, function (data, status, headers, config) {
             $scope.game = data;
-
             angular.forEach($scope.game.competitionTypes, function (competitionType) {
-                this.push(competitionType.competitionType);
+                this.push({
+                    competitionTypeID: competitionType.competitionType.competitionTypeID,
+                    gameID: competitionType.gameID
+                });
             }, $scope.selectedCompetitionTypes);
-
+        }).$promise.then(function () {
+            CompetitionTypeResource.all(function (data, status, headers, config) {
+                $scope.availableCompetitionTypes = data;
+                angular.forEach($scope.availableCompetitionTypes, function (competitionType) {
+                    var ct = {
+                        competitionTypeID: competitionType.competitionTypeID,
+                        gameID: $scope.game.gameID
+                    };
+                    var idx = $scope.selectedCompetitionTypes.indexOf(ct);
+                    if (idx != -1) {
+                        competitionType.checked = true;
+                    }
+                });
+            });
         });
 
-        GameResource.availablecomptypes({ id: $stateParams.id }, function (data, status, headers, config) {
-            $scope.availableCompetitionTypes = data;
-        });
 
         $scope.toggleCompetitionType = function (competitionType) {
-            var idx = $scope.selectedCompetitionTypes.indexOf(competitionType);
+            var ct = {
+                competitionTypeID: competitionType.competitionTypeID,
+                gameID: $scope.game.gameID
+            };
+
+            var idx = $scope.selectedCompetitionTypes.indexOf(ct);
 
             if (idx > -1) {
                 $scope.selectedCompetitionTypes.splice(idx, 1);
             }
             else {
-                $scope.selectedCompetitionTypes.push(competitionType);
+                $scope.selectedCompetitionTypes.push(ct);
             }
         };
 
         $scope.saveGame = function () {
-            console.log($scope.selectedCompetitionTypes);
-            console.log($scope.game.competitionTypes);
-
             $scope.game.competitionTypes = $scope.selectedCompetitionTypes;
             GameResource.save($scope.game, function (data, status, headers, config) {
             });
@@ -114,12 +107,4 @@ angular.module('Playground.game', ['ngResource', 'ui.router']).
                 $scope.toggleAddCompetitorType(false);
             });
         };
-    }]).
-    controller('DetailsGameController', [
-    '$scope',
-    '$stateParams',
-    '$rootScope',
-    'GameResource',
-    function ($scope, $stateParams, $rootScope, GameResource) {
-        console.log($stateParams);
     }]);

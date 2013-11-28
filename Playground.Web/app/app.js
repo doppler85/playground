@@ -4,7 +4,8 @@ var Playground = angular.module('Playground', [
     'ngRoute',
     'Playground.home',
     'Playground.game-category',
-    'Playground.game'
+    'Playground.game-list',
+    'Playground.game-edit'
 ]);
 
 Playground.constant('settingss', {

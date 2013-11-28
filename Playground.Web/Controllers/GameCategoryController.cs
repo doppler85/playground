@@ -30,7 +30,6 @@ namespace Playground.Web.Controllers
             return Uow.GameCategories.GetById(id);
         }
 
-        // Create a new Game category
         // POST /api/gamecategory
         [HttpPost]
         public HttpResponseMessage AddGameCategory(GameCategory gameCategory)
@@ -49,5 +48,16 @@ namespace Playground.Web.Controllers
             return response;
         }
 
+        [HttpDelete]
+        public HttpResponseMessage Delete(int id)
+        {
+            Uow.GameCategories.Delete(id);
+
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+
+            return response;
+        }
     }
 }

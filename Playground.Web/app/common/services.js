@@ -8,7 +8,8 @@ Playground.service('Playground.services', ['ngResource', 'ngSanitize', function 
 factory('GameCategoryResource', ['$resource', function (resource) {
     return resource('api/gamecategory/:actionname/:id', {}, {
         getall: { method: 'GET', isArray: true },
-        add: { method: 'POST' }
+        add: { method: 'POST' },
+        remove: { method: 'DELETE' }
     });
 }]).
 factory('GameResource', ['$resource', function (resource) {
@@ -28,11 +29,13 @@ factory('GameResource', ['$resource', function (resource) {
             }
         },
         add: { method: 'POST' },
-        save: { method: 'PUT' }
+        save: { method: 'PUT' },
+        remove: { method: 'DELETE' },
     });
 }]).
 factory('CompetitionTypeResource', ['$resource', function (resource) {
     return resource('api/competitiontype/:actionname/:id', {}, {
+        all: { method: 'GET', isArray: true },
         add: { method: 'POST' }
     });
 }]);

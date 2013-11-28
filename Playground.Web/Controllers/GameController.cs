@@ -29,9 +29,19 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("availablecomptypes")]
-        public List<CompetitionType> AvailableCompetitionTypes(int id)
+        public List<GameCompetitionType> AvailableCompetitionTypes(int id)
         {
-            List<CompetitionType> retVal = Uow.CompetitionTypes.GetAvailableByGameId(id).ToList();
+            List<GameCompetitionType> retVal = new List<GameCompetitionType>();
+            IQueryable<CompetitionType> availableCompetitionTypes = Uow.CompetitionTypes.GetAvailableByGameId(id);
+            foreach (CompetitionType ct in availableCompetitionTypes)
+            {
+                retVal.Add(new GameCompetitionType()
+                {
+                    CompetitionType = ct,
+                    CompetitionTypeID = ct.CompetitionTypeID,
+                    GameID = id
+                });
+            }
             
             return retVal;
         }
@@ -70,7 +80,6 @@ namespace Playground.Web.Controllers
             }
             foreach (GameCompetitionType ct in game.CompetitionTypes)
             {
-                ct.GameID = game.GameID;
                 Uow.GameCompetitionTypes.Add(ct);
             }
 
@@ -79,6 +88,18 @@ namespace Playground.Web.Controllers
             Uow.Commit();
 
             var response = Request.CreateResponse(HttpStatusCode.OK, game);
+
+            return response;
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage Delete(int id)
+        {
+            Uow.Games.Delete(id);
+
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
 
             return response;
         }

@@ -150,8 +150,9 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\common\services.js" />
+    <Content Include="app\games\game-edit.js" />
     <Content Include="app\games\game-details.tpl.html" />
-    <Content Include="app\games\game.js" />
+    <Content Include="app\games\game-list.js" />
     <Content Include="app\games\game-edit.tpl.html" />
     <Content Include="app\games\game-category.js" />
     <Content Include="app\games\game-category.tpl.html" />

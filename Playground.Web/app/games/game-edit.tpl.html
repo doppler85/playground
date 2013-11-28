@@ -10,24 +10,14 @@
             Title: <input type="text" data-ng-model="game.title"><br /><br />
             <h2>Competition types</h2>
             <ul>
-                <li data-ng-repeat="competitionType in game.competitionTypes">
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            value="competitionType.competitionType.competitionTypeId" 
-                            data-ng-checked="true"
-                            data-ng-click="toggleCompetitionType(competitionType.competitionType)"/> 
-                        {{competitionType.competitionType.name}} {{competitionTypes[competitionType.competitionType.competitorType]}} ({{competitionType.competitionType.competitorsCount}})
-                    </label>
-                </li>
                 <li data-ng-repeat="competitionType in availableCompetitionTypes">
                     <label>
                         <input 
                             type="checkbox" 
                             value="competitionType.competitionTypeId" 
-                            data-ng-checked="false"
+                            data-ng-checked="competitionType.checked"
                             data-ng-click="toggleCompetitionType(competitionType)"/> 
-                        {{competitionType.name}}  {{competitionTypes[competitionType.competitorType]}} ({{competitionType.competitorsCount}}) 
+                        {{competitionType.name}} {{competitionTypes[competitionType.competitorType]}} ({{competitionType.competitorsCount}})
                     </label>
                 </li>
             </ul>
@@ -47,7 +37,8 @@
             <br />
             <br />
             <div class="update-game-wrapp">
-                <a href="javascript:;" data-ng-click="saveGame()">save game</a>
+                <a href="javascript:;" data-ng-click="saveGame()">save game</a> | 
+                <a href="javascript:;" data-ui-sref="game-categories">back to games</a>
             </div>
         </div> 
     </div>
