@@ -1,0 +1,19 @@
+<div class="page-title">
+    <div class="wrapper">
+        <h2>Login</h2>
+    </div>
+</div>
+<div class="last-players">
+    <div class="login-wrapp">
+        <label>Email</label>
+        <input type="email" placeholder="johndoe@gmail.com" data-ng-model="user.email"/>
+        <label>Password</label>
+        <input type="password" placeholder="password" data-ng-model="user.password"/>
+        <button data-ng-click="login()">login</button>
+        <button data-ng-click="clearForm()">clear</button>
+        <button data-ng-click="">cancel</button>
+        <div class="alert alert-error" data-ng-show="authError">
+            {{authError}}
+        </div>
+    </div>
+</div>

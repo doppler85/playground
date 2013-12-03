@@ -5,7 +5,11 @@ var Playground = angular.module('Playground', [
     'Playground.home',
     'Playground.game-category',
     'Playground.game-list',
-    'Playground.game-edit'
+    'Playground.game-edit',
+    'Playground.login',
+    'Playground.security.service',
+    'Playground.security.interceptor',
+    'Playground.security.retry-queue'
 ]);
 
 Playground.constant('settingss', {
