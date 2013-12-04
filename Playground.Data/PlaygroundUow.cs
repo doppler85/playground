@@ -35,6 +35,11 @@ namespace Playground.Data
             get { return GetRepo<ICompetitionTypeRepository>(); }
         }
 
+        public IUserRepository Users
+        {
+            get { return GetRepo<IUserRepository>(); }
+        }
+
         public PlaygroundUow(IRepositoryProvider repositoryProvider)
         {
             CreateDbContext();

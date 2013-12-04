@@ -2,12 +2,15 @@
 'use strict';
 var Playground = angular.module('Playground', [
     'ngRoute',
+    'Playground.main-menu',
     'Playground.home',
     'Playground.game-category',
     'Playground.game-list',
     'Playground.game-edit',
     'Playground.login',
-    'Playground.security.service',
+    'Playground.user-status',
+    'Playground.user-profile',
+    'Playground.security.security-service',
     'Playground.security.interceptor',
     'Playground.security.retry-queue'
 ]);
@@ -31,12 +34,46 @@ Playground.
         }]).
     config([
         '$compileProvider',
-        function ($compileProvider) {
-        }]).
+        '$stateProvider',
+        function ($compileProvider, $stateProvider) {
+            $stateProvider.
+                state('home', {
+                    url: '/home',
+                    templateUrl: 'app/home/home.tpl.html',
+                    controller: 'HomeController',
+                    data: { pageTitle: 'Home page' }
+                }).state('game-categories', {
+                    url: '/game-categories',
+                    templateUrl: 'app/games/game-category.tpl.html',
+                    controller: 'GameCategoryController',
+                    data: { pageTitle: 'Games' }
+                }).state('game-details', {
+                    url: '/game/details/:id',
+                    templateUrl: 'app/games/game-details.tpl.html',
+                    controller: 'DetailsGameController',
+                    data: { pageTitle: 'Game details' }
+                }).state('game-edit', {
+                    url: '/game/edit/:id',
+                    templateUrl: 'app/games/game-edit.tpl.html',
+                    controller: 'EditGameController',
+                    data: { pageTitle: 'Edit Game' }
+                }).state('login', {
+                    url: '/login',
+                    templateUrl: 'app/user/login.tpl.html',
+                    controller: 'LoginController',
+                    data: { pageTitle: 'Login' }
+                }).state('profile', {
+                    url: '/profile',
+                    templateUrl: 'app/user/user-profile.tpl.html',
+                    controller: 'ProfileController',
+                    data: { pageTitle: 'Profile' }
+                });
+           }]).
     run([
         '$rootScope',
         '$location',
         '$state',
+        
         function ($rootScope, $location, $state) { //*** Bootstrap the app, init config etc.
             $rootScope.ShowTitle = true;
             $rootScope.ShowMenu = true;
@@ -48,7 +85,6 @@ Playground.
             $rootScope.changeLocation = function (path) {
                 $state.transitionTo(path);
             }
-
         }]).
     controller('AppCtrl', [
         '$scope',

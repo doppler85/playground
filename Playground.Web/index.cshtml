@@ -22,88 +22,8 @@
 <body data-ng-app="Playground" id="ng-app">
 
 	<div class="container">
-		<header class="header">
-			<div class="wrapper">
-				<nav class="main-nav">
-					<ul>
-						<li>
-							<a href="javascript:;" data-ng-class="{active: IsActive('/home')}" data-ng-click="changeLocation('home')">
-								Home
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;" data-ng-class="{active: IsActive('/game-categories')}" data-ng-click="changeLocation('game-categories')">
-								Games
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;">
-								Item 3
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;">
-								Item 4
-							</a>
-						</li>
-					</ul>
-				</nav>
-				<ul class="user-logged-in">
-					<li>
-						<a href="javascript:;" alt="Go to your profile" title="Go to your profile">
-							<span class="img-holder">
-								<img src="content/assets/img/content/dragan-kojic.png" alt="" />
-							</span>
-							<span class="username">
-								Dragan Kojic Keba
-							</span>
-						</a>
-					</li>
-					<li>
-						<a href="javascript:;" class="show-notifications" alt="Notifications" title="Notifications">
-							<i class="ico notifications-grey"></i>
-						</a>
-						<ul class="notifications-list">
-							<li>
-								<a href="javascript:;">
-									Cupcake ipsum dolor sit amet cupcake gummi bears apple pie.
-								</a>
-							</li>
-							<li>
-								<a href="javascript:;">
-									Candy canes dessert apple pie cotton candy dessert gummies sweet oat cake cake.
-								</a>
-							</li>
-							<li class="last">
-								<a href="javascript:;">
-									OBear claw gummies macaroon pudding.
-								</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a href="javascript:;" alt="Log Out" title="Log Out">
-							<i class="ico logout-grey"></i>
-						</a>
-					</li>
-				</ul>
-				<ul class="user-login" style="display: none;">
-					<li>
-						<a href="javascript:;">
-							Login
-						</a>
-					</li>
-					<li>
-						/
-					</li>
-					<li>
-						<a href="javascript:;">
-							Register
-						</a>
-					</li>
-				</ul>
-			</div>
-		</header>
+        <header class="header" data-ng-include="'app/menu/main-menu.tpl.html'" data-ng-controller="MainMenuController">
+        </header>
         <!-- #main -->
     	<section class="content" data-ui-view="">
 
@@ -131,13 +51,16 @@
     <script type="text/javascript" src="app/lib/angular/angular-resource.min.js"></script>*@
 
     <!-- Modules -->
+    <script type="text/javascript" src="app/menu/main-menu.js"></script>
     <script type="text/javascript" src="app/home/home.js"></script>
     <script type="text/javascript" src="app/games/game-category.js"></script>
     <script type="text/javascript" src="app/games/game-list.js"></script>
     <script type="text/javascript" src="app/games/game-edit.js"></script>
     <script type="text/javascript" src="app/user/login.js"></script>    
+    <script type="text/javascript" src="app/user/user-status.js"></script>
+    <script type="text/javascript" src="app/user/user-profile.js"></script>
 
-    <script type="text/javascript" src="app/security/service.js"></script>    
+    <script type="text/javascript" src="app/security/security-service.js"></script>    
     <script type="text/javascript" src="app/security/interceptor.js"></script>
     <script type="text/javascript" src="app/security/retry-queue.js"></script>
 

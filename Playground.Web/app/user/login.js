@@ -1,14 +1,5 @@
 ﻿'use strict';
 angular.module('Playground.login', ['ngResource', 'ui.router']).
-config(['$stateProvider', function config($stateProvider) {
-    $stateProvider
-        .state('login', {
-            url: '/login',
-            templateUrl: 'app/user/login.tpl.html',
-            controller: 'LoginController',
-            data: { pageTitle: 'Login' }
-        });
-}]).
 controller('LoginController', [
 '$scope',
 '$stateParams',
@@ -24,17 +15,12 @@ function ($scope, $stateParams, $rootScope, security) {
         $scope.authError = null;
 
         // Try to login
-        security.login($scope.user).then(function (data, status, headers, config) {
+        security.login($scope.user).then(function (data) {
             //if (!loggedIn) {
                 // If we get here then the login failed due to bad credentials
                 //$scope.authError = "Invalid credentials";
             //}
             console.log(data);
-            console.log(status);
-            console.log(headers);
-            console.log(config);
-
-
         }, function (x) {
             // If we get here then there was a problem with the login request to the server
             $scope.authError = "Server error, please try again later";
@@ -46,7 +32,10 @@ function ($scope, $stateParams, $rootScope, security) {
     };
 
     $scope.cancelLogin = function () {
-        // security.cancelLogin();
+        security.cancelLogin();
     };
 
+    $scope.toggleRememberMe = function () {
+        $scope.user.rememberMe = !$scope.user.rememberMe;
+    };
 }]);

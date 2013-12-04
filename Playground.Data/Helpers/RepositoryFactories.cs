@@ -18,7 +18,8 @@ namespace Playground.Data.Helpers
             { 
                 // add facty methods for creating non standard repositories
                 {typeof(IGameCompetitionTypeRepository), dbContext =>  new GameCompetitionTypeRepository(dbContext)},
-                {typeof(ICompetitionTypeRepository), dbContext =>  new CompetitionTypeRepository(dbContext)}
+                {typeof(ICompetitionTypeRepository), dbContext =>  new CompetitionTypeRepository(dbContext)},
+                {typeof(IUserRepository), dbContext =>  new UserRepository(dbContext)}
                 // {typeof(IAttendanceRepository), dbContext => new AttendanceRepository(dbContext)},
                 // { typeof(Ig
             };

@@ -63,6 +63,7 @@
     <Compile Include="PlaygroundUow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleData\PlaygroundDataInitializer.cs" />
+    <Compile Include="UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

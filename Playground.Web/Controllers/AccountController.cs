@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using WebMatrix.WebData;
+using Playground.Model;
 
 namespace Playground.Web.Controllers
 {
@@ -43,16 +44,31 @@ namespace Playground.Web.Controllers
         }
         */
 
+        private UserProfile GetUserProfile(string userName)
+        {
+            UserProfile retVal = null;
+            using (UsersContext db = new UsersContext())
+            {
+                retVal = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == userName.ToLower());
+            }
+            return retVal;
+        }
+
+        private UserProfile GetUserProfile()
+        {
+            return GetUserProfile(User.Identity.Name);
+        }
+
         [HttpPost]
         [AllowAnonymous]
         // TODO: uncoment this when antiforgery token mechanism is in place
         //[ValidateHttpAntiForgeryTokeAttribute]
         public HttpResponseMessage Login(LoginModel user)
         {
-
-            if (ModelState.IsValid && WebSecurity.Login(user.Email, user.Password, true))
+            if (ModelState.IsValid && WebSecurity.Login(user.Email, user.Password, user.RememberMe))
             {
-                var response = Request.CreateResponse(HttpStatusCode.OK, "Sucess");
+                UserProfile userProfile = GetCurrentUser(user.Email);
+                var response = Request.CreateResponse(HttpStatusCode.OK, new {user = userProfile});
                 return response;
             }
             else
@@ -61,5 +77,39 @@ namespace Playground.Web.Controllers
                 return response;
             }
         }
+
+        [HttpPost]
+        [ActionName("logout")]
+        // TODO: uncoment this when antiforgery token mechanism is in place
+        //[ValidateHttpAntiForgeryTokeAttribute]
+        public HttpResponseMessage LogOff()
+        {
+            WebSecurity.Logout();
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [ActionName("currentuser")]
+        public UserProfile GetCurrentUser()
+        {
+            return GetCurrentUser(User.Identity.Name);
+        }
+
+        private UserProfile GetCurrentUser(string userName)
+        {
+            UserProfile retVal = GetUserProfile(userName);
+            if (retVal != null)
+            {
+                Playground.Model.User playgroundUser = Uow.Users.GetUserByExternalId(retVal.UserId);
+                if (playgroundUser != null)
+                {
+                    retVal.UserName = String.Format("{0} {1}", playgroundUser.FirstName, playgroundUser.LastName);
+                }
+            }
+
+            return retVal;
+        }
+
     }
 }

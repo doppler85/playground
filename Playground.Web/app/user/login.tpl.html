@@ -9,11 +9,23 @@
         <input type="email" placeholder="johndoe@gmail.com" data-ng-model="user.email"/>
         <label>Password</label>
         <input type="password" placeholder="password" data-ng-model="user.password"/>
+        <label>
+            <input 
+                type="checkbox" 
+                value="user.rememberme" 
+                data-ng-checked="user.rememberMe" 
+                data-ng-click="toggleRememberMe()"/>
+            Remember me
+        </label>
+
         <button data-ng-click="login()">login</button>
         <button data-ng-click="clearForm()">clear</button>
         <button data-ng-click="">cancel</button>
         <div class="alert alert-error" data-ng-show="authError">
             {{authError}}
         </div>
+        <pre>
+            {{user}}
+        </pre>
     </div>
 </div>

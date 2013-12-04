@@ -10,6 +10,7 @@ using WebMatrix.WebData;
 using Playground.Web.Models;
 using Playground.Web.Filters;
 using Microsoft.Web.WebPages.OAuth;
+using Playground.Web.Util;
 
 namespace Playground.Web.Controllers
 {
@@ -80,7 +81,7 @@ namespace Playground.Web.Controllers
                 try
                 {
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    AddUserToRole(model.UserName, Playgorund.Web.Util.Constants.RoleNames.User);
+                    AddUserToRole(model.UserName, Constants.RoleNames.User);
                     WebSecurity.Login(model.UserName, model.Password);
                     
                     return RedirectToAction("Index", "Home");
@@ -275,7 +276,7 @@ namespace Playground.Web.Controllers
                         db.UserProfiles.Add(new UserProfile { UserName = model.UserName });
                         db.SaveChanges();
 
-                        AddUserToRole(model.UserName, Playgorund.Web.Util.Constants.RoleNames.User);
+                        AddUserToRole(model.UserName, Constants.RoleNames.User);
 
                         OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
                         OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);

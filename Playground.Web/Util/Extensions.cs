@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Playgorund.Web.Util
+namespace Playground.Web.Util
 {
     public static class Extensions
     {

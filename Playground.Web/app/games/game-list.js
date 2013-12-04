@@ -1,5 +1,6 @@
 'use strict';
 angular.module('Playground.game-list', ['ngResource', 'ui.router']).
+    /*
     config(['$stateProvider', function config($stateProvider) {
         $stateProvider
             .state('game', {
@@ -13,6 +14,7 @@ angular.module('Playground.game-list', ['ngResource', 'ui.router']).
                 data: { pageTitle: 'Game details' }
             });
     }]).
+    */
     controller('ListGameController', [
     '$scope',
     '$stateParams',

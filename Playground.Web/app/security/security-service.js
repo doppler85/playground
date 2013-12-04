@@ -1,14 +1,17 @@
 ﻿// Based loosely around work by Witold Szczerba - https://github.com/witoldsz/angular-http-auth
-angular.module('Playground.security.service', [
+angular.module('Playground.security.security-service', [
+  'ngRoute',
   'Playground.security.retry-queue',    // Keeps track of failed requests that need to be retried once the user logs in
 ])
 
 .factory('security', ['$http', '$q', '$location', 'securityRetryQueue', function ($http, $q, $location, queue) {
 
     // Redirect to the given url (defaults to '/')
+    // todo: change location to use another provider (ui-router)
     function redirect(url) {
         url = url || '/';
         $location.path(url);
+        // changeLocation(url);
     }
 
     // Login form dialog stuff
@@ -55,14 +58,14 @@ angular.module('Playground.security.service', [
         },
 
         // Attempt to authenticate a user by the given email and password
-        login: function (userModel) {
-            var request = $http.post('api/account/login',  userModel );
+        login: function (loginModel) {
+            var request = $http.post('/api/account/login', loginModel);
             return request.then(function (response) {
                 service.currentUser = response.data.user;
                 if (service.isAuthenticated()) {
                     closeLoginDialog(true);
                 }
-                return response;
+                return response.data;
             });
         },
 
@@ -74,7 +77,7 @@ angular.module('Playground.security.service', [
 
         // Logout the current user and redirect
         logout: function (redirectTo) {
-            $http.post('/logout').then(function () {
+            $http.post('api/account/logout').then(function () {
                 service.currentUser = null;
                 redirect(redirectTo);
             });
@@ -85,8 +88,9 @@ angular.module('Playground.security.service', [
             if (service.isAuthenticated()) {
                 return $q.when(service.currentUser);
             } else {
-                return $http.get('/current-user').then(function (response) {
-                    service.currentUser = response.data.user;
+                return $http.get('/api/account/currentuser').then(function (response) {
+                    console.log('response.data', response.data);
+                    service.currentUser = response.data == "null" ? null : response.data;
                     return service.currentUser;
                 });
             }
@@ -97,7 +101,9 @@ angular.module('Playground.security.service', [
 
         // Is the current user authenticated?
         isAuthenticated: function () {
-            return !!service.currentUser;
+            var auth = service.currentUser != null;
+            console.log('auth ', auth, service.currentUser);
+            return service.currentUser != null;
         },
 
         // Is the current user an adminstrator?

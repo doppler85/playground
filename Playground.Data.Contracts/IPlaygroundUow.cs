@@ -17,5 +17,6 @@ namespace Playground.Data.Contracts
         
         IGameCompetitionTypeRepository GameCompetitionTypes { get; }
         ICompetitionTypeRepository CompetitionTypes { get; }
+        IUserRepository Users { get; }
     }
 }

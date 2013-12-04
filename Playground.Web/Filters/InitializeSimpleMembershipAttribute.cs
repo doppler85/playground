@@ -6,6 +6,7 @@ using System.Threading;
 using WebMatrix.WebData;
 using Playground.Web.Models;
 using System.Web.Http.Filters;
+using Playground.Web.Util;
 
 namespace Playground.Web.Filters
 {
@@ -48,18 +49,18 @@ namespace Playground.Web.Filters
 
                     // add roles 
                     var roles = (SimpleRoleProvider)System.Web.Security.Roles.Provider;
-                    if (!roles.RoleExists(Playgorund.Web.Util.Constants.RoleNames.Admin))
+                    if (!roles.RoleExists(Constants.RoleNames.Admin))
                     {
-                        roles.CreateRole(Playgorund.Web.Util.Constants.RoleNames.Admin);
+                        roles.CreateRole(Constants.RoleNames.Admin);
                     }
-                    if (!roles.RoleExists(Playgorund.Web.Util.Constants.RoleNames.User))
+                    if (!roles.RoleExists(Constants.RoleNames.User))
                     {
-                        roles.CreateRole(Playgorund.Web.Util.Constants.RoleNames.User);
+                        roles.CreateRole(Constants.RoleNames.User);
                     }
-                    if (!WebSecurity.UserExists(Playgorund.Web.Util.Constants.AdminUser.AdminUserName))
+                    if (!WebSecurity.UserExists(Constants.AdminUser.AdminUserName))
                     {
-                        string user = WebSecurity.CreateUserAndAccount(Playgorund.Web.Util.Constants.AdminUser.AdminUserName, Playgorund.Web.Util.Constants.AdminUser.AdminPass);
-                        roles.AddUsersToRoles(new string[] { Playgorund.Web.Util.Constants.AdminUser.AdminUserName }, new string[] { Playgorund.Web.Util.Constants.RoleNames.Admin });
+                        string user = WebSecurity.CreateUserAndAccount(Constants.AdminUser.AdminUserName, Constants.AdminUser.AdminPass);
+                        roles.AddUsersToRoles(new string[] { Constants.AdminUser.AdminUserName }, new string[] { Constants.RoleNames.Admin });
                     }
                 }
                 catch (Exception ex)

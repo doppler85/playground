@@ -1,14 +1,5 @@
 'use strict';
 angular.module('Playground.game-edit', ['ngResource', 'ui.router']).
-    config(['$stateProvider', function config($stateProvider) {
-        $stateProvider
-            .state('game-edit', {
-                        url: '/game/edit/:id',
-                        templateUrl: 'app/games/game-edit.tpl.html',
-                        controller: 'EditGameController',
-                        data: { pageTitle: 'Edit Game' }
-            });
-    }]).
     controller('EditGameController', [
     '$scope',
     '$stateParams',
