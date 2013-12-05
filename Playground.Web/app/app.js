@@ -1,7 +1,7 @@
 /// <reference path="lib/angular/angular.js" />
 'use strict';
 var Playground = angular.module('Playground', [
-    'ngRoute',
+    'ui.router',
     'Playground.main-menu',
     'Playground.home',
     'Playground.game-category',
@@ -12,7 +12,8 @@ var Playground = angular.module('Playground', [
     'Playground.user-profile',
     'Playground.security.security-service',
     'Playground.security.interceptor',
-    'Playground.security.retry-queue'
+    'Playground.security.retry-queue',
+    'Playground.security.security-authorization',
 ]);
 
 Playground.constant('settingss', {
@@ -35,7 +36,8 @@ Playground.
     config([
         '$compileProvider',
         '$stateProvider',
-        function ($compileProvider, $stateProvider) {
+        '$injector',
+        function ($compileProvider, $stateProvider, $injector) {
             $stateProvider.
                 state('home', {
                     url: '/home',
@@ -46,7 +48,12 @@ Playground.
                     url: '/game-categories',
                     templateUrl: 'app/games/game-category.tpl.html',
                     controller: 'GameCategoryController',
-                    data: { pageTitle: 'Games' }
+                    data: { pageTitle: 'Games' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
                 }).state('game-details', {
                     url: '/game/details/:id',
                     templateUrl: 'app/games/game-details.tpl.html',
@@ -56,7 +63,12 @@ Playground.
                     url: '/game/edit/:id',
                     templateUrl: 'app/games/game-edit.tpl.html',
                     controller: 'EditGameController',
-                    data: { pageTitle: 'Edit Game' }
+                    data: { pageTitle: 'Edit Game' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization, $state) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
                 }).state('login', {
                     url: '/login',
                     templateUrl: 'app/user/login.tpl.html',
@@ -66,14 +78,18 @@ Playground.
                     url: '/profile',
                     templateUrl: 'app/user/user-profile.tpl.html',
                     controller: 'ProfileController',
-                    data: { pageTitle: 'Profile' }
+                    data: { pageTitle: 'Profile' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization, $location, $state) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
                 });
            }]).
     run([
         '$rootScope',
         '$location',
         '$state',
-        
         function ($rootScope, $location, $state) { //*** Bootstrap the app, init config etc.
             $rootScope.ShowTitle = true;
             $rootScope.ShowMenu = true;
@@ -83,7 +99,7 @@ Playground.
             }
 
             $rootScope.changeLocation = function (path) {
-                $state.transitionTo(path);
+                $state.go(path);
             }
         }]).
     controller('AppCtrl', [

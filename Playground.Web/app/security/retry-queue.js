@@ -60,7 +60,8 @@
         },
         retryAll: function () {
             while (service.hasMore()) {
-                retryQueue.shift().retry();
+                var retryObject = retryQueue.shift();
+                retryObject.retry();
             }
         }
     };

@@ -6,7 +6,11 @@ controller('LoginController', [
 '$rootScope',
 'security',
 function ($scope, $stateParams, $rootScope, security) {
-    $scope.user = {};
+    $scope.user = {
+        email: 'admin@playground.com',
+        password: 'admin123!',
+        rememberMe: true
+    };
 
     $scope.authError = null;
 
@@ -16,11 +20,14 @@ function ($scope, $stateParams, $rootScope, security) {
 
         // Try to login
         security.login($scope.user).then(function (data) {
+            // TODO: make this more ellegant
             //if (!loggedIn) {
                 // If we get here then the login failed due to bad credentials
                 //$scope.authError = "Invalid credentials";
             //}
-            console.log(data);
+            if (data.user) {
+                security.onSucessLogin(true);
+            }
         }, function (x) {
             // If we get here then there was a problem with the login request to the server
             $scope.authError = "Server error, please try again later";

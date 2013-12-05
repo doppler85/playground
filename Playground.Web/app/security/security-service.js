@@ -1,27 +1,39 @@
 ﻿// Based loosely around work by Witold Szczerba - https://github.com/witoldsz/angular-http-auth
 angular.module('Playground.security.security-service', [
   'ngRoute',
+  'ui.router',
+  'ui.bootstrap.modal',
   'Playground.security.retry-queue',    // Keeps track of failed requests that need to be retried once the user logs in
 ])
 
-.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', function ($http, $q, $location, queue) {
+.factory('security', ['$http', '$q', '$location', '$state', 'securityRetryQueue', '$modal', function ($http, $q, $location, $state, queue, $modal) {
 
     // Redirect to the given url (defaults to '/')
     // todo: change location to use another provider (ui-router)
-    function redirect(url) {
-        url = url || '/';
-        $location.path(url);
+    function redirect(state) {
+        state = state || 'home';
+        //$location.path(url);
         // changeLocation(url);
+        $state.go(state);
     }
 
     // Login form dialog stuff
     var loginDialog = null;
     function openLoginDialog() {
         if (!loginDialog) {
-            loginDialog = $dialog.dialog();
-            loginDialog.open('security/login/form.tpl.html', 'LoginFormController').then(onLoginDialogClose);
+            loginDialog = $modal.open(
+                {
+                    templateUrl: 'app/user/login.tpl.html',
+                    controller: 'LoginController'
+                });
+
+            loginDialog.result.then(onLoginDialogClose, function () {
+                closeLoginDialog(false);
+            });
         }
+        // $state.go('login');
     }
+
     function closeLoginDialog(success) {
         if (loginDialog) {
             loginDialog.close(success);
@@ -69,6 +81,15 @@ angular.module('Playground.security.security-service', [
             });
         },
 
+        onSucessLogin: function (success) {
+            if (success) {
+                queue.retryAll();
+            } else {
+                queue.cancelAll();
+                redirect();
+            }
+        },
+
         // Give up trying to login and clear the retry queue
         cancelLogin: function () {
             closeLoginDialog(false);
@@ -89,7 +110,6 @@ angular.module('Playground.security.security-service', [
                 return $q.when(service.currentUser);
             } else {
                 return $http.get('/api/account/currentuser').then(function (response) {
-                    console.log('response.data', response.data);
                     service.currentUser = response.data == "null" ? null : response.data;
                     return service.currentUser;
                 });
@@ -101,15 +121,16 @@ angular.module('Playground.security.security-service', [
 
         // Is the current user authenticated?
         isAuthenticated: function () {
-            var auth = service.currentUser != null;
-            console.log('auth ', auth, service.currentUser);
             return service.currentUser != null;
         },
 
         // Is the current user an adminstrator?
         isAdmin: function () {
             return !!(service.currentUser && service.currentUser.admin);
-        }
+        },
+
+        // Information about redirect state
+        redirectSateName: null
     };
 
     return service;

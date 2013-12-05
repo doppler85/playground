@@ -255,10 +255,12 @@
     <Content Include="app\lib\angular\angular-ui-router.js" />
     <Content Include="app\lib\angular\angular-ui-router.min.js" />
     <Content Include="app\lib\angular\angular-ui.js" />
+    <Content Include="app\lib\bootstrap\ui-bootstrap-custom-0.7.0.js" />
     <Content Include="app\menu\main-menu.js" />
     <Content Include="app\menu\main-menu.tpl.html" />
     <Content Include="app\security\interceptor.js" />
     <Content Include="app\security\retry-queue.js" />
+    <Content Include="app\security\security-authorization.js" />
     <Content Include="app\security\security-service.js" />
     <Content Include="app\user\user-profile.js" />
     <Content Include="app\user\user-profile.tpl.html" />

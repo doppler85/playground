@@ -15,6 +15,6 @@ function ($scope, $stateParams, $rootScope, security) {
         $scope.authError = null;
 
         // Try to login
-        security.logout("/home");
+        security.logout("home");
     };
 }]);

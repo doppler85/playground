@@ -28,7 +28,9 @@ namespace Playground.Web
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/app/lib/modernizr-{version}.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/assets/css/style.css"));
+            bundles.Add(new StyleBundle("~/Content/css")
+                .Include("~/Content/assets/css/style.css")
+                .Include("~/Content/assets/css/bootstrap.css"));
 
             //bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
             //            "~/Content/themes/base/jquery.ui.core.css",
