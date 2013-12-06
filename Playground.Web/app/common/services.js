@@ -29,7 +29,7 @@ factory('GameResource', ['$resource', function (resource) {
             }
         },
         add: { method: 'POST' },
-        save: { method: 'PUT' },
+        update: { method: 'PUT' },
         remove: { method: 'DELETE' },
     });
 }]).

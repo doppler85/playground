@@ -13,6 +13,13 @@ function ($scope, $stateParams, $rootScope, security) {
     };
 
     $scope.authError = null;
+    $scope.authReason = null;
+
+    if (security.getLoginReason()) {
+        $scope.authReason = (security.isAuthenticated()) ?
+          "User not authenticated" :
+          "User not autorized";
+    }
 
     $scope.login = function () {
         // Clear any previous security errors
@@ -20,13 +27,11 @@ function ($scope, $stateParams, $rootScope, security) {
 
         // Try to login
         security.login($scope.user).then(function (data) {
-            // TODO: make this more ellegant
-            //if (!loggedIn) {
-                // If we get here then the login failed due to bad credentials
-                //$scope.authError = "Invalid credentials";
-            //}
             if (data.user) {
                 security.onSucessLogin(true);
+            }
+            else {
+                $scope.authError = "Invalid credentials";
             }
         }, function (x) {
             // If we get here then there was a problem with the login request to the server

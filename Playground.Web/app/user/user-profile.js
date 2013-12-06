@@ -6,14 +6,16 @@ controller('ProfileController', [
 '$rootScope',
 'security',
 function ($scope, $stateParams, $rootScope, security) {
-    $scope.user = {};
 
-    $scope.authError = null;
+    $scope.$watch(function () {
+        $scope.isAuthenticated = security.isAuthenticated();
+        return security.currentUser;
+    }, function (currentUser) {
+        $scope.currentUser = currentUser;
+        $scope.isAuthenticated = security.isAuthenticated();
+    });
 
     $scope.logout = function () {
-        // Clear any previous security errors
-        $scope.authError = null;
-
         // Try to login
         security.logout("home");
     };

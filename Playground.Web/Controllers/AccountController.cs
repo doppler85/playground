@@ -9,7 +9,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using WebMatrix.WebData;
-using Playground.Model;
 
 namespace Playground.Web.Controllers
 {

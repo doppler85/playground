@@ -27,11 +27,8 @@ angular.module('Playground.security.security-service', [
                     controller: 'LoginController'
                 });
 
-            loginDialog.result.then(onLoginDialogClose, function () {
-                closeLoginDialog(false);
-            });
+            loginDialog.result.then(onLoginDialogClose, closeLoginDialog);
         }
-        // $state.go('login');
     }
 
     function closeLoginDialog(success) {
@@ -58,7 +55,6 @@ angular.module('Playground.security.security-service', [
 
     // The public API of the service
     var service = {
-
         // Get the first reason for needing a login
         getLoginReason: function () {
             return queue.retryReason();

@@ -66,9 +66,9 @@ angular.module('Playground.game-edit', ['ngResource', 'ui.router']).
             }
         };
 
-        $scope.saveGame = function () {
+        $scope.updateGame = function () {
             $scope.game.competitionTypes = $scope.selectedCompetitionTypes;
-            GameResource.save($scope.game, function (data, status, headers, config) {
+            GameResource.update($scope.game, function (data, status, headers, config) {
             });
         };
 

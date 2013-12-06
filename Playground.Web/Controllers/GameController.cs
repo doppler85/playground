@@ -67,10 +67,10 @@ namespace Playground.Web.Controllers
         }
 
         // Create a new Game
-        // POST /api/Game/SaveGame
+        // POST /api/game/updategame
         [HttpPut]
-        [ActionName("savegame")]
-        public HttpResponseMessage SaveGame(Game game)
+        [ActionName("updategame")]
+        public HttpResponseMessage UpdateGame(Game game)
         {
             // clear prvious competition types
             List<GameCompetitionType> currentCompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(game.GameID).ToList();
