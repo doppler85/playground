@@ -1,0 +1,39 @@
+<div class="page-header">
+    <div class="wrapper">
+        <h1>Add competition type</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="span6">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Title</label>
+                <div class="controls">
+                    <input type="text" data-ng-model="competitionType.name">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Comepetitor type</label>
+                <div class="controls">
+                    <select 
+                        data-ng-model="competitionType.competitorType" 
+                        data-ng-options="k as v for (k, v) in competitorTypes" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Competitors count</label>
+                <div class="controls">
+                    <input type="text" data-ng-model="competitionType.competitorsCount">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" data-ng-click="addCompetitionType()">Save</button>
+                    <button class="btn" data-ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+    </div>
+</div>
+

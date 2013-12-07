@@ -50,4 +50,6 @@ angular.module('Playground.game-category', ['ngResource', 'ui.router']).
                 collection.splice(index, 1);
             });
         };
+
+        $scope.loadGameCategories();
     }]);

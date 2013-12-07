@@ -1,20 +1,5 @@
 'use strict';
 angular.module('Playground.game-list', ['ngResource', 'ui.router']).
-    /*
-    config(['$stateProvider', function config($stateProvider) {
-        $stateProvider
-            .state('game', {
-                url: '/game',
-                controller: 'ListGameController',
-                data: { pageTitle: 'Games' }
-            }).state('game-details', {
-                url: '/game/details/:id',
-                templateUrl: 'app/games/game-details.tpl.html',
-                controller: 'DetailsGameController',
-                data: { pageTitle: 'Game details' }
-            });
-    }]).
-    */
     controller('ListGameController', [
     '$scope',
     '$stateParams',

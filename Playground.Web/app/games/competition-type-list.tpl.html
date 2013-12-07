@@ -1,0 +1,27 @@
+<div class="page-header">
+    <h1>Competition types</h1>
+</div>
+
+<div class="row">
+    <div class="span12">
+        <table class="table">
+            <tr>
+                <th>Title</th>
+                <th>Competititor type</th>
+                <th>Competitors count</th>
+                <th></th>
+            </tr>
+            <tr data-ng-repeat="competitionType in competitionTypes">
+                <td data-ng-bind="competitionType.name"></td>
+                <td data-ng-bind="competitorTypes[competitionType.competitorType]"></td>
+                <td data-ng-bind="competitionType.competitorsCount"></td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="deleteCompetitionType(competitionType, $index);">delete</button>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+</div>
+<a class="btn btn-default" data-ui-sref="competition-type-add">add</a>
+

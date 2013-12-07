@@ -1,17 +1,19 @@
-<ul class="user-logged-in" data-ng-show="isAuthenticated">
-    <li>
+<ul class="nav" data-ng-show="isAuthenticated">
+    <li data-ng-class="{active: IsActive('profile')}">
+        <span class="img-holder">
+            <img src="content/assets/img/content/dragan-kojic.png" alt="" />
+        </span>
+    </li>
+    <li data-ng-class="{active: IsActive('profile')}">
         <a data-ui-sref="profile" alt="Go to your profile" title="Go to your profile">
-            <span class="img-holder">
-                <img src="content/assets/img/content/dragan-kojic.png" alt="" />
-            </span>
-            <span class="username" data-ng-bind="currentUser.userName"></span>
+            {{currentUser.userName}}
         </a>
     </li>
     <li>
         <a href="javascript:;" class="show-notifications" alt="Notifications" title="Notifications">
             <i class="ico notifications-grey"></i>
         </a>
-        <ul class="notifications-list">
+<!--        <ul class="notifications-list">
             <li>
                 <a href="javascript:;">Cupcake ipsum dolor sit amet cupcake gummi bears apple pie.
                 </a>
@@ -24,19 +26,17 @@
                 <a href="javascript:;">OBear claw gummies macaroon pudding.
                 </a>
             </li>
-        </ul>
+        </ul>-->
     </li>
     <li>
-        <a href="javascript:;" alt="Log Out" title="Log Out">
+        <a href="javascript:;" alt="Log Out" title="Log Out">Log out
             <i class="ico logout-grey"></i>
         </a>
     </li>
 </ul>
-<ul class="user-login" data-ng-show="!isAuthenticated">
+<ul class="nav" data-ng-show="!isAuthenticated">
     <li>
         <a data-ui-sref="login">Login</a>
-    </li>
-    <li>/
     </li>
     <li>
         <a href="javascript:;">Register

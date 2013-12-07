@@ -10,6 +10,7 @@ angular.module('Playground.game-edit', ['ngResource', 'ui.router']).
     function ($scope, $stateParams, $rootScope, GameResource, CompetitionTypeResource, enums) {
         $scope.competitionTypes = enums.competitionType;
         $scope.selectedCompetitionTypes = [];
+        $scope.alerts = [];
 
         $scope.selectedCompetitionTypes.indexOf = function (obj) {
             var index = -1;
@@ -49,7 +50,6 @@ angular.module('Playground.game-edit', ['ngResource', 'ui.router']).
             });
         });
 
-
         $scope.toggleCompetitionType = function (competitionType) {
             var ct = {
                 competitionTypeID: competitionType.competitionTypeID,
@@ -68,34 +68,21 @@ angular.module('Playground.game-edit', ['ngResource', 'ui.router']).
 
         $scope.updateGame = function () {
             $scope.game.competitionTypes = $scope.selectedCompetitionTypes;
-            GameResource.update($scope.game, function (data, status, headers, config) {
-            });
+            GameResource.update($scope.game,
+                function (data, status, headers, config) {
+                    $scope.addAlert({ type: 'success', msg: 'Game sucessfully saved' });
+                },
+                function () {
+                    $scope.addAlert({ type: 'error', msg: 'Error saving game' });
+                }
+            );
         };
 
-        // competition types
-        $scope.addingCompetitionType = false;
-        $scope.createComepetitionType = function () {
-            var competitionType = 
-            {
-                name: '',
-                competitorType: 0,
-                competitorsCount: ''
-            };
-            return competitionType;
-        };
-        $scope.newCompetitionType = $scope.createComepetitionType();
-
-        $scope.toggleAddCompetitorType = function (show) {
-            $scope.addingCompetitionType = show;
-            if (!show) {
-                $scope.newCompetitionType = $scope.createComepetitionType();
-            }
+        $scope.addAlert = function (msg) {
+            $scope.alerts.push(msg);
         };
 
-        $scope.addCompetitionType = function () {
-            CompetitionTypeResource.add($scope.newCompetitionType, function (data, status, headers, config) {
-                $scope.availableCompetitionTypes.push(data);
-                $scope.toggleAddCompetitorType(false);
-            });
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
         };
     }]);

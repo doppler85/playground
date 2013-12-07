@@ -1,10 +1,8 @@
 ﻿@using System.Web.Optimization
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js ie6"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js ie7"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js ie8"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="en">
 	<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0" />
@@ -15,24 +13,48 @@
 		<link href='http://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
 
         @Styles.Render("~/Content/css")
-
+        <style type="text/css">
+          body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+          }
+        </style>
         @Scripts.Render("~/bundles/modernizr")
-
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
 	</head>
-<body data-ng-app="Playground" id="ng-app">
+    <body data-ng-app="Playground" id="ng-app">     
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="brand" href="https://github.com/doppler85/playground">Playground</a>
+                  <div class="nav-collapse in collapse" 
+                       style="height: auto;"
+                       data-ng-include="'app/menu/main-menu.tpl.html'" 
+                       data-ng-controller="MainMenuController">
+                  </div><!--/.nav-collapse -->
+                </div>
+              </div>
+            </div>
+        <div class="container">
+            <!-- #main -->
+    	    <section  data-ui-view="">
 
-	<div class="container">
-        <header class="header" data-ng-include="'app/menu/main-menu.tpl.html'" data-ng-controller="MainMenuController">
-        </header>
-        <!-- #main -->
-    	<section class="content" data-ui-view="">
-
-		</section>
-
-		<footer class="footer">
-			<h1>I am footer</h1>
-		</footer>
-	</div>
+		    </section>
+            <hr />
+		    <footer >
+			    <p>I am footer</p>
+		    </footer>
+        </div>
 
     <!-- SCRIPTS -->
     <script type="text/javascript" src="app/lib/jQuery/jquery-2.0.3.js"></script>
@@ -58,6 +80,9 @@
     <script type="text/javascript" src="app/games/game-category.js"></script>
     <script type="text/javascript" src="app/games/game-list.js"></script>
     <script type="text/javascript" src="app/games/game-edit.js"></script>
+    <script type="text/javascript" src="app/games/competition-type-list.js"></script>
+    <script type="text/javascript" src="app/games/competition-type-add.js"></script>
+
     <script type="text/javascript" src="app/user/login.js"></script>    
     <script type="text/javascript" src="app/user/user-status.js"></script>
     <script type="text/javascript" src="app/user/user-profile.js"></script>

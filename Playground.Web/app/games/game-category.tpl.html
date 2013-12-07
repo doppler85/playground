@@ -1,43 +1,46 @@
-<div class="page-title">
-    <div class="wrapper">
-        <h2>Games</h2>
-    </div>
+<div class="page-header">
+    <h1>Games</h1>
 </div>
-<div class="last-players" data-ng-init="loadGameCategories()" >
-    <div class="wrapper">
-        <div class="game-category" data-ng-repeat="gameCategory in gameCategories">
-            <h2>{{gameCategory.title}}
-                <a href="javascript:;" data-ng-click="deleteCategory(gameCategory, $index);">delete</a>
-            </h2>
-            <ul>
-                <li data-ng-repeat="game in gameCategory.games">
+
+<div class="row" data-ng-repeat="gameCategory in gameCategories">
+    <div class="span12">
+        <h3>{{gameCategory.title}}
+        <a class="btn btn-primary" href="javascript:;" data-ng-click="deleteCategory(gameCategory, $index);">delete</a>
+        </h3>
+        <table class="table">
+            <tr data-ng-repeat="game in gameCategory.games">
+                <td>
                     <div class="img-holder">
                         <img src="content/assets/img/content/mitar-miric.png" alt="" />
                     </div>
+                </td>
+                <td>
                     <a data-ui-sref="game-edit({id: game.gameID})">{{game.title}}</a>
-                    <a href="javascript:;" data-ng-click="deleteGame(game, gameCategory.games, $index);">delete</a>
-                </li>
-            </ul>
-            <div class="add-game-wrapp" data-ng-controller="ListGameController">
-                <div class="add-category" data-ng-show="addinggame"> 
-                    <label>Title</label>
-                    <input type="text" placeholder="Game title" data-ng-model="newGame.title"/>
-                    <a href="javascript:;" data-ng-click="addGame(gameCategory)">save</a>
-                    <a href="javascript:;" data-ng-click="toggleAddGame(false)">cancel</a>
-                </div>
-                <button data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</button>
-            </div>
-        </div>
-        <br />
-        <br />
-        <div class="add-gamecategory-wrap">
-            <div class="add-category" data-ng-show="addingcategory"> 
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="deleteGame(game, gameCategory.games, $index);">delete</button>
+                </td>
+            </tr>
+        </table>
+        <div class="add-game-wrapp" data-ng-controller="ListGameController">
+            <form class="form-inline" data-ng-show="addinggame">
                 <label>Title</label>
-                <input type="text" placeholder="Category title" data-ng-model="newCategory.title"/>
-                <a href="javascript:;" data-ng-click="addCategory()">save</a>
-                <a href="javascript:;" data-ng-click="toggleAddCategory(false)">cancel</a>
-            </div>
-            <button data-ng-click="toggleAddCategory(true)" data-ng-hide="addingcategory">add category</button>
+                <input type="text" placeholder="Title" data-ng-model="newGame.title" />
+                <button class="btn" data-ng-click="addGame(gameCategory)">save</button>
+                <button class="btn" data-ng-click="toggleAddGame(false)">cancel</button>
+            </form>
+            <button class="btn btn-default" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</button>
         </div>
     </div>
 </div>
+<hr />
+<div class="row">
+    <form class="form-inline" data-ng-show="addingcategory">
+        <label>Title</label>
+        <input type="text" placeholder="Category title" data-ng-model="newCategory.title" />
+        <button class="btn" data-ng-click="addCategory()">save</button>
+        <button class="btn" data-ng-click="toggleAddCategory(false)">cancel</button>
+    </form>
+    <button class="btn btn-default" data-ng-click="toggleAddCategory(true)" data-ng-hide="addingcategory">add category</button>
+</div>
+

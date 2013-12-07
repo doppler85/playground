@@ -1,24 +1,20 @@
-<div class="wrapper">
-    <nav class="main-nav">
-        <ul>
-            <li>
-                <a href="javascript:;" data-ng-class="{active: IsActive('/home')}" data-ng-click="changeLocation('home')">Home
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;" data-ng-class="{active: IsActive('/game-categories')}" data-ng-click="changeLocation('game-categories')">Games
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;">Item 3
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;">Item 4
-                </a>
-            </li>
-        </ul>
-    </nav>
-    <div class="user-status-wrapper" data-ng-include="'app/user/user-status.tpl.html'" data-ng-controller="UserStatusController" data-ng-init="init()">
+    <ul class="nav">
+        <li data-ng-class="{active: IsActive('home')}">
+            <a data-ui-sref="home">Home</a>
+        </li>
+        <li data-ng-class="{active: IsActive('game-categories')}">
+            <a data-ui-sref="game-categories">Games</a>
+        </li>
+        <li data-ng-class="{active: IsActive('competition-types')}">
+            <a data-ui-sref="competition-types">Competition types</a>
+        </li>
+        <li>
+            <a href="javascript:;">Item 4
+            </a>
+        </li>
+    </ul>
+    <div class="navbar-form pull-right"
+        data-ng-include="'app/user/user-status.tpl.html'" 
+        data-ng-controller="UserStatusController" 
+        data-ng-init="init()">
     </div>
-</div>

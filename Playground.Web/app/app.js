@@ -7,6 +7,8 @@ var Playground = angular.module('Playground', [
     'Playground.game-category',
     'Playground.game-list',
     'Playground.game-edit',
+    'Playground.competition-type-list',
+    'Playground.competition-type-add',
     'Playground.login',
     'Playground.user-status',
     'Playground.user-profile',
@@ -54,6 +56,26 @@ Playground.
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
+                }).state('competition-types', {
+                    url: '/competition-types',
+                    templateUrl: 'app/games/competition-type-list.tpl.html',
+                    controller: 'CompetitionTypeListController',
+                    data: { pageTitle: 'Competition types' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
+                }).state('competition-type-add', {
+                    url: '/competition-type/add',
+                    templateUrl: 'app/games/competition-type-add.tpl.html',
+                    controller: 'CompetitionTypeAddController',
+                    data: { pageTitle: 'Add competition type' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
                 }).state('game-details', {
                     url: '/game/details/:id',
                     templateUrl: 'app/games/game-details.tpl.html',
@@ -94,8 +116,8 @@ Playground.
             $rootScope.ShowTitle = true;
             $rootScope.ShowMenu = true;
 
-            $rootScope.IsActive = function (path) {
-                return path === $location.path();
+            $rootScope.IsActive = function (state) {
+                return $state.is(state);
             }
 
             $rootScope.changeLocation = function (path) {

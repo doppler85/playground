@@ -1,4 +1,20 @@
-angular.module("ui.bootstrap", ["ui.bootstrap.modal"]);
+angular.module("ui.bootstrap", ["ui.bootstrap.alert", "ui.bootstrap.modal"]);
+angular.module("ui.bootstrap.alert", []).directive('alert', function () {
+    return {
+        restrict: 'EA',
+        templateUrl: 'app/templates/alert/alert.html',
+        transclude: true,
+        replace: true,
+        scope: {
+            type: '=',
+            close: '&'
+        },
+        link: function (scope, iElement, iAttrs) {
+            scope.closeable = "close" in iAttrs;
+        }
+    };
+});
+
 angular.module('ui.bootstrap.modal', [])
 
 /**

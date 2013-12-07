@@ -1,33 +1,49 @@
-<div class="page-title">
+<div class="page-header">
     <div class="wrapper">
-        <h2>Login</h2>
+        <h1>Login</h1>
     </div>
 </div>
-<div class="last-players">
-    <div class="login-wrapp">
+<div class="row">
+    <div class="span5">
         <div class="alert alert-warning" data-ng-show="authReason">
             {{authReason}}
         </div>
-        <label>Email</label>
-        <input type="email" placeholder="johndoe@gmail.com" data-ng-model="user.email"/>
-        <label>Password</label>
-        <input type="password" placeholder="password" data-ng-model="user.password"/>
-        <label>
-            <input 
-                type="checkbox" 
-                value="user.rememberme" 
-                data-ng-checked="user.rememberMe" 
-                data-ng-click="toggleRememberMe()"/>
-            Remember me
-        </label>
-        <button data-ng-click="login()">login</button>
-        <button data-ng-click="clearForm()">clear</button>
-        <button data-ng-click="cancelLogin()">cancel</button>
-
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Email</label>
+                <div class="controls">
+                    <input type="email" placeholder="johndoe@gmail.com" data-ng-model="user.email" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Password</label>
+                <div class="controls">
+                    <input type="password" placeholder="password" data-ng-model="user.password" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="user.rememberme"
+                            data-ng-checked="user.rememberMe"
+                            data-ng-click="toggleRememberMe()" />
+                        Remember me
+                    </label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" data-ng-click="login()">login</button>
+                    <button class="btn" data-ng-click="clearForm()">clear</button>
+                    <button class="btn" data-ng-click="cancelLogin()">cancel</button>
+                </div>
+            </div>
+        </form>
         <div class="alert alert-error" data-ng-show="authError">
             {{authError}}
         </div>
-
         <pre>
             {{user}}
         </pre>
