@@ -32,7 +32,10 @@ namespace Playground.Web.Controllers
         public List<GameCompetitionType> AvailableCompetitionTypes(int id)
         {
             List<GameCompetitionType> retVal = new List<GameCompetitionType>();
-            IQueryable<CompetitionType> availableCompetitionTypes = Uow.CompetitionTypes.GetAvailableByGameId(id);
+            IQueryable<CompetitionType> availableCompetitionTypes = Uow.CompetitionTypes
+                .GetAll()
+                .Where(ct => !ct.Games.Any(g => g.GameID == id))
+                .Distinct();
             foreach (CompetitionType ct in availableCompetitionTypes)
             {
                 retVal.Add(new GameCompetitionType()
@@ -83,7 +86,7 @@ namespace Playground.Web.Controllers
                 Uow.GameCompetitionTypes.Add(ct);
             }
 
-            Uow.Games.Update(game);
+            Uow.Games.Update(game, game.GameID);
 
             Uow.Commit();
 

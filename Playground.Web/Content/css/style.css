@@ -9,3 +9,7 @@
 td .img-holder {
     float:left;
 }
+
+.table td.winner {
+    background-color: #D9EDF7;
+}

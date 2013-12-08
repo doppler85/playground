@@ -275,6 +275,7 @@
     <Content Include="app\user\user-status.js" />
     <Content Include="app\user\user-status.tpl.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\assets\css\bootstrap.css" />
     <Content Include="Content\assets\css\style.css" />
     <Content Include="Content\assets\img\bg_direction_nav.png" />
     <Content Include="Content\assets\img\content\dara-bubamara.png" />

@@ -15,12 +15,7 @@ namespace Playground.Data
     {
         public GameCompetitionTypeRepository(DbContext context) : base(context) { }
 
-        public override GameCompetitionType GetById(int id)
-        {
-            throw new InvalidOperationException("Cannot return a single GameCompetitionType object by single id value.");
-        }
-
-        public override GameCompetitionType GetById(long id)
+        public override GameCompetitionType GetById(object id)
         {
             throw new InvalidOperationException("Cannot return a single GameCompetitionType object by single id value.");
         }
@@ -37,7 +32,6 @@ namespace Playground.Data
 
         public IQueryable<GameCompetitionType> GetAvailableByGameId(int id)
         {
-            
             return DbSet.Include("CompetitionType").Where(gc => gc.GameID != id);
         }
 

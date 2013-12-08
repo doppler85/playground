@@ -22,7 +22,16 @@ namespace Playground.Web.Controllers
         [ActionName("getplayers")]
         public List<Player> GetPlayers()
         {
-            throw new NotImplementedException();
+            User currentUser = Uow.Users.GetUserByEmail(User.Identity.Name);
+            List<Player> players = Uow.Competitors
+                                        .GetAll(p => p.Game)
+                                        .OfType<Player>()
+                                        .Where(p => p.UserID == currentUser.UserID)
+                                        .OrderBy(p => p.Game.Title)
+                                        .ThenBy(p => p.Name)
+                                        .ToList();
+
+            return players;
         }
 
         public HttpResponseMessage AddPlayer()
@@ -44,7 +53,16 @@ namespace Playground.Web.Controllers
         [ActionName("getteams")]
         public List<Team> GetTeams()
         {
-            throw new NotImplementedException();
+            User currentUser = Uow.Users.GetUserByEmail(User.Identity.Name);
+            List<Team> teams = Uow.Competitors
+                                        .GetAll(p => p.Game)
+                                        .OfType<Team>()
+                                        .Where(t => t.Players.Any(p => p.PlayerID == currentUser.UserID))
+                                        .Distinct()
+                                        .OrderBy(t => t.Game.Title)
+                                        .ThenBy(t => t.Name)
+                                        .ToList();
+            return teams;
         }
 
         public HttpResponseMessage AddTeam()
@@ -60,6 +78,49 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage DeleteTeam()
         {
             throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        [ActionName("gettmatches")]
+        public List<Match> GetMatches(int count)
+        {
+            User currentUser = Uow.Users.GetUserByEmail(User.Identity.Name);
+            List<long> teamsIds = Uow.Competitors
+                                        .GetAll()
+                                        .OfType<Team>()
+                                        .Where(t => t.Players.Any(p => p.PlayerID == currentUser.UserID))
+                                        .Select(t => t.CompetitorID)
+                                        .Distinct()
+                                        .ToList();
+            List<long> playerIds = Uow.Competitors
+                                        .GetAll()
+                                        .OfType<Player>()
+                                        .Where(p => p.UserID == currentUser.UserID)
+                                        .Select(p => p.CompetitorID)
+                                        .ToList();
+
+            List<long> ids = teamsIds.Concat(playerIds).ToList();
+
+            List<Match> matches = Uow.Matches
+                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                        .Where(m => m.Scores
+                                        .Any(s => ids.Contains(s.CompetitorID)))
+                                        .OrderByDescending(s => s.Date)
+                                        .Take(count)
+                                        .ToList();
+
+            List<long> competitorIds = matches
+                .SelectMany(m => m.Scores)
+                .ToList()
+                .Select(s => s.CompetitorID)
+                .ToList();
+            
+            List<Competitor> competitors = Uow.Competitors
+                .GetAll()
+                .Where(c => competitorIds.Contains(c.CompetitorID))
+                .ToList();
+            
+            return matches;
         }
     }
 }

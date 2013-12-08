@@ -21,7 +21,7 @@ namespace Playground.Web.Controllers
         [HttpGet]
         public List<GameCategory> Get()
         {
-            return Uow.GameCategories.GetAll("Games").OrderBy(gc => gc.Title).ToList();
+            return Uow.GameCategories.GetAll(p => p.Games).OrderBy(gc => gc.Title).ToList();
         }
 
         // // api/gamecategory/5

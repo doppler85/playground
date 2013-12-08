@@ -5,11 +5,89 @@
 <div class="row">
     <div class="span12">
         <h3>My pleya's</h3>
+        <table class="table">
+            <tr>
+                <th>
+                    Game
+                </th>
+                <th>
+                    Player nick
+                </th>
+                <th>Creation date</th>
+                <th></th>
+            </tr>
+            <tr data-ng-repeat="player in players">
+                <td data-ng-bind="player.game.title"></td>
+                <td data-ng-bind="player.name"></td>
+                <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="deletePlayer(player, $index);">delete</button>
+                </td>
+            </tr>
+         </table>
     </div>
     <div class="span12">
         <h3>My team's</h3>
+        <table class="table">
+            <tr>
+                <th>
+                    Game
+                </th>
+                <th>
+                    Team nick
+                </th>
+                <th>Creation date</th>
+                <th></th>
+            </tr>
+            <tr data-ng-repeat="team in teams">
+                <td data-ng-bind="team.game.title"></td>
+                <td data-ng-bind="team.name"></td>
+                <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="deleteTeam(team, $index);">delete</button>
+                </td>
+            </tr>
+         </table>
     </div>
     <div class="span12">
         <h3>My matches's</h3>
+        <table class="table">
+            <tr>
+                <th>
+                    Game
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Competitor
+                </th>
+                <th>
+                    Score
+                </th>
+                <th>
+                    Status
+                </th>
+            </tr>
+            <tbody data-ng-repeat="match in matches">
+                <tr data-ng-repeat="score in match.scores">
+                    <td>
+                        {{$index == 0 ? match.game.title : ''}}
+                    </td>
+                    <td>
+                        {{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
+                    <td data-ng-class="{winner : score.competitorID == match.winnerID}">
+                        {{score.competitor.name}}
+                    </td>
+                    <td>
+                        {{score.score}}
+                    </td>
+                    <td>
+                        {{$index == 0 ? matchStatuses[match.status] : ''}}
+                    </td>
+                </tr>
+            </tbody>
+         </table>
     </div>
 </div>

@@ -20,7 +20,15 @@ var Playground = angular.module('Playground', [
 
 Playground.constant('settingss', {
 }).constant('enums', {
-    competitionType: { 0: 'Individual', 1: 'Team' }
+    competitionType: {
+        0: 'Individual',
+        1: 'Team'
+    },
+    matchStatus: {
+        0: 'Submited',
+        1: 'Confirmed',
+        2: 'Invalid'
+    },
 });
 
 Playground.

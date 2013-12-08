@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,18 +28,28 @@ namespace Playground.Data
             return DbSet;
         }
 
-        public virtual IQueryable<T> GetAll(string include)
+        public virtual IQueryable<T> GetAll(params Expression<Func<T, object>>[] includeExpressions)
         {
-            return DbSet.Include(include);
+            return includeExpressions.Aggregate<Expression<Func<T, object>>, IQueryable<T>>
+               (DbSet, (current, expression) => current.Include(expression));
         }
 
-        public virtual T GetById(int id)
+        public virtual T GetById(object id)
         {
             return DbSet.Find(id);
         }
 
-        public virtual T GetById(long id)
+        public virtual T GetById(object id, 
+            Expression<Func<T, bool>> keyFunction, 
+            params Expression<Func<T, object>>[] includeExpressions)
         {
+            if (includeExpressions.Any())
+            {
+                var set = includeExpressions.Aggregate<Expression<Func<T, object>>, IQueryable<T>>
+                                (DbSet, (current, expression) => current.Include(expression));
+
+                return set.SingleOrDefault(keyFunction);
+            }
             return DbSet.Find(id);
         }
 
@@ -55,23 +66,13 @@ namespace Playground.Data
             }
         }
 
-        private object GetPrimaryKey(DbEntityEntry entry)
-        {
-            var myObject = entry.Entity;
-            var property =
-                myObject.GetType()
-                     .GetProperties().FirstOrDefault(prop => Attribute.IsDefined(prop, typeof(KeyAttribute)));
-            return property.GetValue(myObject, null);
-        }
-
-        public virtual void Update(T entity) 
+        public virtual void Update(T entity, params object[] keyValues)
         {
             DbEntityEntry dbEntityEntry = DbContext.Entry(entity);
-            var key = GetPrimaryKey(dbEntityEntry);
 
             if (dbEntityEntry.State == EntityState.Detached)
             {
-                var attachetEntity = DbSet.Find(key);
+                var attachetEntity = DbSet.Find(keyValues);
                 if (attachetEntity != null)
                 {
                     var attachedEntry = DbContext.Entry(attachetEntity);

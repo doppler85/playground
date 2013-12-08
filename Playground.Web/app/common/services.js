@@ -38,7 +38,33 @@ factory('CompetitionTypeResource', ['$resource', function (resource) {
         all: { method: 'GET', isArray: true },
         add: { method: 'POST' }
     });
-}]);
+}]).
+factory('UserResource', ['$resource', function (resource) {
+    return resource('api/user/:actionname/:id', {}, {
+        allPlayers: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'getplayers'
+            }
+        },
+        allTeams: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'getteams'
+            }
+        },
+        allMatches: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'gettmatches'
+            }
+        }
+
+    });
+}]);;
 // examples
 /*
 factory('ChatResource', ['$resource', function (resource) {

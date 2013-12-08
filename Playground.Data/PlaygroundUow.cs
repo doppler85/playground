@@ -30,14 +30,29 @@ namespace Playground.Data
             get { return GetRepo<IGameCompetitionTypeRepository>(); }
         }
 
-        public ICompetitionTypeRepository CompetitionTypes
+        public IRepository<CompetitionType> CompetitionTypes
         {
-            get { return GetRepo<ICompetitionTypeRepository>(); }
+            get { return GetStandardRepo<CompetitionType>(); }
         }
 
         public IUserRepository Users
         {
             get { return GetRepo<IUserRepository>(); }
+        }
+
+        public IRepository<Competitor> Competitors
+        {
+            get { return GetStandardRepo<Competitor>(); }
+        }
+
+        public IRepository<Match> Matches
+        {
+            get { return GetStandardRepo<Match>(); }
+        }
+
+        public IRepository<CompetitorScore> Scores
+        {
+            get { return GetStandardRepo<CompetitorScore>(); }
         }
 
         public PlaygroundUow(IRepositoryProvider repositoryProvider)
