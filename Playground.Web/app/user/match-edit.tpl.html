@@ -10,15 +10,31 @@
                 <label class="control-label">Game</label>
                 <div class="controls">
                     <select 
-                        data-ng-model="selectedGame" 
-                        data-ng-change="gameChanged()"
-                        data-ng-options="game as game | gamefull for game in games" />
+                        data-ng-model="selectedCategory" 
+                        data-ng-change="categoryChanged()"
+                        data-ng-options="category as category.title for category in categories" />
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">My pleya</label>
+                <label class="control-label">My competitors</label>
                 <div class="controls">
-                    <input type="text" data-ng-model="myplayer.name" data-ng-disabled="true">
+                    <select 
+                        data-ng-model="selectedCompetitor" 
+                        data-ng-change="competitorChanged()"
+                        data-ng-options="competitor as competitor.name for competitor in myCompetitors" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Games</label>
+                <div class="controls" data-ng-repeat="game in games">
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            value="game.gameid" 
+                            data-ng-checked="game.checked"
+                            data-ng-click="toggleGame(game)"/> 
+                        {{game.game.title}} 
+                    </label>
                 </div>
             </div>
             <div class="control-group">
@@ -63,6 +79,6 @@
         </table>
     </div>
     <div class="span12">
-        <pre>{{team | json}}</pre>
+        <pre>{{match | json}}</pre>
     </div>
 </div>

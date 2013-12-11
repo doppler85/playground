@@ -113,6 +113,13 @@ factory('UserResource', ['$resource', function (resource) {
             params: {
                 actionname: 'mycompeatinggames'
             }
+        },
+        mycompeatitors: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'mycompeatitors'
+            }
         }
     });
 }]);;

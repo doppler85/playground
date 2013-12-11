@@ -21,8 +21,13 @@ angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap
     'UserResource',
     'enums',
     function ($scope, $stateParams, $rootScope, $state, UserResource, enums) {
+        $scope.match = {};
         $scope.games = [];
-        $scope.selectedGame = null;
+        $scope.categories = [];
+        $scope.selectedCategory = null;
+
+        $scope.myCompetitors = [];
+        $scope.selectedCompetitor = null;
 
         /*
         $scope.myplayer = {};
@@ -58,9 +63,37 @@ angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap
 
         $scope.loadGames = function () {
             UserResource.mycompeatinggames(function (data, status, headers, config) {
-                $scope.games = data;
+                $scope.categories = data;
             });
         };
+
+        $scope.categoryChanged = function () {
+            if ($scope.selectedCategory != null) {
+                $scope.games = [];
+                UserResource.mycompeatitors({ gameCategoryID: $scope.selectedCategory.gameCategoryID },
+                    function (data, status, headers, config) {
+                        $scope.myCompetitors = data;
+                    },
+                    function () {
+                        $scope.myCompetitors = [];
+                    }
+                );
+            }
+            else {
+                $scope.games = [];
+                $scope.availablePlayers = [];
+                $scope.selectedPlayers = [];
+            }
+        }
+
+        $scope.competitorChanged = function () {
+            if ($scope.selectedCompetitor != null) {
+                $scope.games = $scope.selectedCompetitor.games;
+            }
+            else {
+                $scope.games = [];
+            }
+        }
 
         /*
         $scope.loadMyPlayers = function () {

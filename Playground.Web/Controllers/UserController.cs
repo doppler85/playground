@@ -290,17 +290,87 @@ namespace Playground.Web.Controllers
         // api/user/mycompeatinggames
         [HttpGet]
         [ActionName("mycompeatinggames")]
-        public List<Game> MyCompeatingGames()
+        public List<GameCategory> MyCompeatingGames()
         {
-            throw new NotFiniteNumberException("competitor - game relation changed");
             User currentUser = GetUserByEmail(User.Identity.Name);
-            //List<Competitor> allMycompetitors = new List<Competitor>();
-            //allMycompetitors.AddRange(GetPlayers());
-            //allMycompetitors.AddRange(GetTeams());
+            List<Competitor> allMycompetitors = new List<Competitor>();
+            allMycompetitors.AddRange(GetPlayers());
+            allMycompetitors.AddRange(GetTeams());
 
-            //List<Game> games = allMycompetitors.Select(g => g.Game).Distinct().ToList();
+            List<int> gameIds = allMycompetitors
+                .SelectMany(c => c.Games)
+                .ToList()
+                .Select(g => g.GameID)
+                .Distinct()
+                .ToList();
 
-            //return games;
+            List<Game> games = Uow.Games
+                .GetAll(g => g.Category)
+                .Where(g => gameIds.Contains(g.GameID))
+                .ToList();
+
+            List<GameCategory> categories = games
+                .Select(g => g.Category)
+                .Distinct()
+                .ToList();
+
+            return categories;
         }
+
+        // api/user/mycompeatinggames
+        [HttpGet]
+        [ActionName("mycompeatitors")]
+        public List<Competitor> MyCompetitors(int gameCategoryID)
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            List<Competitor> allMycompetitors = new List<Competitor>();
+
+            List<Player> players = Uow.Competitors
+                                        .GetAll(p => p.Games)
+                                        .OfType<Player>()
+                                        .Where(p => p.UserID == currentUser.UserID && 
+                                                    p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
+                                        .OrderBy(p => p.Name)
+                                        .ToList();
+
+            List<Team> teams = Uow.Competitors
+                                        .GetAll(t => t.Games)
+                                        .OfType<Team>()
+                                        .Where(t => t.Players.Any(p => p.Player.UserID == currentUser.UserID) && 
+                                                    t.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
+                                        .Distinct()
+                                        .OrderBy(t => t.Name)
+                                        .ToList();
+
+            foreach (Player p in players)
+            {
+                allMycompetitors.Add(p);
+            }
+
+            foreach (Team t in teams)
+            {
+                allMycompetitors.Add(t);
+            }
+
+            List<int> gameIds = allMycompetitors
+                .SelectMany(p => p.Games)
+                .ToList()
+                .Select(g => g.GameID)
+                .ToList();
+
+            List<Game> games = Uow.Games
+                                    .GetAll()
+                                    .Where(g => gameIds.Contains(g.GameID))
+                                    .ToList();
+
+            //// fetch game categories for players
+            //List<Game> games = Uow.Games
+            //    .GetAll(g => g.Category)
+            //    .Where(g => gameIds.Contains(g.GameID))
+            //    .ToList();
+
+            return allMycompetitors;
+        }
+
     }
 }
