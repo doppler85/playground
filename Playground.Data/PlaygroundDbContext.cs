@@ -32,6 +32,7 @@ namespace Playground.Data
             modelBuilder.Configurations.Add(new TeamPlayerConfiguration());
             modelBuilder.Configurations.Add(new MatchConfiguration());
             modelBuilder.Configurations.Add(new GameCompetitionTypeConfiguration());
+            modelBuilder.Configurations.Add(new GameCompetitorConfiguration());
         }
 
 
@@ -46,5 +47,6 @@ namespace Playground.Data
         public DbSet<AutomaticMatchConfirmation> AutomaticMatchConfirmations { get; set; }
         public DbSet<CompetitorScore> CompetitorScores { get; set; }
         public DbSet<TeamPlayer> TeamPlayers { get; set; }
+        public DbSet<GameCompetitor> GameCompetitors { get; set; }
     }
 }

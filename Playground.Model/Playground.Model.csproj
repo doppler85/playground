@@ -46,6 +46,7 @@
     <Compile Include="GameCompetitionType.cs" />
     <Compile Include="GameCategory.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameCompetitor.cs" />
     <Compile Include="Match.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

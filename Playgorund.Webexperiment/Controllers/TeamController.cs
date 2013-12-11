@@ -104,39 +104,40 @@ namespace Playgorund.Webexperiment.Controllers
         [Authorize]
         public ActionResult AddPlayer(long teamID)
         {
-            Team team = db.Competitors
-                .OfType<Team>()
-                .FirstOrDefault(t => t.CompetitorID == teamID);
+            throw new NotImplementedException("competitor - game relation changed");
+            //Team team = db.Competitors
+            //    .OfType<Team>()
+            //    .FirstOrDefault(t => t.CompetitorID == teamID);
 
-            var playerIds = team.Players.Select(p => p.PlayerID).ToList();
+            //var playerIds = team.Players.Select(p => p.PlayerID).ToList();
 
-            var query = (
-                    from  gamePlayers in db.Competitors.OfType<Player>()
-                    where
-                        gamePlayers.GameID == team.GameID &&
-                        !playerIds.Contains(gamePlayers.CompetitorID)
-                    select gamePlayers
-            );
+            //var query = (
+            //        from  gamePlayers in db.Competitors.OfType<Player>()
+            //        where
+            //            gamePlayers.GameID == team.GameID &&
+            //            !playerIds.Contains(gamePlayers.CompetitorID)
+            //        select gamePlayers
+            //);
 
-            List<Player> availablePlayers = query.ToList();
+            //List<Player> availablePlayers = query.ToList();
 
-            List<SelectListItem> availablePlayersList = new List<SelectListItem>();
-            foreach (Player p in availablePlayers)
-            {
-                availablePlayersList.Add(new SelectListItem()
-                {
-                    Text = String.Format("{0} ({1} {2})", p.Name, p.User.FirstName, p.User.LastName),
-                    Value = p.CompetitorID.ToString()
-                });
-            }
+            //List<SelectListItem> availablePlayersList = new List<SelectListItem>();
+            //foreach (Player p in availablePlayers)
+            //{
+            //    availablePlayersList.Add(new SelectListItem()
+            //    {
+            //        Text = String.Format("{0} ({1} {2})", p.Name, p.User.FirstName, p.User.LastName),
+            //        Value = p.CompetitorID.ToString()
+            //    });
+            //}
 
-            ViewBag.AvailablePlayers = availablePlayersList;
-            TeamPlayer teamPlayer = new TeamPlayer() 
-            {
-                Team = team
-            };
+            //ViewBag.AvailablePlayers = availablePlayersList;
+            //TeamPlayer teamPlayer = new TeamPlayer() 
+            //{
+            //    Team = team
+            //};
 
-            return View(teamPlayer);
+            //return View(teamPlayer);
         }
 
         //

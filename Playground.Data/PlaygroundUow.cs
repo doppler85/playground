@@ -45,6 +45,11 @@ namespace Playground.Data
             get { return GetStandardRepo<Competitor>(); }
         }
 
+        public IRepository<GameCompetitor> GameCompetitors
+        {
+            get { return GetStandardRepo<GameCompetitor>(); }
+        }
+
         public IRepository<Match> Matches
         {
             get { return GetStandardRepo<Match>(); }

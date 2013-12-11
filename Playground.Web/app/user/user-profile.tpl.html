@@ -17,7 +17,7 @@
                 <th></th>
             </tr>
             <tr data-ng-repeat="player in players">
-                <td data-ng-bind="player.game.title"></td>
+                <td data-ng-bind="player.games[0].game.category.title"></td>
                 <td data-ng-bind="player.name"></td>
                 <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                 <td>
@@ -42,7 +42,7 @@
                 <th></th>
             </tr>
             <tr data-ng-repeat="team in teams">
-                <td data-ng-bind="team.game.title"></td>
+                <td data-ng-bind="team.games[0].game.category.title"></td>
                 <td data-ng-bind="team.name"></td>
                 <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                 <td>

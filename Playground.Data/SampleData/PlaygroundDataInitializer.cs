@@ -143,9 +143,10 @@ namespace Playground.Data.SampleData
             context.Users.Add(new User()
             {
                 FirstName = "voja",
-                EmailAddress = "voja@gmail.com",
+                EmailAddress = "admin@playground.com",
                 Gender = Gender.Male,
-                LastName = "pankovic"
+                LastName = "pankovic",
+                ExternalUserID = 1
             });
 
             context.Users.Add(new User()
@@ -177,7 +178,7 @@ namespace Playground.Data.SampleData
 
         private void AddPlayers(PlaygroundDbContext context)
         {
-            User userVoja = context.Users.FirstOrDefault(u => u.EmailAddress == "voja@gmail.com");
+            User userVoja = context.Users.FirstOrDefault(u => u.EmailAddress == "admin@playground.com");
             User userAlex = context.Users.FirstOrDefault(u => u.EmailAddress == "alex@gmail.com");
             User userNeven = context.Users.FirstOrDefault(u => u.EmailAddress == "neven@gmail.com");
             User userNemanja = context.Users.FirstOrDefault(u => u.EmailAddress == "nemanja@gmail.com");
@@ -187,7 +188,6 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(new Player()
             {
                 UserID = userVoja.UserID,
-                GameID = game.GameID,
                 CreationDate = DateTime.Now,
                 Name = "Voja Dublefire",
                 Status = CompetitorStatus.Active
@@ -196,7 +196,6 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(new Player()
             {
                 UserID = userAlex.UserID,
-                GameID = game.GameID,
                 CreationDate = DateTime.Now,
                 Name = "Alex Tunderball",
                 Status = CompetitorStatus.Active
@@ -205,7 +204,6 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(new Player()
             {
                 UserID = userNeven.UserID,
-                GameID = game.GameID,
                 CreationDate = DateTime.Now,
                 Name = "Neven Defence Breaker",
                 Status = CompetitorStatus.Active
@@ -214,29 +212,58 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(new Player()
             {
                 UserID = userNemanja.UserID,
-                GameID = game.GameID,
                 CreationDate = DateTime.Now,
                 Name = "Nemanja The Son",
                 Status = CompetitorStatus.Active
             });
 
+            context.SaveChanges();
+
+            // add game competitors
+            Player playerVoja = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "admin@playground.com");
+            Player playerAlex = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "alex@gmail.com");
+            Player playerNeven = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "neven@gmail.com");
+            Player playerNemanja = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "nemanja@gmail.com");
+
+            context.GameCompetitors.Add(new GameCompetitor()
+            {
+                GameID = game.GameID,
+                CompetitorID = playerVoja.CompetitorID
+            });
+
+            context.GameCompetitors.Add(new GameCompetitor()
+            {
+                GameID = game.GameID,
+                CompetitorID = playerAlex.CompetitorID
+            });
+
+            context.GameCompetitors.Add(new GameCompetitor()
+            {
+                GameID = game.GameID,
+                CompetitorID = playerNeven.CompetitorID
+            });
+
+            context.GameCompetitors.Add(new GameCompetitor()
+            {
+                GameID = game.GameID,
+                CompetitorID = playerNemanja.CompetitorID
+            });
 
             context.SaveChanges();
         }
 
         private void AddTeams(PlaygroundDbContext context)
         {
-            Player playerVoja = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "voja@gmail.com" && p.Game.Title == "Foozball");
-            Player playerAlex = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "alex@gmail.com" && p.Game.Title == "Foozball");
-            Player playerNeven = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "neven@gmail.com" && p.Game.Title == "Foozball");
-            Player playerNemanja = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "nemanja@gmail.com" && p.Game.Title == "Foozball");
+            Player playerVoja = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "admin@playground.com");
+            Player playerAlex = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "alex@gmail.com");
+            Player playerNeven = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "neven@gmail.com");
+            Player playerNemanja = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "nemanja@gmail.com");
 
             Game game = context.Games.FirstOrDefault(g => g.Title == "Foozball");
 
             Team teamZakivaci = new Team()
             {
                 Creator = playerVoja.User,
-                GameID = game.GameID,
                 CreationDate = DateTime.Now,
                 Name = "Zabagreli Zakivaci",
                 Status = CompetitorStatus.Active
@@ -257,7 +284,6 @@ namespace Playground.Data.SampleData
             Team teamFurija = new Team()
             {
                 Creator = playerNeven.User,
-                GameID = game.GameID,
                 CreationDate = DateTime.Now,
                 Name = "Crvena Furija",
                 Status = CompetitorStatus.Active
@@ -279,16 +305,31 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(teamFurija);
 
             context.SaveChanges();
+
+            // add game competitors
+            context.GameCompetitors.Add(new GameCompetitor()
+            {
+                GameID = game.GameID,
+                CompetitorID = teamZakivaci.CompetitorID
+            });
+
+            context.GameCompetitors.Add(new GameCompetitor()
+            {
+                GameID = game.GameID,
+                CompetitorID = teamFurija.CompetitorID
+            });
+
+            context.SaveChanges();
         }
 
         private void AddMatches(PlaygroundDbContext context)
         {
-            Player playerVoja = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "voja@gmail.com" && p.Game.Title == "Foozball");
-            Player playerAlex = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "alex@gmail.com" && p.Game.Title == "Foozball");
-            Player playerNeven = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "neven@gmail.com" && p.Game.Title == "Foozball");
-
-            Team teamFurija = context.Competitors.OfType<Team>().FirstOrDefault(t => t.Name == "Crvena Furija" && t.Game.Title == "Foozball");
-            Team teamZakivaci = context.Competitors.OfType<Team>().FirstOrDefault(t => t.Name == "Zabagreli Zakivaci" && t.Game.Title == "Foozball");
+            Player playerVoja = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "admin@playground.com");
+            Player playerAlex = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "alex@gmail.com");
+            Player playerNeven = context.Competitors.OfType<Player>().FirstOrDefault(p => p.User.EmailAddress == "neven@gmail.com");
+            
+            Team teamFurija = context.Competitors.OfType<Team>().FirstOrDefault(t => t.Name == "Crvena Furija");
+            Team teamZakivaci = context.Competitors.OfType<Team>().FirstOrDefault(t => t.Name == "Zabagreli Zakivaci");
 
             Game game = context.Games.FirstOrDefault(g => g.Title == "Foozball");
             CompetitionType competitionSingle = game.CompetitionTypes.FirstOrDefault(ct => ct.CompetitionType.Name == "Single" && ct.CompetitionType.CompetitorType == CompetitorType.Individual).CompetitionType;

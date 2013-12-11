@@ -49,6 +49,7 @@
     <Compile Include="Configurations\CompetitorConfiguration.cs" />
     <Compile Include="Configurations\CompetitorScoreConfiguration.cs" />
     <Compile Include="Configurations\GameCompetitionTypeConfiguration.cs" />
+    <Compile Include="Configurations\GameCompetitorConfiguration.cs" />
     <Compile Include="Configurations\MatchCfiguration.cs" />
     <Compile Include="Configurations\TeamConfiguration.cs" />
     <Compile Include="Configurations\PlayerConfiguration.cs" />

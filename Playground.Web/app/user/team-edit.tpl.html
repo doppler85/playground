@@ -1,0 +1,87 @@
+<div class="page-header">
+    <div class="wrapper">
+        <h1>Team edit</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="span6">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Team nick</label>
+                <div class="controls">
+                    <input type="text" data-ng-model="team.name">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Game</label>
+                <div class="controls">
+                    <select 
+                        data-ng-model="selectedCategory" 
+                        data-ng-change="categoryChanged()"
+                        data-ng-options="category as category.title for category in categories" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">My pleya</label>
+                <div class="controls">
+                    <input type="text" data-ng-model="myplayer.name" data-ng-disabled="true">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Games</label>
+                <div class="controls" data-ng-repeat="game in games">
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            value="game.gameid" 
+                            data-ng-checked="game.checked"
+                            data-ng-click="toggleGame(game)"/> 
+                        {{game.title}} 
+                    </label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" data-ng-click="addTeam()">Save</button>
+                    <button class="btn" data-ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+    </div>
+    <div class="span6">
+        <span data-ng-show="team.players.length > 0">
+            Team members
+        </span>
+        <table class="table">
+            <tr data-ng-repeat="teamPlayer in team.players">
+                <td data-ng-bind="teamPlayer.player | userfull"></td>
+                <td data-ng-bind="teamPlayer.player.name"></td>
+                <td>
+                    <button class="btn btn-primary" 
+                        data-ng-show="teamPlayer.playerID != myplayer.competitorID"
+                        data-ng-click="removePlayer(player, $index)">remove</button>
+                </td>
+            </tr>
+        </table>
+        <form class="form-inline">
+            <input type="text" data-ng-model="searchQuery" placeholder="Search players">
+            <button class="btn" data-ng-disabled="!selectedCategory.gameCategoryID" data-ng-click="searchPlayers()">Search</button>
+        </form>
+        <span data-ng-show="availablePlayers.length > 0">
+            Results
+        </span>
+        <table class="table">
+            <tr data-ng-repeat="player in availablePlayers">
+                <td data-ng-bind="player | userfull"></td>
+                <td data-ng-bind="player.name"></td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="addPlayer(player, $index)">add</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="span12">
+        <pre>{{team | json}}</pre>
+    </div>
+</div>

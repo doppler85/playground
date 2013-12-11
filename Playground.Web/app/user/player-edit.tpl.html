@@ -1,0 +1,50 @@
+<div class="page-header">
+    <div class="wrapper">
+        <h1>Player edit</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="span6">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Player nick</label>
+                <div class="controls">
+                    <input type="text" data-ng-model="player.name">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Game</label>
+                <div class="controls">
+                    <select 
+                        data-ng-model="selectedCategory" 
+                        data-ng-change="categoryChanged()"
+                        data-ng-options="category as category.title for category in categories" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Games</label>
+                <div class="controls" data-ng-repeat="game in games">
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            value="game.gameid" 
+                            data-ng-checked="game.checked"
+                            data-ng-click="toggleGame(game)"/> 
+                        {{game.title}} 
+                    </label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" data-ng-click="addPlayer()">Save</button>
+                    <button class="btn" data-ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+    </div>
+    <div class="span12">
+        <pre>{{player | json}}</pre>
+        <pre>{{games | json}}</pre>
+    </div>
+</div>

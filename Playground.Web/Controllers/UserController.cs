@@ -32,12 +32,23 @@ namespace Playground.Web.Controllers
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<Player> players = Uow.Competitors
-                                        .GetAll(p => p.Game, p => p.Game.Category)
+                                        .GetAll(p => p.Games)
                                         .OfType<Player>()
                                         .Where(p => p.UserID == currentUser.UserID)
-                                        .OrderBy(p => p.Game.Title)
-                                        .ThenBy(p => p.Name)
+                                        .OrderBy(p => p.Name)
                                         .ToList();
+
+            List<int> gameIds = players
+                .SelectMany(p => p.Games)
+                .ToList()
+                .Select(g => g.GameID)
+                .ToList();
+
+            // fetch game categories for players
+            List<Game> games = Uow.Games
+                .GetAll(g => g.Category)
+                .Where(g => gameIds.Contains(g.GameID))
+                .ToList();
 
             return players;
         }
@@ -65,7 +76,7 @@ namespace Playground.Web.Controllers
         // api/user/getindividualgames
         [HttpGet]
         [ActionName("individualgames")]
-        public List<Game> GetIndividualGames()
+        public List<GameCategory> GetIndividualGames()
         {
             List<Game> games = Uow.Games
                                 .GetAll(g => g.Category)
@@ -73,7 +84,13 @@ namespace Playground.Web.Controllers
                                 .OrderBy(g => g.Category.Title)
                                 .ThenBy(g => g.Title)
                                 .ToList();
-            return games;
+
+            List<GameCategory> categories = games
+                .Select(g => g.Category)
+                .Distinct()
+                .ToList();
+            
+            return categories;
         }
 
         public HttpResponseMessage UpdatePlayer()
@@ -89,11 +106,20 @@ namespace Playground.Web.Controllers
                 .GetAll()
                 .Where(p => p.TeamID == id)
                 .ToList();
-
             foreach (TeamPlayer player in players)
             {
-                Uow.TeamPlayers.Delete(tp => tp.PlayerID == player.PlayerID && tp.TeamID == player.TeamID);
+                Uow.TeamPlayers.Delete(player);
             }
+
+            List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
+                .GetAll()
+                .Where(gc => gc.CompetitorID == id)
+                .ToList();
+            foreach (GameCompetitor gameCompetitor in gameCompetitors)
+            {
+                Uow.GameCompetitors.Delete(gameCompetitor);
+            }
+
             
             Uow.Competitors.Delete(id);
             Uow.Commit();
@@ -108,13 +134,25 @@ namespace Playground.Web.Controllers
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<Team> teams = Uow.Competitors
-                                        .GetAll(p => p.Game, p => p.Game.Category)
+                                        .GetAll(t => t.Games)
                                         .OfType<Team>()
                                         .Where(t => t.Players.Any(p => p.Player.UserID == currentUser.UserID))
                                         .Distinct()
-                                        .OrderBy(t => t.Game.Title)
-                                        .ThenBy(t => t.Name)
+                                        .OrderBy(t => t.Name)
                                         .ToList();
+            
+            List<int> gameIds = teams
+                .SelectMany(t => t.Games)
+                .ToList()
+                .Select(g => g.GameID)
+                .ToList();
+
+            // fetch game categories for players
+            List<Game> games = Uow.Games
+                .GetAll(g => g.Category)
+                .Where(g => gameIds.Contains(g.GameID))
+                .ToList();
+            
             return teams;
         }
 
@@ -145,7 +183,7 @@ namespace Playground.Web.Controllers
         // api/user/teamgames
         [HttpGet]
         [ActionName("teamgames")]
-        public List<Game> GetTeamGames()
+        public List<GameCategory> GetTeamGames()
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<Game> games = Uow.Games
@@ -156,19 +194,24 @@ namespace Playground.Web.Controllers
                                 .ThenBy(g => g.Title)
                                 .ToList();
 
-            return games;
+            List<GameCategory> categories = games
+                .Select(g => g.Category)
+                .Distinct()
+                .ToList();
+
+            return categories;
         }
 
         // api/user/myteamplayer
         [HttpGet]
         [ActionName("myteamplayer")]
-        public Player MyTeamPlayer(int gameID)
+        public Player MyTeamPlayer(int gameCategoryID)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             Player player = Uow.Competitors
                 .GetAll()
                 .OfType<Player>()
-                .Where(p => p.GameID == gameID &&
+                .Where(p => p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID) &&
                     p.User.UserID == currentUser.UserID)
                 .FirstOrDefault();
 
@@ -178,21 +221,20 @@ namespace Playground.Web.Controllers
         // api/user/searchplayers
         [HttpGet]
         [ActionName("searchplayers")]
-        public List<Player> SearchPlayers(int gameID, string search) {
+        public List<Player> SearchPlayers(int gameCategoryID, string search) {
             if (search == null)
             {
                 search = String.Empty;
-
             }
+
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<Player> players = Uow.Competitors
                 .GetAll(p => ((Player)p).User)
                 .OfType<Player>()
-                .Where(p => p.GameID == gameID && 
-                            p.User.UserID != currentUser.UserID && 
+                .Where(p => p.Games.Any(g => g.Game.Category.GameCategoryID == gameCategoryID) &&
+                            p.User.UserID != currentUser.UserID &&
                             (p.Name.Contains(search) || p.User.FirstName.Contains(search) || p.User.LastName.Contains(search)))
                 .ToList();
-            
 
             return players;
         }
@@ -250,14 +292,15 @@ namespace Playground.Web.Controllers
         [ActionName("mycompeatinggames")]
         public List<Game> MyCompeatingGames()
         {
+            throw new NotFiniteNumberException("competitor - game relation changed");
             User currentUser = GetUserByEmail(User.Identity.Name);
-            List<Competitor> allMycompetitors = new List<Competitor>();
-            allMycompetitors.AddRange(GetPlayers());
-            allMycompetitors.AddRange(GetTeams());
+            //List<Competitor> allMycompetitors = new List<Competitor>();
+            //allMycompetitors.AddRange(GetPlayers());
+            //allMycompetitors.AddRange(GetTeams());
 
-            List<Game> games = allMycompetitors.Select(g => g.Game).Distinct().ToList();
+            //List<Game> games = allMycompetitors.Select(g => g.Game).Distinct().ToList();
 
-            return games;
+            //return games;
         }
     }
 }

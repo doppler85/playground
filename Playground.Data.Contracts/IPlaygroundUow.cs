@@ -18,6 +18,7 @@ namespace Playground.Data.Contracts
         IRepository<Game> Games { get; }
         IRepository<User> Users { get; }
         IRepository<Competitor> Competitors { get; }
+        IRepository<GameCompetitor> GameCompetitors { get; }
         IRepository<Match> Matches { get; }
         IRepository<CompetitorScore> Scores { get; }
         IRepository<TeamPlayer> TeamPlayers { get; }
