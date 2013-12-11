@@ -12,6 +12,8 @@ function ($scope, $stateParams, $rootScope, security, UserResource, enums) {
     $scope.teams = {};
     $scope.matches = {};
     $scope.matchStatuses = enums.matchStatus;
+    $scope.playerAlerts = [];
+    $scope.teamAlerts = [];
 
     $scope.$watch(function () {
         $scope.isAuthenticated = security.isAuthenticated();
@@ -43,6 +45,23 @@ function ($scope, $stateParams, $rootScope, security, UserResource, enums) {
             $scope.matches = data;
         });
     }
+
+    $scope.deleteCompetitor = function (competitor, collection, index, msgCollection) {
+        UserResource.deletecompetitor({ id: competitor.competitorID },
+            function (data, status, headers, config) {
+                collection.splice(index, 1);
+            }, function () {
+                msgCollection.push({ type:'error', msg:'Error deleting competitor: ' + competitor.name });
+            });
+    };
+
+    $scope.addAlert = function (collection, msg) {
+        collection.push(msg);
+    };
+
+    $scope.closeAlert = function (collection, index) {
+        collection.splice(index, 1);
+    };
 
     $scope.loadPlayers();
     $scope.loadTeams();

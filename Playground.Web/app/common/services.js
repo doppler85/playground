@@ -45,24 +45,75 @@ factory('UserResource', ['$resource', function (resource) {
             method: 'GET',
             isArray: true,
             params: {
-                actionname: 'getplayers'
+                actionname: 'players'
             }
         },
         allTeams: {
             method: 'GET',
             isArray: true,
             params: {
-                actionname: 'getteams'
+                actionname: 'teams'
             }
         },
         allMatches: {
             method: 'GET',
             isArray: true,
             params: {
-                actionname: 'gettmatches'
+                actionname: 'matches'
+            }
+        },
+        individualGames: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'individualgames'
+            }
+        },
+        teamGames: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'teamgames'
+            }
+        },
+        myteamplayer: {
+            method: 'GET',
+            params: {
+                actionname: 'myteamplayer'
+            }
+        },
+        searchplayers: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'searchplayers'
+            }
+        },
+        addPlayer: {
+            method: 'POST',
+            params: {
+                actionname: 'addplayer'
+            }
+        },
+        addTeam: {
+            method: 'POST',
+            params: {
+                actionname: 'addteam'
+            }
+        },
+        deletecompetitor: {
+            method: 'DELETE',
+            params: {
+                actionname: 'delete'
+            }
+        },
+        mycompeatinggames: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'mycompeatinggames'
             }
         }
-
     });
 }]);;
 // examples

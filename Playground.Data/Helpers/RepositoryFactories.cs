@@ -17,8 +17,7 @@ namespace Playground.Data.Helpers
             return new Dictionary<Type, Func<DbContext, object>> 
             { 
                 // add facty methods for creating non standard repositories
-                {typeof(IGameCompetitionTypeRepository), dbContext =>  new GameCompetitionTypeRepository(dbContext)},
-                {typeof(IUserRepository), dbContext =>  new UserRepository(dbContext)}
+                //{typeof(IGameCompetitionTypeRepository), dbContext =>  new GameCompetitionTypeRepository(dbContext)},
                 // {typeof(IAttendanceRepository), dbContext => new AttendanceRepository(dbContext)},
                 // { typeof(Ig
             };

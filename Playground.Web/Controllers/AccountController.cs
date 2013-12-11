@@ -100,7 +100,9 @@ namespace Playground.Web.Controllers
             UserProfile retVal = GetUserProfile(userName);
             if (retVal != null)
             {
-                Playground.Model.User playgroundUser = Uow.Users.GetUserByExternalId(retVal.UserId);
+                Playground.Model.User playgroundUser = Uow.Users
+                    .GetAll()
+                    .FirstOrDefault(u => u.ExternalUserID == retVal.UserId);
                 if (playgroundUser != null)
                 {
                     retVal.UserName = String.Format("{0} {1}", playgroundUser.FirstName, playgroundUser.LastName);

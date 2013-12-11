@@ -23,7 +23,7 @@ angular.module('Playground.game-list', ['ngResource', 'ui.router']).
             $scope.newGame.gameCategoryID = gameCategory.gameCategoryID;
 
             GameResource.add($scope.newGame, function (data, status, headers, config) {
-                $state.transitionTo('game-edit', { id: data.gameID });
+                $state.go('game-edit', { id: data.gameID });
             });
         };
     }]).

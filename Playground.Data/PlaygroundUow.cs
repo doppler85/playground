@@ -25,9 +25,9 @@ namespace Playground.Data
             get { return GetStandardRepo<Game>(); }
         }
 
-        public IGameCompetitionTypeRepository GameCompetitionTypes
+        public IRepository<GameCompetitionType> GameCompetitionTypes
         {
-            get { return GetRepo<IGameCompetitionTypeRepository>(); }
+            get { return GetStandardRepo<GameCompetitionType>(); }
         }
 
         public IRepository<CompetitionType> CompetitionTypes
@@ -35,9 +35,9 @@ namespace Playground.Data
             get { return GetStandardRepo<CompetitionType>(); }
         }
 
-        public IUserRepository Users
+        public IRepository<User> Users
         {
-            get { return GetRepo<IUserRepository>(); }
+            get { return GetStandardRepo<User>(); }
         }
 
         public IRepository<Competitor> Competitors
@@ -53,6 +53,11 @@ namespace Playground.Data
         public IRepository<CompetitorScore> Scores
         {
             get { return GetStandardRepo<CompetitorScore>(); }
+        }
+
+        public IRepository<TeamPlayer> TeamPlayers
+        {
+            get { return GetStandardRepo<TeamPlayer>(); }
         }
 
         public PlaygroundUow(IRepositoryProvider repositoryProvider)

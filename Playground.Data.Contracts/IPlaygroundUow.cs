@@ -14,12 +14,15 @@ namespace Playground.Data.Contracts
         // Repositories
         IRepository<GameCategory> GameCategories { get; }
         IRepository<CompetitionType> CompetitionTypes { get; }
+        IRepository<GameCompetitionType> GameCompetitionTypes { get; }
         IRepository<Game> Games { get; }
+        IRepository<User> Users { get; }
         IRepository<Competitor> Competitors { get; }
         IRepository<Match> Matches { get; }
         IRepository<CompetitorScore> Scores { get; }
+        IRepository<TeamPlayer> TeamPlayers { get; }
         
-        IGameCompetitionTypeRepository GameCompetitionTypes { get; }
-        IUserRepository Users { get; }
+        // Custom repositories
+        // IGameCompetitionTypeRepository GameCompetitionTypes { get; }
     }
 }

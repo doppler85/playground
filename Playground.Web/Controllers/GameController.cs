@@ -16,13 +16,24 @@ namespace Playground.Web.Controllers
             this.Uow = uow;
         }
 
+
+        private List<GameCompetitionType> GetByGameId(int gameID)
+        {
+            return Uow.GameCompetitionTypes
+                                        .GetAll(ct => ct.CompetitionType)
+                                        .Where(ct => ct.GameID == gameID)
+                                        .ToList();
+        }
+
         [HttpGet]
         [ActionName("details")]
         public Game GameDetails(int id)
         {
             Game retVal = Uow.Games.GetById(id);
             retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
-            retVal.CompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(retVal.GameID).ToList();
+            // retVal.CompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(retVal.GameID).ToList();
+            retVal.CompetitionTypes = GetByGameId(retVal.GameID);
+                                            
 
             return retVal;
         }
@@ -76,7 +87,7 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage UpdateGame(Game game)
         {
             // clear prvious competition types
-            List<GameCompetitionType> currentCompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(game.GameID).ToList();
+            List<GameCompetitionType> currentCompetitionTypes = GetByGameId(game.GameID); 
             foreach (GameCompetitionType ct in currentCompetitionTypes)
             {
                 Uow.GameCompetitionTypes.Delete(ct);
@@ -99,9 +110,7 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage Delete(int id)
         {
             Uow.Games.Delete(id);
-
             Uow.Commit();
-
             var response = Request.CreateResponse(HttpStatusCode.OK);
 
             return response;

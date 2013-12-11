@@ -12,11 +12,11 @@ namespace Playground.Data.Contracts
         IQueryable<T> GetAll();
         IQueryable<T> GetAll(params Expression<Func<T, object>>[] includeExpressions);
         T GetById(object id);
-        T GetById(object id, Expression<Func<T, bool>> keyFunction, params Expression<Func<T, object>>[] includeExpressions);
+        T GetById(Expression<Func<T, bool>> keyFunction, params Expression<Func<T, object>>[] includeExpressions);
         void Add(T entity);
         void Update(T entity, params object[] keyValues);
         void Delete(T entity);
-        void Delete(int id);
-        void Delete(long id);
+        void Delete(object id);
+        void Delete(Expression<Func<T, bool>> keyFunction);
     }
 }

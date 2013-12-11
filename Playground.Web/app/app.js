@@ -12,6 +12,9 @@ var Playground = angular.module('Playground', [
     'Playground.login',
     'Playground.user-status',
     'Playground.user-profile',
+    'Playground.player-add',
+    'Playground.team-add',
+    'Playground.match-add',
     'Playground.security.security-service',
     'Playground.security.interceptor',
     'Playground.security.retry-queue',
@@ -109,6 +112,36 @@ Playground.
                     templateUrl: 'app/user/user-profile.tpl.html',
                     controller: 'ProfileController',
                     data: { pageTitle: 'Profile' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization, $location, $state) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
+                }).state('player-add', {
+                    url: '/user/player/add',
+                    templateUrl: 'app/user/player-edit.tpl.html',
+                    controller: 'PlayerAddController',
+                    data: { pageTitle: 'Player add' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization, $location, $state) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
+                }).state('team-add', {
+                    url: '/user/team/add',
+                    templateUrl: 'app/user/team-edit.tpl.html',
+                    controller: 'TeamAddController',
+                    data: { pageTitle: 'Team add' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization, $location, $state) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
+                }).state('match-add', {
+                    url: '/user/match/add',
+                    templateUrl: 'app/user/match-edit.tpl.html',
+                    controller: 'MatchAddController',
+                    data: { pageTitle: 'Match add' },
                     resolve: {
                         authenticaated: function (securityAuthorization, $location, $state) {
                             return securityAuthorization.requireAuthenticatedUser();

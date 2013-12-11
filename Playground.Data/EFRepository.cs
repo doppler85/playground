@@ -39,8 +39,7 @@ namespace Playground.Data
             return DbSet.Find(id);
         }
 
-        public virtual T GetById(object id, 
-            Expression<Func<T, bool>> keyFunction, 
+        public virtual T GetById(Expression<Func<T, bool>> keyFunction, 
             params Expression<Func<T, object>>[] includeExpressions)
         {
             if (includeExpressions.Any())
@@ -50,7 +49,7 @@ namespace Playground.Data
 
                 return set.SingleOrDefault(keyFunction);
             }
-            return DbSet.Find(id);
+            return DbSet.SingleOrDefault(keyFunction);
         }
 
         public virtual void Add(T entity)
@@ -100,16 +99,17 @@ namespace Playground.Data
             }
         }
 
-        public virtual void Delete(int id)
+        public virtual void Delete(object id)
         {
             var entity = GetById(id);
-            if (entity == null) return; 
+            if (entity == null) return;
             Delete(entity);
         }
 
-        public virtual void Delete(long id)
+
+        public virtual void Delete(Expression<Func<T, bool>> keyFunction)
         {
-            var entity = GetById(id);
+            var entity = GetById(keyFunction);
             if (entity == null) return;
             Delete(entity);
         }

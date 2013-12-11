@@ -31,7 +31,7 @@ angular.module('Playground.competition-type-add', ['ngResource', 'ui.router', 'u
             $scope.alerts.push(msg);
         };
 
-        $scope.closeAlert = function (index) {
+        $scope.closeAlert = function () {
             $scope.alerts.splice(index, 1);
         };
     }]);

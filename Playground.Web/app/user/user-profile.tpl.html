@@ -21,10 +21,12 @@
                 <td data-ng-bind="player.name"></td>
                 <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                 <td>
-                    <button class="btn btn-primary" data-ng-click="deletePlayer(player, $index);">delete</button>
+                    <button class="btn btn-primary" data-ng-click="deleteCompetitor(player, players, $index, playerAlerts);">delete</button>
                 </td>
             </tr>
          </table>
+        <a data-ui-sref="player-add">add player</a>
+        <alert ng-repeat="alert in playerAlerts" type="alert.type" close="closeAlert(playerAlerts, $index)">{{alert.msg}}</alert>
     </div>
     <div class="span12">
         <h3>My team's</h3>
@@ -44,10 +46,12 @@
                 <td data-ng-bind="team.name"></td>
                 <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                 <td>
-                    <button class="btn btn-primary" data-ng-click="deleteTeam(team, $index);">delete</button>
+                    <button class="btn btn-primary" data-ng-click="deleteCompetitor(team, teams, $index, teamAlerts);">delete</button>
                 </td>
             </tr>
          </table>
+        <a data-ui-sref="team-add">add team</a>
+        <alert ng-repeat="alert in teamAlerts" type="alert.type" close="closeAlert(teamAlerts, $index)">{{alert.msg}}</alert>
     </div>
     <div class="span12">
         <h3>My matches's</h3>
@@ -89,5 +93,6 @@
                 </tr>
             </tbody>
          </table>
+        <a data-ui-sref="match-add">add match</a>
     </div>
 </div>
