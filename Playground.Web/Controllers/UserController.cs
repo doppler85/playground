@@ -389,10 +389,12 @@ namespace Playground.Web.Controllers
                 .Where(g => g.Game.GameCategoryID == gameCategoryID && 
                             g.Competitor.CompetitorType == (CompetitorType)competitorType && 
                             g.Competitor.Name.Contains(search))
+                .Distinct()
                 .ToList();
 
             List<Competitor> retVal = gameCompetitors
                                         .Select(gc => gc.Competitor)
+                                        .Distinct()
                                         .ToList();
 
             return retVal;
