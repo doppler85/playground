@@ -188,6 +188,7 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(new Player()
             {
                 UserID = userVoja.UserID,
+                CompetitorType = Model.CompetitorType.Individual,
                 CreationDate = DateTime.Now,
                 Name = "Voja Dublefire",
                 Status = CompetitorStatus.Active
@@ -196,6 +197,7 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(new Player()
             {
                 UserID = userAlex.UserID,
+                CompetitorType = Model.CompetitorType.Individual,
                 CreationDate = DateTime.Now,
                 Name = "Alex Tunderball",
                 Status = CompetitorStatus.Active
@@ -204,6 +206,7 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(new Player()
             {
                 UserID = userNeven.UserID,
+                CompetitorType = Model.CompetitorType.Individual,
                 CreationDate = DateTime.Now,
                 Name = "Neven Defence Breaker",
                 Status = CompetitorStatus.Active
@@ -212,6 +215,7 @@ namespace Playground.Data.SampleData
             context.Competitors.Add(new Player()
             {
                 UserID = userNemanja.UserID,
+                CompetitorType = Model.CompetitorType.Individual,
                 CreationDate = DateTime.Now,
                 Name = "Nemanja The Son",
                 Status = CompetitorStatus.Active
@@ -264,6 +268,7 @@ namespace Playground.Data.SampleData
             Team teamZakivaci = new Team()
             {
                 Creator = playerVoja.User,
+                CompetitorType = Model.CompetitorType.Team,
                 CreationDate = DateTime.Now,
                 Name = "Zabagreli Zakivaci",
                 Status = CompetitorStatus.Active
@@ -284,6 +289,7 @@ namespace Playground.Data.SampleData
             Team teamFurija = new Team()
             {
                 Creator = playerNeven.User,
+                CompetitorType = Model.CompetitorType.Team,
                 CreationDate = DateTime.Now,
                 Name = "Crvena Furija",
                 Status = CompetitorStatus.Active

@@ -14,7 +14,8 @@ function ($scope, $stateParams, $rootScope, security, UserResource, enums) {
     $scope.matchStatuses = enums.matchStatus;
     $scope.playerAlerts = [];
     $scope.teamAlerts = [];
-
+    $scope.profile = {};
+    
     $scope.$watch(function () {
         $scope.isAuthenticated = security.isAuthenticated();
         return security.currentUser;
@@ -22,6 +23,20 @@ function ($scope, $stateParams, $rootScope, security, UserResource, enums) {
         $scope.currentUser = currentUser;
         $scope.isAuthenticated = security.isAuthenticated();
     });
+
+    $scope.getProfile = function () {
+        UserResource.getprofile(function (data, status, headers, config) {
+            $scope.profile = data;
+        });
+    };
+
+    $scope.updateProfile = function () {
+        UserResource.updateprofile($scope.profile, function (data, status, headers, config) {
+            $scope.profile = data;
+            security.refreshCurrentUser();
+        });
+    };
+
 
     $scope.logout = function () {
         // Try to login
@@ -66,4 +81,5 @@ function ($scope, $stateParams, $rootScope, security, UserResource, enums) {
     $scope.loadPlayers();
     $scope.loadTeams();
     $scope.loadMatches();
+    $scope.getProfile();
 }]);

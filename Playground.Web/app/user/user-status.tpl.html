@@ -29,8 +29,8 @@
         </ul>-->
     </li>
     <li>
-        <a href="javascript:;" alt="Log Out" title="Log Out">Log out
-            <i class="ico logout-grey"></i>
+        <a href="javascript:;" alt="Log Out" title="Log Out" data-ng-click="logout()">Log out
+            <i data-ng-click="logout()" class="ico logout-grey"></i>
         </a>
     </li>
 </ul>
@@ -39,8 +39,7 @@
         <a data-ui-sref="login">Login</a>
     </li>
     <li>
-        <a href="javascript:;">Register
-        </a>
+        <a data-ui-sref="register">Register</a>
     </li>
 </ul>
 

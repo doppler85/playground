@@ -17,5 +17,9 @@ function ($scope, $stateParams, $rootScope, security) {
         $scope.isAuthenticated = security.isAuthenticated();
     });
 
+    $scope.logout = function () {
+        security.logout('home');
+    };
+
     //$scope.$digest();
 }]);;

@@ -120,6 +120,31 @@ factory('UserResource', ['$resource', function (resource) {
             params: {
                 actionname: 'mycompeatitors'
             }
+        },
+        searchcompetitors: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'searchcompetitors'
+            }
+        },
+        addmatch: {
+            method: 'POST',
+            params: {
+                actionname: 'addmatch'
+            }
+        },
+        getprofile: {
+            method: 'GET',
+            params: {
+                actionname: 'getprofile'
+            }
+        },
+        updateprofile: {
+            method: 'PUT',
+            params: {
+                actionname: 'updateprofile'
+            }
         }
     });
 }]);;

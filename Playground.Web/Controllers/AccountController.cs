@@ -2,12 +2,14 @@
 using Playground.Model;
 using Playground.Web.Filters;
 using Playground.Web.Models;
+using Playground.Web.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Security;
 using WebMatrix.WebData;
 
 namespace Playground.Web.Controllers
@@ -112,5 +114,57 @@ namespace Playground.Web.Controllers
             return retVal;
         }
 
+        //
+        // POST: /Account/Register
+
+        [HttpPost]
+        [AllowAnonymous]
+        // TODO: uncoment this when antiforgery token mechanism is in place
+        //[ValidateHttpAntiForgeryTokeAttribute]
+        public HttpResponseMessage Register(RegisterModel registerModel)
+        {
+            if (ModelState.IsValid)
+            {
+                // Attempt to register the user
+                try
+                {
+                    WebSecurity.CreateUserAndAccount(registerModel.UserName, registerModel.Password);
+                    AddUserToRole(registerModel.UserName, Constants.RoleNames.User);
+                    WebSecurity.Login(registerModel.UserName, registerModel.Password);
+                    UserProfile userProfile = GetCurrentUser(registerModel.UserName);
+
+                    User user = new User()
+                    {
+                        EmailAddress = registerModel.UserName,
+                        ExternalUserID = userProfile.UserId
+                    };
+
+                    Uow.Users.Add(user);
+                    Uow.Commit();
+
+                    var response = Request.CreateResponse(HttpStatusCode.OK, new { user = userProfile });
+                    return response;
+                }
+                catch (MembershipCreateUserException e)
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.OK, "Invalid credentilas");
+                    return response;
+                }
+            }
+            else
+            {
+                var response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return response;
+            }
+        }
+
+        private void AddUserToRole(string userName, string roleName)
+        {
+            var roles = (SimpleRoleProvider)Roles.Provider;
+            if (!roles.IsUserInRole(userName, roleName))
+            {
+                roles.AddUsersToRoles(new string[] { userName }, new string[] { roleName });
+            }
+        }
     }
 }

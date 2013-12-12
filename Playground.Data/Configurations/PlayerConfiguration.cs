@@ -16,7 +16,7 @@ namespace Playground.Data.Configurations
             Map(p => 
                 { 
                     p.MapInheritedProperties();
-                    p.Requires("CompetitorType").HasValue(1);
+                    p.Requires("CompetitorTypeDiscriminator").HasValue((int)CompetitorType.Individual);
                 });
 
             HasKey(p => p.CompetitorID);

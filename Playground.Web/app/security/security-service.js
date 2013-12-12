@@ -77,6 +77,18 @@ angular.module('Playground.security.security-service', [
             });
         },
 
+        // Attempt to authenticate a user by the given email and password
+        register: function (registerModel, userModel) {
+            var request = $http.post('/api/account/register', registerModel, userModel);
+            return request.then(function (response) {
+                service.currentUser = response.data.user;
+                if (service.isAuthenticated()) {
+                    closeLoginDialog(true);
+                }
+                return response.data;
+            });
+        },
+
         onSucessLogin: function (success) {
             if (success) {
                 queue.retryAll();
@@ -110,6 +122,13 @@ angular.module('Playground.security.security-service', [
                     return service.currentUser;
                 });
             }
+        },
+
+        refreshCurrentUser: function () {
+            return $http.get('/api/account/currentuser').then(function (response) {
+                service.currentUser = response.data == "null" ? null : response.data;
+                return service.currentUser;
+            });
         },
 
         // Information about the current user

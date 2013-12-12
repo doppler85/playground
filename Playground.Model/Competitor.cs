@@ -16,6 +16,7 @@ namespace Playground.Model
     public abstract class Competitor
     {
         public long CompetitorID { get; set; }
+        public CompetitorType CompetitorType { get; set; }
         public DateTime CreationDate { get; set; }
         public string Name { get; set; }
         public string PictureSource { get; set; }

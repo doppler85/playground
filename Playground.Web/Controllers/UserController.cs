@@ -59,6 +59,7 @@ namespace Playground.Web.Controllers
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             player.UserID = currentUser.UserID;
+            player.CompetitorType = CompetitorType.Individual;
             player.CreationDate = DateTime.Now;
             Uow.Competitors.Add(player);
             Uow.Commit();
@@ -167,6 +168,7 @@ namespace Playground.Web.Controllers
                 tp.Player = null;
             }
             team.CreatorID = currentUser.UserID;
+            team.CompetitorType = CompetitorType.Team;
             team.CreationDate = DateTime.Now;
             Uow.Competitors.Add(team);
             Uow.Commit();
@@ -326,20 +328,22 @@ namespace Playground.Web.Controllers
             List<Competitor> allMycompetitors = new List<Competitor>();
 
             List<Player> players = Uow.Competitors
-                                        .GetAll(p => p.Games)
+                                        .GetAll(p => p.Games, p => ((Player)p).Teams)
                                         .OfType<Player>()
                                         .Where(p => p.UserID == currentUser.UserID && 
                                                     p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
                                         .OrderBy(p => p.Name)
                                         .ToList();
+            List<long> teamIds = players
+                .SelectMany(p => p.Teams)
+                .ToList()
+                .Select(t => t.TeamID)
+                .ToList();
 
             List<Team> teams = Uow.Competitors
                                         .GetAll(t => t.Games)
                                         .OfType<Team>()
-                                        .Where(t => t.Players.Any(p => p.Player.UserID == currentUser.UserID) && 
-                                                    t.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
-                                        .Distinct()
-                                        .OrderBy(t => t.Name)
+                                        .Where(t => teamIds.Contains(t.CompetitorID))
                                         .ToList();
 
             foreach (Player p in players)
@@ -359,18 +363,81 @@ namespace Playground.Web.Controllers
                 .ToList();
 
             List<Game> games = Uow.Games
-                                    .GetAll()
+                                    .GetAll(g => g.CompetitionTypes)
                                     .Where(g => gameIds.Contains(g.GameID))
                                     .ToList();
 
-            //// fetch game categories for players
-            //List<Game> games = Uow.Games
-            //    .GetAll(g => g.Category)
-            //    .Where(g => gameIds.Contains(g.GameID))
-            //    .ToList();
+            List<GameCompetitionType> competitionTypes = Uow.GameCompetitionTypes.GetAll(gc => gc.CompetitionType)
+                .Where(gc => gameIds.Contains(gc.GameID))
+                .ToList();
 
             return allMycompetitors;
         }
 
+        // api/user/searchcompetitors
+        [HttpGet]
+        [ActionName("searchcompetitors")]
+        public List<Competitor> SearchCompetitors(int gameCategoryID, int competitorType, string search)
+        {
+            if (search == null)
+            {
+                search = String.Empty;
+            }
+
+            List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
+                .GetAll(gc => gc.Competitor)
+                .Where(g => g.Game.GameCategoryID == gameCategoryID && 
+                            g.Competitor.CompetitorType == (CompetitorType)competitorType && 
+                            g.Competitor.Name.Contains(search))
+                .ToList();
+
+            List<Competitor> retVal = gameCompetitors
+                                        .Select(gc => gc.Competitor)
+                                        .ToList();
+
+            return retVal;
+        }
+
+        [HttpPost]
+        [ActionName("addmatch")]
+        public HttpResponseMessage AddMath(Match match)
+        {
+            match.WinnerID = match.Scores.OrderByDescending(s => s.Score).First().CompetitorID;
+            match.Status = MatchStatus.Submited;
+            Uow.Matches.Add(match);
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, match);
+
+            // Compose location header that tells how to get this game 
+            response.Headers.Location =
+                new Uri(Url.Link(RouteConfig.ControllerAndId, new { id = match.MatchID }));
+
+            return response;
+        }
+
+        [HttpGet]
+        [ActionName("getprofile")]
+        public User GetProfile()
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            return currentUser;
+        }
+
+        [HttpPut]
+        [ActionName("updateprofile")]
+        public HttpResponseMessage UpdateProfile(User user)
+        {
+            User userToUpdate = Uow.Users.GetById(user.UserID);
+            userToUpdate.FirstName = user.FirstName;
+            userToUpdate.LastName = user.LastName;
+            userToUpdate.Gender = user.Gender;
+
+            Uow.Users.Update(userToUpdate);
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, userToUpdate);
+            return response;
+        }
     }
 }

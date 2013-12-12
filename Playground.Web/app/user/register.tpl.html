@@ -1,0 +1,40 @@
+<div class="page-header">
+    <div class="wrapper">
+        <h1>Register</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="span5">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Email</label>
+                <div class="controls">
+                    <input type="email" placeholder="johndoe@gmail.com" data-ng-model="registerModel.userName" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Password</label>
+                <div class="controls">
+                    <input type="password" placeholder="password" data-ng-model="registerModel.password" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Confirm password</label>
+                <div class="controls">
+                    <input type="password" placeholder="password" data-ng-model="registerModel.confirmPassword" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" data-ng-click="register()">register</button>
+                    <button class="btn" data-ng-click="cancelRegister()">cancel</button>
+                </div>
+            </div>
+        </form>
+        <div class="alert alert-error" data-ng-show="authError">
+            {{authError}}
+        </div>
+        <pre>{{user | json}}</pre>
+        <pre>{{registerModel | json}}</pre>
+    </div>
+</div>

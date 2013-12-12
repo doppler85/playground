@@ -9,6 +9,7 @@ var Playground = angular.module('Playground', [
     'Playground.game-edit',
     'Playground.competition-type-list',
     'Playground.competition-type-add',
+    'Playground.register',
     'Playground.login',
     'Playground.user-status',
     'Playground.user-profile',
@@ -106,6 +107,11 @@ Playground.
                     url: '/login',
                     templateUrl: 'app/user/login.tpl.html',
                     controller: 'LoginController',
+                    data: { pageTitle: 'Login' }
+                }).state('register', {
+                    url: '/register',
+                    templateUrl: 'app/user/register.tpl.html',
+                    controller: 'RegisterController',
                     data: { pageTitle: 'Login' }
                 }).state('profile', {
                     url: '/profile',
