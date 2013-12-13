@@ -285,7 +285,14 @@ namespace Playground.Web.Controllers
                 .GetAll()
                 .Where(c => competitorIds.Contains(c.CompetitorID))
                 .ToList();
-            
+
+            foreach (Match match in matches)
+            {
+                if (match.Status == MatchStatus.Submited && match.CreatorID != currentUser.UserID)
+                {
+                    match.NeedsConfirmation = true;
+                }
+            }
             return matches;
         }
 
@@ -404,6 +411,8 @@ namespace Playground.Web.Controllers
         [ActionName("addmatch")]
         public HttpResponseMessage AddMath(Match match)
         {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            match.CreatorID = currentUser.UserID;
             match.WinnerID = match.Scores.OrderByDescending(s => s.Score).First().CompetitorID;
             match.Status = MatchStatus.Submited;
             Uow.Matches.Add(match);

@@ -16,6 +16,11 @@ namespace Playground.Data.Configurations
                 .WithMany()
                 .HasForeignKey(m => m.WinnerID)
                 .WillCascadeOnDelete(false);
+
+            HasRequired(m => m.Creator)
+                .WithMany()
+                .HasForeignKey(m => m.CreatorID)
+                .WillCascadeOnDelete(false);
         }
     }
 }

@@ -344,6 +344,7 @@ namespace Playground.Data.SampleData
             List<Match> matches = new List<Match>() {
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionSingle,
                     Date = new DateTime(2012, 6, 17, 17, 5, 0),
@@ -362,6 +363,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionSingle,
                     Date = new DateTime(2012, 6, 17, 17, 10, 0),
@@ -380,6 +382,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionSingle,
                     Date = new DateTime(2012, 6, 17, 17, 15, 0),
@@ -398,6 +401,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionSingle,
                     Date = new DateTime(2012, 6, 18, 17, 5, 0),
@@ -416,6 +420,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionSingle,
                     Date = new DateTime(2012, 6, 18, 17, 10, 0),
@@ -434,6 +439,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionSingle,
                     Date = new DateTime(2012, 6, 18, 17, 15, 0),
@@ -452,6 +458,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionDouble,
                     Date = new DateTime(2012, 10, 07, 17, 5, 0),
@@ -470,6 +477,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionDouble,
                     Date = new DateTime(2012, 10, 07, 17, 10, 0),
@@ -488,6 +496,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionDouble,
                     Date = new DateTime(2012, 10, 08, 17, 5, 0),
@@ -506,6 +515,7 @@ namespace Playground.Data.SampleData
                 },
                 new Match()
                 {
+                    CreatorID = playerVoja.UserID,
                     GameID = game.GameID,
                     CompetitionType = competitionDouble,
                     Date = new DateTime(2012, 10, 08, 17, 10, 0),

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,12 +17,16 @@ namespace Playground.Model
     public class Match
     {
         public long MatchID { get; set; }
+        public int CreatorID { get; set; }
         public int GameID { get; set; }
         public int CompetitionTypeID { get; set; }
         public long WinnerID { get; set; }
         public DateTime Date { get; set; }
         public MatchStatus Status { get; set; }
+        [NotMapped]
+        public bool NeedsConfirmation { get; set; }
 
+        public virtual User Creator { get; set; }
         public virtual Game Game { get; set; }
         public virtual CompetitionType CompetitionType { get; set; }
         public virtual List<CompetitorScore> Scores { get; set; }
