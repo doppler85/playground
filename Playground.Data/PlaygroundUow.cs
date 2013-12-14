@@ -50,6 +50,11 @@ namespace Playground.Data
             get { return GetStandardRepo<GameCompetitor>(); }
         }
 
+        public IRepository<CompetitorScore> CompetitorScores 
+        {
+            get { return GetStandardRepo<CompetitorScore>(); } 
+        }
+
         public IRepository<Match> Matches
         {
             get { return GetStandardRepo<Match>(); }
@@ -63,6 +68,11 @@ namespace Playground.Data
         public IRepository<TeamPlayer> TeamPlayers
         {
             get { return GetStandardRepo<TeamPlayer>(); }
+        }
+
+        public IRepository<AutomaticMatchConfirmation> AutomaticMatchConfirmations 
+        {
+            get { return GetStandardRepo<AutomaticMatchConfirmation>(); }
         }
 
         public PlaygroundUow(IRepositoryProvider repositoryProvider)

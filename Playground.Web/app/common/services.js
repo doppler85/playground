@@ -145,6 +145,12 @@ factory('UserResource', ['$resource', function (resource) {
             params: {
                 actionname: 'updateprofile'
             }
+        },
+        confirmscore: {
+            method: 'PUT',
+            params: {
+                actionname: 'confirmscore'
+            }
         }
     });
 }]);;

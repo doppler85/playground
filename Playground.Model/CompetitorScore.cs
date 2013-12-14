@@ -13,6 +13,7 @@ namespace Playground.Model
 
         public long MatchID { get; set; }
         public Match Match { get; set; }
+        public bool Confirmed { get; set; }
 
         public decimal Score { get; set; }
     }

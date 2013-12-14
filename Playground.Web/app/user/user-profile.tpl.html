@@ -95,6 +95,9 @@
                 <th>
                     Status
                 </th>
+                <th>
+                    Confirmation
+                </th>
             </tr>
             <tbody data-ng-repeat="match in matches">
                 <tr data-ng-repeat="score in match.scores">
@@ -112,6 +115,11 @@
                     </td>
                     <td>
                         {{$index == 0 ? matchStatuses[match.status] : ''}}
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-small" 
+                                data-ng-show="!score.confirmed"
+                                data-ng-click="confirmScore(match, score,  $index, teamAlerts);">confirm</button>
                     </td>
                 </tr>
             </tbody>

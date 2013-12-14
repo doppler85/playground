@@ -23,8 +23,8 @@ namespace Playground.Model
         public long WinnerID { get; set; }
         public DateTime Date { get; set; }
         public MatchStatus Status { get; set; }
-        [NotMapped]
-        public bool NeedsConfirmation { get; set; }
+        //[NotMapped]
+        //public bool NeedsConfirmation { get; set; }
 
         public virtual User Creator { get; set; }
         public virtual Game Game { get; set; }

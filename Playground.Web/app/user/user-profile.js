@@ -78,6 +78,20 @@ function ($scope, $stateParams, $rootScope, security, UserResource, enums) {
         collection.splice(index, 1);
     };
 
+    $scope.confirmScore = function (match, score, $index, msgCollection) {
+        UserResource.confirmscore({
+                matchID: match.matchID,
+                competitorID: score.competitorID,
+                confirmed: true
+            },
+            function (data, status, headers, config) {
+                score.confirmed = true;
+                match.status = data.status;
+            }, function () {
+                msgCollection.push({ type: 'error', msg: 'Error deleting competitor: ' + competitor.name });
+            });
+    }
+
     $scope.loadPlayers();
     $scope.loadTeams();
     $scope.loadMatches();

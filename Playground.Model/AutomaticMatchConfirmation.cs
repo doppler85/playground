@@ -8,10 +8,10 @@ namespace Playground.Model
 {
     public class AutomaticMatchConfirmation
     {
-        public long ConfirmeeID { get; set; }
-        public long ConfirmerID { get; set; }
+        public int ConfirmeeID { get; set; }
+        public int ConfirmerID { get; set; }
 
-        public Competitor Confirmee { get; set; }
-        public Competitor Confirmer { get; set; }
+        public User Confirmee { get; set; }
+        public User Confirmer { get; set; }
     }
 }

@@ -254,7 +254,7 @@ namespace Playground.Web.Controllers
             List<long> teamsIds = Uow.Competitors
                                         .GetAll()
                                         .OfType<Team>()
-                                        .Where(t => t.Players.Any(p => p.PlayerID == currentUser.UserID))
+                                        .Where(t => t.Players.Any(p => p.Player.User.UserID == currentUser.UserID))
                                         .Select(t => t.CompetitorID)
                                         .Distinct()
                                         .ToList();
@@ -286,13 +286,13 @@ namespace Playground.Web.Controllers
                 .Where(c => competitorIds.Contains(c.CompetitorID))
                 .ToList();
 
-            foreach (Match match in matches)
-            {
-                if (match.Status == MatchStatus.Submited && match.CreatorID != currentUser.UserID)
-                {
-                    match.NeedsConfirmation = true;
-                }
-            }
+            //foreach (Match match in matches)
+            //{
+            //    if (match.Status == MatchStatus.Submited && match.CreatorID != currentUser.UserID)
+            //    {
+            //        match.NeedsConfirmation = true;
+            //    }
+            //}
             return matches;
         }
 
@@ -407,11 +407,75 @@ namespace Playground.Web.Controllers
             return retVal;
         }
 
+        private bool CheckMyCompetitor(long competitorID)
+        {
+            bool retVal = false;
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            Competitor competitor = Uow.Competitors.GetById(competitorID);
+            retVal = (competitor is Player && ((Player)competitor).UserID == currentUser.UserID);
+            if (!retVal && competitor is Team)
+            {
+                retVal = Uow.Competitors
+                    .GetAll()
+                    .OfType<Team>()
+                    .Where(t => t.CompetitorID == competitorID && 
+                        t.Players.Any(p => p.Player.UserID == currentUser.UserID))
+                    .Count() > 0;
+            }
+
+            return retVal;
+        }
+
+        private bool CheckConfirmation(long competitorID)
+        {
+            bool retVal = false;
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            Competitor competitor = Uow.Competitors.GetById(competitorID);
+            if (competitor is Player)
+            {
+                int competitorUserid = ((Player)competitor).UserID;
+                AutomaticMatchConfirmation amc = Uow.AutomaticMatchConfirmations
+                    .GetAll()
+                    .FirstOrDefault(a => a.ConfirmeeID == currentUser.UserID && 
+                                         a.ConfirmerID == competitorID);
+                
+                retVal = amc != null;
+            }
+            else
+            {
+                List<int> userIds = Uow.TeamPlayers
+                    .GetAll(tp => tp.Player)
+                    .Where(tp => tp.TeamID == competitorID)
+                    .Select(tp => tp.Player.UserID)
+                    .ToList();
+
+                AutomaticMatchConfirmation amc = Uow.AutomaticMatchConfirmations
+                    .GetAll()
+                    .FirstOrDefault(a => a.ConfirmeeID == currentUser.UserID &&
+                                         userIds.Contains(a.ConfirmerID));
+
+                retVal = amc != null;
+            }
+            return retVal;
+        }
+
         [HttpPost]
         [ActionName("addmatch")]
         public HttpResponseMessage AddMath(Match match)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
+            foreach (CompetitorScore competitorScore in match.Scores)
+            {
+                if (CheckMyCompetitor(competitorScore.CompetitorID))
+                {
+                    competitorScore.Confirmed = true;
+                }
+                else if (CheckConfirmation(competitorScore.CompetitorID))
+                {
+                    competitorScore.Confirmed = true;
+                }
+            }
+
             match.CreatorID = currentUser.UserID;
             match.WinnerID = match.Scores.OrderByDescending(s => s.Score).First().CompetitorID;
             match.Status = MatchStatus.Submited;
@@ -448,6 +512,79 @@ namespace Playground.Web.Controllers
             Uow.Commit();
 
             var response = Request.CreateResponse(HttpStatusCode.OK, userToUpdate);
+            return response;
+        }
+
+        [HttpGet]
+        [ActionName("automaticmatchconfirmations")]
+        public List<AutomaticMatchConfirmation> AutomaticMatchConfirmations()
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+
+            List<AutomaticMatchConfirmation> retVal = Uow.AutomaticMatchConfirmations
+                .GetAll(ac => ac.Confirmee, ac => ac.Confirmer)
+                .Where(ac => ac.ConfirmeeID == currentUser.UserID)
+                .ToList();
+
+            return retVal;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage AddAutomaticConfirmation(int confirmerID)
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            AutomaticMatchConfirmation amc = new AutomaticMatchConfirmation()
+            {
+                ConfirmeeID = currentUser.UserID,
+                ConfirmerID = confirmerID
+            };
+            Uow.AutomaticMatchConfirmations.Add(amc);
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, amc);
+
+            return response;
+        }
+
+        [HttpDelete]
+        [ActionName("deleteautomaticconfirmation")]
+        public HttpResponseMessage DeleteAutomaticConfirmation(int confirmerID)
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            AutomaticMatchConfirmation amc = Uow.AutomaticMatchConfirmations
+                .GetAll()
+                .FirstOrDefault(ac => ac.ConfirmeeID == currentUser.UserID &&
+                             ac.ConfirmerID == confirmerID);
+            Uow.AutomaticMatchConfirmations.Delete(amc);
+            Uow.Commit();
+                
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+
+            return response;
+        }
+
+        [HttpPut]
+        [ActionName("confirmscore")]
+        public HttpResponseMessage ConfirmScore(CompetitorScore competitorScore)
+        {
+            Uow.CompetitorScores.Update(competitorScore, competitorScore.CompetitorID, competitorScore.MatchID);
+            Uow.Commit();
+
+            bool matchConfirmed = !Uow.CompetitorScores
+                .GetAll()
+                .Any(cs => cs.MatchID == competitorScore.MatchID &&
+                           !cs.Confirmed);
+            Match match = Uow.Matches.GetById(competitorScore.MatchID);
+
+            if (matchConfirmed)
+            {
+                match.Status = MatchStatus.Confirmed;
+                Uow.Matches.Update(match, match.MatchID);
+                Uow.Commit();
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, match);
+
             return response;
         }
     }
