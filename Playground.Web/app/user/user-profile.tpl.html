@@ -24,7 +24,7 @@
                 </div>
             </div>
         </form>
-        <pre>{{profile | json}}</pre>
+<!--        <pre>{{profile | json}}</pre>-->
     </div>
     <div class="span12">
         <h3>My pleya's</h3>
@@ -118,12 +118,44 @@
                     </td>
                     <td>
                         <button class="btn btn-primary btn-small" 
-                                data-ng-show="!score.confirmed"
+                                data-ng-show="!score.confirmed && score.competitor.isCurrentUserCompetitor"
                                 data-ng-click="confirmScore(match, score,  $index, teamAlerts);">confirm</button>
                     </td>
                 </tr>
             </tbody>
          </table>
         <a data-ui-sref="match-add">add match</a>
+    </div>
+   <div class="span12">
+        <h3>My automatic confirmations</h3>
+        <table class="table">
+            <tr>
+                <th>
+                    User
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </table>
+        <div class="add-confirmation-wrapp" >
+            <form class="form-inline">
+                <input type="text" data-ng-model="searchQuery" placeholder="Search users">
+                <button class="btn" data-ng-click="searchAutomaticConfirmationUsers()">Search</button>
+            </form>
+            <span data-ng-show="automaticMatchConfirmationsUsers.length > 0">
+                Results
+            </span>
+            <table class="table">
+                <tr data-ng-repeat="user in automaticMatchConfirmationsUsers">
+                    <td data-ng-bind="user | userfull"></td>
+                    <td>
+                        <button class="btn btn-primary" data-ng-click="addAutomaticConfirmation(user, $index)">add</button>
+                    </td>
+                </tr>
+            </table>
+
+            <button class="btn btn-default" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</button>
+        </div>
     </div>
 </div>

@@ -4,7 +4,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         return function (player) {
             return (player && player.user) ? '(' + player.user.firstName + ' ' + player.user.lastName + ') ' + player.name : '';
         };
-    }).filter('userfull', function () {
+    }).filter('playeruserfull', function () {
         return function (player) {
             return (player && player.user) ? player.user.firstName + ' ' + player.user.lastName : '';
         };

@@ -55,7 +55,7 @@
         </span>
         <table class="table">
             <tr data-ng-repeat="teamPlayer in team.players">
-                <td data-ng-bind="teamPlayer.player | userfull"></td>
+                <td data-ng-bind="teamPlayer.player | playeruserfull"></td>
                 <td data-ng-bind="teamPlayer.player.name"></td>
                 <td>
                     <button class="btn btn-primary" 
@@ -73,7 +73,7 @@
         </span>
         <table class="table">
             <tr data-ng-repeat="player in availablePlayers">
-                <td data-ng-bind="player | userfull"></td>
+                <td data-ng-bind="player | playeruserfull"></td>
                 <td data-ng-bind="player.name"></td>
                 <td>
                     <button class="btn btn-primary" data-ng-click="addPlayer(player, $index)">add</button>

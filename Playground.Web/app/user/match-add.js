@@ -8,10 +8,6 @@ angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap
         return function (player) {
             return (player && player.user) ? '(' + player.user.firstName + ' ' + player.user.lastName + ') ' + player.name : '';
         };
-    }).filter('userfull', function () {
-        return function (player) {
-            return (player && player.user) ? player.user.firstName + ' ' + player.user.lastName : '';
-        };
     })
     .filter('competitiontypefull', function () {
         return function (competitionType) {

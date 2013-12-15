@@ -270,7 +270,7 @@ namespace Playground.Web.Controllers
             List<Match> matches = Uow.Matches
                                         .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
                                         .Where(m => m.Scores
-                                        .Any(s => ids.Contains(s.CompetitorID)))
+                                                        .Any(s => ids.Contains(s.CompetitorID)))
                                         .OrderByDescending(s => s.Date)
                                         .Take(count)
                                         .ToList();
@@ -286,13 +286,14 @@ namespace Playground.Web.Controllers
                 .Where(c => competitorIds.Contains(c.CompetitorID))
                 .ToList();
 
-            //foreach (Match match in matches)
-            //{
-            //    if (match.Status == MatchStatus.Submited && match.CreatorID != currentUser.UserID)
-            //    {
-            //        match.NeedsConfirmation = true;
-            //    }
-            //}
+            foreach (Competitor competitor in competitors)
+            {
+                if (ids.Contains(competitor.CompetitorID))
+                {
+                    competitor.IsCurrentUserCompetitor = true;
+                }
+            }
+            
             return matches;
         }
 
@@ -529,7 +530,31 @@ namespace Playground.Web.Controllers
             return retVal;
         }
 
+        [HttpGet]
+        [ActionName("automaticmatchconfirmationsusers")]
+        public List<User> AutomaticMatchConfirmationUsers(string search)
+        {
+            if (search == null)
+            {
+                search = String.Empty;
+            }
+            
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            List<User> retVal = Uow.Users
+                .GetAll()
+                .Except(
+                    Uow.AutomaticMatchConfirmations.GetAll()
+                    .Where(ac => ac.ConfirmeeID == currentUser.UserID)
+                    .Select(ac => ac.Confirmer)
+                    .ToList())
+                .Where(u => u.FirstName.Contains(search) || u.LastName.Contains(search))
+                .ToList();
+                
+            return retVal;
+        }
+
         [HttpPost]
+        [ActionName("addautomaticconfirmation")]
         public HttpResponseMessage AddAutomaticConfirmation(int confirmerID)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);

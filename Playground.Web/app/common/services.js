@@ -151,6 +151,20 @@ factory('UserResource', ['$resource', function (resource) {
             params: {
                 actionname: 'confirmscore'
             }
+        },
+        automaticmatchconfirmations: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'automaticmatchconfirmations'
+            }
+        },
+        automaticmatchconfirmationsusers: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'automaticmatchconfirmationsusers'
+            }
         }
     });
 }]);;
