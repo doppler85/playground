@@ -479,7 +479,7 @@ namespace Playground.Web.Controllers
 
             match.CreatorID = currentUser.UserID;
             match.WinnerID = match.Scores.OrderByDescending(s => s.Score).First().CompetitorID;
-            match.Status = MatchStatus.Submited;
+            match.Status = match.Scores.Count(s => !s.Confirmed) > 0 ? MatchStatus.Submited : MatchStatus.Confirmed;
             Uow.Matches.Add(match);
             Uow.Commit();
 
@@ -524,7 +524,7 @@ namespace Playground.Web.Controllers
 
             List<AutomaticMatchConfirmation> retVal = Uow.AutomaticMatchConfirmations
                 .GetAll(ac => ac.Confirmee, ac => ac.Confirmer)
-                .Where(ac => ac.ConfirmeeID == currentUser.UserID)
+                .Where(ac => ac.ConfirmerID == currentUser.UserID)
                 .ToList();
 
             return retVal;
@@ -544,10 +544,10 @@ namespace Playground.Web.Controllers
                 .GetAll()
                 .Except(
                     Uow.AutomaticMatchConfirmations.GetAll()
-                    .Where(ac => ac.ConfirmeeID == currentUser.UserID)
-                    .Select(ac => ac.Confirmer)
-                    .ToList())
-                .Where(u => u.FirstName.Contains(search) || u.LastName.Contains(search))
+                    .Where(ac => ac.ConfirmerID == currentUser.UserID)
+                    .Select(ac => ac.Confirmee))
+                .Where(u => u.UserID != currentUser.UserID && 
+                        (u.FirstName.Contains(search) || u.LastName.Contains(search)))
                 .ToList();
                 
             return retVal;
@@ -555,13 +555,13 @@ namespace Playground.Web.Controllers
 
         [HttpPost]
         [ActionName("addautomaticconfirmation")]
-        public HttpResponseMessage AddAutomaticConfirmation(int confirmerID)
+        public HttpResponseMessage AddAutomaticConfirmation(User user)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             AutomaticMatchConfirmation amc = new AutomaticMatchConfirmation()
             {
-                ConfirmeeID = currentUser.UserID,
-                ConfirmerID = confirmerID
+                ConfirmeeID = user.UserID,
+                ConfirmerID = currentUser.UserID
             };
             Uow.AutomaticMatchConfirmations.Add(amc);
             Uow.Commit();
@@ -573,14 +573,11 @@ namespace Playground.Web.Controllers
 
         [HttpDelete]
         [ActionName("deleteautomaticconfirmation")]
-        public HttpResponseMessage DeleteAutomaticConfirmation(int confirmerID)
+        public HttpResponseMessage DeleteAutomaticConfirmation(int confirmeeID)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
-            AutomaticMatchConfirmation amc = Uow.AutomaticMatchConfirmations
-                .GetAll()
-                .FirstOrDefault(ac => ac.ConfirmeeID == currentUser.UserID &&
-                             ac.ConfirmerID == confirmerID);
-            Uow.AutomaticMatchConfirmations.Delete(amc);
+            Uow.AutomaticMatchConfirmations.Delete(ac => ac.ConfirmeeID == confirmeeID &&
+                                                         ac.ConfirmerID == currentUser.UserID);
             Uow.Commit();
                 
             var response = Request.CreateResponse(HttpStatusCode.OK);

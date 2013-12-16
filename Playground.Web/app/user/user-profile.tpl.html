@@ -1,161 +1,178 @@
 <div class="page-header">
-    <h1>{{currentUser.userName}} <a href="javascript:;" data-ng-click="logout()">logout</a></h1>
+    <h1>{{currentUser.userName}}
 </div>
 
 <div class="row">
-    <div class="span12">
-        <h3>My info</h3>
-        <form class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label">First name</label>
-                <div class="controls">
-                    <input type="text" data-ng-model="profile.firstName" />
-                </div>
+    <tabset>
+        <tab heading="My info">    
+            <div class="span12">
+            <h3>My info</h3>
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label">First name</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="profile.firstName" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Last name</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="profile.lastName" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn" data-ng-click="updateProfile()">update</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="control-group">
-                <label class="control-label">Last name</label>
-                <div class="controls">
-                    <input type="text" data-ng-model="profile.lastName" />
-                </div>
+        </tab>
+        <tab heading="My pleya's">
+            <div class="span12">
+                    <h3>My pleya's</h3>
+                    <table class="table">
+                        <tr>
+                            <th>
+                                Game
+                            </th>
+                            <th>
+                                Player nick
+                            </th>
+                            <th>Creation date</th>
+                            <th></th>
+                        </tr>
+                        <tr data-ng-repeat="player in players">
+                            <td data-ng-bind="player.games[0].game.category.title"></td>
+                            <td data-ng-bind="player.name"></td>
+                            <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                            <td>
+                                <button class="btn btn-primary" data-ng-click="deleteCompetitor(player, players, $index, playerAlerts);">delete</button>
+                            </td>
+                        </tr>
+                     </table>
+                    <a data-ui-sref="player-add">add player</a>
+                    <alert ng-repeat="alert in playerAlerts" type="alert.type" close="closeAlert(playerAlerts, $index)">{{alert.msg}}</alert>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn" data-ng-click="updateProfile()">update</button>
-                </div>
+        </tab>
+        <tab heading="My teams">
+            <div class="span12">
+                <h3>My teams</h3>
+                <table class="table">
+                    <tr>
+                        <th>
+                            Game
+                        </th>
+                        <th>
+                            Team nick
+                        </th>
+                        <th>Creation date</th>
+                        <th></th>
+                    </tr>
+                    <tr data-ng-repeat="team in teams">
+                        <td data-ng-bind="team.games[0].game.category.title"></td>
+                        <td data-ng-bind="team.name"></td>
+                        <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                        <td>
+                            <button class="btn btn-primary" data-ng-click="deleteCompetitor(team, teams, $index, teamAlerts);">delete</button>
+                        </td>
+                    </tr>
+                 </table>
+                <a data-ui-sref="team-add">add team</a>
+                <alert ng-repeat="alert in teamAlerts" type="alert.type" close="closeAlert(teamAlerts, $index)">{{alert.msg}}</alert>
             </div>
-        </form>
-<!--        <pre>{{profile | json}}</pre>-->
-    </div>
-    <div class="span12">
-        <h3>My pleya's</h3>
-        <table class="table">
-            <tr>
-                <th>
-                    Game
-                </th>
-                <th>
-                    Player nick
-                </th>
-                <th>Creation date</th>
-                <th></th>
-            </tr>
-            <tr data-ng-repeat="player in players">
-                <td data-ng-bind="player.games[0].game.category.title"></td>
-                <td data-ng-bind="player.name"></td>
-                <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
-                <td>
-                    <button class="btn btn-primary" data-ng-click="deleteCompetitor(player, players, $index, playerAlerts);">delete</button>
-                </td>
-            </tr>
-         </table>
-        <a data-ui-sref="player-add">add player</a>
-        <alert ng-repeat="alert in playerAlerts" type="alert.type" close="closeAlert(playerAlerts, $index)">{{alert.msg}}</alert>
-    </div>
-    <div class="span12">
-        <h3>My team's</h3>
-        <table class="table">
-            <tr>
-                <th>
-                    Game
-                </th>
-                <th>
-                    Team nick
-                </th>
-                <th>Creation date</th>
-                <th></th>
-            </tr>
-            <tr data-ng-repeat="team in teams">
-                <td data-ng-bind="team.games[0].game.category.title"></td>
-                <td data-ng-bind="team.name"></td>
-                <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
-                <td>
-                    <button class="btn btn-primary" data-ng-click="deleteCompetitor(team, teams, $index, teamAlerts);">delete</button>
-                </td>
-            </tr>
-         </table>
-        <a data-ui-sref="team-add">add team</a>
-        <alert ng-repeat="alert in teamAlerts" type="alert.type" close="closeAlert(teamAlerts, $index)">{{alert.msg}}</alert>
-    </div>
-    <div class="span12">
-        <h3>My matches's</h3>
-        <table class="table">
-            <tr>
-                <th>
-                    Game
-                </th>
-                <th>
-                    Date
-                </th>
-                <th>
-                    Competitor
-                </th>
-                <th>
-                    Score
-                </th>
-                <th>
-                    Status
-                </th>
-                <th>
-                    Confirmation
-                </th>
-            </tr>
-            <tbody data-ng-repeat="match in matches">
-                <tr data-ng-repeat="score in match.scores">
-                    <td>
-                        {{$index == 0 ? match.game.title : ''}}
-                    </td>
-                    <td>
-                        {{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
-                    </td>
-                    <td data-ng-class="{winner : score.competitorID == match.winnerID}">
-                        {{score.competitor.name}}
-                    </td>
-                    <td>
-                        {{score.score}}
-                    </td>
-                    <td>
-                        {{$index == 0 ? matchStatuses[match.status] : ''}}
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-small" 
-                                data-ng-show="!score.confirmed && score.competitor.isCurrentUserCompetitor"
-                                data-ng-click="confirmScore(match, score,  $index, teamAlerts);">confirm</button>
-                    </td>
-                </tr>
-            </tbody>
-         </table>
-        <a data-ui-sref="match-add">add match</a>
-    </div>
-   <div class="span12">
-        <h3>My automatic confirmations</h3>
-        <table class="table">
-            <tr>
-                <th>
-                    User
-                </th>
-                <th>
-
-                </th>
-            </tr>
-        </table>
-        <div class="add-confirmation-wrapp" >
-            <form class="form-inline">
-                <input type="text" data-ng-model="searchQuery" placeholder="Search users">
-                <button class="btn" data-ng-click="searchAutomaticConfirmationUsers()">Search</button>
-            </form>
-            <span data-ng-show="automaticMatchConfirmationsUsers.length > 0">
-                Results
-            </span>
+        </tab>
+        <tab heading="My matches">
+        <div class="span12">
+            <h3>My matches</h3>
             <table class="table">
-                <tr data-ng-repeat="user in automaticMatchConfirmationsUsers">
-                    <td data-ng-bind="user | userfull"></td>
+                <tr>
+                    <th>
+                        Game
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Competitor
+                    </th>
+                    <th>
+                        Score
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Confirmation
+                    </th>
+                </tr>
+                <tbody data-ng-repeat="match in matches">
+                    <tr data-ng-repeat="score in match.scores">
+                        <td>
+                            {{$index == 0 ? match.game.title : ''}}
+                        </td>
+                        <td>
+                            {{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
+                        </td>
+                        <td data-ng-class="{winner : score.competitorID == match.winnerID}">
+                            {{score.competitor.name}}
+                        </td>
+                        <td>
+                            {{score.score}}
+                        </td>
+                        <td>
+                            {{$index == 0 ? matchStatuses[match.status] : ''}}
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-small" 
+                                    data-ng-show="!score.confirmed && score.competitor.isCurrentUserCompetitor"
+                                    data-ng-click="confirmScore(match, score,  $index, teamAlerts);">confirm</button>
+                        </td>
+                    </tr>
+                </tbody>
+             </table>
+            <a data-ui-sref="match-add">add match</a>
+            </div>
+        </tab>
+        <tab heading="My automatic confirmations">
+            <h3>My automatic confirmations</h3>
+            <table class="table">
+                <tr>
+                    <th>
+                        User
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr data-ng-repeat="confirmation in automaticMatchConfirmations">
+                    <td data-ng-bind="confirmation.confirmee | userfull"></td>
                     <td>
-                        <button class="btn btn-primary" data-ng-click="addAutomaticConfirmation(user, $index)">add</button>
+                        <button class="btn btn-primary" data-ng-click="deleteAutomaticConfirmation(confirmation.confirmee, $index)">remove</button>
                     </td>
                 </tr>
             </table>
-
-            <button class="btn btn-default" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</button>
-        </div>
-    </div>
+            <div class="add-confirmation-wrapp" >
+                <a href="javascript:;" data-ng-click="toggleAddConfirmation(true)" data-ng-hide="addingconfirmation">add confirmation</a>
+                <div class="add-confirmation-inner" data-ng-show="addingconfirmation" >
+                    <form class="form-inline">
+                        <input type="text" data-ng-model="searchQuery" placeholder="Search users">
+                        <button class="btn" data-ng-click="searchAutomaticConfirmationUsers()">Search</button>
+                        <button class="btn" data-ng-click="toggleAddConfirmation(false)">cancel</button>
+                    </form>
+                    <span data-ng-show="automaticMatchConfirmationsUsers.length > 0">
+                        Results
+                    </span>
+                    <table class="table">
+                        <tr data-ng-repeat="user in automaticMatchConfirmationsUsers">
+                            <td data-ng-bind="user | userfull"></td>
+                            <td>
+                                <button class="btn btn-primary" data-ng-click="addAutomaticConfirmation(user, $index)">add</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </tab>
+    </tabset>
 </div>

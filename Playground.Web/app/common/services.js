@@ -165,9 +165,39 @@ factory('UserResource', ['$resource', function (resource) {
             params: {
                 actionname: 'automaticmatchconfirmationsusers'
             }
+        },
+        addautomaticconfirmation: {
+            method: 'POST',
+            params: {
+                actionname: 'addautomaticconfirmation'
+            }
+        },
+        deleteautomaticconfirmation: {
+            method: 'DELETE',
+            params: {
+                actionname: 'deleteautomaticconfirmation'
+            }
         }
     });
-}]);;
+}]).
+factory('HomeResource', ['$resource', function (resource) {
+    return resource('api/home/:actionname/:id', {}, {
+        lastMatches: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'matches'
+            }
+        },
+        lastCompetitors: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'competitors'
+            }
+        }
+    });
+}]);
 // examples
 /*
 factory('ChatResource', ['$resource', function (resource) {

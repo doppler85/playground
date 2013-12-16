@@ -1,5 +1,5 @@
 ﻿'use strict';
-angular.module('Playground.user-profile', ['ngResource', 'ui.router'])
+angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootstrap.tabs'])
     .filter('userfull', function () {
         return function (user) {
             return user ? user.firstName + ' ' + user.lastName : '';
@@ -15,7 +15,7 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router'])
     function ($scope, $stateParams, $rootScope, security, UserResource, enums) {
         $scope.players = {};
         $scope.teams = {};
-        $scope.matches = {};
+        $scope.matches = [];
         $scope.matchStatuses = enums.matchStatus;
         $scope.playerAlerts = [];
         $scope.teamAlerts = [];
@@ -23,6 +23,7 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router'])
         $scope.automaticMatchConfirmations = [];
         $scope.automaticMatchConfirmationsUsers = [];
         $scope.searchQuery = '';
+        $scope.addingconfirmation = false;
     
         $scope.$watch(function () {
             $scope.isAuthenticated = security.isAuthenticated();
@@ -109,6 +110,30 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router'])
             UserResource.automaticmatchconfirmationsusers({ search: $scope.searchQuery }, function (data, status, headers, config) {
                 $scope.automaticMatchConfirmationsUsers = data;
             });
+        };
+
+        $scope.addAutomaticConfirmation = function (user, index) {
+            UserResource.addautomaticconfirmation(user,
+                function (data, status, headers, config) {
+                    $scope.automaticMatchConfirmationsUsers.splice(index, 1);
+                    $scope.loadAutomaticConfirmations();
+                } 
+            );
+        };
+
+        $scope.deleteAutomaticConfirmation = function (user, index) {
+            UserResource.deleteautomaticconfirmation({ confirmeeID: user.userID },
+                function (data, status, headers, config) {
+                    $scope.automaticMatchConfirmations.splice(index, 1);
+                }
+            );
+        };
+
+        $scope.toggleAddConfirmation = function(show) {
+            $scope.addingconfirmation = show;
+            if (!show) {
+                $scope.automaticMatchConfirmationsUsers = [];
+            }
         };
 
         $scope.loadPlayers();

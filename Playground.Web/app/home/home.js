@@ -4,6 +4,23 @@ angular.module('Playground.home', ['ngResource', 'ui.router']).
     '$scope',
     '$stateParams',
     '$rootScope',
-    function ($scope, $stateParams, $rootScope) {
-        console.log('i am home controller');
+    'HomeResource',
+    function ($scope, $stateParams, $rootScope, HomeResource) {
+        $scope.matches = [];
+        $scope.competitors = [];
+
+        $scope.loadMatches = function () {
+            HomeResource.lastMatches({ count: 5 }, function (data, status, headers, config) {
+                $scope.matches = data;
+            });
+        }
+
+        $scope.loadCompetitors = function () {
+            HomeResource.lastCompetitors({ count: 5 }, function (data, status, headers, config) {
+                $scope.competitors = data;
+            });
+        }
+
+        $scope.loadMatches();
+        $scope.loadCompetitors();
     }]);

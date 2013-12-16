@@ -16,7 +16,6 @@ namespace Playground.Web.Controllers
             this.Uow = uow;
         }
 
-
         private List<GameCompetitionType> GetByGameId(int gameID)
         {
             return Uow.GameCompetitionTypes
