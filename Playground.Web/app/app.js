@@ -2,6 +2,7 @@
 'use strict';
 var Playground = angular.module('Playground', [
     'ui.router',
+    'Playground.imageupload',
     'Playground.main-menu',
     'Playground.home',
     'Playground.game-category',
@@ -19,7 +20,7 @@ var Playground = angular.module('Playground', [
     'Playground.security.security-service',
     'Playground.security.interceptor',
     'Playground.security.retry-queue',
-    'Playground.security.security-authorization',
+    'Playground.security.security-authorization'
 ]);
 
 Playground.constant('settingss', {
@@ -33,6 +34,10 @@ Playground.constant('settingss', {
         1: 'Confirmed',
         2: 'Invalid'
     },
+    gender: {
+        0: 'Male',
+        1: 'Female'
+    }
 });
 
 Playground.

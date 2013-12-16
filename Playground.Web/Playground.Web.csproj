@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\common\imageupload.js" />
     <Content Include="app\common\services.js" />
     <Content Include="app\games\competition-type-list.js" />
     <Content Include="app\games\competition-type-list.tpl.html" />

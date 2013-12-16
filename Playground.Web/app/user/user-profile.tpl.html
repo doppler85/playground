@@ -1,3 +1,26 @@
+<style type="text/css">
+.dropbox {
+    width: 15em;
+    height: 3em;
+    border: 2px solid #DDD;
+    border-radius: 8px;
+    background-color: #FEFFEC;
+    text-align: center;
+    color: #BBB;
+    font-size: 2em;
+    font-family: Arial, sans-serif;
+}
+.dropbox span {
+    margin-top: 0.9em;
+    display: block;
+}
+.dropbox.not-available {
+    background-color: #F88;
+}
+.dropbox.over {
+    background-color: #bfb;
+}
+</style>
 <div class="page-header">
     <h1>{{currentUser.userName}}
 </div>
@@ -5,7 +28,37 @@
 <div class="row">
     <tabset>
         <tab heading="My info">    
-            <div class="span12">
+            <div class="span6">
+                <h3>Profile picture</h3>
+                <form >
+                    <img src="content/assets/img/content/dragan-kojic.png" alt="" style="width:200px; height: 200px;">
+                    <a href="javascript:;">change</a>
+                </form>
+
+                <div>
+                    <label for="inputImage2">Image 2</label>
+            
+                    <input id="inputImage2" 
+                        type="file" 
+                        accept="image/*" 
+                        image="image2" 
+                        resize-max-height="200"
+                        resize-max-width="200"
+                        resize-quality="0.7" />
+            
+                    <p>Resized</p>
+                    <img ng-show="image2" ng-src="{{image2.resized.dataURL}}"/>
+                    <button type="submit" ng-click="single(image2.resized)">Add</button>
+                </div>
+
+                <input type="file" file-upload multiple/>
+                <ul>
+                    <li ng-repeat="file in files">{{file.name}}</li>
+                </ul>
+                <button class="btn" data-ng-click="save()">save</button>
+            </div>
+
+            <div class="span6">
             <h3>My info</h3>
                 <form class="form-horizontal">
                     <div class="control-group">
