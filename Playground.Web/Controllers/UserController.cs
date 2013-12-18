@@ -10,6 +10,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Text;
 using System.IO;
+using System.Web.Hosting;
+using System.Net.Http.Headers;
 
 namespace Playground.Web.Controllers
 {
@@ -631,8 +633,6 @@ namespace Playground.Web.Controllers
             {
                 StringBuilder sb = new StringBuilder(); // Holds the response body
 
-                await Request.Content.ReadAsStreamAsync();
-
                 // Read the form data and return an async task.
                 await Request.Content.ReadAsMultipartAsync(provider);
 
@@ -660,6 +660,60 @@ namespace Playground.Web.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
+        }
+
+        private static readonly string mediaPath = HttpContext.Current.Server.MapPath("~/Images/");
+        private static readonly string applicationPath = HostingEnvironment.MapPath("~/");
+
+
+        //POST api/uploadimage
+        [HttpPost]
+        [ActionName("uploadprofilepicture2")]
+        public async Task<IEnumerable<string>> Post()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var multipartStreamProvider = new UniqueMultipartFormDataStreamProvider(mediaPath);
+            Task task = Request.Content.ReadAsStreamAsync().ContinueWith(t =>
+            {
+                var stream = t.Result;
+                using (FileStream fileStream = File.Create("ggg", (int)stream.Length))
+                {
+                    byte[] bytesInStream = new byte[stream.Length];
+                    stream.Read(bytesInStream, 0, (int)bytesInStream.Length);
+                    fileStream.Write(bytesInStream, 0, bytesInStream.Length);
+                }
+            });
+
+            // await Request.Content.ReadAsMultipartAsync(multipartStreamProvider);
+
+            return multipartStreamProvider.FileData.Select(fd => ResolveVirtual(fd.LocalFileName));
+        }
+
+
+        public static string ResolveVirtual(string physicalPath)
+        {
+            string url = physicalPath.Substring(applicationPath.Length).Replace('\\', '/');
+            return (url);
+        }
+    }
+
+    public class UniqueMultipartFormDataStreamProvider : MultipartFormDataStreamProvider
+    {
+        public UniqueMultipartFormDataStreamProvider(string path)
+            : base(path)
+        { }
+
+        public override string GetLocalFileName(HttpContentHeaders headers)
+        {
+            var name = !string.IsNullOrWhiteSpace(headers.ContentDisposition.FileName) ? headers.ContentDisposition.FileName : "NoName";
+            name = name.Insert(0, Guid.NewGuid().ToString());
+
+            //this is here because Chrome submits files in quotation marks which get treated as part of the filename and get escaped
+            return name.Replace("\"", string.Empty);
         }
     }
 }

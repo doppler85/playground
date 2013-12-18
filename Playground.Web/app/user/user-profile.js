@@ -15,6 +15,41 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             }
         };
     })
+    .directive('imgCropped', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: { src: '@', selected: '&' },
+            link: function (scope, element, attr) {
+                var myImg;
+                var clear = function () {
+                    if (myImg) {
+                        myImg.next().remove();
+                        myImg.remove();
+                        myImg = undefined;
+                    }
+                };
+                scope.$watch('src', function (nv) {
+                    clear();
+                    if (nv) {
+                        element.after('<img />');
+                        myImg = element.next();
+                        myImg.attr('src', nv);
+                        $(myImg).Jcrop({
+                            trackDocument: true,
+                            onSelect: function (x) {
+                                scope.$apply(function () {
+                                    scope.selected({ cords: x });
+                                });
+                            }
+                        });
+                    }
+                });
+
+                scope.$on('$destroy', clear);
+            }
+        };
+    })
     .filter('userfull', function () {
         return function (user) {
             return user ? user.firstName + ' ' + user.lastName : '';
@@ -40,7 +75,7 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
         $scope.automaticMatchConfirmationsUsers = [];
         $scope.searchQuery = '';
         $scope.addingconfirmation = false;
-    
+ 
         $scope.$watch(function () {
             $scope.isAuthenticated = security.isAuthenticated();
             return security.currentUser;
@@ -154,14 +189,24 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
 
         $scope.single = function (image) {
             var formData = new FormData();
-            formData.append('image', image, "ggg");
+            formData.append('image', image);
 
-            $http.post('api/user/uploadprofilepicture', formData, {
-                headers: { 'Content-Type': false},
+            /*
+            $http.post('api/user/uploadprofilepicture', {
+                data: formData,
+                headers: { 'Content-Type': undefined },
                 transformRequest: angular.identity
             }).success(function (result) {
                 $scope.uploadedImgSrc = result.src;
                 $scope.sizeInBytes = result.size;
+            });
+            */
+            $http({
+                method: 'POST',
+                url: "api/user/uploadprofilepicture2",
+                transformRequest: angular.identity,
+                data: formData,
+                headers: { 'Content-Type': undefined }
             });
         };
 
@@ -172,8 +217,8 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
         $scope.loadAutomaticConfirmations();
 
         $scope.model = {
-            name: "",
-            comments: ""
+            name: "gggg",
+            comments: "mmm"
         };
 
         //an array of files selected
@@ -188,6 +233,35 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
         });
 
         $scope.save = function () {
+            /*
+            var formData = new FormData();
+            //need to convert our json object to a string version of json otherwise
+            // the browser will do a 'toString()' on the object which will result 
+            // in the value '[Object object]' on the server.
+            formData.append("model", angular.toJson($scope.model));
+            //now add all of the assigned files
+            for (var i = 0; i < $scope.files.length; i++) {
+                //add each file to the form data and iteratively name them
+                formData.append("file" + i, $scope.files[i]);
+            }
+
+            $http({ method: 'POST', url: 'api/user/uploadprofilepicture', data: formData, headers: { 'Content-Type': undefined }, transformRequest: angular.identity })
+                .success(function (data, status, headers, config) {
+            });
+            return
+
+            $.ajax({
+                type: "POST",
+                url: "api/user/uploadprofilepicture",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (res) {
+                    //do something with our ressponse
+                }
+            });
+            return;
+            */
             $http({
                 method: 'POST',
                 url: "api/user/uploadprofilepicture",
@@ -198,7 +272,8 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                 // manually will not set this boundary parameter. For whatever reason, 
                 // setting the Content-type to 'false' will force the request to automatically
                 // populate the headers properly including the boundary parameter.
-                headers: { 'Content-Type': false },
+                headers: { 'Content-Type': undefined },
+                //headers: { 'Content-Type': false },
                 //This method will allow us to change how the data is sent up to the server
                 // for which we'll need to encapsulate the model data in 'FormData'
                 transformRequest: function (data) {
@@ -208,7 +283,7 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                     // in the value '[Object object]' on the server.
                     formData.append("model", angular.toJson(data.model));
                     //now add all of the assigned files
-                    for (var i = 0; i < data.files; i++) {
+                    for (var i = 0; i < data.files.length; i++) {
                         //add each file to the form data and iteratively name them
                         formData.append("file" + i, data.files[i]);
                     }
@@ -225,10 +300,23 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                 alert("failed!");
             });
         };
+
+        
+        $scope.single2 = function (image) {
+            var formData = new FormData();
+            formData.append('image', image, "ggg");
+
+            var xhr = new XMLHttpRequest()
+            xhr.open("POST", "api/user/uploadprofilepicture2")
+            xhr.send(formData);
+        };
         //var xhr = new XMLHttpRequest()
         //xhr.upload.addEventListener("progress", uploadProgress, false)
         //xhr.addEventListener("load", uploadComplete, false)
         //xhr.addEventListener("error", uploadFailed, false)
         //xhr.addEventListener("abort", uploadCanceled, false)
+        $scope.setcropping = function (src) {
+            $scope.ggg = src;
+        };
 
     }]);

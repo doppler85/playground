@@ -30,6 +30,7 @@
         <tab heading="My info">    
             <div class="span6">
                 <h3>Profile picture</h3>
+                <canvas id="myCanvas" width="200" height="200" style="border:1px solid #d3d3d3;" data-drawing=""></canvas>
                 <form >
                     <img src="content/assets/img/content/dragan-kojic.png" alt="" style="width:200px; height: 200px;">
                     <a href="javascript:;">change</a>
@@ -47,10 +48,11 @@
                         resize-quality="0.7" />
             
                     <p>Resized</p>
+                    <img-cropped src='{{ggg}}' selected='selected(cords)'>
+                    <button type="button" ng-click="setcropping('content/assets/img/content/dragan-kojic.png')">set image</button>
                     <img ng-show="image2" ng-src="{{image2.resized.dataURL}}"/>
                     <button type="submit" ng-click="single(image2.resized)">Add</button>
                 </div>
-
                 <input type="file" file-upload multiple/>
                 <ul>
                     <li ng-repeat="file in files">{{file.name}}</li>
