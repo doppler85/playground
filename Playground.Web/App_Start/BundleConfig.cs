@@ -31,6 +31,7 @@ namespace Playground.Web
             bundles.Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/css/style.css")
                 .Include("~/Content/css/bootstrap.css")
+                .Include("~/Content/css/jquery.Jcrop.css")
                 //.Include("~/Content/css/bootstrap-responsive.css")
                 );
 

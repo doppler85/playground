@@ -2,7 +2,6 @@
 'use strict';
 var Playground = angular.module('Playground', [
     'ui.router',
-    'Playground.imageupload',
     'Playground.main-menu',
     'Playground.home',
     'Playground.game-category',

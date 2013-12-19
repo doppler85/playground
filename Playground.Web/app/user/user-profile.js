@@ -1,5 +1,5 @@
 ﻿'use strict';
-angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootstrap.tabs', 'Playground.imageupload'])
+angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootstrap.tabs'])
     .directive('fileUpload', function () {
         return {
             scope: true,        //create a new scope
@@ -36,11 +36,24 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                         myImg = element.next();
                         myImg.attr('src', nv);
                         $(myImg).Jcrop({
+                            aspectRatio: 1,
+                            minSize: [100, 100],
+                            maxSize: [300, 300],
+                            setSelect: [0, 0, 100, 100],
                             trackDocument: true,
-                            onSelect: function (x) {
-                                scope.$apply(function () {
-                                    scope.selected({ cords: x });
-                                });
+                            onRelease: function (rect) {
+                                console.log('released', rect);
+                                
+                                //scope.$apply(function () {
+                                //    scope.selected({ cords: rect });
+                                //});
+                            },
+                            onSelect: function (rect) {
+                                // console.log('select', rect);
+                                scope.$emit("selectionChanged", { coords: rect });
+                                //scope.$apply(function () {
+                                //    scope.selected({ cords: x });
+                                //});
                             }
                         });
                     }
@@ -228,9 +241,40 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
         $scope.$on("fileSelected", function (event, args) {
             $scope.$apply(function () {
                 //add the file object to the scope's files collection
-                $scope.files.push(args.file);
+                $scope.files[0] = args.file;
+                $scope.uploadProfilePicture();
+                // upload
             });
         });
+
+        $scope.$on("selectionChanged", function (event, args) {
+            //$scope.$apply(function () {
+                //add the file object to the scope's files collection
+                // $scope.files.push(args.file);
+                //console.log('selectionChanged', args);
+            //});
+            console.log('selectionChanged', args);
+        });
+
+        // upload profile picture and show crop screen 
+        $scope.uploadProfilePicture = function () {
+            console.log('uploading profile picture...');
+
+            var formData = new FormData();
+            formData.append("image", $scope.files[0]);
+            $http(
+            {
+                method: 'POST',
+                url: 'api/user/uploadprofilepicture', data:
+                formData,
+                headers: {
+                    'Content-Type': undefined
+                },
+                transformRequest: angular.identity
+            }).success(function (data, status, headers, config) {
+                alert('success');
+            });
+        };
 
         $scope.save = function () {
             /*

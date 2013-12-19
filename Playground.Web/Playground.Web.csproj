@@ -261,6 +261,9 @@
     <Content Include="app\lib\angular\angular-ui-router.min.js" />
     <Content Include="app\lib\angular\angular-ui.js" />
     <Content Include="app\lib\bootstrap\ui-bootstrap-custom-0.7.0.js" />
+    <Content Include="app\lib\jQuery\jquery.color.js" />
+    <Content Include="app\lib\jQuery\jquery.Jcrop.js" />
+    <Content Include="app\lib\jQuery\jquery.Jcrop.min.js" />
     <Content Include="app\menu\main-menu.js" />
     <Content Include="app\menu\main-menu.tpl.html" />
     <Content Include="app\security\interceptor.js" />
@@ -349,6 +352,7 @@
     <Content Include="Content\assets\scripts\main\modernizr-2.6.2.min.js" />
     <Content Include="Content\css\bootstrap-responsive.css" />
     <Content Include="Content\css\bootstrap.css" />
+    <Content Include="Content\css\jquery.Jcrop.css" />
     <Content Include="Content\css\style.css" />
     <Content Include="Content\img\glyphicons-halflings-white.png" />
     <Content Include="Content\img\glyphicons-halflings.png" />
@@ -460,6 +464,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\assets\fonts\" />
     <Folder Include="Content\assets\scripts\pages\" />
+    <Folder Include="Images\Profile\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>

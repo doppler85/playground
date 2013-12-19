@@ -625,35 +625,48 @@ namespace Playground.Web.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            string root = HttpContext.Current.Server.MapPath("~/App_Data");
-            var provider = new MultipartFormDataStreamProvider(root);
+            string root = HttpContext.Current.Server.MapPath("~/Images/Profile/");
+            var provider = new UniqueMultipartFormDataStreamProvider(root);
             
-
             try
             {
-                StringBuilder sb = new StringBuilder(); // Holds the response body
+                // StringBuilder sb = new StringBuilder(); // Holds the response body
 
                 // Read the form data and return an async task.
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 // This illustrates how to get the form data.
-                foreach (var key in provider.FormData.AllKeys)
-                {
-                    foreach (var val in provider.FormData.GetValues(key))
-                    {
-                        sb.Append(string.Format("{0}: {1}\n", key, val));
-                    }
-                }
+                //foreach (var key in provider.FormData.AllKeys)
+                //{
+                //    foreach (var val in provider.FormData.GetValues(key))
+                //    {
+                //        sb.Append(string.Format("{0}: {1}\n", key, val));
+                //    }
+                //}
 
                 // This illustrates how to get the file names for uploaded files.
-                foreach (var file in provider.FileData)
+                User currentUser = GetUserByEmail(User.Identity.Name);
+                string fileName = "";
+                if (provider.FileData.Count > 0)
                 {
-                    FileInfo fileInfo = new FileInfo(file.LocalFileName);
-                    sb.Append(string.Format("Uploaded file: {0} ({1} bytes)\n", fileInfo.Name, fileInfo.Length));
+                    string localName = provider.FileData[0].LocalFileName;
+                    string extension = localName.Substring(localName.LastIndexOf('.') + 1);
+                    fileName = String.Format("profile_{0}_temp.{1}", currentUser.UserID, extension);
+                    FileInfo fileInfo = new FileInfo(localName);
+                    if (File.Exists(root + fileName))
+                    {
+                        File.Delete(root + fileName);
+                    }
+                    fileInfo.MoveTo(root + fileName);
                 }
+                //foreach (var file in provider.FileData)
+                //{
+                //    FileInfo fileInfo = new FileInfo(file.LocalFileName);
+                //    // sb.Append(string.Format("Uploaded file: {0} ({1} bytes)\n", fileInfo.Name, fileInfo.Length));
+                //}
                 return new HttpResponseMessage()
                 {
-                    Content = new StringContent(sb.ToString())
+                    Content = new StringContent(fileName)
                 };
             }
             catch (System.Exception e)
@@ -676,21 +689,26 @@ namespace Playground.Web.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            var multipartStreamProvider = new UniqueMultipartFormDataStreamProvider(mediaPath);
-            Task task = Request.Content.ReadAsStreamAsync().ContinueWith(t =>
-            {
-                var stream = t.Result;
-                using (FileStream fileStream = File.Create("ggg", (int)stream.Length))
-                {
-                    byte[] bytesInStream = new byte[stream.Length];
-                    stream.Read(bytesInStream, 0, (int)bytesInStream.Length);
-                    fileStream.Write(bytesInStream, 0, bytesInStream.Length);
-                }
-            });
+            string root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new MultipartFormDataStreamProvider(root);
+
+
+            // var multipartStreamProvider = new UniqueMultipartFormDataStreamProvider(mediaPath);
+            //Task task = Request.Content.ReadAsStreamAsync().ContinueWith(t =>
+            //{
+            //    var stream = t.Result;
+            //    using (FileStream fileStream = File.Create("ggg.png", (int)stream.Length))
+            //    {
+            //        byte[] bytesInStream = new byte[stream.Length];
+            //        stream.Read(bytesInStream, 0, (int)bytesInStream.Length);
+            //        fileStream.Write(bytesInStream, 0, bytesInStream.Length);
+            //    }
+            //});
 
             // await Request.Content.ReadAsMultipartAsync(multipartStreamProvider);
 
-            return multipartStreamProvider.FileData.Select(fd => ResolveVirtual(fd.LocalFileName));
+            // return multipartStreamProvider.FileData.Select(fd => ResolveVirtual(fd.LocalFileName));
+            return new List<String>() { "ok" };
         }
 
 
