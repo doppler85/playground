@@ -237,9 +237,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\CropingCoords.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Constants.cs" />
     <Compile Include="Util\Extensions.cs" />
+    <Compile Include="Util\ImageUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />

@@ -18,5 +18,14 @@ namespace Playground.Web.Util
             public static string AdminUserName = "admin@playground.com";
             public static string AdminPass = "admin123!";
         }
+
+        public static class Images
+        {
+            public static string ProfilePictureRoot = "/Images/Profile/";
+            public static string ProfilePicturePrefix = "profile_pic";
+            public static System.Drawing.Imaging.ImageFormat ProfileImageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+            public static string ProfilePictureExtension = "jpg";
+            public static int ProfileImageMaxSize = 400;
+        }
     }
 }

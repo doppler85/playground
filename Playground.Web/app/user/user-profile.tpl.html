@@ -30,23 +30,21 @@
         <tab heading="My info">    
             <div class="span6">
                 <h3>Profile picture</h3>
-                
-                <form >
-                    <img src="content/assets/img/content/dragan-kojic.png" alt="" style="width:200px; height: 200px;">
-                    <a href="javascript:;">change</a>
-                </form>
-                <div >
-                    <img-cropped src='content/assets/img/content/dragan-kojic.png' selected='selected(cords)'>
+                <div data-ng-hide="changeProfilePictureStep == 2">
+                    <img data-ng-src="{{profile.profilePictureUrl}}" alt="" style="width:200px; height: 200px;">
+                    <a href="javascript:;" data-ng-click="changeProfilePictureStep = 1;">change</a>
                 </div>
-
-                <div>
-                    <label for="inputImage2">Image 2</label>
+                <div data-ng-show="changeProfilePictureStep == 1">
+                    <input file-upload type="file" accept="image/*">
+                    <button class="btn" data-ng-click="changeProfilePictureStep = 0">cancel</button>
                 </div>
-                <input file-upload type="file" accept="image/*">
-                <ul>
-                    <li data-ng-repeat="file in files">{{file.name}}</li>
-                </ul>
-                <button class="btn" data-ng-click="save()">save</button>
+                <div data-ng-show="changeProfilePictureStep == 2">
+                    <div>
+                        <img-cropped src='{{croppingUrl}}'>
+                    </div>
+                    <button class="btn" data-ng-click="cropProfileImage()">save</button>
+                    <button class="btn" data-ng-click="changeProfilePictureStep = 0;">cancel</button>
+                </div>
             </div>
 
             <div class="span6">

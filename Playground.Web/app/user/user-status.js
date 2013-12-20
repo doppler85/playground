@@ -5,16 +5,21 @@ controller('UserStatusController', [
 '$stateParams',
 '$rootScope',
 'security',
-function ($scope, $stateParams, $rootScope, security) {
-    $scope.init = function () {
-    }
-
+'UserResource',
+function ($scope, $stateParams, $rootScope, security, UserResource) {
     $scope.$watch(function () {
         $scope.isAuthenticated = security.isAuthenticated();
         return security.currentUser;
     }, function (currentUser) {
         $scope.currentUser = currentUser;
         $scope.isAuthenticated = security.isAuthenticated();
+        if ($scope.isAuthenticated) {
+            UserResource.getprofile(function (data, status, headers, config) {
+                $scope.profile = data;
+            });
+        } else {
+            $scope.profile = {};
+        }
     });
 
     $scope.logout = function () {

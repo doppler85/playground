@@ -42,18 +42,10 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                             setSelect: [0, 0, 100, 100],
                             trackDocument: true,
                             onRelease: function (rect) {
-                                console.log('released', rect);
-                                
-                                //scope.$apply(function () {
-                                //    scope.selected({ cords: rect });
-                                //});
+                                scope.$emit("cropingSelectionReleased", { coords: rect });
                             },
                             onSelect: function (rect) {
-                                // console.log('select', rect);
-                                scope.$emit("selectionChanged", { coords: rect });
-                                //scope.$apply(function () {
-                                //    scope.selected({ cords: x });
-                                //});
+                                scope.$emit("cropingSelectionChanged", { coords: rect });
                             }
                         });
                     }
@@ -200,61 +192,51 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             }
         };
 
-        $scope.single = function (image) {
-            var formData = new FormData();
-            formData.append('image', image);
-
-            /*
-            $http.post('api/user/uploadprofilepicture', {
-                data: formData,
-                headers: { 'Content-Type': undefined },
-                transformRequest: angular.identity
-            }).success(function (result) {
-                $scope.uploadedImgSrc = result.src;
-                $scope.sizeInBytes = result.size;
-            });
-            */
-            $http({
-                method: 'POST',
-                url: "api/user/uploadprofilepicture2",
-                transformRequest: angular.identity,
-                data: formData,
-                headers: { 'Content-Type': undefined }
-            });
-        };
-
         $scope.loadPlayers();
         $scope.loadTeams();
         $scope.loadMatches();
         $scope.getProfile();
         $scope.loadAutomaticConfirmations();
 
-        $scope.model = {
-            name: "gggg",
-            comments: "mmm"
-        };
+
+        // cropping -> move to directive one day
 
         //an array of files selected
+        $scope.changeProfilePictureStep = 0;
+        $scope.cropingCoords = null;
         $scope.files = [];
 
         //listen for the file selected event
         $scope.$on("fileSelected", function (event, args) {
             $scope.$apply(function () {
-                //add the file object to the scope's files collection
                 $scope.files[0] = args.file;
                 $scope.uploadProfilePicture();
-                // upload
             });
         });
 
-        $scope.$on("selectionChanged", function (event, args) {
-            //$scope.$apply(function () {
-                //add the file object to the scope's files collection
-                // $scope.files.push(args.file);
-                //console.log('selectionChanged', args);
-            //});
-            console.log('selectionChanged', args);
+        $scope.$on("cropingSelectionChanged", function (event, args) {
+            $scope.cropingCoords = args.coords;
         });
+
+        $scope.$on("cropingSelectionReleased", function (event, args) {
+            $scope.cropingCoords = null;
+        });
+
+        $scope.cropProfileImage = function () {
+            if ($scope.cropingCoords != null) {
+                $http(
+                {
+                    method: 'POST',
+                    url: 'api/user/cropprofilepicture',
+                    data: $scope.cropingCoords,
+                }).success(function (data, status, headers, config) {
+                    $scope.croppingUrl = '';
+                    $scope.profile.profilePictureUrl = data;
+                    $scope.changeProfilePictureStep = 0;
+                    security.refreshCurrentUser();
+                });
+            }
+        }
 
         // upload profile picture and show crop screen 
         $scope.uploadProfilePicture = function () {
@@ -265,102 +247,15 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             $http(
             {
                 method: 'POST',
-                url: 'api/user/uploadprofilepicture', data:
-                formData,
+                url: 'api/user/uploadprofilepicture',
+                data: formData,
                 headers: {
                     'Content-Type': undefined
                 },
                 transformRequest: angular.identity
             }).success(function (data, status, headers, config) {
-                alert('success');
+                $scope.croppingUrl = data;
+                $scope.changeProfilePictureStep = 2;
             });
         };
-
-        $scope.save = function () {
-            /*
-            var formData = new FormData();
-            //need to convert our json object to a string version of json otherwise
-            // the browser will do a 'toString()' on the object which will result 
-            // in the value '[Object object]' on the server.
-            formData.append("model", angular.toJson($scope.model));
-            //now add all of the assigned files
-            for (var i = 0; i < $scope.files.length; i++) {
-                //add each file to the form data and iteratively name them
-                formData.append("file" + i, $scope.files[i]);
-            }
-
-            $http({ method: 'POST', url: 'api/user/uploadprofilepicture', data: formData, headers: { 'Content-Type': undefined }, transformRequest: angular.identity })
-                .success(function (data, status, headers, config) {
-            });
-            return
-
-            $.ajax({
-                type: "POST",
-                url: "api/user/uploadprofilepicture",
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function (res) {
-                    //do something with our ressponse
-                }
-            });
-            return;
-            */
-            $http({
-                method: 'POST',
-                url: "api/user/uploadprofilepicture",
-                //IMPORTANT!!! You might think this should be set to 'multipart/form-data' 
-                // but this is not true because when we are sending up files the request 
-                // needs to include a 'boundary' parameter which identifies the boundary 
-                // name between parts in this multi-part request and setting the Content-type 
-                // manually will not set this boundary parameter. For whatever reason, 
-                // setting the Content-type to 'false' will force the request to automatically
-                // populate the headers properly including the boundary parameter.
-                headers: { 'Content-Type': undefined },
-                //headers: { 'Content-Type': false },
-                //This method will allow us to change how the data is sent up to the server
-                // for which we'll need to encapsulate the model data in 'FormData'
-                transformRequest: function (data) {
-                    var formData = new FormData();
-                    //need to convert our json object to a string version of json otherwise
-                    // the browser will do a 'toString()' on the object which will result 
-                    // in the value '[Object object]' on the server.
-                    formData.append("model", angular.toJson(data.model));
-                    //now add all of the assigned files
-                    for (var i = 0; i < data.files.length; i++) {
-                        //add each file to the form data and iteratively name them
-                        formData.append("file" + i, data.files[i]);
-                    }
-                    return formData;
-                },
-                //Create an object that contains the model and files which will be transformed
-                // in the above transformRequest method
-                data: { model: $scope.model, files: $scope.files }
-            }).
-            success(function (data, status, headers, config) {
-                alert("success!");
-            }).
-            error(function (data, status, headers, config) {
-                alert("failed!");
-            });
-        };
-
-        
-        $scope.single2 = function (image) {
-            var formData = new FormData();
-            formData.append('image', image, "ggg");
-
-            var xhr = new XMLHttpRequest()
-            xhr.open("POST", "api/user/uploadprofilepicture2")
-            xhr.send(formData);
-        };
-        //var xhr = new XMLHttpRequest()
-        //xhr.upload.addEventListener("progress", uploadProgress, false)
-        //xhr.addEventListener("load", uploadComplete, false)
-        //xhr.addEventListener("error", uploadFailed, false)
-        //xhr.addEventListener("abort", uploadCanceled, false)
-        $scope.setcropping = function (src) {
-            $scope.ggg = src;
-        };
-
     }]);

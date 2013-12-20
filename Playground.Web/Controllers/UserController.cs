@@ -12,6 +12,8 @@ using System.Text;
 using System.IO;
 using System.Web.Hosting;
 using System.Net.Http.Headers;
+using Playground.Web.Util;
+using Playground.Web.Models;
 
 namespace Playground.Web.Controllers
 {
@@ -502,6 +504,13 @@ namespace Playground.Web.Controllers
         public User GetProfile()
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
+            currentUser.ProfilePictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
+                Constants.Images.ProfilePictureRoot,
+                Constants.Images.ProfilePicturePrefix,
+                currentUser.UserID,
+                Constants.Images.ProfilePictureExtension,
+                DateTime.Now.Ticks);
+
             return currentUser;
         }
 
@@ -615,6 +624,11 @@ namespace Playground.Web.Controllers
             return response;
         }
 
+        private string GetImagesRootFolder()
+        {
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.ProfilePictureRoot)); 
+        }
+
         [HttpPost]
         [ActionName("uploadprofilepicture")]
         public async Task<HttpResponseMessage> UploadProfilePicture()
@@ -625,24 +639,106 @@ namespace Playground.Web.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            string root = HttpContext.Current.Server.MapPath("~/Images/Profile/");
+            string root = GetImagesRootFolder();
             var provider = new UniqueMultipartFormDataStreamProvider(root);
             
             try
             {
-                // StringBuilder sb = new StringBuilder(); // Holds the response body
-
                 // Read the form data and return an async task.
                 await Request.Content.ReadAsMultipartAsync(provider);
 
-                // This illustrates how to get the form data.
-                //foreach (var key in provider.FormData.AllKeys)
-                //{
-                //    foreach (var val in provider.FormData.GetValues(key))
-                //    {
-                //        sb.Append(string.Format("{0}: {1}\n", key, val));
-                //    }
-                //}
+                // This illustrates how to get the file names for uploaded files.
+                User currentUser = GetUserByEmail(User.Identity.Name);
+
+                string retUrl = "";
+                if (provider.FileData.Count > 0)
+                {
+                    string localName = provider.FileData[0].LocalFileName;
+                    FileInfo fileInfo = new FileInfo(localName);
+                    string filePath = String.Format("{0}{1}_{2}_temp.{3}", 
+                                            root, 
+                                            Constants.Images.ProfilePicturePrefix,
+                                            currentUser.UserID,
+                                            Constants.Images.ProfilePictureExtension);
+
+                    ImageUtil.ScaleImage(fileInfo.FullName, 
+                                        filePath, 
+                                        Constants.Images.ProfileImageFormat,
+                                        Constants.Images.ProfileImageMaxSize, 
+                                        Constants.Images.ProfileImageMaxSize);
+                    
+                    fileInfo.Delete();
+
+                    fileInfo = new FileInfo(filePath);
+                    retUrl = String.Format("{0}{1}", Constants.Images.ProfilePictureRoot, fileInfo.Name);
+                }
+
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                };
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        [HttpPost]
+        [ActionName("cropprofilepicture")]
+        public HttpResponseMessage CropProfilePicture(CropingCoords coords)
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            string root = GetImagesRootFolder();
+            string filePath = String.Format("{0}{1}_{2}_temp.{3}",
+                                                        root,
+                                                        Constants.Images.ProfilePicturePrefix,
+                                                        currentUser.UserID,
+                                                        Constants.Images.ProfilePictureExtension);
+
+            string destFilePath = String.Format("{0}{1}_{2}.{3}",
+                                                                    root,
+                                                                    Constants.Images.ProfilePicturePrefix,
+                                                                    currentUser.UserID,
+                                                                    Constants.Images.ProfilePictureExtension);
+            try 
+            {
+                ImageUtil.CropImage(filePath,
+                                    destFilePath,
+                                    Constants.Images.ProfileImageFormat,
+                                    coords);
+                
+                // delete temporary file
+                FileInfo fileInfo = new FileInfo(filePath);
+                fileInfo.Delete();
+
+                fileInfo = new FileInfo(destFilePath);
+                string retUrl = String.Format("{0}{1}", Constants.Images.ProfilePictureRoot, fileInfo.Name);
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                };
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            
+
+            /*
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            string root = HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.ImagesPath));
+            var provider = new UniqueMultipartFormDataStreamProvider(root);
+
+            try
+            {
+                // Read the form data and return an async task.
+                await Request.Content.ReadAsMultipartAsync(provider);
 
                 // This illustrates how to get the file names for uploaded files.
                 User currentUser = GetUserByEmail(User.Identity.Name);
@@ -652,70 +748,30 @@ namespace Playground.Web.Controllers
                     string localName = provider.FileData[0].LocalFileName;
                     string extension = localName.Substring(localName.LastIndexOf('.') + 1);
                     fileName = String.Format("profile_{0}_temp.{1}", currentUser.UserID, extension);
+                    string filePath = root + fileName;
+
                     FileInfo fileInfo = new FileInfo(localName);
-                    if (File.Exists(root + fileName))
+                    if (File.Exists(filePath))
                     {
-                        File.Delete(root + fileName);
+                        File.Delete(filePath);
                     }
-                    fileInfo.MoveTo(root + fileName);
+                    fileInfo.MoveTo(filePath);
+                    ImageUtil.ScaleImage(filePath,
+                        Constants.Images.ProfileImageMaxSize,
+                        Constants.Images.ProfileImageMaxSize);
                 }
-                //foreach (var file in provider.FileData)
-                //{
-                //    FileInfo fileInfo = new FileInfo(file.LocalFileName);
-                //    // sb.Append(string.Format("Uploaded file: {0} ({1} bytes)\n", fileInfo.Name, fileInfo.Length));
-                //}
+
                 return new HttpResponseMessage()
                 {
-                    Content = new StringContent(fileName)
+                    Content = new StringContent(String.Format("{0}{1}?{2}", Constants.Images.ImagesPath, fileName, DateTime.Now.Ticks))
+
                 };
             }
             catch (System.Exception e)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-        }
-
-        private static readonly string mediaPath = HttpContext.Current.Server.MapPath("~/Images/");
-        private static readonly string applicationPath = HostingEnvironment.MapPath("~/");
-
-
-        //POST api/uploadimage
-        [HttpPost]
-        [ActionName("uploadprofilepicture2")]
-        public async Task<IEnumerable<string>> Post()
-        {
-            if (!Request.Content.IsMimeMultipartContent())
-            {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            }
-
-            string root = HttpContext.Current.Server.MapPath("~/App_Data");
-            var provider = new MultipartFormDataStreamProvider(root);
-
-
-            // var multipartStreamProvider = new UniqueMultipartFormDataStreamProvider(mediaPath);
-            //Task task = Request.Content.ReadAsStreamAsync().ContinueWith(t =>
-            //{
-            //    var stream = t.Result;
-            //    using (FileStream fileStream = File.Create("ggg.png", (int)stream.Length))
-            //    {
-            //        byte[] bytesInStream = new byte[stream.Length];
-            //        stream.Read(bytesInStream, 0, (int)bytesInStream.Length);
-            //        fileStream.Write(bytesInStream, 0, bytesInStream.Length);
-            //    }
-            //});
-
-            // await Request.Content.ReadAsMultipartAsync(multipartStreamProvider);
-
-            // return multipartStreamProvider.FileData.Select(fd => ResolveVirtual(fd.LocalFileName));
-            return new List<String>() { "ok" };
-        }
-
-
-        public static string ResolveVirtual(string physicalPath)
-        {
-            string url = physicalPath.Substring(applicationPath.Length).Replace('\\', '/');
-            return (url);
+            */
         }
     }
 
