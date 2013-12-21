@@ -1,28 +1,5 @@
-<style type="text/css">
-.dropbox {
-    width: 15em;
-    height: 3em;
-    border: 2px solid #DDD;
-    border-radius: 8px;
-    background-color: #FEFFEC;
-    text-align: center;
-    color: #BBB;
-    font-size: 2em;
-    font-family: Arial, sans-serif;
-}
-.dropbox span {
-    margin-top: 0.9em;
-    display: block;
-}
-.dropbox.not-available {
-    background-color: #F88;
-}
-.dropbox.over {
-    background-color: #bfb;
-}
-</style>
 <div class="page-header">
-    <h1>{{currentUser.userName}}
+    <h1>{{pageTitle}}</h1>
 </div>
 
 <div class="row">
@@ -85,8 +62,16 @@
                             <th></th>
                         </tr>
                         <tr data-ng-repeat="player in players">
-                            <td data-ng-bind="player.games[0].game.category.title"></td>
-                            <td data-ng-bind="player.name"></td>
+                            <td>
+                                <a href="javascript:;" 
+                                    data-ui-sref="game-category-details({id: player.games[0].game.gameCategoryID})" 
+                                    data-ng-bind="player.games[0].game.category.title"></a>
+                            </td>
+                            <td>
+                                <a href="javascript:;" 
+                                    data-ui-sref="player-profile({id: player.competitorID})" 
+                                    data-ng-bind="player.name"></a>
+                            </td>
                             <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                             <td>
                                 <button class="btn btn-primary" data-ng-click="deleteCompetitor(player, players, $index, playerAlerts);">delete</button>
@@ -112,8 +97,16 @@
                         <th></th>
                     </tr>
                     <tr data-ng-repeat="team in teams">
-                        <td data-ng-bind="team.games[0].game.category.title"></td>
-                        <td data-ng-bind="team.name"></td>
+                        <td>
+                            <a href="javascript:;" 
+                                data-ui-sref="game-category-details({id: team.games[0].game.gameCategoryID})" 
+                                data-ng-bind="team.games[0].game.category.title"></a>
+                        </td>
+                        <td>
+                            <a href="javascript:;" 
+                                data-ui-sref="team-profile({id: team.competitorID})" 
+                                data-ng-bind="team.name"></a>
+                        </td>
                         <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                         <td>
                             <button class="btn btn-primary" data-ng-click="deleteCompetitor(team, teams, $index, teamAlerts);">delete</button>
@@ -151,13 +144,23 @@
                 <tbody data-ng-repeat="match in matches">
                     <tr data-ng-repeat="score in match.scores">
                         <td>
-                            {{$index == 0 ? match.game.title : ''}}
+                            <a href="javascript:;" 
+                                data-ui-sref="game-details({id: match.gameID})" 
+                                data-ng-show="$index == 0" 
+                                data-ng-bind="match.game.title"></a>
                         </td>
                         <td>
                             {{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                         <td data-ng-class="{winner : score.competitorID == match.winnerID}">
-                            {{score.competitor.name}}
+                            <a href="javascript:;" 
+                                data-ui-sref="player-profile({id: score.competitor.competitorID})" 
+                                data-ng-show="score.competitor.competitorType == 0" 
+                                data-ng-bind="score.competitor.name"></a>
+                            <a href="javascript:;" 
+                                data-ui-sref="team-profile({id: score.competitor.competitorID})" 
+                                data-ng-show="score.competitor.competitorType == 1" 
+                                data-ng-bind="score.competitor.name"></a>
                         </td>
                         <td>
                             {{score.score}}
@@ -188,7 +191,11 @@
                     </th>
                 </tr>
                 <tr data-ng-repeat="confirmation in automaticMatchConfirmations">
-                    <td data-ng-bind="confirmation.confirmee | userfull"></td>
+                    <td>
+                            <a href="javascript:;" 
+                                data-ui-sref="public-profile({id: confirmation.confirmeeID})" 
+                                data-ng-bind="confirmation.confirmee | userfull"></a>
+                    </td>
                     <td>
                         <button class="btn btn-primary" data-ng-click="deleteAutomaticConfirmation(confirmation.confirmee, $index)">remove</button>
                     </td>

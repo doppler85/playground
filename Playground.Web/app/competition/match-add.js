@@ -29,6 +29,7 @@ angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap
     'UserResource',
     'enums',
     function ($scope, $stateParams, $rootScope, $state, UserResource, enums) {
+        $scope.pageTitle = $state.current.data.pageTitle;
         $scope.match = {
             date: new Date(),
             scores: []

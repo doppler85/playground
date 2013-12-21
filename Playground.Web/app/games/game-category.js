@@ -4,10 +4,11 @@ angular.module('Playground.game-category', ['ngResource', 'ui.router']).
     '$scope',
     '$stateParams',
     '$rootScope',
+    '$state',
     'GameCategoryResource',
     'GameResource',
-    function ($scope, $stateParams, $rootScope, GameCategoryResource, GameResource) {
-
+    function ($scope, $stateParams, $rootScope, $state, GameCategoryResource, GameResource) {
+        $scope.pageTitle = $state.current.data.pageTitle;
         $scope.gameCategories = {};
         $scope.addingcategory = false;
         $scope.createCategory = function () {

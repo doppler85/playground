@@ -8,6 +8,7 @@ angular.module('Playground.competition-type-add', ['ngResource', 'ui.router', 'u
     'CompetitionTypeResource',
     'enums',
     function ($scope, $stateParams, $rootScope, $state, CompetitionTypeResource, enums) {
+        $scope.pageTitle = $state.current.data.pageTitle;
         $scope.competitorTypes = enums.competitionType;
         $scope.competitionType = {};
         $scope.alerts = [];

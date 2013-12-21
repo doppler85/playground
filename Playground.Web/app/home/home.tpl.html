@@ -1,3 +1,6 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
 <div class="row">
     <div class="span9">
         <h3>Last Matches</h3>
@@ -19,13 +22,23 @@
                 <tbody data-ng-repeat="match in matches">
                     <tr data-ng-repeat="score in match.scores">
                         <td>
-                            {{$index == 0 ? match.game.title : ''}}
+                            <a href="javascript:;" 
+                                data-ui-sref="game-details({id: match.gameID})" 
+                                data-ng-show="$index == 0" 
+                                data-ng-bind="match.game.title"></a>
                         </td>
                         <td>
                             {{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                         <td data-ng-class="{winner : score.competitorID == match.winnerID}">
-                            {{score.competitor.name}}
+                            <a href="javascript:;" 
+                                data-ui-sref="player-profile({id: score.competitor.competitorID})" 
+                                data-ng-show="score.competitor.competitorType == 0" 
+                                data-ng-bind="score.competitor.name"></a>
+                            <a href="javascript:;" 
+                                data-ui-sref="team-profile({id: score.competitor.competitorID})" 
+                                data-ng-show="score.competitor.competitorType == 1" 
+                                data-ng-bind="score.competitor.name"></a>
                         </td>
                         <td>
                             {{score.score}}
@@ -34,7 +47,7 @@
                 </tbody>
              </table>
         <p>
-            <a href="javascript:;" class="btn">More matches >></a>
+            <a href="javascript:;">More matches >></a>
         </p>
     </div>
 </div>
@@ -53,13 +66,26 @@
                 <th>Creation date</th>
             </tr>
             <tr data-ng-repeat="competitor in competitors">
-                <td data-ng-bind="competitor.games[0].game.category.title"></td>
-                <td data-ng-bind="competitor.name"></td>
+                <td>
+                    <a href="javascript:;" 
+                        data-ui-sref="game-category-details({id: competitor.games[0].game.gameCategoryID})" 
+                        data-ng-bind="competitor.games[0].game.category.title"></a>
+                </td>
+                <td>
+                    <a href="javascript:;" 
+                        data-ui-sref="player-profile({id: competitor.competitorID})" 
+                        data-ng-show="competitor.competitorType == 0" 
+                        data-ng-bind="competitor.name"></a>
+                    <a href="javascript:;" 
+                        data-ui-sref="team-profile({id: competitor.competitorID})" 
+                        data-ng-show="competitor.competitorType == 1" 
+                        data-ng-bind="competitor.name"></a>
+                </td>
                 <td data-ng-bind="competitor.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
             </tr>
             </table>
         <p>
-            <a href="javascript:;" class="btn">More players >></a>
+            <a href="javascript:;" >More players >></a>
         </p>
     </div>
 </div>

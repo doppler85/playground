@@ -4,8 +4,10 @@ angular.module('Playground.home', ['ngResource', 'ui.router']).
     '$scope',
     '$stateParams',
     '$rootScope',
+    '$state',
     'HomeResource',
-    function ($scope, $stateParams, $rootScope, HomeResource) {
+    function ($scope, $stateParams, $rootScope, $state, HomeResource) {
+        $scope.pageTitle = $state.current.data.pageTitle;
         $scope.matches = [];
         $scope.competitors = [];
 

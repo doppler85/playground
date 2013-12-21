@@ -2,11 +2,12 @@
 angular.module('Playground.register', ['ngResource', 'ui.router']).
 controller('RegisterController', [
 '$scope',
+'$state',
 '$stateParams',
 '$rootScope',
-'$state',
 'security',
-function ($scope, $stateParams, $rootScope, $state, security) {
+function ($scope, $state, $stateParams, $rootScope, security) {
+    $scope.pageTitle = $state.current.data.pageTitle;
     $scope.authError = null;
 
     $scope.registerModel = {

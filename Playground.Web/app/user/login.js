@@ -2,10 +2,13 @@
 angular.module('Playground.login', ['ngResource', 'ui.router']).
 controller('LoginController', [
 '$scope',
+'$state',
 '$stateParams',
 '$rootScope',
 'security',
-function ($scope, $stateParams, $rootScope, security) {
+function ($scope, $state, $stateParams, $rootScope, security) {
+    $scope.pageTitle = $state.current.data.pageTitle;
+
     $scope.user = {
         email: 'admin@playground.com',
         password: 'admin123!',

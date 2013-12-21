@@ -17,6 +17,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
     'UserResource',
     'enums',
     function ($scope, $stateParams, $rootScope, $state, UserResource, enums) {
+        $scope.pageTitle = $state.current.data.pageTitle;
         $scope.team = {
             players: [],
             games: []

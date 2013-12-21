@@ -1,17 +1,19 @@
 <div class="page-header">
-    <h1>Games</h1>
+    <h1>{{pageTitle}}</h1>
 </div>
 
 <div class="row" data-ng-repeat="gameCategory in gameCategories">
     <div class="span12">
-        <h3>{{gameCategory.title}}
+        <h3><a data-ui-sref="game-categlry-details({id: gameCategory.gameCategoryID })" href="javascript:;">{{gameCategory.title}}</a>
         <a class="btn btn-primary" href="javascript:;" data-ng-click="deleteCategory(gameCategory, $index);">delete</a>
         </h3>
         <table class="table">
             <tr data-ng-repeat="game in gameCategory.games">
                 <td>
                     <div class="img-holder">
-                        <img src="content/assets/img/content/mitar-miric.png" alt="" />
+                        <a href="javascript:;" data-ui-sref="game-details({id: game.gameID})">
+                            <img src="content/assets/img/content/mitar-miric.png" alt="" />
+                        </a>
                     </div>
                 </td>
                 <td>

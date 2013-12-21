@@ -7,6 +7,8 @@ var Playground = angular.module('Playground', [
     'Playground.game-category',
     'Playground.game-list',
     'Playground.game-edit',
+    'Playground.game-details',
+    'Playground.game-category-details',
     'Playground.competition-type-list',
     'Playground.competition-type-add',
     'Playground.register',
@@ -16,6 +18,9 @@ var Playground = angular.module('Playground', [
     'Playground.player-add',
     'Playground.team-add',
     'Playground.match-add',
+    'Playground.player-profile',
+    'Playground.team-profile',
+    'Playground.user-public-profile',
     'Playground.security.security-service',
     'Playground.security.interceptor',
     'Playground.security.retry-queue',
@@ -47,7 +52,7 @@ Playground.
         '$httpProvider',
         '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $routeProvider, $httpProvider, $locationProvider) {
-            $locationProvider.html5Mode(false).hashPrefix('!');
+            $locationProvider.html5Mode(false)//.hashPrefix('!');
             delete $httpProvider.defaults.headers.common["X-Requested-With"];
             $urlRouterProvider.otherwise('/home');
         }]).
@@ -61,7 +66,7 @@ Playground.
                     url: '/home',
                     templateUrl: 'app/home/home.tpl.html',
                     controller: 'HomeController',
-                    data: { pageTitle: 'Home page' }
+                    data: { pageTitle: 'Playground' }
                 }).state('game-categories', {
                     url: '/game-categories',
                     templateUrl: 'app/games/game-category.tpl.html',
@@ -72,6 +77,11 @@ Playground.
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
+                }).state('game-category-details', {
+                    url: '/game/category-details/:id',
+                    templateUrl: 'app/games/game-category-details.tpl.html',
+                    controller: 'GameCategoryDetailsController',
+                    data: { pageTitle: 'Game category details' }
                 }).state('competition-types', {
                     url: '/competition-types',
                     templateUrl: 'app/games/competition-type-list.tpl.html',
@@ -95,13 +105,13 @@ Playground.
                 }).state('game-details', {
                     url: '/game/details/:id',
                     templateUrl: 'app/games/game-details.tpl.html',
-                    controller: 'DetailsGameController',
+                    controller: 'GameDetailsController',
                     data: { pageTitle: 'Game details' }
                 }).state('game-edit', {
                     url: '/game/edit/:id',
                     templateUrl: 'app/games/game-edit.tpl.html',
                     controller: 'EditGameController',
-                    data: { pageTitle: 'Edit Game' },
+                    data: { pageTitle: 'Edit game' },
                     resolve: {
                         authenticaated: function (securityAuthorization, $state) {
                             return securityAuthorization.requireAuthenticatedUser();
@@ -116,47 +126,62 @@ Playground.
                     url: '/register',
                     templateUrl: 'app/user/register.tpl.html',
                     controller: 'RegisterController',
-                    data: { pageTitle: 'Login' }
+                    data: { pageTitle: 'Register' }
                 }).state('profile', {
                     url: '/profile',
                     templateUrl: 'app/user/user-profile.tpl.html',
                     controller: 'ProfileController',
-                    data: { pageTitle: 'Profile' },
+                    data: { pageTitle: 'My profile' },
                     resolve: {
                         authenticaated: function (securityAuthorization, $location, $state) {
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
+                }).state('public-profile', {
+                    url: '/profile/:id',
+                    templateUrl: 'app/user/user-public-profile.tpl.html',
+                    controller: 'PublicProfileController',
+                    data: { pageTitle: 'Public profile' }
                 }).state('player-add', {
-                    url: '/user/player/add',
-                    templateUrl: 'app/user/player-edit.tpl.html',
+                    url: '/user/competition/player/add',
+                    templateUrl: 'app/competition/player-edit.tpl.html',
                     controller: 'PlayerAddController',
-                    data: { pageTitle: 'Player add' },
+                    data: { pageTitle: 'Add player' },
                     resolve: {
                         authenticaated: function (securityAuthorization, $location, $state) {
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
                 }).state('team-add', {
-                    url: '/user/team/add',
-                    templateUrl: 'app/user/team-edit.tpl.html',
+                    url: '/competition/team/add',
+                    templateUrl: 'app/competition/team-edit.tpl.html',
                     controller: 'TeamAddController',
-                    data: { pageTitle: 'Team add' },
+                    data: { pageTitle: 'Add team' },
                     resolve: {
                         authenticaated: function (securityAuthorization, $location, $state) {
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
                 }).state('match-add', {
-                    url: '/user/match/add',
-                    templateUrl: 'app/user/match-edit.tpl.html',
+                    url: '/competition/match/add',
+                    templateUrl: 'app/competition/match-edit.tpl.html',
                     controller: 'MatchAddController',
-                    data: { pageTitle: 'Match add' },
+                    data: { pageTitle: 'Add match' },
                     resolve: {
                         authenticaated: function (securityAuthorization, $location, $state) {
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
+                }).state('player-profile', {
+                    url: '/competition/player/:id',
+                    templateUrl: 'app/competition/player-profile.tpl.html',
+                    controller: 'PlayerProfileController',
+                    data: { pageTitle: 'Player profile' }
+                }).state('team-profile', {
+                    url: '/competition/team/:id',
+                    templateUrl: 'app/competition/team-profile.tpl.html',
+                    controller: 'TeamProfileController',
+                    data: { pageTitle: 'Team profile' }
                 });
            }]).
     run([

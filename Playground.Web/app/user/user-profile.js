@@ -63,12 +63,14 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
     .controller('ProfileController', [
     '$http',
     '$scope',
+    '$state',
     '$stateParams',
     '$rootScope',
     'security',
     'UserResource',
     'enums',
-    function ($http, $scope, $stateParams, $rootScope, security, UserResource, enums) {
+    function ($http, $scope, $state, $stateParams, $rootScope, security, UserResource, enums) {
+        $scope.pageTitle = $state.current.data.pageTitle;
         $scope.players = {};
         $scope.teams = {};
         $scope.matches = [];

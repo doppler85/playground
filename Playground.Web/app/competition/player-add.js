@@ -13,6 +13,7 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
     'UserResource',
     'enums',
     function ($scope, $stateParams, $rootScope, $state, UserResource, enums) {
+        $scope.pageTitle = $state.current.data.pageTitle;
         $scope.player = {
             games: []
         };
