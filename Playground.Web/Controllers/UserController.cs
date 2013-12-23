@@ -25,13 +25,6 @@ namespace Playground.Web.Controllers
             this.Uow = uow;
         }
 
-        private User GetUserByEmail(string email)
-        {
-            return Uow.Users
-                        .GetAll()
-                        .FirstOrDefault(u => u.EmailAddress == email);
-        }
-
         // api/user/getplayers
         [HttpGet]
         [ActionName("players")]
@@ -624,9 +617,9 @@ namespace Playground.Web.Controllers
             return response;
         }
 
-        private string GetImagesRootFolder()
+        private string GetProfilePicturesRootFolder()
         {
-            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.ProfilePictureRoot)); 
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.ProfilePictureRoot));
         }
 
         [HttpPost]
@@ -639,7 +632,7 @@ namespace Playground.Web.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            string root = GetImagesRootFolder();
+            string root = GetProfilePicturesRootFolder();
             var provider = new UniqueMultipartFormDataStreamProvider(root);
             
             try
@@ -686,10 +679,10 @@ namespace Playground.Web.Controllers
 
         [HttpPost]
         [ActionName("cropprofilepicture")]
-        public HttpResponseMessage CropProfilePicture(CropingCoords coords)
+        public HttpResponseMessage CropProfilePicture(CropingArgs coords)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
-            string root = GetImagesRootFolder();
+            string root = GetProfilePicturesRootFolder();
             string filePath = String.Format("{0}{1}_{2}_temp.{3}",
                                                         root,
                                                         Constants.Images.ProfilePicturePrefix,

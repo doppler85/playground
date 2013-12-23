@@ -7,7 +7,13 @@
             <div class="control-group">
                 <label class="control-label" for="logo">logo</label>
                 <div class="controls">
-                    <input id="logo" type="image" src="content/assets/img/content/mitar-miric.png" alt="" style="width: 50px; height: 50px;" />
+                    <image-upload 
+                        data-object-id="game.gameID"
+                        data-img-src="game.gamePictureUrl"
+                        data-upload-url="api/game/uploadgamepicture"
+                        data-crop-url="api/game/cropgamepicture"
+                        data-on-image-cropped="onImageCropped(data);"
+                        />
                 </div>
             </div>
             <div class="control-group">

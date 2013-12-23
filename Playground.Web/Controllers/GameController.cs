@@ -1,10 +1,15 @@
 ﻿using Playground.Data.Contracts;
 using Playground.Model;
+using Playground.Web.Models;
+using Playground.Web.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 
 namespace Playground.Web.Controllers
@@ -32,7 +37,12 @@ namespace Playground.Web.Controllers
             retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
             // retVal.CompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(retVal.GameID).ToList();
             retVal.CompetitionTypes = GetByGameId(retVal.GameID);
-                                            
+            retVal.GamePictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={3}",
+                Constants.Images.GamePictureRoot,
+                Constants.Images.GamePicturePrefix,
+                retVal.GameID,
+                Constants.Images.GamePictureExtension,
+                DateTime.Now.Ticks);
 
             return retVal;
         }
@@ -113,6 +123,113 @@ namespace Playground.Web.Controllers
             var response = Request.CreateResponse(HttpStatusCode.OK);
 
             return response;
+        }
+
+        private string GetGamePicturesRootFolder()
+        {
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.GamePictureRoot));
+        }
+
+        [HttpPost]
+        [ActionName("uploadgamepicture")]
+        public async Task<HttpResponseMessage> UploadGamePicture()
+        {
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            string root = GetGamePicturesRootFolder();
+            var provider = new UniqueMultipartFormDataStreamProvider(root);
+
+            try
+            {
+                // Read the form data and return an async task.
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                // This illustrates how to get the file names for uploaded files.
+                User currentUser = GetUserByEmail(User.Identity.Name);
+
+                
+                if (String.IsNullOrEmpty(provider.FormData["ID"]))
+                {
+                    throw new Exception("No ID for the game specified");
+                }
+                int gameId = Int32.Parse(provider.FormData["ID"]);
+                string retUrl = "";
+                if (provider.FileData.Count > 0)
+                {
+                    string localName = provider.FileData[0].LocalFileName;
+                    FileInfo fileInfo = new FileInfo(localName);
+                    string filePath = String.Format("{0}{1}_{2}_temp.{3}",
+                                            root,
+                                            Constants.Images.GamePicturePrefix,
+                                            gameId,
+                                            Constants.Images.GamePictureExtension);
+
+                    ImageUtil.ScaleImage(fileInfo.FullName,
+                                        filePath,
+                                        Constants.Images.GameImageFormat,
+                                        Constants.Images.GameImageMaxSize,
+                                        Constants.Images.GameImageMaxSize);
+
+                    fileInfo.Delete();
+
+                    fileInfo = new FileInfo(filePath);
+                    retUrl = String.Format("{0}{1}", Constants.Images.GamePictureRoot, fileInfo.Name);
+                }
+
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                };
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        [HttpPost]
+        [ActionName("cropgamepicture")]
+        public HttpResponseMessage CropGamePicture(CropingArgs coords)
+        {
+            //User currentUser = GetUserByEmail(User.Identity.Name);
+            string root = GetGamePicturesRootFolder();
+            string filePath = String.Format("{0}{1}_{2}_temp.{3}",
+                                                        root,
+                                                        Constants.Images.GamePicturePrefix,
+                                                        coords.ID,
+                                                        Constants.Images.GamePictureExtension);
+
+            string destFilePath = String.Format("{0}{1}_{2}.{3}",
+                                                                    root,
+                                                                    Constants.Images.GamePicturePrefix,
+                                                                    coords.ID,
+                                                                    Constants.Images.GamePictureExtension);
+            try
+            {
+                ImageUtil.CropImage(filePath,
+                                    destFilePath,
+                                    Constants.Images.GameImageFormat,
+                                    coords);
+
+                // delete temporary file
+                FileInfo fileInfo = new FileInfo(filePath);
+                fileInfo.Delete();
+
+                fileInfo = new FileInfo(destFilePath);
+                string retUrl = String.Format("{0}{1}", Constants.Images.GamePictureRoot, fileInfo.Name);
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                };
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
     }
 }

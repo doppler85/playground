@@ -1,0 +1,17 @@
+<div>
+    <div data-ng-hide="changePicturePhase == 'crop'">
+        <img data-ng-src="{{imgSrc}}" alt="" style="width:200px; height: 200px;"/>
+        <a href="javascript:;" data-ng-click="changePicturePhase = 'select'">change</a>
+    </div>
+    <div data-ng-show="changePicturePhase == 'select'">
+        <input id="fileupload" type="file" accept="image/*">
+        <button class="btn" data-ng-click="changePicturePhase = 'initial'">cancel</button>
+    </div>
+    <div data-ng-show="changePicturePhase == 'crop'">
+        <div>
+            <img id="croppingImg" alt="">
+        </div>
+        <button class="btn" data-ng-click="cropPicture()">save</button>
+        <button class="btn" data-ng-click="changePicturePhase = 'initial';">cancel</button>
+    </div>
+</div>

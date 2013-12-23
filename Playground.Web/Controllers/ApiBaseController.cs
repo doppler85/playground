@@ -1,4 +1,6 @@
 ﻿using Playground.Data.Contracts;
+using Playground.Model;
+using Playground.Web.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +12,12 @@ namespace Playground.Web.Controllers
     public abstract class ApiBaseController : ApiController
     {
         protected IPlaygroundUow Uow { get; set; }
+
+        protected User GetUserByEmail(string email)
+        {
+            return Uow.Users
+                        .GetAll()
+                        .FirstOrDefault(u => u.EmailAddress == email);
+        }
     }
 }

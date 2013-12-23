@@ -4,7 +4,7 @@
 
 <div class="row" data-ng-repeat="gameCategory in gameCategories">
     <div class="span12">
-        <h3><a data-ui-sref="game-categlry-details({id: gameCategory.gameCategoryID })" href="javascript:;">{{gameCategory.title}}</a>
+        <h3><a data-ui-sref="game-category-details({id: gameCategory.gameCategoryID })" href="javascript:;">{{gameCategory.title}}</a>
         <a class="btn btn-primary" href="javascript:;" data-ng-click="deleteCategory(gameCategory, $index);">delete</a>
         </h3>
         <table class="table">
@@ -12,7 +12,7 @@
                 <td>
                     <div class="img-holder">
                         <a href="javascript:;" data-ui-sref="game-details({id: game.gameID})">
-                            <img src="content/assets/img/content/mitar-miric.png" alt="" />
+                            <img data-ng-src="{{game.gamePictureUrl}}" alt="" />
                         </a>
                     </div>
                 </td>

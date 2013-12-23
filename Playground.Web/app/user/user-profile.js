@@ -1,5 +1,6 @@
 ﻿'use strict';
-angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootstrap.tabs'])
+angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootstrap.tabs', 'Playground.imageupload'])
+    /*
     .directive('fileUpload', function () {
         return {
             scope: true,        //create a new scope
@@ -15,6 +16,8 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             }
         };
     })
+    */
+    /*
     .directive('imgCropped', function () {
         return {
             restrict: 'E',
@@ -55,6 +58,7 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             }
         };
     })
+    */
     .filter('userfull', function () {
         return function (user) {
             return user ? user.firstName + ' ' + user.lastName : '';
@@ -204,26 +208,35 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
         // cropping -> move to directive one day
 
         //an array of files selected
+        /*
         $scope.changeProfilePictureStep = 0;
         $scope.cropingCoords = null;
         $scope.files = [];
-
+        */
         //listen for the file selected event
+        /*
         $scope.$on("fileSelected", function (event, args) {
             $scope.$apply(function () {
                 $scope.files[0] = args.file;
                 $scope.uploadProfilePicture();
             });
         });
-
+        */
+        /*
         $scope.$on("cropingSelectionChanged", function (event, args) {
             $scope.cropingCoords = args.coords;
         });
-
+        */
+        /*
         $scope.$on("cropingSelectionReleased", function (event, args) {
             $scope.cropingCoords = null;
         });
-
+        */
+        $scope.onImageCropped = function (data) {
+            console.log('image cropped', data);
+            security.refreshCurrentUser();
+        }
+        /*
         $scope.cropProfileImage = function () {
             if ($scope.cropingCoords != null) {
                 $http(
@@ -239,8 +252,10 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                 });
             }
         }
+        */
 
         // upload profile picture and show crop screen 
+        /*
         $scope.uploadProfilePicture = function () {
             console.log('uploading profile picture...');
 
@@ -260,4 +275,5 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                 $scope.changeProfilePictureStep = 2;
             });
         };
+        */
     }]);

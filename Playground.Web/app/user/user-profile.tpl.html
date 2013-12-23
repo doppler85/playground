@@ -7,7 +7,7 @@
         <tab heading="My info">    
             <div class="span6">
                 <h3>Profile picture</h3>
-                <div data-ng-hide="changeProfilePictureStep == 2">
+<!--                <div data-ng-hide="changeProfilePictureStep == 2">
                     <img data-ng-src="{{profile.profilePictureUrl}}" alt="" style="width:200px; height: 200px;">
                     <a href="javascript:;" data-ng-click="changeProfilePictureStep = 1;">change</a>
                 </div>
@@ -21,8 +21,15 @@
                     </div>
                     <button class="btn" data-ng-click="cropProfileImage()">save</button>
                     <button class="btn" data-ng-click="changeProfilePictureStep = 0;">cancel</button>
-                </div>
+                </div>-->
+                <image-upload 
+                    data-img-src="profile.profilePictureUrl"
+                    data-upload-url="api/user/uploadprofilepicture"
+                    data-crop-url="api/user/cropprofilepicture"
+                    data-on-image-cropped="onImageCropped(data);"
+                    />
             </div>
+            
 
             <div class="span6">
             <h3>My info</h3>

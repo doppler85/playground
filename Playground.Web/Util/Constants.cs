@@ -26,6 +26,12 @@ namespace Playground.Web.Util
             public static System.Drawing.Imaging.ImageFormat ProfileImageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
             public static string ProfilePictureExtension = "jpg";
             public static int ProfileImageMaxSize = 400;
+
+            public static string GamePictureRoot = "/Images/Game/";
+            public static string GamePicturePrefix = "game_pic";
+            public static System.Drawing.Imaging.ImageFormat GameImageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+            public static string GamePictureExtension = "jpg";
+            public static int GameImageMaxSize = 200;
         }
     }
 }

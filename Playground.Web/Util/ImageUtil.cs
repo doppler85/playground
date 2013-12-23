@@ -37,7 +37,7 @@ namespace Playground.Web.Util
             }
         }
 
-        public static void CropImage(string sourcePath, string destinationPath, System.Drawing.Imaging.ImageFormat format, CropingCoords cropingCoords)
+        public static void CropImage(string sourcePath, string destinationPath, System.Drawing.Imaging.ImageFormat format, CropingArgs cropingCoords)
         {
             using (Image image = Image.FromFile(sourcePath))
             {

@@ -1,5 +1,6 @@
 ﻿using Playground.Data.Contracts;
 using Playground.Model;
+using Playground.Web.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,21 @@ namespace Playground.Web.Controllers
         [HttpGet]
         public List<GameCategory> Get()
         {
-            return Uow.GameCategories.GetAll(p => p.Games).OrderBy(gc => gc.Title).ToList();
+            List<GameCategory> retVal = Uow.GameCategories.GetAll(p => p.Games).OrderBy(gc => gc.Title).ToList();
+            foreach (GameCategory gameCategory in retVal)
+            {
+                foreach (Game game in gameCategory.Games)
+                {
+                    game.GamePictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={3}",
+                        Constants.Images.GamePictureRoot,
+                        Constants.Images.GamePicturePrefix,
+                        game.GameID,
+                        Constants.Images.GamePictureExtension,
+                        DateTime.Now.Ticks);
+
+                }
+            }
+            return retVal;
         }
 
         // // api/gamecategory/5

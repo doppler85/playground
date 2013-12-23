@@ -1,5 +1,5 @@
 'use strict';
-angular.module('Playground.game-edit', ['ngResource', 'ui.router']).
+angular.module('Playground.game-edit', ['ngResource', 'ui.router', 'Playground.imageupload']).
     controller('EditGameController', [
     '$scope',
     '$state',

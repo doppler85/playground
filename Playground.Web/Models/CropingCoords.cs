@@ -5,8 +5,9 @@ using System.Web;
 
 namespace Playground.Web.Models
 {
-    public class CropingCoords
+    public class CropingArgs
     {
+        public object ID { get; set; }
         public int H { get; set; }
         public int W { get; set; }
         public int X { get; set; }
