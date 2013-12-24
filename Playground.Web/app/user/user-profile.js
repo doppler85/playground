@@ -1,64 +1,5 @@
 ﻿'use strict';
-angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootstrap.tabs', 'Playground.imageupload'])
-    /*
-    .directive('fileUpload', function () {
-        return {
-            scope: true,        //create a new scope
-            link: function (scope, el, attrs) {
-                el.bind('change', function (event) {
-                    var files = event.target.files;
-                    //iterate files since 'multiple' may be specified on the element
-                    for (var i = 0;i<files.length;i++) {
-                        //emit event upward
-                        scope.$emit("fileSelected", { file: files[i] });
-                    }                                       
-                });
-            }
-        };
-    })
-    */
-    /*
-    .directive('imgCropped', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: { src: '@', selected: '&' },
-            link: function (scope, element, attr) {
-                var myImg;
-                var clear = function () {
-                    if (myImg) {
-                        myImg.next().remove();
-                        myImg.remove();
-                        myImg = undefined;
-                    }
-                };
-                scope.$watch('src', function (nv) {
-                    clear();
-                    if (nv) {
-                        element.after('<img />');
-                        myImg = element.next();
-                        myImg.attr('src', nv);
-                        $(myImg).Jcrop({
-                            aspectRatio: 1,
-                            minSize: [100, 100],
-                            maxSize: [300, 300],
-                            setSelect: [0, 0, 100, 100],
-                            trackDocument: true,
-                            onRelease: function (rect) {
-                                scope.$emit("cropingSelectionReleased", { coords: rect });
-                            },
-                            onSelect: function (rect) {
-                                scope.$emit("cropingSelectionChanged", { coords: rect });
-                            }
-                        });
-                    }
-                });
-
-                scope.$on('$destroy', clear);
-            }
-        };
-    })
-    */
+angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootstrap.tabs', 'ui.bootstrap.pagination', 'Playground.imageupload'])
     .filter('userfull', function () {
         return function (user) {
             return user ? user.firstName + ' ' + user.lastName : '';
@@ -72,13 +13,10 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
     '$rootScope',
     'security',
     'UserResource',
-    'enums',
-    function ($http, $scope, $state, $stateParams, $rootScope, security, UserResource, enums) {
+    function ($http, $scope, $state, $stateParams, $rootScope, security, UserResource) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.players = {};
         $scope.teams = {};
-        $scope.matches = [];
-        $scope.matchStatuses = enums.matchStatus;
         $scope.playerAlerts = [];
         $scope.teamAlerts = [];
         $scope.profile = {};
@@ -125,10 +63,10 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             });
         }
 
-        $scope.loadMatches = function () {
-            UserResource.allMatches({count: 5}, function (data, status, headers, config) {
-                $scope.matches = data;
-            });
+        $scope.loadMatches = function (page) {
+            //UserResource.allMatches({page: page, count: 5}, function (data, status, headers, config) {
+            //    $scope.matches = data;
+            //});
         }
 
         $scope.deleteCompetitor = function (competitor, collection, index, msgCollection) {
@@ -198,82 +136,18 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             }
         };
 
-        $scope.loadPlayers();
-        $scope.loadTeams();
-        $scope.loadMatches();
-        $scope.getProfile();
-        $scope.loadAutomaticConfirmations();
-
-
-        // cropping -> move to directive one day
-
-        //an array of files selected
-        /*
-        $scope.changeProfilePictureStep = 0;
-        $scope.cropingCoords = null;
-        $scope.files = [];
-        */
-        //listen for the file selected event
-        /*
-        $scope.$on("fileSelected", function (event, args) {
-            $scope.$apply(function () {
-                $scope.files[0] = args.file;
-                $scope.uploadProfilePicture();
-            });
-        });
-        */
-        /*
-        $scope.$on("cropingSelectionChanged", function (event, args) {
-            $scope.cropingCoords = args.coords;
-        });
-        */
-        /*
-        $scope.$on("cropingSelectionReleased", function (event, args) {
-            $scope.cropingCoords = null;
-        });
-        */
         $scope.onImageCropped = function (data) {
             console.log('image cropped', data);
             security.refreshCurrentUser();
-        }
-        /*
-        $scope.cropProfileImage = function () {
-            if ($scope.cropingCoords != null) {
-                $http(
-                {
-                    method: 'POST',
-                    url: 'api/user/cropprofilepicture',
-                    data: $scope.cropingCoords,
-                }).success(function (data, status, headers, config) {
-                    $scope.croppingUrl = '';
-                    $scope.profile.profilePictureUrl = data;
-                    $scope.changeProfilePictureStep = 0;
-                    security.refreshCurrentUser();
-                });
-            }
-        }
-        */
-
-        // upload profile picture and show crop screen 
-        /*
-        $scope.uploadProfilePicture = function () {
-            console.log('uploading profile picture...');
-
-            var formData = new FormData();
-            formData.append("image", $scope.files[0]);
-            $http(
-            {
-                method: 'POST',
-                url: 'api/user/uploadprofilepicture',
-                data: formData,
-                headers: {
-                    'Content-Type': undefined
-                },
-                transformRequest: angular.identity
-            }).success(function (data, status, headers, config) {
-                $scope.croppingUrl = data;
-                $scope.changeProfilePictureStep = 2;
-            });
         };
-        */
+
+        $scope.onMatchPageSelect = function (page) {
+            $scope.loadMatches(page);
+        }
+
+        $scope.loadPlayers();
+        $scope.loadTeams();
+        $scope.loadMatches(1);
+        $scope.getProfile();
+        $scope.loadAutomaticConfirmations();
     }]);

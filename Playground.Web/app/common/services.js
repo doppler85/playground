@@ -57,7 +57,6 @@ factory('UserResource', ['$resource', function (resource) {
         },
         allMatches: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'matches'
             }

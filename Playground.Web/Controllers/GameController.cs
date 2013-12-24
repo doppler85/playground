@@ -231,5 +231,78 @@ namespace Playground.Web.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
+
+        [HttpGet]
+        [ActionName("matches")]
+        public PagedResult<Match> GetMatches(string id, int page, int count)
+        {
+            int gameId = Int32.Parse(id);
+            int totalItems = Uow.Matches
+                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                        .Where(m => m.GameID == gameId && m.Status == MatchStatus.Confirmed)
+                                        .Count();
+
+            List<Match> matches = Uow.Matches
+                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                        .Where(m => m.GameID == gameId && m.Status == MatchStatus.Confirmed)
+                                        .OrderByDescending(s => s.Date)
+                                        .Skip((page - 1) * count)
+                                        .Take(count)
+                                        .ToList();
+
+
+            List<long> competitorIds = matches
+                .SelectMany(m => m.Scores)
+                .ToList()
+                .Select(s => s.CompetitorID)
+                .ToList();
+
+            List<Competitor> competitors = Uow.Competitors
+                .GetAll()
+                .Where(c => competitorIds.Contains(c.CompetitorID))
+                .ToList();
+
+            PagedResult<Match> retVal = new PagedResult<Match>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = matches
+            };
+
+            return retVal;
+        }
+
+        [HttpGet]
+        [ActionName("players")]
+        public PagedResult<Player> GetPlayers(string id, int page, int count)
+        {
+            int gameId = Int32.Parse(id);
+            int totalItems = Uow.Competitors
+                                        .GetAll(c => ((Player)c).User)
+                                        .OfType<Player>()
+                                        .Where(c => c.Games.Any(g => g.GameID == gameId))
+                                        .Count();
+
+            List<Player> players = Uow.Competitors
+                                        .GetAll(c => ((Player)c).User, c => c.Games)
+                                        .OfType<Player>()
+                                        .Where(c => c.Games.Any(g => g.GameID == gameId))
+                                        .OrderByDescending(c => c.CreationDate)
+                                        .Skip((page - 1) * count)
+                                        .Take(count)
+                                        .ToList();
+            
+            PagedResult<Player> retVal = new PagedResult<Player>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = players
+            };
+
+            return retVal;
+        }
+
     }
 }

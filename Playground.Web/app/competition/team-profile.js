@@ -9,5 +9,6 @@ controller('TeamProfileController', [
 'UserResource',
 function ($scope, $state, $stateParams, $rootScope, security, UserResource) {
     $scope.pageTitle = $state.current.data.pageTitle;
+    $scope.competitorID = $stateParams.id;
 
 }]);;

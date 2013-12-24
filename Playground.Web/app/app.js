@@ -3,6 +3,8 @@
 var Playground = angular.module('Playground', [
     'ui.router',
     'Playground.imageupload',
+    'Playground.matches',
+    'Playground.players',
     'Playground.main-menu',
     'Playground.home',
     'Playground.game-category',

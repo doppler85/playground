@@ -226,6 +226,7 @@
     <Compile Include="Controllers\ApiBaseController.cs" />
     <Compile Include="Controllers\CompetitionTypeController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CompetitorController.cs" />
     <Compile Include="Controllers\GameCategoryController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -247,6 +248,8 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\common\imageupload.js" />
+    <Content Include="app\common\matches.js" />
+    <Content Include="app\common\players.js" />
     <Content Include="app\common\services.js" />
     <Content Include="app\competition\match-add.js" />
     <Content Include="app\competition\match-edit.tpl.html" />
@@ -290,10 +293,12 @@
     <Content Include="app\templates\datepicker\datepicker.html" />
     <Content Include="app\templates\datepicker\popup.html" />
     <Content Include="app\templates\imageupload\image-upload.html" />
+    <Content Include="app\templates\matches\matches.html" />
     <Content Include="app\templates\modal\backdrop.html" />
     <Content Include="app\templates\modal\window.html" />
     <Content Include="app\templates\pagination\pager.html" />
     <Content Include="app\templates\pagination\pagination.html" />
+    <Content Include="app\templates\players\players.html" />
     <Content Include="app\templates\tabs\tab.html" />
     <Content Include="app\templates\tabs\tabset-titles.html" />
     <Content Include="app\templates\tabs\tabset.html" />

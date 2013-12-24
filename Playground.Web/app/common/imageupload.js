@@ -42,10 +42,8 @@ angular.module('Playground.imageupload', [])
                         data: $scope.cropingArgs,
                     }).success(function (data, status, headers, config) {
                         $scope.croppingUrl = '';
-                        // $scope.profile.profilePictureUrl = data;
                         $scope.imgSrc = data;
                         $scope.changePicturePhase = 'initial';
-                        // security.refreshCurrentUser();
                         $scope.onImageCropped({ data: data });
                     });
                 }

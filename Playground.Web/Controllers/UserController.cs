@@ -248,7 +248,7 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("matches")]
-        public List<Match> GetMatches(int count)
+        public PagedResult<Match> GetMatches(int page, int count)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<long> teamsIds = Uow.Competitors
@@ -267,20 +267,28 @@ namespace Playground.Web.Controllers
 
             List<long> ids = teamsIds.Concat(playerIds).ToList();
 
+            int totalItems = Uow.Matches
+                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                        .Where(m => m.Scores
+                                                        .Any(s => ids.Contains(s.CompetitorID)))
+                                        .Count();
+
             List<Match> matches = Uow.Matches
                                         .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
                                         .Where(m => m.Scores
                                                         .Any(s => ids.Contains(s.CompetitorID)))
                                         .OrderByDescending(s => s.Date)
+                                        .Skip((page - 1) * count)
                                         .Take(count)
                                         .ToList();
 
+                         
             List<long> competitorIds = matches
                 .SelectMany(m => m.Scores)
                 .ToList()
                 .Select(s => s.CompetitorID)
                 .ToList();
-            
+
             List<Competitor> competitors = Uow.Competitors
                 .GetAll()
                 .Where(c => competitorIds.Contains(c.CompetitorID))
@@ -293,9 +301,96 @@ namespace Playground.Web.Controllers
                     competitor.IsCurrentUserCompetitor = true;
                 }
             }
-            
-            return matches;
+
+            PagedResult<Match> retVal = new PagedResult<Match>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = matches
+            };
+
+            return retVal;
         }
+
+        [HttpGet]
+        [ActionName("publicmatches")]
+        public PagedResult<Match> GetMatches(string id, int page, int count)
+        {
+            int userId = Int32.Parse(id);
+            List<long> teamsIds = Uow.Competitors
+                                        .GetAll()
+                                        .OfType<Team>()
+                                        .Where(t => t.Players.Any(p => p.Player.User.UserID == userId))
+                                        .Select(t => t.CompetitorID)
+                                        .Distinct()
+                                        .ToList();
+            List<long> playerIds = Uow.Competitors
+                                        .GetAll()
+                                        .OfType<Player>()
+                                        .Where(p => p.UserID == userId)
+                                        .Select(p => p.CompetitorID)
+                                        .ToList();
+
+            List<long> ids = teamsIds.Concat(playerIds).ToList();
+
+            int totalItems = Uow.Matches
+                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                        .Where(m => m.Scores
+                                                        .Any(s => ids.Contains(s.CompetitorID)))
+                                        .Count();
+
+            List<Match> matches = Uow.Matches
+                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                        .Where(m => m.Scores
+                                                        .Any(s => ids.Contains(s.CompetitorID)))
+                                        .OrderByDescending(s => s.Date)
+                                        .Skip((page - 1) * count)
+                                        .Take(count)
+                                        .ToList();
+
+            PagedResult<Match> retVal = new PagedResult<Match>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = matches
+            };
+
+            return retVal;
+        }
+
+        [HttpGet]
+        [ActionName("publicplayers")]
+        public PagedResult<Player> GetPlayers(string id, int page, int count)
+        {
+            int userId = Int32.Parse(id);
+            int totalItems = Uow.Competitors
+                                        .GetAll(c => ((Player)c).User)
+                                        .OfType<Player>()
+                                        .Where(c => c.UserID == userId)
+                                        .Count();
+
+            List<Player> players = Uow.Competitors
+                                        .GetAll(c => ((Player)c).User, c => c.Games)
+                                        .OfType<Player>()
+                                        .Where(c => c.UserID == userId)
+                                        .OrderByDescending(c => c.CreationDate)
+                                        .Skip((page - 1) * count)
+                                        .Take(count)
+                                        .ToList();
+
+            PagedResult<Player> retVal = new PagedResult<Player>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = players
+            };
+
+            return retVal;
+        }
+
 
         // api/user/mycompeatinggames
         [HttpGet]

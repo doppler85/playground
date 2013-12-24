@@ -22,9 +22,18 @@
                 </ul>
             </div>
         </tab>
-        <tab heading="Competitors">    
+        <tab heading="Players">    
             <div class="span12">
-                Competitors (paged) with filer (players / teams)
+                Players
+                <players 
+                    object-id="gameID"
+                    resource-url="api/game/players"
+                    items-per-page="5"/>
+            </div>
+        </tab>
+        <tab heading="Teams">    
+            <div class="span12">
+                Teams
                 <ul>
                     <li>
                         Type (player / team) (maybe icon of one or more people)
@@ -40,7 +49,11 @@
         </tab>
         <tab heading="Matches">    
             <div class="span12">
-                Matches (paged)
+                <h3>My matches</h3>
+                <matches 
+                    object-id="gameID"
+                    resource-url="api/game/matches"
+                    items-per-page="5"/>
             </div>
         </tab>
     </tabset>

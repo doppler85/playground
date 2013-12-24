@@ -10,6 +10,7 @@ angular.module('Playground.game-edit', ['ngResource', 'ui.router', 'Playground.i
     'enums',
     function ($scope, $state, $stateParams, $rootScope, GameResource, CompetitionTypeResource, enums) {
         $scope.pageTitle = $state.current.data.pageTitle;
+        $scope.game = {};
         $scope.competitionTypes = enums.competitionType;
         $scope.selectedCompetitionTypes = [];
         $scope.alerts = [];

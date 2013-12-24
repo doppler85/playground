@@ -8,4 +8,5 @@ controller('GameCategoryDetailsController', [
 'security',
 function ($scope, $stateParams, $rootScope, $state, security) {
     $scope.pageTitle = $state.current.data.pageTitle;
+    $scope.gameCategoryID = $stateParams.id;
 }]);;

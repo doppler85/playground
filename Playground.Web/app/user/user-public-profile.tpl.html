@@ -14,6 +14,10 @@
         <tab heading="Pleya's">
             <div class="span12">
                 <h3>Pleya's</h3>
+                <players 
+                    object-id="userID"
+                    resource-url="api/user/publicplayers"
+                    items-per-page="5"/>
             </div>
         </tab>
         <tab heading="Teams">
@@ -24,6 +28,10 @@
         <tab heading="Matches">
         <div class="span12">
             <h3>Matches</h3>
+                <matches 
+                    object-id="userID"
+                    resource-url="api/user/publicmatches"
+                    items-per-page="5"/>
         </tab>
     </tabset>
 </div>
