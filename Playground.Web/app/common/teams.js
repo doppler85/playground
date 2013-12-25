@@ -1,17 +1,17 @@
 ﻿'use strict';
-angular.module('Playground.players', ['ui.bootstrap.pagination'])
+angular.module('Playground.teams', ['ui.bootstrap.pagination'])
 
-    .controller('PlayersController', [
+    .controller('TeamsController', [
         '$http',
         '$scope',
         '$attrs',
         '$parse',
         '$interpolate',
-        'playersConfig',
+        'teamsConfig',
         function ($http, $scope, $attrs, $parse, $interpolate, config) {
-            $scope.players = {};
+            $scope.teams = {};
 
-            $scope.loadPlayers = function (page) {
+            $scope.loadTeams = function (page) {
                 if ($scope.resourceUrl) {
                     $http(
                     {
@@ -23,7 +23,7 @@ angular.module('Playground.players', ['ui.bootstrap.pagination'])
                             count: $scope.itemsPerPage ? $scope.itemsPerPage : config.itemsPerPage
                         },
                     }).success(function (data, status, headers, config) {
-                        $scope.players = data;
+                        $scope.teams = data;
                     }).error(function (error) {
                         console.log('something went wrong ');
                     });
@@ -33,27 +33,38 @@ angular.module('Playground.players', ['ui.bootstrap.pagination'])
                 }
             }
 
-            $scope.onPlayerPageSelect = function (page) {
-                $scope.loadPlayers(page);
+            $scope.onTeamPageSelect = function (page) {
+                $scope.loadTeams(page);
             }
 
-            $scope.loadPlayers(1);
+            $scope.loadTeams(1);
         }])
 
-    .constant('playersConfig', {
-        itemsPerPage: 5
+    .constant('teamsConfig', {
+        itemsPerPage: 5,
+        parentCategory: 'gamecategory'
     })
 
-    .directive('players', function () {
+    .directive('teams', ['teamsConfig', function (config) {
         return {
             restrict: 'E',
-            templateUrl: 'app/templates/players/players.html',
+            templateUrl: 'app/templates/teams/teams.html',
             replace: true,
             scope: {
                 objectId: '=',
+                parentCategory: '@',
                 resourceUrl: '@',
                 itemsPerPage: '@'
             },
-            controller: 'PlayersController'
+            controller: 'TeamsController',
+            // set default values in compile time
+            compile: function(element, attrs){
+                if (!attrs.parentCategory) {
+                    attrs.parentCategory = config.parentCategory
+                }
+                if (!attrs.itemsPerPage) {
+                    attrs.itemsPerPage = config.itemsPerPage
+                }
+            }
         }
-    })
+    }])

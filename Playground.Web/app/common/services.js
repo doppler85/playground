@@ -7,9 +7,33 @@ Playground.service('Playground.services', ['ngResource', 'ngSanitize', function 
 }]).
 factory('GameCategoryResource', ['$resource', function (resource) {
     return resource('api/gamecategory/:actionname/:id', {}, {
-        getall: { method: 'GET', isArray: true },
+        getall: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'allcategories'
+            }
+        },
+        getcategory: {
+            method: 'GET',
+            params: {
+                actionname: 'getcategory'
+            }
+        },
         add: { method: 'POST' },
-        remove: { method: 'DELETE' }
+        update: {
+            method: 'PUT',
+            params: {
+                actionname: 'updategamecategory'
+            }
+        },
+        stats: {
+            method: 'GET',
+            params: {
+                actionname: 'getcategorystats'
+            }
+        },
+        remove: { method: 'DELETE' },
     });
 }]).
 factory('GameResource', ['$resource', function (resource) {
@@ -30,6 +54,12 @@ factory('GameResource', ['$resource', function (resource) {
         },
         add: { method: 'POST' },
         update: { method: 'PUT' },
+        stats: {
+            method: 'GET',
+            params: {
+                actionname: 'getgamestats'
+            }
+        },
         remove: { method: 'DELETE' },
     });
 }]).

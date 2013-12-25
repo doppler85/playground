@@ -1,0 +1,21 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+
+<div class="row">
+    <div class="span12">
+        <h3>Players</h3>
+        <players 
+            resource-url="api/competitor/allplayers"
+            items-per-page="5"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="span12">
+        <h3>Teams</h3>
+        <teams 
+            resource-url="api/competitor/allteams"
+            items-per-page="5"/>
+    </div>
+</div>

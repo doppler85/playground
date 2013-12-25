@@ -1,0 +1,17 @@
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                Game
+            </th>
+        </tr>
+        <tr data-ng-repeat="game in games.items">
+            <td>
+                <a href="javascript:;" 
+                    data-ui-sref="game-details({id: game.gameID})" 
+                    data-ng-bind="game.title"></a>
+            </td>
+        </tr>
+    </table>
+    <pagination total-items="games.totalItems" page="games.currentPage" num-page="games.totalPages" items-per-page="5" on-select-page="onGamePageSelect(page)"></pagination>
+</div>

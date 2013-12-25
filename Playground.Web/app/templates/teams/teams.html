@@ -1,0 +1,37 @@
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                <span data-ng-show="parentCategory == 'gamecategory'">
+                    Game category
+                </span>
+                <span data-ng-show="parentCategory == 'game'">
+                    Game
+                </span>
+            </th>
+            <th>
+                Team nick
+            </th>
+            <th>Creation date</th>
+        </tr>
+        <tr data-ng-repeat="team in teams.items">
+            <td>
+                <a href="javascript:;" 
+                    data-ng-show="parentCategory == 'gamecategory'"
+                    data-ui-sref="game-category-details({id: team.games[0].game.gameCategoryID})" 
+                    data-ng-bind="team.games[0].game.category.title"></a>
+                <a href="javascript:;" 
+                    data-ng-show="parentCategory == 'game'"
+                    data-ui-sref="game-details({id: team.games[0].gameID})" 
+                    data-ng-bind="team.games[0].game.title"></a>
+            </td>
+            <td>
+                <a href="javascript:;" 
+                    data-ui-sref="team-profile({id: team.competitorID})" 
+                    data-ng-bind="team.name"></a>
+            </td>
+            <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+        </tr>
+    </table>
+    <pagination total-items="teams.totalItems" page="players.currentPage" num-page="teams.totalPages" items-per-page="5" on-select-page="onTeamPageSelect(page)"></pagination>
+</div>

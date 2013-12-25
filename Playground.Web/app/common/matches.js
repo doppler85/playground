@@ -8,8 +8,9 @@ angular.module('Playground.matches', ['ui.bootstrap.pagination'])
         '$parse',
         '$interpolate',
         'matchesConfig',
+        'UserResource',
         'enums',
-        function ($http, $scope, $attrs, $parse, $interpolate, config, enums) {
+        function ($http, $scope, $attrs, $parse, $interpolate, config, UserResource, enums) {
         $scope.matches = {};
         $scope.showStatusCol = $attrs.showStatusCol ? true : config.minWidth;
         $scope.showConfirmButton = $attrs.showConfirmButton ? true : config.showConfirmButton;
@@ -40,6 +41,20 @@ angular.module('Playground.matches', ['ui.bootstrap.pagination'])
         $scope.onMatchPageSelect = function (page) {
             $scope.loadMatches(page);
         }
+
+        $scope.confirmScore = function (match, score, $index, msgCollection) {
+            UserResource.confirmscore({
+                matchID: match.matchID,
+                competitorID: score.competitorID,
+                confirmed: true
+            },
+                function (data, status, headers, config) {
+                    score.confirmed = true;
+                    match.status = data.status;
+                }, function () {
+                    msgCollection.push({ type: 'error', msg: 'Error confirming score: ' + competitor.name });
+                });
+        };
 
         $scope.loadMatches(1);
     }])

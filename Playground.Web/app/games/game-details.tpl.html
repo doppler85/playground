@@ -5,26 +5,28 @@
     <tabset>
         <tab heading="Info">    
             <div class="span12">
-                Category info
-                <ul>
+                <ul style="list-style:none">
                     <li>
-                        picture
+                        <img data-ng-src="{{gameStats.gamePictureUrl}}" alt=""/>
                     </li>
                     <li>
-                        title
+                        <h4>Title: {{gameStats.title}}</h4>
                     </li>
                     <li>
-                        total competitors
+                        <h4>Category: <a data-ui-sref="game-category-details({id: gameStats.gameCategoryID})">{{gameStats.category.title}}</a></h4>
                     </li>
                     <li>
-                        total matches
+                        <h4>Competitors: {{gameStats.totalCompetitors}}</h4>
+                    </li>
+                    <li>
+                        <h4>Matches: {{gameStats.totalMatches}}</h4>
                     </li>
                 </ul>
             </div>
         </tab>
         <tab heading="Players">    
             <div class="span12">
-                Players
+                <h3>Players</h3>
                 <players 
                     object-id="gameID"
                     resource-url="api/game/players"
@@ -33,18 +35,11 @@
         </tab>
         <tab heading="Teams">    
             <div class="span12">
-                Teams
-                <ul>
-                    <li>
-                        Type (player / team) (maybe icon of one or more people)
-                    </li>
-                    <li>
-                        pictyre
-                    </li>
-                    <li>
-                        Name (link to details)
-                    </li>
-                </ul>
+                <h3>Teams</h3>
+                <teams 
+                    object-id="gameID"
+                    resource-url="api/game/teams"
+                    items-per-page="5"/>
             </div>
         </tab>
         <tab heading="Matches">    

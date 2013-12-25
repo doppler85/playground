@@ -1,17 +1,17 @@
 ﻿'use strict';
-angular.module('Playground.players', ['ui.bootstrap.pagination'])
+angular.module('Playground.games', ['ui.bootstrap.pagination'])
 
-    .controller('PlayersController', [
+    .controller('GamesController', [
         '$http',
         '$scope',
         '$attrs',
         '$parse',
         '$interpolate',
-        'playersConfig',
+        'gamesConfig',
         function ($http, $scope, $attrs, $parse, $interpolate, config) {
-            $scope.players = {};
+            $scope.games = {};
 
-            $scope.loadPlayers = function (page) {
+            $scope.loadGames = function (page) {
                 if ($scope.resourceUrl) {
                     $http(
                     {
@@ -23,7 +23,7 @@ angular.module('Playground.players', ['ui.bootstrap.pagination'])
                             count: $scope.itemsPerPage ? $scope.itemsPerPage : config.itemsPerPage
                         },
                     }).success(function (data, status, headers, config) {
-                        $scope.players = data;
+                        $scope.games = data;
                     }).error(function (error) {
                         console.log('something went wrong ');
                     });
@@ -33,27 +33,33 @@ angular.module('Playground.players', ['ui.bootstrap.pagination'])
                 }
             }
 
-            $scope.onPlayerPageSelect = function (page) {
-                $scope.loadPlayers(page);
+            $scope.onGamePageSelect = function (page) {
+                $scope.loadGames(page);
             }
 
-            $scope.loadPlayers(1);
+            $scope.loadGames(1);
         }])
 
-    .constant('playersConfig', {
+    .constant('gamesConfig', {
         itemsPerPage: 5
     })
 
-    .directive('players', function () {
+    .directive('games', ['gamesConfig', function (config) {
         return {
             restrict: 'E',
-            templateUrl: 'app/templates/players/players.html',
+            templateUrl: 'app/templates/games/games.html',
             replace: true,
             scope: {
                 objectId: '=',
                 resourceUrl: '@',
                 itemsPerPage: '@'
             },
-            controller: 'PlayersController'
+            controller: 'GamesController',
+            // set default values in compile time
+            compile: function(element, attrs){
+                if (!attrs.itemsPerPage) {
+                    attrs.itemsPerPage = config.itemsPerPage
+                }
+            }
         }
-    })
+    }])

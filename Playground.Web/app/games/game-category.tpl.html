@@ -4,6 +4,9 @@
 
 <div class="row" data-ng-repeat="gameCategory in gameCategories">
     <div class="span12">
+        <a href="javascript:;" data-ui-sref="game-category-edit({id: gameCategory.gameCategoryID })">
+            <img data-ng-src="{{gameCategory.gameCategoryPictureUrl}}" alt="" style="height:30px; width:30px;"/>
+        </a>
         <h3><a data-ui-sref="game-category-details({id: gameCategory.gameCategoryID })" href="javascript:;">{{gameCategory.title}}</a>
         <a class="btn btn-primary" href="javascript:;" data-ng-click="deleteCategory(gameCategory, $index);">delete</a>
         </h3>
@@ -11,13 +14,13 @@
             <tr data-ng-repeat="game in gameCategory.games">
                 <td>
                     <div class="img-holder">
-                        <a href="javascript:;" data-ui-sref="game-details({id: game.gameID})">
+                        <a href="javascript:;" data-ui-sref="game-edit({id: game.gameID})">
                             <img data-ng-src="{{game.gamePictureUrl}}" alt="" />
                         </a>
                     </div>
                 </td>
                 <td>
-                    <a data-ui-sref="game-edit({id: game.gameID})">{{game.title}}</a>
+                    <a data-ui-sref="game-details({id: game.gameID})">{{game.title}}</a>
                 </td>
                 <td>
                     <button class="btn btn-primary" data-ng-click="deleteGame(game, gameCategory.games, $index);">delete</button>
@@ -31,8 +34,9 @@
                 <button class="btn" data-ng-click="addGame(gameCategory)">save</button>
                 <button class="btn" data-ng-click="toggleAddGame(false)">cancel</button>
             </form>
-            <button class="btn btn-default" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</button>
+            <a href="javascript:;" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</a>
         </div>
+        <br />
     </div>
 </div>
 <hr />
@@ -43,6 +47,6 @@
         <button class="btn" data-ng-click="addCategory()">save</button>
         <button class="btn" data-ng-click="toggleAddCategory(false)">cancel</button>
     </form>
-    <button class="btn btn-default" data-ng-click="toggleAddCategory(true)" data-ng-hide="addingcategory">add category</button>
+    <a href="javascript:;" data-ng-click="toggleAddCategory(true)" data-ng-hide="addinggame">add category</a>
 </div>
 

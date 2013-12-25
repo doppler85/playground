@@ -230,6 +230,7 @@
     <Compile Include="Controllers\GameCategoryController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MatchController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
@@ -239,6 +240,8 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\CropingCoords.cs" />
+    <Compile Include="Models\GameCategoryStats.cs" />
+    <Compile Include="Models\GameStats.cs" />
     <Compile Include="Models\PagedResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Constants.cs" />
@@ -247,10 +250,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\common\games.js" />
     <Content Include="app\common\imageupload.js" />
     <Content Include="app\common\matches.js" />
     <Content Include="app\common\players.js" />
     <Content Include="app\common\services.js" />
+    <Content Include="app\common\teams.js" />
+    <Content Include="app\competition\competitors-list.js" />
+    <Content Include="app\competition\competitors-list.tpl.html" />
+    <Content Include="app\competition\match-list.js" />
+    <Content Include="app\competition\match-list.tpl.html" />
     <Content Include="app\competition\match-add.js" />
     <Content Include="app\competition\match-edit.tpl.html" />
     <Content Include="app\competition\player-add.js" />
@@ -265,6 +274,8 @@
     <Content Include="app\games\competition-type-list.tpl.html" />
     <Content Include="app\games\competition-type-add.js" />
     <Content Include="app\games\competition-type-add.tpl.html" />
+    <Content Include="app\games\game-category-edit.js" />
+    <Content Include="app\games\game-category-edit.tpl.html" />
     <Content Include="app\games\game-category-details.js" />
     <Content Include="app\games\game-category-details.tpl.html" />
     <Content Include="app\games\game-details.js" />
@@ -292,6 +303,7 @@
     <Content Include="app\templates\alert\alert.html" />
     <Content Include="app\templates\datepicker\datepicker.html" />
     <Content Include="app\templates\datepicker\popup.html" />
+    <Content Include="app\templates\games\games.html" />
     <Content Include="app\templates\imageupload\image-upload.html" />
     <Content Include="app\templates\matches\matches.html" />
     <Content Include="app\templates\modal\backdrop.html" />
@@ -302,6 +314,7 @@
     <Content Include="app\templates\tabs\tab.html" />
     <Content Include="app\templates\tabs\tabset-titles.html" />
     <Content Include="app\templates\tabs\tabset.html" />
+    <Content Include="app\templates\teams\teams.html" />
     <Content Include="app\templates\timepicker\timepicker.html" />
     <Content Include="app\templates\typeahead\typeahead-match.html" />
     <Content Include="app\templates\typeahead\typeahead-popup.html" />

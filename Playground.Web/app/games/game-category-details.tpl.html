@@ -5,50 +5,52 @@
     <tabset>
         <tab heading="Info">    
             <div class="span12">
-                Category info
-                <ul>
+                <ul style="list-style:none">
                     <li>
-                        picture
+                        <img data-ng-src="{{gameCategoryStats.gameCategoryPictureUrl}}" alt=""/>
                     </li>
                     <li>
-                        title
+                        <h4>Title: {{gameCategoryStats.title}}</h4>
                     </li>
                     <li>
-                        total games
+                        <h4>Games: {{gameCategoryStats.totalGames}}</h4>
                     </li>
                     <li>
-                        total competitors
+                        <h4>Competitors: {{gameCategoryStats.totalCompetitors}}</h4>
                     </li>
                     <li>
-                        total matches
+                        <h4>Matches: {{gameCategoryStats.totalMatches}}</h4>
                     </li>
                 </ul>
             </div>
         </tab>
         <tab heading="Games">    
             <div class="span12">
-                Games
-                <ul>
-                    <li>
-                        Game (link to details page) 
-                    </li>
-                </ul>
+                <h3>Games</h3>
+                <games 
+                    object-id="gameCategoryID"
+                    resource-url="api/gamecategory/games"
+                    items-per-page="5"/>
+
             </div>
         </tab>
-        <tab heading="Competitors">    
+        <tab heading="Players">    
             <div class="span12">
-                Competitors (paged) with filer (players / teams)
-                <ul>
-                    <li>
-                        Type (player / team) (maybe icon of one or more people)
-                    </li>
-                    <li>
-                        pictyre
-                    </li>
-                    <li>
-                        Name (link to details)
-                    </li>
-                </ul>
+                <h3>Players</h3>
+                <players 
+                    object-id="gameCategoryID"
+                    resource-url="api/gamecategory/players"
+                    items-per-page="5"/>
+            </div>
+        </tab>
+        <tab heading="Teams">    
+            <div class="span12">
+                <h3>Teams</h3>
+                <teams 
+                    object-id="gameCategoryID"
+                    resource-url="api/gamecategory/teams"
+                    parent-category="game"
+                    items-per-page="5"/>
             </div>
         </tab>
         <tab heading="Matches">    

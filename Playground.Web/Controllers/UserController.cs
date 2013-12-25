@@ -268,7 +268,7 @@ namespace Playground.Web.Controllers
             List<long> ids = teamsIds.Concat(playerIds).ToList();
 
             int totalItems = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                        .GetAll()
                                         .Where(m => m.Scores
                                                         .Any(s => ids.Contains(s.CompetitorID)))
                                         .Count();
@@ -313,7 +313,9 @@ namespace Playground.Web.Controllers
             return retVal;
         }
 
+        
         [HttpGet]
+        [AllowAnonymous]
         [ActionName("publicmatches")]
         public PagedResult<Match> GetMatches(string id, int page, int count)
         {
@@ -361,6 +363,7 @@ namespace Playground.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [ActionName("publicplayers")]
         public PagedResult<Player> GetPlayers(string id, int page, int count)
         {
@@ -391,6 +394,43 @@ namespace Playground.Web.Controllers
             return retVal;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [ActionName("publicteams")]
+        public PagedResult<Team> GetTeams(string id, int page, int count)
+        {
+            int userId = Int32.Parse(id);
+            int totalItems = Uow.Competitors
+                                        .GetAll()
+                                        .OfType<Team>()
+                                        .Where(c => c.Players.Any(p => p.Player.UserID == userId))
+                                        .Count();
+
+            List<Team> teams = Uow.Competitors
+                                        .GetAll(c => c.Games)
+                                        .OfType<Team>()
+                                        .Where(c => c.Players.Any(p => p.Player.UserID == userId))
+                                        .OrderByDescending(c => c.CreationDate)
+                                        .Skip((page - 1) * count)
+                                        .Take(count)
+                                        .ToList();
+
+            List<int> gameIds = teams.SelectMany(t => t.Games).Select(g => g.GameID).ToList();
+            List<Game> games = Uow.Games
+                                        .GetAll(g => g.Category)
+                                        .Where(g => gameIds.Contains(g.GameID))
+                                        .ToList();
+
+            PagedResult<Team> retVal = new PagedResult<Team>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = teams
+            };
+
+            return retVal;
+        }
 
         // api/user/mycompeatinggames
         [HttpGet]
@@ -811,55 +851,6 @@ namespace Playground.Web.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-            
-
-            /*
-            // Check if the request contains multipart/form-data.
-            if (!Request.Content.IsMimeMultipartContent())
-            {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            }
-
-            string root = HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.ImagesPath));
-            var provider = new UniqueMultipartFormDataStreamProvider(root);
-
-            try
-            {
-                // Read the form data and return an async task.
-                await Request.Content.ReadAsMultipartAsync(provider);
-
-                // This illustrates how to get the file names for uploaded files.
-                User currentUser = GetUserByEmail(User.Identity.Name);
-                string fileName = "";
-                if (provider.FileData.Count > 0)
-                {
-                    string localName = provider.FileData[0].LocalFileName;
-                    string extension = localName.Substring(localName.LastIndexOf('.') + 1);
-                    fileName = String.Format("profile_{0}_temp.{1}", currentUser.UserID, extension);
-                    string filePath = root + fileName;
-
-                    FileInfo fileInfo = new FileInfo(localName);
-                    if (File.Exists(filePath))
-                    {
-                        File.Delete(filePath);
-                    }
-                    fileInfo.MoveTo(filePath);
-                    ImageUtil.ScaleImage(filePath,
-                        Constants.Images.ProfileImageMaxSize,
-                        Constants.Images.ProfileImageMaxSize);
-                }
-
-                return new HttpResponseMessage()
-                {
-                    Content = new StringContent(String.Format("{0}{1}?{2}", Constants.Images.ImagesPath, fileName, DateTime.Now.Ticks))
-
-                };
-            }
-            catch (System.Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
-            */
         }
     }
 

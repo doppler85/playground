@@ -15,6 +15,7 @@
                 <a href="javascript:;" 
                     data-ui-sref="public-profile({id: player.userID})" 
                     data-ng-bind="player.user| userfull"></a>
+            </td>
             <td>
                 <a href="javascript:;" 
                     data-ui-sref="player-profile({id: player.competitorID})" 
@@ -22,7 +23,6 @@
             </td>
             <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
         </tr>
-        </table>
-
+    </table>
     <pagination total-items="players.totalItems" page="players.currentPage" num-page="players.totalPages" items-per-page="5" on-select-page="onPlayerPageSelect(page)"></pagination>
 </div>

@@ -37,12 +37,31 @@ namespace Playground.Web.Controllers
             retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
             // retVal.CompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(retVal.GameID).ToList();
             retVal.CompetitionTypes = GetByGameId(retVal.GameID);
-            retVal.GamePictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={3}",
+            retVal.GamePictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
                 Constants.Images.GamePictureRoot,
                 Constants.Images.GamePicturePrefix,
                 retVal.GameID,
                 Constants.Images.GamePictureExtension,
                 DateTime.Now.Ticks);
+
+            return retVal;
+        }
+
+        [HttpGet]
+        [ActionName("getgamestats")]
+        public GameStats GetStats(int id)
+        {
+            Game game = GameDetails(id);
+            GameStats retVal = new GameStats(game);
+            retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
+            retVal.TotalCompetitors = Uow.Competitors
+                .GetAll()
+                .Where(c => c.Games.Any(g => g.GameID == retVal.GameID))
+                .Count();
+            retVal.TotalMatches = Uow.Matches
+                .GetAll()
+                .Where(m => m.Scores.Any(s => s.Match.GameID == retVal.GameID))
+                .Count();
 
             return retVal;
         }
@@ -304,5 +323,41 @@ namespace Playground.Web.Controllers
             return retVal;
         }
 
+        [HttpGet]
+        [ActionName("teams")]
+        public PagedResult<Team> GetTeams(string id, int page, int count)
+        {
+            int gameId = Int32.Parse(id);
+            int totalItems = Uow.Competitors
+                                        .GetAll()
+                                        .OfType<Team>()
+                                        .Where(c => c.Games.Any(g => g.GameID == gameId))
+                                        .Count();
+
+            List<Team> teams = Uow.Competitors
+                                        .GetAll(c => c.Games)
+                                        .OfType<Team>()
+                                        .Where(c => c.Games.Any(g => g.GameID == gameId))
+                                        .OrderByDescending(c => c.CreationDate)
+                                        .Skip((page - 1) * count)
+                                        .Take(count)
+                                        .ToList();
+
+            List<int> gameIds = teams.SelectMany(t => t.Games).Select(g => g.GameID).ToList();
+            List<Game> games = Uow.Games
+                                        .GetAll(g => g.Category)
+                                        .Where(g => gameIds.Contains(g.GameID))
+                                        .ToList();
+
+            PagedResult<Team> retVal = new PagedResult<Team>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = teams
+            };
+
+            return retVal;
+        }
     }
 }

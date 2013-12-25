@@ -5,6 +5,8 @@ var Playground = angular.module('Playground', [
     'Playground.imageupload',
     'Playground.matches',
     'Playground.players',
+    'Playground.teams',
+    'Playground.games',
     'Playground.main-menu',
     'Playground.home',
     'Playground.game-category',
@@ -12,15 +14,18 @@ var Playground = angular.module('Playground', [
     'Playground.game-edit',
     'Playground.game-details',
     'Playground.game-category-details',
+    'Playground.game-category-edit',
     'Playground.competition-type-list',
     'Playground.competition-type-add',
     'Playground.register',
     'Playground.login',
     'Playground.user-status',
     'Playground.user-profile',
+    'Playground.competitors-list',
     'Playground.player-add',
     'Playground.team-add',
     'Playground.match-add',
+    'Playground.match-list',
     'Playground.player-profile',
     'Playground.team-profile',
     'Playground.user-public-profile',
@@ -71,7 +76,7 @@ Playground.
                     controller: 'HomeController',
                     data: { pageTitle: 'Playground' }
                 }).state('game-categories', {
-                    url: '/game-categories',
+                    url: '/game/categories',
                     templateUrl: 'app/games/game-category.tpl.html',
                     controller: 'GameCategoryController',
                     data: { pageTitle: 'Games' },
@@ -80,8 +85,18 @@ Playground.
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
+                }).state('game-category-edit', {
+                    url: '/game/category/edit/:id',
+                    templateUrl: 'app/games/game-category-edit.tpl.html',
+                    controller: 'EditGameCategoryController',
+                    data: { pageTitle: 'Edit game category' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
                 }).state('game-category-details', {
-                    url: '/game/category-details/:id',
+                    url: '/game/category/details/:id',
                     templateUrl: 'app/games/game-category-details.tpl.html',
                     controller: 'GameCategoryDetailsController',
                     data: { pageTitle: 'Game category details' }
@@ -175,6 +190,11 @@ Playground.
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
+                }).state('match-list', {
+                    url: '/competition/match/list',
+                    templateUrl: 'app/competition/match-list.tpl.html',
+                    controller: 'MatchListController',
+                    data: { pageTitle: 'All matches' }
                 }).state('player-profile', {
                     url: '/competition/player/:id',
                     templateUrl: 'app/competition/player-profile.tpl.html',
@@ -185,6 +205,11 @@ Playground.
                     templateUrl: 'app/competition/team-profile.tpl.html',
                     controller: 'TeamProfileController',
                     data: { pageTitle: 'Team profile' }
+                }).state('competitors-list', {
+                    url: '/competition/list',
+                    templateUrl: 'app/competition/competitors-list.tpl.html',
+                    controller: 'CompetitorsListController',
+                    data: { pageTitle: 'All competitors' }
                 });
            }]).
     run([

@@ -28,20 +28,16 @@
         </tab>
         <tab heading="Teams">    
             <div class="span12">
-                Player teams
-                <ul>
-                    <li>
-                        Game (category) 
-                    </li>
-                    <li>
-                        Name (link to profile)
-                    </li>
-                </ul>
+                <h3>Player teams</h3>
+                <teams 
+                    object-id="competitorID"
+                    resource-url="api/competitor/teams"
+                    items-per-page="5"/>
             </div>
         </tab>
         <tab heading="Matches">    
             <div class="span12">
-                Player matches
+                <h3>Player matches</h3>
                 <matches 
                     object-id="competitorID"
                     resource-url="api/competitor/matches"
