@@ -20,7 +20,12 @@ factory('GameCategoryResource', ['$resource', function (resource) {
                 actionname: 'getcategory'
             }
         },
-        add: { method: 'POST' },
+        add: {
+            method: 'POST',
+            params: {
+                actionname: 'addgamecategory'
+            }
+        },
         update: {
             method: 'PUT',
             params: {
@@ -34,6 +39,16 @@ factory('GameCategoryResource', ['$resource', function (resource) {
             }
         },
         remove: { method: 'DELETE' },
+    });
+}]).
+factory('CompetitorResource', ['$resource', function (resource) {
+    return resource('api/competitor/:actionname/:id', {}, {
+        playerstats: {
+            method: 'GET',
+            params: {
+                actionname: 'getplayerstats'
+            }
+        }
     });
 }]).
 factory('GameResource', ['$resource', function (resource) {
@@ -52,8 +67,17 @@ factory('GameResource', ['$resource', function (resource) {
                 actionname: 'availablecomptypes'
             }
         },
-        add: { method: 'POST' },
-        update: { method: 'PUT' },
+        add: {
+            method: 'POST',
+            params: {
+                actionname: 'addgame'
+            }
+        },
+        update: {
+            method: 'PUT', params: {
+                actionname: 'updategame'
+            }
+        },
         stats: {
             method: 'GET',
             params: {

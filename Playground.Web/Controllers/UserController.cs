@@ -53,6 +53,142 @@ namespace Playground.Web.Controllers
             return players;
         }
 
+        private string GetPlayerPicturesRootFolder()
+        {
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.PlayerPictureRoot));
+        }
+
+        [HttpPost]
+        [ActionName("uploadplayerpicture")]
+        public async Task<HttpResponseMessage> UploadPlayerPicture()
+        {
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            string root = GetPlayerPicturesRootFolder();
+            var provider = new UniqueMultipartFormDataStreamProvider(root);
+
+            try
+            {
+                // Read the form data and return an async task.
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                // This illustrates how to get the file names for uploaded files.
+                User currentUser = GetUserByEmail(User.Identity.Name);
+
+
+                if (String.IsNullOrEmpty(provider.FormData["ID"]))
+                {
+                    throw new Exception("No ID for the game specified");
+                }
+                int playerId = Int32.Parse(provider.FormData["ID"]);
+                string retUrl = "";
+                if (provider.FileData.Count > 0)
+                {
+                    string localName = provider.FileData[0].LocalFileName;
+                    FileInfo fileInfo = new FileInfo(localName);
+                    string filePath = String.Format("{0}{1}_{2}_{3}_temp.{4}",
+                                            root,
+                                            Constants.Images.PlayerPicturePrefix,
+                                            currentUser.UserID,
+                                            playerId,
+                                            Constants.Images.PlayerPictureExtension);
+
+                    ImageUtil.ScaleImage(fileInfo.FullName,
+                                        filePath,
+                                        Constants.Images.PlayerImageFormat,
+                                        Constants.Images.PlayerImageMaxSize,
+                                        Constants.Images.PlayerImageMaxSize);
+
+                    fileInfo.Delete();
+
+                    fileInfo = new FileInfo(filePath);
+                    retUrl = String.Format("{0}{1}", Constants.Images.PlayerPictureRoot, fileInfo.Name);
+                }
+
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                };
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        [HttpPost]
+        [ActionName("cropplayerpicture")]
+        public HttpResponseMessage CropPlayerPicture(CropingArgs coords)
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            string root = GetPlayerPicturesRootFolder();
+            string filePath = String.Format("{0}{1}_{2}_{3}_temp.{4}",
+                                                        root,
+                                                        Constants.Images.PlayerPicturePrefix,
+                                                        currentUser.UserID,
+                                                        coords.ID,
+                                                        Constants.Images.PlayerPictureExtension);
+
+            string destFilePath = String.Format("{0}{1}_{2}_{3}.{4}",
+                                                                    root,
+                                                                    Constants.Images.PlayerPicturePrefix,
+                                                                    currentUser.UserID,
+                                                                    coords.ID,
+                                                                    Constants.Images.PlayerPictureExtension);
+            try
+            {
+                ImageUtil.CropImage(filePath,
+                                    destFilePath,
+                                    Constants.Images.PlayerImageFormat,
+                                    coords);
+
+                // delete temporary file
+                FileInfo fileInfo = new FileInfo(filePath);
+                fileInfo.Delete();
+
+                fileInfo = new FileInfo(destFilePath);
+                string retUrl = String.Format("{0}{1}", Constants.Images.PlayerPictureRoot, fileInfo.Name);
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                };
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+
+        private void AssignImage(long playerID)
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            string root = GetPlayerPicturesRootFolder();
+            
+            // temp profile picture
+            string sourceFilePath = String.Format("{0}{1}_{2}_{3}.{4}",
+                                                                    root,
+                                                                    Constants.Images.PlayerPicturePrefix,
+                                                                    currentUser.UserID,
+                                                                    0,
+                                                                    Constants.Images.PlayerPictureExtension);
+
+            string destFilePath = String.Format("{0}{1}_{2}.{3}",
+                                                                    root,
+                                                                    Constants.Images.PlayerPicturePrefix,
+                                                                    playerID,
+                                                                    Constants.Images.PlayerPictureExtension);
+            if (File.Exists(sourceFilePath))
+            {
+                File.Move(sourceFilePath, destFilePath);
+                File.Delete(sourceFilePath);
+            }
+        }
+
         [HttpPost]
         [ActionName("addplayer")]
         public HttpResponseMessage AddPlayer(Player player)
@@ -63,6 +199,7 @@ namespace Playground.Web.Controllers
             player.CreationDate = DateTime.Now;
             Uow.Competitors.Add(player);
             Uow.Commit();
+            AssignImage(player.CompetitorID);
 
             var response = Request.CreateResponse(HttpStatusCode.Created, player);
 
@@ -573,7 +710,7 @@ namespace Playground.Web.Controllers
                 AutomaticMatchConfirmation amc = Uow.AutomaticMatchConfirmations
                     .GetAll()
                     .FirstOrDefault(a => a.ConfirmeeID == currentUser.UserID && 
-                                         a.ConfirmerID == competitorID);
+                                         a.ConfirmerID == competitorUserid);
                 
                 retVal = amc != null;
             }

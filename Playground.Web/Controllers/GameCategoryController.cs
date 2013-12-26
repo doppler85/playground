@@ -195,6 +195,7 @@ namespace Playground.Web.Controllers
 
         // POST /api/gamecategory
         [HttpPost]
+        [ActionName("addgamecategory")]
         public HttpResponseMessage AddGameCategory(GameCategory gameCategory)
         {
             Uow.GameCategories.Add(gameCategory);

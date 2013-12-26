@@ -6,9 +6,21 @@ controller('PlayerProfileController', [
 '$stateParams',
 '$rootScope',
 'security',
-'UserResource',
-function ($scope, $state, $stateParams, $rootScope, security, UserResource) {
+'CompetitorResource',
+function ($scope, $state, $stateParams, $rootScope, security, CompetitorResource) {
     $scope.pageTitle = $state.current.data.pageTitle;
     $scope.competitorID = $stateParams.id;
+    $scope.playerStats = {};
 
+    $scope.loadPlayerStats = function () {
+        CompetitorResource.playerstats({ id: $stateParams.id },
+            function (data, status, headers, config) {
+                $scope.playerStats = data;
+            },
+            function () {
+            }
+        );
+    };
+
+    $scope.loadPlayerStats();
 }]);;

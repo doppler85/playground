@@ -90,8 +90,9 @@ namespace Playground.Web.Controllers
 
 
         // Create a new Game
-        // POST /api/Game
+        // POST /api/game/addgame
         [HttpPost]
+        [ActionName("addgame")]
         public HttpResponseMessage AddGame(Game game)
         {
             Uow.Games.Add(game);

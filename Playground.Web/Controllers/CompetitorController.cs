@@ -1,6 +1,7 @@
 ﻿using Playground.Data.Contracts;
 using Playground.Model;
 using Playground.Web.Models;
+using Playground.Web.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,52 @@ namespace Playground.Web.Controllers
         public CompetitorController(IPlaygroundUow uow)
         {
             this.Uow = uow;
+        }
+
+        private void SetPlayerPicture(Player player)
+        {
+            player.CompetitorPictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
+                Constants.Images.PlayerPictureRoot,
+                Constants.Images.PlayerPicturePrefix,
+                player.CompetitorID,
+                Constants.Images.PlayerPictureExtension,
+                DateTime.Now.Ticks);
+        }
+
+
+        [HttpGet]
+        [ActionName("details")]
+        public Player PlayerDetails(long id)
+        {
+            Player retVal = Uow.Competitors
+                .GetAll(p => ((Player)p).Games, p => ((Player)p).User)
+                .OfType<Player>()
+                .Where(p => p.CompetitorID == id)
+                .FirstOrDefault();
+            SetPlayerPicture(retVal);
+            
+            return retVal;
+        }
+
+        [HttpGet]
+        [ActionName("getplayerstats")]
+        public PlayerStats GetStats(long id)
+        {
+            Player palyer = PlayerDetails(id);
+            PlayerStats retVal = new PlayerStats(palyer);
+            List<int> gameIds = retVal.Games
+                .Select(p => p.GameID)
+                .ToList();
+            GameCategory gameCategory = Uow.GameCategories
+                .GetAll(gc => gc.Games)
+                .FirstOrDefault(gc => gc.Games.Any(g => gameIds.Contains(g.GameID)));
+            retVal.GameCategory = gameCategory;
+            retVal.TotalMatches = Uow.Matches
+                .GetAll()
+                .Where(m => m.Scores.Any(s => s.CompetitorID == id))
+                .Count();
+
+            return retVal;
         }
 
         [HttpGet]
@@ -79,6 +126,11 @@ namespace Playground.Web.Controllers
                                         .Skip((page - 1) * count)
                                         .Take(count)
                                         .ToList();
+            
+            foreach (Player player in players)
+            {
+                SetPlayerPicture(player);
+            }
 
             PagedResult<Player> retVal = new PagedResult<Player>()
             {

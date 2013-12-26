@@ -243,6 +243,7 @@
     <Compile Include="Models\GameCategoryStats.cs" />
     <Compile Include="Models\GameStats.cs" />
     <Compile Include="Models\PagedResult.cs" />
+    <Compile Include="Models\PlayerStats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Constants.cs" />
     <Compile Include="Util\Extensions.cs" />
@@ -507,7 +508,9 @@
     <Folder Include="Content\assets\fonts\" />
     <Folder Include="Content\assets\scripts\pages\" />
     <Folder Include="Images\Game\" />
+    <Folder Include="Images\Player\" />
     <Folder Include="Images\Profile\" />
+    <Folder Include="Images\Team\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>

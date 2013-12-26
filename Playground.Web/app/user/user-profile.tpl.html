@@ -65,7 +65,8 @@
                             </td>
                             <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                             <td>
-                                <button class="btn btn-primary" data-ng-click="deleteCompetitor(player, players, $index, playerAlerts);">delete</button>
+                                <a href="javascript:;">edit</a> |
+                                <a href="javascript:;" data-ng-click="deleteCompetitor(player, players, $index, playerAlerts);">delete</a>
                             </td>
                         </tr>
                      </table>

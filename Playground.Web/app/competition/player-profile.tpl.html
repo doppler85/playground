@@ -6,22 +6,27 @@
     <tabset>
         <tab heading="Info">    
             <div class="span12">
-                Player info
-                <ul>
+                <ul style="list-style:none">
                     <li>
-                        picture
+                        <img data-ng-src="{{playerStats.competitorPictureUrl}}" alt=""/>
                     </li>
                     <li>
-                        game
+                        <h4>User:<a href="javascript:;" 
+                            data-ui-sref="public-profile({id: playerStats.user.userID})" 
+                            data-ng-bind="playerStats.user | userfull"></a>
+                        </h4>
                     </li>
                     <li>
-                        name
+                        <h4>Nick: {{playerStats.name}}</h4>
                     </li>
                     <li>
-                        user (link to profile)
+                        <h4>Game category: {{playerStats.gameCategory.title}}</h4>
                     </li>
                     <li>
-                        creation date
+                        <h4>Total matches: {{playerStats.totalMatches}}</h4>
+                    </li>
+                    <li>
+                        <h4>Creation date: {{playerStats.creationDate | date: 'dd-MM-yyyy'}}</h4>
                     </li>
                 </ul>
             </div>

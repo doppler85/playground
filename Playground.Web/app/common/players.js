@@ -54,6 +54,12 @@ angular.module('Playground.players', ['ui.bootstrap.pagination'])
                 resourceUrl: '@',
                 itemsPerPage: '@'
             },
-            controller: 'PlayersController'
+            controller: 'PlayersController',
+            // set default values in compile time
+            compile: function(element, attrs) {
+                if (!attrs.itemsPerPage) {
+                    attrs.itemsPerPage = config.itemsPerPage
+                }
+            }
         }
     })

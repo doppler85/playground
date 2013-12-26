@@ -5,6 +5,18 @@
     <div class="span6">
         <form class="form-horizontal">
             <div class="control-group">
+                <label class="control-label" for="logo">logo</label>
+                <div class="controls">
+                    <image-upload 
+                        data-object-id="player.competitorID"
+                        data-img-src="player.competitorPictureUrl"
+                        data-upload-url="api/user/uploadplayerpicture"
+                        data-crop-url="api/user/cropplayerpicture"
+                        data-on-image-cropped="onImageCropped(data);"
+                        />
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label">Player nick</label>
                 <div class="controls">
                     <input type="text" data-ng-model="player.name">

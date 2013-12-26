@@ -15,6 +15,7 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
     function ($scope, $stateParams, $rootScope, $state, UserResource, enums) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.player = {
+            competitorID: 0,
             games: []
         };
         $scope.selectedCategory = null;

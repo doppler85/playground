@@ -39,6 +39,12 @@ namespace Playground.Web.Util
             public static string GameCategoryPictureExtension = "jpg";
             public static int GameCategoryImageMaxSize = 200;
 
+            public static string PlayerPictureRoot = "/Images/Player/";
+            public static string PlayerPicturePrefix = "player_pic";
+            public static System.Drawing.Imaging.ImageFormat PlayerImageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+            public static string PlayerPictureExtension = "jpg";
+            public static int PlayerImageMaxSize = 200;
+
             public static string DefaultMalaProfileImage = "";
             public static string DefaultFemaleProfileImage = "";
             public static string DefaultGameImage = "";
