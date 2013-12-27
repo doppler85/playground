@@ -463,6 +463,7 @@
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
+    <None Include="Properties\PublishProfiles\filesystem.pubxml" />
     <None Include="Web.config_ggg">
       <SubType>Designer</SubType>
     </None>

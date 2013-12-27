@@ -146,7 +146,7 @@ Playground.
                     controller: 'RegisterController',
                     data: { pageTitle: 'Register' }
                 }).state('profile', {
-                    url: '/profile',
+                    url: '/profile/:tab',
                     templateUrl: 'app/user/user-profile.tpl.html',
                     controller: 'ProfileController',
                     data: { pageTitle: 'My profile' },
