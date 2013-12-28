@@ -1,38 +1,61 @@
 ﻿'use strict';
-angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootstrap.tabs', 'ui.bootstrap.pagination', 'Playground.imageupload'])
+angular.module('Playground.user-profile', [
+    'ngResource',
+    'ui.router',
+    'ui.bootstrap.tabs',
+    'ui.bootstrap.pagination',
+    'Playground.imageupload',
+    'Playground.matches'])
     .filter('userfull', function () {
         return function (user) {
             return user ? user.firstName + ' ' + user.lastName : '';
         };
     })
-    .controller('ProfileController', [
-    '$http',
+    .config([
+        '$stateProvider',
+        function ($stateProvider) {
+            $stateProvider
+            .state('profile', {
+                url: '/profile',
+                abstract: true,
+                templateUrl: 'app/templates/user/user-profile.tpl.html',
+                controller: 'ProfileController',
+                data: { pageTitle: 'My profile' },
+                resolve: {
+                    authenticaated: function (securityAuthorization, $location, $state) {
+                        return securityAuthorization.requireAuthenticatedUser();
+                    }
+                }
+            }).state('profile.info', {
+                url: '/info',
+                controller: 'ProfileInfoController',
+                templateUrl: 'app/templates/user/user-profile.info.tpl.html'
+            }).state('profile.players', {
+                url: '/players',
+                controller: 'ProfilePlayersController',
+                templateUrl: 'app/templates/user/user-profile.players.tpl.html'
+            }).state('profile.teams', {
+                url: '/teams',
+                controller: 'ProfileTeamsController',
+                templateUrl: 'app/templates/user/user-profile.teams.tpl.html'
+            }).state('profile.matches', {
+                url: '/matches',
+                controller: 'ProfileMatchesController',
+                templateUrl: 'app/templates/user/user-profile.matches.tpl.html'
+            }).state('profile.automaticconfirmations', {
+                url: '/automaticconfirmations',
+                controller: 'ProfileAutomaticConfirmationsController',
+                templateUrl: 'app/templates/user/user-profile.automatic-confirmations.tpl.html'
+            })
+        }
+    ])
+    .controller('ProfileInfoController', [
     '$scope',
-    '$state',
-    '$stateParams',
-    '$rootScope',
     'security',
     'UserResource',
-    function ($http, $scope, $state, $stateParams, $rootScope, security, UserResource) {
-        $scope.pageTitle = $state.current.data.pageTitle;
-        $scope.activeTab = $stateParams.tab;
-        $scope.players = {};
-        $scope.teams = {};
-        $scope.playerAlerts = [];
-        $scope.teamAlerts = [];
+    function ($scope, security, UserResource) {
+        $scope.$parent.tab = 'info';
         $scope.profile = {};
-        $scope.automaticMatchConfirmations = [];
-        $scope.automaticMatchConfirmationsUsers = [];
-        $scope.searchQuery = '';
-        $scope.addingconfirmation = false;
- 
-        $scope.$watch(function () {
-            $scope.isAuthenticated = security.isAuthenticated();
-            return security.currentUser;
-        }, function (currentUser) {
-            $scope.currentUser = currentUser;
-            $scope.isAuthenticated = security.isAuthenticated();
-        });
 
         $scope.getProfile = function () {
             UserResource.getprofile(function (data, status, headers, config) {
@@ -47,10 +70,21 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             });
         };
 
-        $scope.logout = function () {
-            // Try to login
-            security.logout("home");
+        $scope.onImageCropped = function (data) {
+            console.log('image cropped', data);
+            security.refreshCurrentUser();
         };
+
+        $scope.getProfile();
+    }])
+    .controller('ProfilePlayersController', [
+    '$scope',
+    '$state',
+    'UserResource',
+    function ($scope, $state, UserResource) {
+        $scope.$parent.tab = 'players';
+        $scope.players = {};
+        $scope.playerAlerts = [];
 
         $scope.loadPlayers = function () {
             UserResource.allPlayers(function (data, status, headers, config) {
@@ -58,41 +92,47 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             });
         }
 
+        $scope.deleteCompetitor = function (competitor, collection, index, msgCollection) {
+            UserResource.deletecompetitor({ id: competitor.competitorID },
+                function (data, status, headers, config) {
+                    collection.splice(index, 1);
+                }, function () {
+                    msgCollection.push({ type: 'error', msg: 'Error deleting competitor: ' + competitor.name });
+                });
+        };
+
+        $scope.loadPlayers();
+    }])
+    .controller('ProfileTeamsController', [
+    '$scope',
+    '$state',
+    'UserResource',
+    function ($scope, $state, UserResource) {
+        $scope.$parent.tab = 'teams';
+        $scope.teams = {};
+        $scope.teamAlerts = [];
+
         $scope.loadTeams = function () {
             UserResource.allTeams(function (data, status, headers, config) {
                 $scope.teams = data;
             });
         }
 
-        $scope.loadMatches = function (page) {
-            //UserResource.allMatches({page: page, count: 5}, function (data, status, headers, config) {
-            //    $scope.matches = data;
-            //});
-        }
-
-        $scope.deleteCompetitor = function (competitor, collection, index, msgCollection) {
-            UserResource.deletecompetitor({ id: competitor.competitorID },
-                function (data, status, headers, config) {
-                    collection.splice(index, 1);
-                }, function () {
-                    msgCollection.push({ type:'error', msg:'Error deleting competitor: ' + competitor.name });
-                });
-        };
-
-        $scope.addAlert = function (collection, msg) {
-            collection.push(msg);
-        };
-
-        $scope.closeAlert = function (collection, index) {
-            collection.splice(index, 1);
-        };
+        $scope.loadTeams();
+    }])
+    .controller('ProfileMatchesController', [
+    '$scope',
+    '$state',
+    'UserResource',
+    function ($scope, $state, UserResource) {
+        $scope.$parent.tab = 'matches';
 
         $scope.confirmScore = function (match, score, $index, msgCollection) {
             UserResource.confirmscore({
-                    matchID: match.matchID,
-                    competitorID: score.competitorID,
-                    confirmed: true
-                },
+                matchID: match.matchID,
+                competitorID: score.competitorID,
+                confirmed: true
+            },
                 function (data, status, headers, config) {
                     score.confirmed = true;
                     match.status = data.status;
@@ -100,9 +140,16 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                     msgCollection.push({ type: 'error', msg: 'Error deleting competitor: ' + competitor.name });
                 });
         };
+    }])
+    .controller('ProfileAutomaticConfirmationsController', [
+    '$scope',
+    '$state',
+    'UserResource',
+    function ($scope, $state, UserResource) {
+        $scope.$parent.tab = 'automaticconfirmations';
 
         $scope.loadAutomaticConfirmations = function () {
-            UserResource.automaticmatchconfirmations(function(data, status, headers, config) {
+            UserResource.automaticmatchconfirmations(function (data, status, headers, config) {
                 $scope.automaticMatchConfirmations = data;
             });
         };
@@ -118,7 +165,7 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
                 function (data, status, headers, config) {
                     $scope.automaticMatchConfirmationsUsers.splice(index, 1);
                     $scope.loadAutomaticConfirmations();
-                } 
+                }
             );
         };
 
@@ -130,25 +177,41 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
             );
         };
 
-        $scope.toggleAddConfirmation = function(show) {
+        $scope.toggleAddConfirmation = function (show) {
             $scope.addingconfirmation = show;
             if (!show) {
                 $scope.automaticMatchConfirmationsUsers = [];
             }
         };
 
-        $scope.onImageCropped = function (data) {
-            console.log('image cropped', data);
-            security.refreshCurrentUser();
+        $scope.loadAutomaticConfirmations();
+    }])
+    .controller('ProfileController', [
+    '$scope',
+    '$state',
+    'security',
+    'UserResource',
+    function ($scope, $state, security, UserResource) {
+        $scope.pageTitle = $state.current.data.pageTitle;
+        $scope.tab = 'info';
+        $scope.automaticMatchConfirmations = [];
+        $scope.automaticMatchConfirmationsUsers = [];
+        $scope.searchQuery = '';
+        $scope.addingconfirmation = false;
+ 
+        $scope.$watch(function () {
+            $scope.isAuthenticated = security.isAuthenticated();
+            return security.currentUser;
+        }, function (currentUser) {
+            $scope.currentUser = currentUser;
+            $scope.isAuthenticated = security.isAuthenticated();
+        });
+
+        $scope.addAlert = function (collection, msg) {
+            collection.push(msg);
         };
 
-        $scope.onMatchPageSelect = function (page) {
-            $scope.loadMatches(page);
-        }
-
-        $scope.loadPlayers();
-        $scope.loadTeams();
-        $scope.loadMatches(1);
-        $scope.getProfile();
-        $scope.loadAutomaticConfirmations();
+        $scope.closeAlert = function (collection, index) {
+            collection.splice(index, 1);
+        };
     }]);

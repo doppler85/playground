@@ -1,0 +1,32 @@
+<div class="span6">
+    <h3>Profile picture</h3>
+    <image-upload
+        data-img-src="profile.pictureUrl"
+        data-upload-url="api/user/uploadprofilepicture"
+        data-crop-url="api/user/cropprofilepicture"
+        data-on-image-cropped="onImageCropped(data);" />
+</div>
+
+
+<div class="span6">
+    <h3>My info</h3>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">First name</label>
+            <div class="controls">
+                <input type="text" data-ng-model="profile.firstName" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Last name</label>
+            <div class="controls">
+                <input type="text" data-ng-model="profile.lastName" />
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn" data-ng-click="updateProfile()">update</button>
+            </div>
+        </div>
+    </form>
+</div>

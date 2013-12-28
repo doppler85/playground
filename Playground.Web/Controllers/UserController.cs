@@ -775,7 +775,10 @@ namespace Playground.Web.Controllers
         public User GetProfile()
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
-            
+            if (!String.IsNullOrEmpty(currentUser.PictureUrl))
+            {
+                currentUser.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+            }
             return currentUser;
         }
 

@@ -1,0 +1,31 @@
+<div class="span12">
+    <h3>My teams</h3>
+    <table class="table">
+        <tr>
+            <th>Game
+            </th>
+            <th>Team nick
+            </th>
+            <th>Creation date</th>
+            <th></th>
+        </tr>
+        <tr data-ng-repeat="team in teams">
+            <td>
+                <a href="javascript:;"
+                    data-ui-sref="game-category-details({id: team.games[0].game.gameCategoryID})"
+                    data-ng-bind="team.games[0].game.category.title"></a>
+            </td>
+            <td>
+                <a href="javascript:;"
+                    data-ui-sref="team-profile({id: team.competitorID})"
+                    data-ng-bind="team.name"></a>
+            </td>
+            <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+            <td>
+                <button class="btn btn-primary" data-ng-click="deleteCompetitor(team, teams, $index, teamAlerts);">delete</button>
+            </td>
+        </tr>
+    </table>
+    <a data-ui-sref="team-add">add team</a>
+    <alert ng-repeat="alert in teamAlerts" type="alert.type" close="closeAlert(teamAlerts, $index)">{{alert.msg}}</alert>
+</div>

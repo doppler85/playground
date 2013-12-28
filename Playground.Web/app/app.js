@@ -145,16 +145,6 @@ Playground.
                     templateUrl: 'app/user/register.tpl.html',
                     controller: 'RegisterController',
                     data: { pageTitle: 'Register' }
-                }).state('profile', {
-                    url: '/profile/:tab',
-                    templateUrl: 'app/user/user-profile.tpl.html',
-                    controller: 'ProfileController',
-                    data: { pageTitle: 'My profile' },
-                    resolve: {
-                        authenticaated: function (securityAuthorization, $location, $state) {
-                            return securityAuthorization.requireAuthenticatedUser();
-                        }
-                    }
                 }).state('public-profile', {
                     url: '/profile/:id',
                     templateUrl: 'app/user/user-public-profile.tpl.html',

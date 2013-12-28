@@ -1,0 +1,44 @@
+<div class="span12">
+    <h3>My automatic confirmations</h3>
+    <table class="table">
+        <tr>
+            <th>User
+            </th>
+            <th></th>
+        </tr>
+        <tr data-ng-repeat="confirmation in automaticMatchConfirmations">
+            <td>
+                <a href="javascript:;"
+                    data-ui-sref="public-profile({id: confirmation.confirmeeID})"
+                    data-ng-bind="confirmation.confirmee | userfull"></a>
+            </td>
+            <td>
+                <button class="btn btn-primary" data-ng-click="deleteAutomaticConfirmation(confirmation.confirmee, $index)">remove</button>
+            </td>
+        </tr>
+    </table>
+    <div class="add-confirmation-wrapp">
+        <a href="javascript:;" data-ng-click="toggleAddConfirmation(true)" data-ng-hide="addingconfirmation">add confirmation</a>
+        <div class="add-confirmation-inner" data-ng-show="addingconfirmation">
+            <form class="form-inline">
+                <input type="text" data-ng-model="searchQuery" placeholder="Search users">
+                <button class="btn" data-ng-click="searchAutomaticConfirmationUsers()">Search</button>
+                <button class="btn" data-ng-click="toggleAddConfirmation(false)">cancel</button>
+            </form>
+            <span data-ng-show="automaticMatchConfirmationsUsers.length > 0">Results
+            </span>
+            <table class="table">
+                <tr data-ng-repeat="user in automaticMatchConfirmationsUsers">
+                    <td>
+                        <a href="javascript:;"
+                            data-ui-sref="public-profile({id: user.userID})"
+                            data-ng-bind="user | userfull"></a>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" data-ng-click="addAutomaticConfirmation(user, $index)">add</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

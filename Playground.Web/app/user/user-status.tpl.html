@@ -1,11 +1,11 @@
 <ul class="nav" data-ng-show="isAuthenticated">
     <li data-ng-class="{active: IsActive('profile')}">
         <span class="img-holder">
-            <img data-ng-src="{{profile.profilePictureUrl}}" alt="" />
+            <img data-ng-src="{{profile.pictureUrl}}" alt="" />
         </span>
     </li>
     <li data-ng-class="{active: IsActive('profile')}">
-        <a data-ui-sref="profile" alt="Go to your profile" title="Go to your profile">
+        <a data-ui-sref="profile.info" alt="Go to your profile" title="Go to your profile">
             {{currentUser.userName}}
         </a>
     </li>

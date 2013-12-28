@@ -1,0 +1,26 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+
+<div class="row">
+    <ul class="nav nav-tabs">
+      <li data-ng-class="{active: tab == 'info'}">
+          <a href="javascript:;" data-ui-sref="profile.info">My info</a>
+      </li>
+      <li data-ng-class="{active: tab == 'players'}">
+          <a href="javascript:;" data-ui-sref="profile.players">My pleya's</a>
+      </li>
+      <li data-ng-class="{active: tab == 'teams'}">
+          <a href="javascript:;" data-ui-sref="profile.teams">My teams</a>
+      </li>
+      <li data-ng-class="{active: tab == 'matches'}">
+          <a href="javascript:;" data-ui-sref="profile.matches">My matches</a>
+      </li>
+      <li data-ng-class="{active: tab == 'automaticconfirmations'}">
+          <a href="javascript:;" data-ui-sref="profile.automaticconfirmations">My automatic confirmations</a>
+      </li>
+    </ul>
+    <div class="row" ui-view="">
+
+    </div>
+</div>
