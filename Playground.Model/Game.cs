@@ -13,8 +13,7 @@ namespace Playground.Model
         public int GameID { get; set; }
         public int GameCategoryID { get; set; }
         public string Title { get; set; }
-        [NotMapped]
-        public string GamePictureUrl { get; set; }
+        public string PictureUrl { get; set; }
 
         public virtual GameCategory Category { get; set; }
         public virtual List<GameCompetitor> Competitors { get; set; }

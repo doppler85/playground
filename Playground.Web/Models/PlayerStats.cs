@@ -13,7 +13,7 @@ namespace Playground.Web.Models
             CompetitorID = player.CompetitorID;
             CreationDate = player.CreationDate;
             Name = player.Name;
-            CompetitorPictureUrl = player.CompetitorPictureUrl;
+            PictureUrl = player.PictureUrl;
             Games = player.Games;
             User = player.User;
         }

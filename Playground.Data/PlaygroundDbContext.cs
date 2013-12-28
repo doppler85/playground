@@ -18,8 +18,7 @@ namespace Playground.Data
 
         static PlaygroundDbContext()
         {
-            Database.SetInitializer(new PlaygroundDataInitializer());
-
+           // Database.SetInitializer(new PlaygroundDataInitializer());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

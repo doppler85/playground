@@ -10,8 +10,8 @@ function ($scope, $state, $stateParams, $rootScope, security) {
     $scope.pageTitle = $state.current.data.pageTitle;
 
     $scope.user = {
-        email: 'admin@playground.com',
-        password: 'admin123!',
+        email: 'voja@playground.com',
+        password: 'pass*123',
         rememberMe: true
     };
 

@@ -15,8 +15,8 @@ namespace Playground.Web.Util
 
         public static class AdminUser
         {
-            public static string AdminUserName = "admin@playground.com";
-            public static string AdminPass = "admin123!";
+            public static string AdminUserName = "voja@playground.com";
+            public static string AdminPass = "pass*123";
         }
 
         public static class Images

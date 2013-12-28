@@ -14,7 +14,7 @@ namespace Playground.Web.Models
             Title = game.Title;
             GameCategoryID = game.GameCategoryID;
             Category = game.Category;
-            GamePictureUrl = game.GamePictureUrl;
+            PictureUrl = game.PictureUrl;
         }
 
         public int TotalCompetitors { get; set; }

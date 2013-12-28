@@ -152,6 +152,12 @@ namespace Playground.Web.Controllers
 
                 fileInfo = new FileInfo(destFilePath);
                 string retUrl = String.Format("{0}{1}", Constants.Images.PlayerPictureRoot, fileInfo.Name);
+                // if all ok update user
+                Competitor player = Uow.Competitors.GetById(coords.ID);
+                player.PictureUrl = retUrl;
+                Uow.Competitors.Update(player, player.CompetitorID);
+                Uow.Commit();
+
                 return new HttpResponseMessage()
                 {
                     Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
@@ -769,13 +775,7 @@ namespace Playground.Web.Controllers
         public User GetProfile()
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
-            currentUser.ProfilePictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
-                Constants.Images.ProfilePictureRoot,
-                Constants.Images.ProfilePicturePrefix,
-                currentUser.UserID,
-                Constants.Images.ProfilePictureExtension,
-                DateTime.Now.Ticks);
-
+            
             return currentUser;
         }
 
@@ -979,6 +979,11 @@ namespace Playground.Web.Controllers
 
                 fileInfo = new FileInfo(destFilePath);
                 string retUrl = String.Format("{0}{1}", Constants.Images.ProfilePictureRoot, fileInfo.Name);
+                // if all ok update user picture
+                currentUser.PictureUrl = retUrl;
+                Uow.Users.Update(currentUser, currentUser.UserID);
+                Uow.Commit();
+
                 return new HttpResponseMessage()
                 {
                     Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))

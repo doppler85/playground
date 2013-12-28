@@ -27,26 +27,6 @@ namespace Playground.Web.Controllers
         public List<GameCategory> Get()
         {
             List<GameCategory> retVal = Uow.GameCategories.GetAll(p => p.Games).OrderBy(gc => gc.Title).ToList();
-            foreach (GameCategory gameCategory in retVal)
-            {
-                gameCategory.GameCategoryPictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
-                    Constants.Images.GameCategoryPictureRoot,
-                    Constants.Images.GameCategoryPicturePrefix,
-                    gameCategory.GameCategoryID,
-                    Constants.Images.GameCategoryPictureExtension,
-                    DateTime.Now.Ticks);
-
-                foreach (Game game in gameCategory.Games)
-                {
-                    game.GamePictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
-                        Constants.Images.GamePictureRoot,
-                        Constants.Images.GamePicturePrefix,
-                        game.GameID,
-                        Constants.Images.GamePictureExtension,
-                        DateTime.Now.Ticks);
-
-                }
-            }
             return retVal;
         }
 
@@ -56,12 +36,6 @@ namespace Playground.Web.Controllers
         public GameCategory GetCategory(int id)
         {
             GameCategory retVal = Uow.GameCategories.GetById(id);
-            retVal.GameCategoryPictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
-                    Constants.Images.GameCategoryPictureRoot,
-                    Constants.Images.GameCategoryPicturePrefix,
-                    retVal.GameCategoryID,
-                    Constants.Images.GameCategoryPictureExtension,
-                    DateTime.Now.Ticks);
             return retVal;
         }
         
@@ -182,6 +156,13 @@ namespace Playground.Web.Controllers
 
                 fileInfo = new FileInfo(destFilePath);
                 string retUrl = String.Format("{0}{1}", Constants.Images.GameCategoryPictureRoot, fileInfo.Name);
+
+                // if all ok update category image 
+                GameCategory category = Uow.GameCategories.GetById(coords.ID);
+                category.PictureUrl = retUrl;
+                Uow.GameCategories.Update(category, category.GameCategoryID);
+                Uow.Commit();
+
                 return new HttpResponseMessage()
                 {
                     Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))

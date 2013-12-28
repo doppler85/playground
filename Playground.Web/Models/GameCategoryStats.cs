@@ -12,7 +12,7 @@ namespace Playground.Web.Models
         {
             GameCategoryID = category.GameCategoryID;
             Title = category.Title;
-            GameCategoryPictureUrl = category.GameCategoryPictureUrl;
+            PictureUrl = category.PictureUrl;
         }
 
         public int TotalGames { get; set; }

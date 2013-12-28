@@ -17,17 +17,6 @@ namespace Playground.Web.Controllers
             this.Uow = uow;
         }
 
-        private void SetPlayerPicture(Player player)
-        {
-            player.CompetitorPictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
-                Constants.Images.PlayerPictureRoot,
-                Constants.Images.PlayerPicturePrefix,
-                player.CompetitorID,
-                Constants.Images.PlayerPictureExtension,
-                DateTime.Now.Ticks);
-        }
-
-
         [HttpGet]
         [ActionName("details")]
         public Player PlayerDetails(long id)
@@ -37,8 +26,7 @@ namespace Playground.Web.Controllers
                 .OfType<Player>()
                 .Where(p => p.CompetitorID == id)
                 .FirstOrDefault();
-            SetPlayerPicture(retVal);
-            
+           
             return retVal;
         }
 
@@ -127,11 +115,6 @@ namespace Playground.Web.Controllers
                                         .Take(count)
                                         .ToList();
             
-            foreach (Player player in players)
-            {
-                SetPlayerPicture(player);
-            }
-
             PagedResult<Player> retVal = new PagedResult<Player>()
             {
                 CurrentPage = page,

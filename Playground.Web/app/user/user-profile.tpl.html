@@ -4,11 +4,11 @@
 
 <div class="row">
     <tabset>
-        <tab heading="My info">    
+        <tab heading="My info" select="tabChanged('info')">    
             <div class="span6">
                 <h3>Profile picture</h3>
                 <image-upload 
-                    data-img-src="profile.profilePictureUrl"
+                    data-img-src="profile.pictureUrl"
                     data-upload-url="api/user/uploadprofilepicture"
                     data-crop-url="api/user/cropprofilepicture"
                     data-on-image-cropped="onImageCropped(data);"/>

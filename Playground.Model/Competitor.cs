@@ -19,12 +19,10 @@ namespace Playground.Model
         public CompetitorType CompetitorType { get; set; }
         public DateTime CreationDate { get; set; }
         public string Name { get; set; }
-        public string PictureSource { get; set; }
         public CompetitorStatus Status { get; set; }
+        public string PictureUrl { get; set; }
         [NotMapped]
         public bool IsCurrentUserCompetitor { get; set; }
-        [NotMapped]
-        public string CompetitorPictureUrl { get; set; }
 
         public virtual List<GameCompetitor> Games { get; set; }
         public virtual List<CompetitorScore> Scores { get; set; }

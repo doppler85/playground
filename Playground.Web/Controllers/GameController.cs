@@ -37,13 +37,7 @@ namespace Playground.Web.Controllers
             retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
             // retVal.CompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(retVal.GameID).ToList();
             retVal.CompetitionTypes = GetByGameId(retVal.GameID);
-            retVal.GamePictureUrl = String.Format("{0}{1}_{2}.{3}?nocache={4}",
-                Constants.Images.GamePictureRoot,
-                Constants.Images.GamePicturePrefix,
-                retVal.GameID,
-                Constants.Images.GamePictureExtension,
-                DateTime.Now.Ticks);
-
+            
             return retVal;
         }
 
@@ -241,6 +235,13 @@ namespace Playground.Web.Controllers
 
                 fileInfo = new FileInfo(destFilePath);
                 string retUrl = String.Format("{0}{1}", Constants.Images.GamePictureRoot, fileInfo.Name);
+
+                // if all ok update game with image
+                Game game = Uow.Games.GetById(coords.ID);
+                game.PictureUrl = retUrl;
+                Uow.Games.Update(game, game.GameID);
+                Uow.Commit();
+
                 return new HttpResponseMessage()
                 {
                     Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))

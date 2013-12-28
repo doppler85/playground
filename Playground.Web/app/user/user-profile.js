@@ -15,6 +15,7 @@ angular.module('Playground.user-profile', ['ngResource', 'ui.router', 'ui.bootst
     'UserResource',
     function ($http, $scope, $state, $stateParams, $rootScope, security, UserResource) {
         $scope.pageTitle = $state.current.data.pageTitle;
+        $scope.activeTab = $stateParams.tab;
         $scope.players = {};
         $scope.teams = {};
         $scope.playerAlerts = [];
