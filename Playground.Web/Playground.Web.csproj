@@ -404,6 +404,7 @@
     <Content Include="Content\css\style.css" />
     <Content Include="Content\img\glyphicons-halflings-white.png" />
     <Content Include="Content\img\glyphicons-halflings.png" />
+    <Content Include="Content\img\Jcrop.gif" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="index.cshtml" />

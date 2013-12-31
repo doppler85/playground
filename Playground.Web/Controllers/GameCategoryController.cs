@@ -27,6 +27,25 @@ namespace Playground.Web.Controllers
         public List<GameCategory> Get()
         {
             List<GameCategory> retVal = Uow.GameCategories.GetAll(p => p.Games).OrderBy(gc => gc.Title).ToList();
+            foreach (GameCategory gameCategory in retVal)
+            {
+                if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
+                {
+                    gameCategory.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                }
+
+                foreach (Game game in gameCategory.Games)
+                {
+                    if (!String.IsNullOrEmpty(game.PictureUrl))
+                    {
+                        game.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                    }
+                    else
+                    {
+                        game.PictureUrl = gameCategory.PictureUrl;
+                    }
+                }
+            }
             return retVal;
         }
 

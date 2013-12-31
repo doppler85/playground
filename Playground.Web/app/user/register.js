@@ -31,7 +31,7 @@ function ($scope, $state, $stateParams, $rootScope, security) {
         // Try to login
         security.register($scope.registerModel, $scope.user).then(function (data) {
             if (data.user) {
-                $state.go('profile');
+                $state.go('profile.info');
             }
             else {
                 $scope.authError = "Erorr";

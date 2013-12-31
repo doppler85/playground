@@ -35,9 +35,15 @@ namespace Playground.Web.Controllers
         {
             Game retVal = Uow.Games.GetById(id);
             retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
-            // retVal.CompetitionTypes = Uow.GameCompetitionTypes.GetByGameId(retVal.GameID).ToList();
             retVal.CompetitionTypes = GetByGameId(retVal.GameID);
-            
+            if (!String.IsNullOrEmpty(retVal.PictureUrl))
+            {
+                retVal.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+            }
+            else if (!String.IsNullOrEmpty(retVal.Category.PictureUrl))
+            {
+                retVal.PictureUrl = String.Format("{0}?nocache={1}", retVal.Category.PictureUrl, DateTime.Now.Ticks);
+            }
             return retVal;
         }
 
