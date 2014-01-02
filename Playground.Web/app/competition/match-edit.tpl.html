@@ -2,7 +2,7 @@
     <h1>{{pageTitle}}</h1>
 </div>
 <div class="row">
-    <div class="span6">
+    <div class="span12">
         <form class="form-horizontal">
             <div class="control-group">
                 <label class="control-label">Date</label>
@@ -69,6 +69,49 @@
             </div>
             <div class="control-group">
                 <div class="controls">
+                    <span data-ng-show="team.players.length > 0">
+                        Competitors
+                    </span>
+                    <table class="table">
+                        <tr data-ng-repeat="competitorScore in competitorScores">
+                            <td data-ng-bind="competitorScore.competitor.name"></td>
+                            <td>
+                                <input 
+                                    class="input-small"
+                                    type="text" 
+                                    data-ng-model="competitorScore.score" />
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" 
+                                    data-ng-show="competitorScore.competitor.competitorID != selectedCompetitor.competitorID"
+                                    data-ng-click="removeCompetitor($index)">remove</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="text" data-ng-model="searchQuery" placeholder="Search players">
+                    <button class="btn" data-ng-disabled="!selectedGame.gameID" data-ng-click="searchPlayers()">Search</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <span data-ng-show="availablePlayers.length > 0">Results
+                    </span>
+                    <table class="table">
+                        <tr data-ng-repeat="competitor in availableCompetitors">
+                            <td data-ng-bind="competitor.name"></td>
+                            <td>
+                                <button class="btn btn-primary" data-ng-click="addCompetitor(competitor, $index)">add</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
                     <button class="btn" data-ng-click="addMatch()">Save</button>
                     <button class="btn" data-ng-click="cancel()">Cancel</button>
                 </div>
@@ -76,42 +119,7 @@
         </form>
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
     </div>
-    <div class="span6">
-        <span data-ng-show="team.players.length > 0">
-            Competitors
-        </span>
-        <table class="table">
-            <tr data-ng-repeat="competitorScore in competitorScores">
-                <td data-ng-bind="competitorScore.competitor.name"></td>
-                <td>
-                    <input 
-                        class="input-small"
-                        type="text" 
-                        data-ng-model="competitorScore.score" />
-                </td>
-                <td>
-                    <button class="btn btn-primary" 
-                        data-ng-show="competitorScore.competitor.competitorID != selectedCompetitor.competitorID"
-                        data-ng-click="removeCompetitor($index)">remove</button>
-                </td>
-            </tr>
-        </table>
-        <form class="form-inline">
-            <input type="text" data-ng-model="searchQuery" placeholder="Search players">
-            <button class="btn" data-ng-disabled="!selectedGame.gameID" data-ng-click="searchPlayers()">Search</button>
-        </form>
-        <span data-ng-show="availablePlayers.length > 0">
-            Results
-        </span>
-        <table class="table">
-            <tr data-ng-repeat="competitor in availableCompetitors">
-                <td data-ng-bind="competitor.name"></td>
-                <td>
-                    <button class="btn btn-primary" data-ng-click="addCompetitor(competitor, $index)">add</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+    
     <div class="span12">
         match
         <pre>{{match | json}}</pre>

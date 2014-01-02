@@ -187,7 +187,7 @@ angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap
         };
 
         $scope.cancel = function () {
-            $state.go('profile');
+            window.history.back();
         };
 
         $scope.openCalendar = function () {

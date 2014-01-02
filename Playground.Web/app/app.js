@@ -97,11 +97,6 @@ Playground.
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
-                }).state('game-category-details', {
-                    url: '/game/category/details/:id',
-                    templateUrl: 'app/games/game-category-details.tpl.html',
-                    controller: 'GameCategoryDetailsController',
-                    data: { pageTitle: 'Game category details' }
                 }).state('competition-types', {
                     url: '/competition-types',
                     templateUrl: 'app/games/competition-type-list.tpl.html',
