@@ -1,7 +1,7 @@
 <ul class="nav" data-ng-show="isAuthenticated">
     <li data-ng-class="{active: IsActive('profile')}">
         <span class="img-holder">
-            <img data-ng-src="{{profile.pictureUrl}}" alt="" />
+            <img data-ng-src="{{profile.pictureUrl || ''}}" alt="{{profile.lastName}}" />
         </span>
     </li>
     <li data-ng-class="{active: IsActive('profile')}">

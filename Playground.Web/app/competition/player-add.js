@@ -11,8 +11,9 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
     '$rootScope',
     '$state',
     'UserResource',
+    'GameResource',
     'enums',
-    function ($scope, $stateParams, $rootScope, $state, UserResource, enums) {
+    function ($scope, $stateParams, $rootScope, $state, UserResource, GameResource, enums) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.player = {
             competitorID: 0,
@@ -32,7 +33,7 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
         };
 
         $scope.loadGames = function () {
-            UserResource.individualGames(function (data, status, headers, config) {
+            GameResource.individualGames(function (data, status, headers, config) {
                 $scope.categories = data;
             });
         };
@@ -62,7 +63,7 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
                 function (data, status, headers, config) {
                     $scope.player = data.player;
                     $scope.addAlert({ type: 'success', msg: 'Player sucessfully added' });
-                    $state.go('profile');
+                    $state.go('profile.players');
                 },
                 function () {
                     $scope.addAlert({ type: 'error', msg: 'Error adding player' });
@@ -71,7 +72,7 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
         };
 
         $scope.cancel = function () {
-            $state.go('profile');
+            $state.go('profile.players');
         };
 
         $scope.loadGames();

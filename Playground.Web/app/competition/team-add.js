@@ -15,10 +15,12 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
     '$rootScope',
     '$state',
     'UserResource',
+    'GameResource',
     'enums',
-    function ($scope, $stateParams, $rootScope, $state, UserResource, enums) {
+    function ($scope, $stateParams, $rootScope, $state, UserResource, GameResource, enums) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.team = {
+            competitorID: 0,
             players: [],
             games: []
         };
@@ -55,13 +57,13 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         };
 
         $scope.loadGames = function () {
-            UserResource.teamGames(function (data, status, headers, config) {
+            GameResource.teamGames(function (data, status, headers, config) {
                 $scope.categories = data;
             });
         };
 
         $scope.loadMyPlayers = function () {
-            UserResource.teamGames(function (data, status, headers, config) {
+            GameResource.teamGames(function (data, status, headers, config) {
                 $scope.games = data;
             });
         };
@@ -78,7 +80,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
                 function (data, status, headers, config) {
                     $scope.team = data.team;
                     $scope.addAlert({ type: 'success', msg: 'Team sucessfully added' });
-                    $state.go('profile');
+                    $state.go('profile.teams');
                 },
                 function () {
                     $scope.addAlert({ type: 'error', msg: 'Error adding team' });
@@ -142,7 +144,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         }
 
         $scope.cancel = function () {
-            $state.go('profile');
+            window.history.back();
         };
 
         $scope.loadGames();

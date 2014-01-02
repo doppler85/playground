@@ -58,6 +58,11 @@ namespace Playground.Web.Controllers
             return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.PlayerPictureRoot));
         }
 
+        private string GetTeamPicturesRootFolder()
+        {
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.TeamPictureRoot));
+        }
+
         [HttpPost]
         [ActionName("uploadplayerpicture")]
         public async Task<HttpResponseMessage> UploadPlayerPicture()
@@ -154,9 +159,12 @@ namespace Playground.Web.Controllers
                 string retUrl = String.Format("{0}{1}", Constants.Images.PlayerPictureRoot, fileInfo.Name);
                 // if all ok update user
                 Competitor player = Uow.Competitors.GetById(coords.ID);
-                player.PictureUrl = retUrl;
-                Uow.Competitors.Update(player, player.CompetitorID);
-                Uow.Commit();
+                if (player != null)
+                {
+                    player.PictureUrl = retUrl;
+                    Uow.Competitors.Update(player, player.CompetitorID);
+                    Uow.Commit();
+                }
 
                 return new HttpResponseMessage()
                 {
@@ -169,30 +177,156 @@ namespace Playground.Web.Controllers
             }
         }
 
+        [HttpPost]
+        [ActionName("uploadteampicture")]
+        public async Task<HttpResponseMessage> UploadTeamPicture()
+        {
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
 
-        private void AssignImage(long playerID)
+            string root = GetTeamPicturesRootFolder();
+            var provider = new UniqueMultipartFormDataStreamProvider(root);
+
+            try
+            {
+                // Read the form data and return an async task.
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                // This illustrates how to get the file names for uploaded files.
+                User currentUser = GetUserByEmail(User.Identity.Name);
+
+
+                if (String.IsNullOrEmpty(provider.FormData["ID"]))
+                {
+                    throw new Exception("No ID for the game specified");
+                }
+                int teamId = Int32.Parse(provider.FormData["ID"]);
+                string retUrl = "";
+                if (provider.FileData.Count > 0)
+                {
+                    string localName = provider.FileData[0].LocalFileName;
+                    FileInfo fileInfo = new FileInfo(localName);
+                    string filePath = String.Format("{0}{1}_{2}_{3}_temp.{4}",
+                                            root,
+                                            Constants.Images.TeamPicturePrefix,
+                                            currentUser.UserID,
+                                            teamId,
+                                            Constants.Images.PlayerPictureExtension);
+
+                    ImageUtil.ScaleImage(fileInfo.FullName,
+                                        filePath,
+                                        Constants.Images.TeamImageFormat,
+                                        Constants.Images.TeamImageMaxSize,
+                                        Constants.Images.TeamImageMaxSize);
+
+                    fileInfo.Delete();
+
+                    fileInfo = new FileInfo(filePath);
+                    retUrl = String.Format("{0}{1}", Constants.Images.TeamPictureRoot, fileInfo.Name);
+                }
+
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                };
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        [HttpPost]
+        [ActionName("cropteampicture")]
+        public HttpResponseMessage CropTeamPicture(CropingArgs coords)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
-            string root = GetPlayerPicturesRootFolder();
-            
+            string root = GetTeamPicturesRootFolder();
+            string filePath = String.Format("{0}{1}_{2}_{3}_temp.{4}",
+                                                        root,
+                                                        Constants.Images.TeamPicturePrefix,
+                                                        currentUser.UserID,
+                                                        coords.ID,
+                                                        Constants.Images.TeamPictureExtension);
+
+            string destFilePath = String.Format("{0}{1}_{2}_{3}.{4}",
+                                                                    root,
+                                                                    Constants.Images.TeamPicturePrefix,
+                                                                    currentUser.UserID,
+                                                                    coords.ID,
+                                                                    Constants.Images.TeamPictureExtension);
+            try
+            {
+                ImageUtil.CropImage(filePath,
+                                    destFilePath,
+                                    Constants.Images.TeamImageFormat,
+                                    coords);
+
+                // delete temporary file
+                FileInfo fileInfo = new FileInfo(filePath);
+                fileInfo.Delete();
+
+                fileInfo = new FileInfo(destFilePath);
+                string retUrl = String.Format("{0}{1}", Constants.Images.TeamPictureRoot, fileInfo.Name);
+                // if all ok update user
+                Competitor team = Uow.Competitors.GetById(coords.ID);
+                if (team != null)
+                {
+                    team.PictureUrl = retUrl;
+                    Uow.Competitors.Update(team, team.CompetitorID);
+                    Uow.Commit();
+                }
+
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                };
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        private void AssignImage(Competitor competitor, string root, string prefix, string extension)
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            string fileSystemRoot = HttpContext.Current.Server.MapPath(String.Format("~{0}", root));
             // temp profile picture
             string sourceFilePath = String.Format("{0}{1}_{2}_{3}.{4}",
-                                                                    root,
-                                                                    Constants.Images.PlayerPicturePrefix,
+                                                                    fileSystemRoot,
+                                                                    prefix,
                                                                     currentUser.UserID,
                                                                     0,
-                                                                    Constants.Images.PlayerPictureExtension);
+                                                                    extension);
 
             string destFilePath = String.Format("{0}{1}_{2}.{3}",
+                                                                    fileSystemRoot,
+                                                                    prefix,
+                                                                    competitor.CompetitorID,
+                                                                    extension);
+            
+            string destUrl = String.Format("{0}{1}_{2}.{3}",
                                                                     root,
-                                                                    Constants.Images.PlayerPicturePrefix,
-                                                                    playerID,
-                                                                    Constants.Images.PlayerPictureExtension);
+                                                                    prefix,
+                                                                    competitor.CompetitorID,
+                                                                    extension);
+
             if (File.Exists(sourceFilePath))
             {
+                competitor.PictureUrl = destUrl;
                 File.Move(sourceFilePath, destFilePath);
                 File.Delete(sourceFilePath);
             }
+            else
+            {
+                competitor.PictureUrl = String.Empty;
+            }
+            Uow.Competitors.Update(competitor, competitor.CompetitorID);
+            Uow.Commit();
         }
 
         [HttpPost]
@@ -205,7 +339,10 @@ namespace Playground.Web.Controllers
             player.CreationDate = DateTime.Now;
             Uow.Competitors.Add(player);
             Uow.Commit();
-            AssignImage(player.CompetitorID);
+            AssignImage(player, 
+                Constants.Images.PlayerPictureRoot,
+                Constants.Images.PlayerPicturePrefix, 
+                Constants.Images.PlayerPictureExtension);
 
             var response = Request.CreateResponse(HttpStatusCode.Created, player);
 
@@ -217,29 +354,74 @@ namespace Playground.Web.Controllers
             return response;
         }
 
-        // api/user/getindividualgames
-        [HttpGet]
-        [ActionName("individualgames")]
-        public List<GameCategory> GetIndividualGames()
+        [HttpPut]
+        [ActionName("updateplayer")]
+        public HttpResponseMessage UpdatePlayer(Player player)
         {
-            List<Game> games = Uow.Games
-                                .GetAll(g => g.Category)
-                                .Where(g => g.CompetitionTypes.Any(ct => ct.CompetitionType.CompetitorType == CompetitorType.Individual))
-                                .OrderBy(g => g.Category.Title)
-                                .ThenBy(g => g.Title)
-                                .ToList();
-
-            List<GameCategory> categories = games
-                .Select(g => g.Category)
-                .Distinct()
+            List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
+                .GetAll()
+                .Where(gc => gc.CompetitorID == player.CompetitorID)
                 .ToList();
-            
-            return categories;
+            foreach (GameCompetitor gc in gameCompetitors)
+            {
+                Uow.GameCompetitors.Delete(gc);
+            }
+            foreach (GameCompetitor gc in player.Games.Where(g => g.Selected))
+            {
+                gc.Competitor = null;
+                gc.Game = null;
+                Uow.GameCompetitors.Add(gc);
+            }
+            Uow.Competitors.Update(player, player.CompetitorID);
+            Uow.Commit();
+            var response = Request.CreateResponse(HttpStatusCode.OK, player);
+
+            return response;
         }
 
-        public HttpResponseMessage UpdatePlayer()
+        [HttpGet]
+        [ActionName("getupdateplayer")]
+        public Player GetUpdatePlayer(long id)
         {
-            throw new NotImplementedException();
+            Player retVal = Uow.Competitors
+                .GetAll(c => c.Games)
+                .OfType<Player>()
+                .Where(p => p.CompetitorID == id)
+                .First();
+            List<int> gameIds = retVal.Games.Select(g => g.GameID).ToList();
+            List<Game> games = Uow.Games
+                .GetAll(g => g.Category)
+                .Where(g => gameIds.Contains(g.GameID))
+                .ToList();
+            
+            // assume that there should always be at least one game that player comeptes in
+            int gameCategory = games[0].GameCategoryID;
+            List<Game> allGames = Uow.Games
+                .GetAll(g => g.Category)
+                .Where(g => g.GameCategoryID == gameCategory)
+                .ToList();
+
+            foreach (Game game in allGames)
+            {
+                GameCompetitor gameCompetitor = retVal.Games.FirstOrDefault(gc => gc.GameID == game.GameID);
+                if (gameCompetitor != null)
+                {
+                    gameCompetitor.Selected = true;
+                }
+                else
+                {
+                    retVal.Games.Add(new GameCompetitor()
+                    {
+                        CompetitorID = retVal.CompetitorID,
+                        Competitor = retVal,
+                        Game = game,
+                        GameID = game.GameID
+                    });
+                }
+            }
+            retVal.Games = retVal.Games.OrderBy(g => g.Game.Title).ToList();
+
+             return retVal;
         }
 
         [HttpDelete]
@@ -315,6 +497,10 @@ namespace Playground.Web.Controllers
             team.CreationDate = DateTime.Now;
             Uow.Competitors.Add(team);
             Uow.Commit();
+            AssignImage(team,
+                Constants.Images.TeamPictureRoot,
+                Constants.Images.TeamPicturePrefix,
+                Constants.Images.TeamPictureExtension);
 
             var response = Request.CreateResponse(HttpStatusCode.Created, team);
 
@@ -323,28 +509,6 @@ namespace Playground.Web.Controllers
                 new Uri(Url.Link(RouteConfig.ControllerAndId, new { id = team.CompetitorID }));
 
             return response;
-        }
-
-        // api/user/teamgames
-        [HttpGet]
-        [ActionName("teamgames")]
-        public List<GameCategory> GetTeamGames()
-        {
-            User currentUser = GetUserByEmail(User.Identity.Name);
-            List<Game> games = Uow.Games
-                                .GetAll(g => g.Category)
-                                .Where(g => g.CompetitionTypes.Any(ct => ct.CompetitionType.CompetitorType == CompetitorType.Team) &&
-                                            g.Competitors.Count > 0)
-                                .OrderBy(g => g.Category.Title)
-                                .ThenBy(g => g.Title)
-                                .ToList();
-
-            List<GameCategory> categories = games
-                .Select(g => g.Category)
-                .Distinct()
-                .ToList();
-
-            return categories;
         }
 
         // api/user/myteamplayer
@@ -384,10 +548,148 @@ namespace Playground.Web.Controllers
             return players;
         }
 
-        public HttpResponseMessage UpdateTeam()
+        // api/user/searchplayers
+        [HttpGet]
+        [ActionName("searchteamplayers")]
+        public List<Player> SearchPlayers(long teamId, string search)
         {
-            throw new NotImplementedException();
+            if (search == null)
+            {
+                search = String.Empty;
+            }
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            Team team = Uow.Competitors
+                .GetAll(t => ((Team)t).Players, t => t.Games)
+                .OfType<Team>()
+                .First(t => t.CompetitorID == teamId);
+            List<int> gameIds = team.Games.Select(g => g.GameID).ToList();
+            List<Game> games = Uow.Games
+                .GetAll(g => g.Category)
+                .Where(g => gameIds.Contains(g.GameID))
+                .ToList();
+
+            int gameCategoryID = games[0].GameCategoryID;
+            List<long> teamPlayerIds = team.Players.Select(tp => tp.PlayerID).ToList();
+            List<Player> players = Uow.Competitors
+                .GetAll(p => ((Player)p).User)
+                .OfType<Player>()
+                .Where(p => p.Games.Any(g => g.Game.Category.GameCategoryID == gameCategoryID) &&
+                            p.User.UserID != currentUser.UserID &&
+                            !teamPlayerIds.Contains(p.CompetitorID) &&
+                            (p.Name.Contains(search) || p.User.FirstName.Contains(search) || p.User.LastName.Contains(search)))
+                .ToList();
+
+            return players;
         }
+
+        [HttpPost]
+        [ActionName("addteamplayer")]
+        public HttpResponseMessage AddTeamPlayer(TeamPlayer teamPlayer)
+        {
+            Uow.TeamPlayers.Add(teamPlayer);
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, teamPlayer);
+            return response;
+        }
+
+        [HttpDelete]
+        [ActionName("deleteteamplayer")]
+        public HttpResponseMessage DeleteTeamPlayer(long teamID, long playerID)
+        {
+            Uow.TeamPlayers.Delete(tp => tp.TeamID == teamID && tp.PlayerID == playerID);
+            Uow.Commit();
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            return response;
+        }
+
+        [HttpPut]
+        [ActionName("updateteam")]
+        public HttpResponseMessage UpdateTeam(Team team)
+        {
+            List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
+                .GetAll()
+                .Where(gc => gc.CompetitorID == team.CompetitorID)
+                .ToList();
+            foreach (GameCompetitor gc in gameCompetitors)
+            {
+                Uow.GameCompetitors.Delete(gc);
+            }
+            foreach (GameCompetitor gc in team.Games.Where(g => g.Selected))
+            {
+                gc.Competitor = null;
+                gc.Game = null;
+                Uow.GameCompetitors.Add(gc);
+            }
+            Uow.Competitors.Update(team, team.CompetitorID);
+            Uow.Commit();
+            var response = Request.CreateResponse(HttpStatusCode.OK, team);
+
+            return response;
+        }
+
+        [HttpGet]
+        [ActionName("getupdateteam")]
+        public Team GetUpdateTeam(long id)
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+
+            Team retVal = Uow.Competitors
+                .GetAll(c => c.Games, c => ((Team)c).Players)
+                .OfType<Team>()
+                .Where(p => p.CompetitorID == id)
+                .First();
+            List<int> gameIds = retVal.Games.Select(g => g.GameID).ToList();
+
+            List<Game> games = Uow.Games
+                .GetAll(g => g.Category)
+                .Where(g => gameIds.Contains(g.GameID))
+                .ToList();
+
+            // assume that there should always be at least one game that player comeptes in
+            int gameCategory = games[0].GameCategoryID;
+            List<Game> allGames = Uow.Games
+                .GetAll(g => g.Category)
+                .Where(g => g.GameCategoryID == gameCategory)
+                .ToList();
+
+            foreach (Game game in allGames)
+            {
+                GameCompetitor gameCompetitor = retVal.Games.FirstOrDefault(gc => gc.GameID == game.GameID);
+                if (gameCompetitor != null)
+                {
+                    gameCompetitor.Selected = true;
+                }
+                else
+                {
+                    retVal.Games.Add(new GameCompetitor()
+                    {
+                        CompetitorID = retVal.CompetitorID,
+                        Competitor = retVal,
+                        Game = game,
+                        GameID = game.GameID
+                    });
+                }
+            }
+
+            // load players
+            foreach (TeamPlayer teamPlayer in retVal.Players)
+            {
+                teamPlayer.Player = Uow.Competitors
+                    .GetAll(p => ((Player)p).User)
+                    .OfType<Player>()
+                    .FirstOrDefault(p => p.CompetitorID == teamPlayer.PlayerID);
+                    
+                teamPlayer.Player.IsCurrentUserCompetitor = teamPlayer.Player.UserID == currentUser.UserID;
+            }
+
+            retVal.Games = retVal.Games.OrderBy(g => g.Game.Title).ToList();
+
+
+            return retVal;
+        }
+
 
         [HttpGet]
         [ActionName("matches")]
@@ -778,6 +1080,12 @@ namespace Playground.Web.Controllers
             if (!String.IsNullOrEmpty(currentUser.PictureUrl))
             {
                 currentUser.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+            }
+            else
+            {
+                currentUser.PictureUrl = currentUser.Gender == Gender.Male ?
+                    Util.Constants.Images.DefaultProfileMale :
+                    Util.Constants.Images.DefaultProfileFemale;
             }
             return currentUser;
         }

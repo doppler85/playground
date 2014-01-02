@@ -16,6 +16,7 @@
                 <td data-ng-bind="competitorTypes[competitionType.competitorType]"></td>
                 <td data-ng-bind="competitionType.competitorsCount"></td>
                 <td>
+                    <button class="btn btn-primary" data-ng-click="editCompetitionType(competitionType, $index);">edit</button>
                     <button class="btn btn-primary" data-ng-click="deleteCompetitionType(competitionType, $index);">delete</button>
                 </td>
 

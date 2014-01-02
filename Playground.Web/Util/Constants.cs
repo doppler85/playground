@@ -15,7 +15,7 @@ namespace Playground.Web.Util
 
         public static class AdminUser
         {
-            public static string AdminUserName = "voja@playground.com";
+            public static string AdminUserName = "vojaadmin@playground.com";
             public static string AdminPass = "pass*123";
         }
 
@@ -45,8 +45,14 @@ namespace Playground.Web.Util
             public static string PlayerPictureExtension = "jpg";
             public static int PlayerImageMaxSize = 200;
 
-            public static string DefaultMalaProfileImage = "";
-            public static string DefaultFemaleProfileImage = "";
+            public static string TeamPictureRoot = "/Images/Team/";
+            public static string TeamPicturePrefix = "team_pic";
+            public static System.Drawing.Imaging.ImageFormat TeamImageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+            public static string TeamPictureExtension = "jpg";
+            public static int TeamImageMaxSize = 200;
+
+            public static string DefaultProfileMale = "/Images/Default/default_profile_male.jpg";
+            public static string DefaultProfileFemale = "/Images/Default/default_profile_female.jpg";
             public static string DefaultGameImage = "";
                 
         }

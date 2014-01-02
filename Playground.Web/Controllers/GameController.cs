@@ -125,11 +125,8 @@ namespace Playground.Web.Controllers
             {
                 Uow.GameCompetitionTypes.Add(ct);
             }
-
             Uow.Games.Update(game, game.GameID);
-
             Uow.Commit();
-
             var response = Request.CreateResponse(HttpStatusCode.OK, game);
 
             return response;
@@ -366,6 +363,48 @@ namespace Playground.Web.Controllers
             };
 
             return retVal;
+        }
+
+        // api/game/individualgames
+        [HttpGet]
+        [ActionName("individualgames")]
+        public List<GameCategory> GetIndividualGames()
+        {
+            List<Game> games = Uow.Games
+                                .GetAll(g => g.Category)
+                                .Where(g => g.CompetitionTypes.Any(ct => ct.CompetitionType.CompetitorType == CompetitorType.Individual))
+                                .OrderBy(g => g.Category.Title)
+                                .ThenBy(g => g.Title)
+                                .ToList();
+
+            List<GameCategory> categories = games
+                .Select(g => g.Category)
+                .Distinct()
+                .ToList();
+
+            return categories;
+        }
+
+        // api/game/teamgames 
+        [HttpGet]
+        [ActionName("teamgames")]
+        public List<GameCategory> GetTeamGames()
+        {
+            User currentUser = GetUserByEmail(User.Identity.Name);
+            List<Game> games = Uow.Games
+                                .GetAll(g => g.Category)
+                                .Where(g => g.CompetitionTypes.Any(ct => ct.CompetitionType.CompetitorType == CompetitorType.Team) &&
+                                            g.Competitors.Count > 0)
+                                .OrderBy(g => g.Category.Title)
+                                .ThenBy(g => g.Title)
+                                .ToList();
+
+            List<GameCategory> categories = games
+                .Select(g => g.Category)
+                .Distinct()
+                .ToList();
+
+            return categories;
         }
     }
 }

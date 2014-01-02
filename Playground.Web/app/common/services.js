@@ -85,6 +85,20 @@ factory('GameResource', ['$resource', function (resource) {
             }
         },
         remove: { method: 'DELETE' },
+        individualGames: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'individualgames'
+            }
+        },
+        teamGames: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'teamgames'
+            }
+        }
     });
 }]).
 factory('CompetitionTypeResource', ['$resource', function (resource) {
@@ -115,20 +129,6 @@ factory('UserResource', ['$resource', function (resource) {
                 actionname: 'matches'
             }
         },
-        individualGames: {
-            method: 'GET',
-            isArray: true,
-            params: {
-                actionname: 'individualgames'
-            }
-        },
-        teamGames: {
-            method: 'GET',
-            isArray: true,
-            params: {
-                actionname: 'teamgames'
-            }
-        },
         myteamplayer: {
             method: 'GET',
             params: {
@@ -142,16 +142,59 @@ factory('UserResource', ['$resource', function (resource) {
                 actionname: 'searchplayers'
             }
         },
+        searchteamplayers: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'searchteamplayers'
+            }
+        },
         addPlayer: {
             method: 'POST',
             params: {
                 actionname: 'addplayer'
             }
         },
+        updatePlayer: {
+            method: 'PUT',
+            params: {
+                actionname: 'updateplayer'
+            }
+        },
+        getUpdatePlayer: {
+            method: 'GET',
+            params: {
+                actionname: 'getupdateplayer'
+            }
+        },
         addTeam: {
             method: 'POST',
             params: {
                 actionname: 'addteam'
+            }
+        },
+        updateTeam: {
+            method: 'PUT',
+            params: {
+                actionname: 'updateteam'
+            }
+        },
+        addteamplayer: {
+            method: 'POST',
+            params: {
+                actionname: 'addteamplayer'
+            }
+        },
+        deleteteamplayer: {
+            method: 'DELETE',
+            params: {
+                actionname: 'deleteteamplayer'
+            }
+        },
+        getUpdateTeam: {
+            method: 'GET',
+            params: {
+                actionname: 'getupdateteam'
             }
         },
         deletecompetitor: {

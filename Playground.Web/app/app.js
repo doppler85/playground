@@ -23,7 +23,9 @@ var Playground = angular.module('Playground', [
     'Playground.user-profile',
     'Playground.competitors-list',
     'Playground.player-add',
+    'Playground.player-edit',
     'Playground.team-add',
+    'Playground.team-edit',
     'Playground.match-add',
     'Playground.match-list',
     'Playground.player-profile',
@@ -152,7 +154,7 @@ Playground.
                     data: { pageTitle: 'Public profile' }
                 }).state('player-add', {
                     url: '/user/competition/player/add',
-                    templateUrl: 'app/competition/player-edit.tpl.html',
+                    templateUrl: 'app/competition/player-add.tpl.html',
                     controller: 'PlayerAddController',
                     data: { pageTitle: 'Add player' },
                     resolve: {
@@ -160,11 +162,31 @@ Playground.
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
+                }).state('player-edit', {
+                    url: '/user/competition/player/edit/:id',
+                    templateUrl: 'app/competition/player-edit.tpl.html',
+                    controller: 'PlayerEditController',
+                    data: { pageTitle: 'Edit player' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization, $location, $state) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
                 }).state('team-add', {
                     url: '/competition/team/add',
-                    templateUrl: 'app/competition/team-edit.tpl.html',
+                    templateUrl: 'app/competition/team-add.tpl.html',
                     controller: 'TeamAddController',
                     data: { pageTitle: 'Add team' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization, $location, $state) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
+                }).state('team-edit', {
+                    url: '/competition/team/edit/:id',
+                    templateUrl: 'app/competition/team-edit.tpl.html',
+                    controller: 'TeamEditController',
+                    data: { pageTitle: 'Edit team' },
                     resolve: {
                         authenticaated: function (securityAuthorization, $location, $state) {
                             return securityAuthorization.requireAuthenticatedUser();

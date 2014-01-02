@@ -23,11 +23,12 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">Game category</label>
+                <label class="control-label">Game</label>
                 <div class="controls">
-                    <input type="text" 
-                        data-ng-model="team.games[0].game.category.title"
-                        data-ng-disabled="true">
+                    <select 
+                        data-ng-model="selectedCategory" 
+                        data-ng-change="categoryChanged()"
+                        data-ng-options="category as category.title for category in categories" />
                 </div>
             </div>
             <div class="control-group">
@@ -38,20 +39,20 @@
             </div>
             <div class="control-group">
                 <label class="control-label">Games</label>
-                <div class="controls" data-ng-repeat="gamecompetitor in team.games">
+                <div class="controls" data-ng-repeat="game in games">
                     <label>
                         <input 
                             type="checkbox" 
-                            value="gamecompetitor.game.gameid" 
-                            data-ng-checked="gamecompetitor.selected"
-                            data-ng-click="gamecompetitor.selected = !gamecompetitor.selected"/> 
-                        {{gamecompetitor.game.title}} 
+                            value="game.gameid" 
+                            data-ng-checked="game.checked"
+                            data-ng-click="toggleGame(game)"/> 
+                        {{game.title}} 
                     </label>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn" data-ng-click="updateTeam()">Save</button>
+                    <button class="btn" data-ng-click="addTeam()">Save</button>
                     <button class="btn" data-ng-click="cancel()">Cancel</button>
                 </div>
             </div>
@@ -69,14 +70,14 @@
                 <td>
                     <button class="btn btn-primary" 
                         data-ng-show="teamPlayer.playerID != myplayer.competitorID"
-                        data-ng-click="removePlayer(teamPlayer, $index)">remove</button>
+                        data-ng-click="removePlayer(player, $index)">remove</button>
                 </td>
             </tr>
         </table>
         <form class="form-inline"
               data-ng-show="team.players.length > 0">
             <input type="text" data-ng-model="searchQuery" placeholder="Search players">
-            <button class="btn" data-ng-click="searchPlayers()">Search</button>
+            <button class="btn" data-ng-disabled="!selectedCategory.gameCategoryID" data-ng-click="searchPlayers()">Search</button>
         </form>
         <span data-ng-show="availablePlayers.length > 0">
             Results

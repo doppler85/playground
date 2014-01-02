@@ -4,17 +4,18 @@
 
 <div class="row" data-ng-repeat="gameCategory in gameCategories">
     <div class="span12">
-        <a href="javascript:;" data-ui-sref="game-category-edit({id: gameCategory.gameCategoryID })">
+        <a href="javascript:;" data-ui-sref="game-category-details({id: gameCategory.gameCategoryID })">
             <img data-ng-src="{{gameCategory.pictureUrl}}" alt="" style="height:30px; width:30px;"/>
         </a>
         <h3><a data-ui-sref="game-category-details({id: gameCategory.gameCategoryID })" href="javascript:;">{{gameCategory.title}}</a>
+        <a class="btn btn-primary" href="javascript:;" data-ui-sref="game-category-edit({id: gameCategory.gameCategoryID })">edit</a>
         <a class="btn btn-primary" href="javascript:;" data-ng-click="deleteCategory(gameCategory, $index);">delete</a>
         </h3>
         <table class="table">
             <tr data-ng-repeat="game in gameCategory.games">
                 <td>
                     <div class="img-holder">
-                        <a href="javascript:;" data-ui-sref="game-edit({id: game.gameID})">
+                        <a href="javascript:;" data-ui-sref="game-details({id: game.gameID})">
                             <img data-ng-src="{{game.pictureUrl}}" alt="" />
                         </a>
                     </div>
@@ -23,6 +24,7 @@
                     <a data-ui-sref="game-details({id: game.gameID})">{{game.title}}</a>
                 </td>
                 <td>
+                    <a class="btn btn-primary" data-ui-sref="game-edit({id: game.gameID})">edit</a>
                     <button class="btn btn-primary" data-ng-click="deleteGame(game, gameCategory.games, $index);">delete</button>
                 </td>
             </tr>
