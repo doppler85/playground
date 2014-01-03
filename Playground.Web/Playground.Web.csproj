@@ -239,6 +239,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\TeamStats.cs" />
     <Compile Include="Models\CropingCoords.cs" />
     <Compile Include="Models\GameCategoryStats.cs" />
     <Compile Include="Models\GameStats.cs" />
@@ -270,6 +271,9 @@
     <Content Include="app\competition\player-add.js" />
     <Content Include="app\competition\player-add.tpl.html" />
     <Content Include="app\competition\player-profile.js" />
+    <Content Include="app\templates\competition\team-profile-matches.tpl.html" />
+    <Content Include="app\templates\competition\team-profile-players.tpl.html" />
+    <Content Include="app\templates\competition\team-profile-info.tpl.html" />
     <Content Include="app\templates\competition\player-profile-matches.tpl.html" />
     <Content Include="app\templates\competition\player-profile-teams.tpl.html" />
     <Content Include="app\templates\competition\player-profile-info.tpl.html" />
@@ -277,7 +281,7 @@
     <Content Include="app\competition\team-add.js" />
     <Content Include="app\competition\team-add.tpl.html" />
     <Content Include="app\competition\team-profile.js" />
-    <Content Include="app\competition\team-profile.tpl.html" />
+    <Content Include="app\templates\competition\team-profile.tpl.html" />
     <Content Include="app\games\competition-type-list.js" />
     <Content Include="app\games\competition-type-list.tpl.html" />
     <Content Include="app\games\competition-type-add.js" />

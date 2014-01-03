@@ -48,6 +48,12 @@ factory('CompetitorResource', ['$resource', function (resource) {
             params: {
                 actionname: 'getplayerstats'
             }
+        },
+        teamstats: {
+            method: 'GET',
+            params: {
+                actionname: 'getteamstats'
+            }
         }
     });
 }]).

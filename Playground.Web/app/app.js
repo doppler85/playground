@@ -197,11 +197,6 @@ Playground.
                     templateUrl: 'app/competition/match-list.tpl.html',
                     controller: 'MatchListController',
                     data: { pageTitle: 'All matches' }
-                }).state('team-profile', {
-                    url: '/competition/team/:id',
-                    templateUrl: 'app/competition/team-profile.tpl.html',
-                    controller: 'TeamProfileController',
-                    data: { pageTitle: 'Team profile' }
                 }).state('competitors-list', {
                     url: '/competition/list',
                     templateUrl: 'app/competition/competitors-list.tpl.html',

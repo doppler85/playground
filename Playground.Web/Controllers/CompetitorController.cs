@@ -52,6 +52,39 @@ namespace Playground.Web.Controllers
         }
 
         [HttpGet]
+        [ActionName("teamdetails")]
+        public Team TeamDetails(long id)
+        {
+            Team retVal = Uow.Competitors
+                .GetAll(t => ((Team)t).Games)
+                .OfType<Team>()
+                .FirstOrDefault(p => p.CompetitorID == id);
+
+            return retVal;
+        }
+
+        [HttpGet]
+        [ActionName("getteamstats")]
+        public TeamStats GetTeamStats(long id)
+        {
+            Team team = TeamDetails(id);
+            TeamStats retVal = new TeamStats(team);
+            List<int> gameIds = retVal.Games
+                .Select(p => p.GameID)
+                .ToList();
+            GameCategory gameCategory = Uow.GameCategories
+                .GetAll(gc => gc.Games)
+                .FirstOrDefault(gc => gc.Games.Any(g => gameIds.Contains(g.GameID)));
+            retVal.GameCategory = gameCategory;
+            retVal.TotalMatches = Uow.Matches
+                .GetAll()
+                .Where(m => m.Scores.Any(s => s.CompetitorID == id))
+                .Count();
+
+            return retVal;
+        }
+
+        [HttpGet]
         [ActionName("matches")]
         public PagedResult<Match> GetMatches(string id, int page, int count)
         {

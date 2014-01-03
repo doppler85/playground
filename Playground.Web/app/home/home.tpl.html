@@ -23,7 +23,7 @@
                     <tr data-ng-repeat="score in match.scores">
                         <td>
                             <a href="javascript:;" 
-                                data-ui-sref="game-details({id: match.gameID})" 
+                                data-ui-sref="game-details.info({id: match.gameID})" 
                                 data-ng-show="$index == 0" 
                                 data-ng-bind="match.game.title"></a>
                         </td>
@@ -36,7 +36,7 @@
                                 data-ng-show="score.competitor.competitorType == 0" 
                                 data-ng-bind="score.competitor.name"></a>
                             <a href="javascript:;" 
-                                data-ui-sref="team-profile({id: score.competitor.competitorID})" 
+                                data-ui-sref="team-profile.info({id: score.competitor.competitorID})" 
                                 data-ng-show="score.competitor.competitorType == 1" 
                                 data-ng-bind="score.competitor.name"></a>
                         </td>
