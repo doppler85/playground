@@ -117,11 +117,6 @@ Playground.
                             return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
-                }).state('game-details', {
-                    url: '/game/details/:id',
-                    templateUrl: 'app/games/game-details.tpl.html',
-                    controller: 'GameDetailsController',
-                    data: { pageTitle: 'Game details' }
                 }).state('game-edit', {
                     url: '/game/edit/:id',
                     templateUrl: 'app/games/game-edit.tpl.html',

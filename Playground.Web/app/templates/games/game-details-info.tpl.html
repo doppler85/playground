@@ -1,0 +1,19 @@
+<div class="span12">
+    <ul style="list-style: none">
+        <li>
+            <img data-ng-src="{{gameStats.pictureUrl}}" alt="" />
+        </li>
+        <li>
+            <h4>Title: {{gameStats.title}}</h4>
+        </li>
+        <li>
+            <h4>Category: <a data-ui-sref="game-category-details.info({id: gameStats.gameCategoryID})">{{gameStats.category.title}}</a></h4>
+        </li>
+        <li>
+            <h4>Competitors: {{gameStats.totalCompetitors}}</h4>
+        </li>
+        <li>
+            <h4>Matches: {{gameStats.totalMatches}}</h4>
+        </li>
+    </ul>
+</div>

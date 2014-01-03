@@ -91,8 +91,8 @@ angular.module('Playground.game-category-details', [
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'games';
         $scope.gameCategoryID = $stateParams.id;
-
-    }]).controller('GameCategoryDetailsPlayersController', [
+    }])
+    .controller('GameCategoryDetailsPlayersController', [
     '$scope',
     '$stateParams',
     '$rootScope',
@@ -103,8 +103,8 @@ angular.module('Playground.game-category-details', [
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'players';
         $scope.gameCategoryID = $stateParams.id;
-
-    }]).controller('GameCategoryDetailsTeamsController', [
+    }])
+    .controller('GameCategoryDetailsTeamsController', [
     '$scope',
     '$stateParams',
     '$rootScope',
@@ -115,8 +115,8 @@ angular.module('Playground.game-category-details', [
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'teams';
         $scope.gameCategoryID = $stateParams.id;
-
-    }]).controller('GameCategoryDetailsMatchesController', [
+    }])
+    .controller('GameCategoryDetailsMatchesController', [
     '$scope',
     '$stateParams',
     '$rootScope',
@@ -127,5 +127,4 @@ angular.module('Playground.game-category-details', [
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'matches';
         $scope.gameCategoryID = $stateParams.id;
-
     }]);
