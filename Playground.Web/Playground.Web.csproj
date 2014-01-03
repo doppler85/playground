@@ -270,7 +270,10 @@
     <Content Include="app\competition\player-add.js" />
     <Content Include="app\competition\player-add.tpl.html" />
     <Content Include="app\competition\player-profile.js" />
-    <Content Include="app\competition\player-profile.tpl.html" />
+    <Content Include="app\templates\competition\player-profile-matches.tpl.html" />
+    <Content Include="app\templates\competition\player-profile-teams.tpl.html" />
+    <Content Include="app\templates\competition\player-profile-info.tpl.html" />
+    <Content Include="app\templates\competition\player-profile.tpl.html" />
     <Content Include="app\competition\team-add.js" />
     <Content Include="app\competition\team-add.tpl.html" />
     <Content Include="app\competition\team-profile.js" />
@@ -324,11 +327,11 @@
     <Content Include="app\templates\modal\window.html" />
     <Content Include="app\templates\pagination\pager.html" />
     <Content Include="app\templates\pagination\pagination.html" />
-    <Content Include="app\templates\players\players.html" />
+    <Content Include="app\templates\competition\players.html" />
     <Content Include="app\templates\tabs\tab.html" />
     <Content Include="app\templates\tabs\tabset-titles.html" />
     <Content Include="app\templates\tabs\tabset.html" />
-    <Content Include="app\templates\teams\teams.html" />
+    <Content Include="app\templates\competition\teams.html" />
     <Content Include="app\templates\timepicker\timepicker.html" />
     <Content Include="app\templates\typeahead\typeahead-match.html" />
     <Content Include="app\templates\typeahead\typeahead-popup.html" />

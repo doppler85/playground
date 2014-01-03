@@ -47,7 +47,7 @@ angular.module('Playground.players', ['ui.bootstrap.pagination'])
     .directive('players', function () {
         return {
             restrict: 'E',
-            templateUrl: 'app/templates/players/players.html',
+            templateUrl: 'app/templates/competition/players.html',
             replace: true,
             scope: {
                 objectId: '=',

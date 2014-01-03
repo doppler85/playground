@@ -48,7 +48,7 @@ angular.module('Playground.teams', ['ui.bootstrap.pagination'])
     .directive('teams', ['teamsConfig', function (config) {
         return {
             restrict: 'E',
-            templateUrl: 'app/templates/teams/teams.html',
+            templateUrl: 'app/templates/competition/teams.html',
             replace: true,
             scope: {
                 objectId: '=',

@@ -2,7 +2,6 @@
 angular.module('Playground.game-details', [
     'ngResource',
     'ui.router',
-    'ui.bootstrap.tabs',
     'Playground.matches',
     'Playground.players',
     'Playground.teams'])
@@ -79,8 +78,7 @@ angular.module('Playground.game-details', [
     '$rootScope',
     '$state',
     'security',
-    'GameResource',
-    function ($scope, $stateParams, $rootScope, $state, security, GameResource) {
+    function ($scope, $stateParams, $rootScope, $state, security) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'players';
         $scope.gameID = $stateParams.id;
@@ -91,8 +89,7 @@ angular.module('Playground.game-details', [
     '$rootScope',
     '$state',
     'security',
-    'GameResource',
-    function ($scope, $stateParams, $rootScope, $state, security, GameResource) {
+    function ($scope, $stateParams, $rootScope, $state, security) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'teams';
         $scope.gameID = $stateParams.id;
@@ -103,8 +100,7 @@ angular.module('Playground.game-details', [
     '$rootScope',
     '$state',
     'security',
-    'GameResource',
-    function ($scope, $stateParams, $rootScope, $state, security, GameResource) {
+    function ($scope, $stateParams, $rootScope, $state, security) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'matches';
         $scope.gameID = $stateParams.id;

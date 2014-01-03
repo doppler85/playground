@@ -18,11 +18,11 @@
             <td>
                 <a href="javascript:;" 
                     data-ng-show="parentCategory == 'gamecategory'"
-                    data-ui-sref="game-category-details({id: team.games[0].game.gameCategoryID})" 
+                    data-ui-sref="game-category-details.info({id: team.games[0].game.gameCategoryID})" 
                     data-ng-bind="team.games[0].game.category.title"></a>
                 <a href="javascript:;" 
                     data-ng-show="parentCategory == 'game'"
-                    data-ui-sref="game-details({id: team.games[0].gameID})" 
+                    data-ui-sref="game-details.info({id: team.games[0].gameID})" 
                     data-ng-bind="team.games[0].game.title"></a>
             </td>
             <td>
