@@ -137,11 +137,6 @@ Playground.
                     templateUrl: 'app/user/register.tpl.html',
                     controller: 'RegisterController',
                     data: { pageTitle: 'Register' }
-                }).state('public-profile', {
-                    url: '/profile/:id',
-                    templateUrl: 'app/user/user-public-profile.tpl.html',
-                    controller: 'PublicProfileController',
-                    data: { pageTitle: 'Public profile' }
                 }).state('player-add', {
                     url: '/user/competition/player/add',
                     templateUrl: 'app/competition/player-add.tpl.html',

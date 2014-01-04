@@ -794,19 +794,29 @@ namespace Playground.Web.Controllers
             List<long> ids = teamsIds.Concat(playerIds).ToList();
 
             int totalItems = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.Scores
+                                        .GetAll()
+                                        .Where(m => m.Status == MatchStatus.Confirmed &&
+                                                    m.Scores
                                                         .Any(s => ids.Contains(s.CompetitorID)))
                                         .Count();
 
             List<Match> matches = Uow.Matches
                                         .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.Scores
+                                        .Where(m => m.Status == MatchStatus.Confirmed && 
+                                                    m.Scores
                                                         .Any(s => ids.Contains(s.CompetitorID)))
                                         .OrderByDescending(s => s.Date)
                                         .Skip((page - 1) * count)
                                         .Take(count)
                                         .ToList();
+            
+            foreach (Match match in matches)
+            {
+                foreach (CompetitorScore cs in match.Scores)
+                {
+                    cs.Competitor = Uow.Competitors.GetById(cs.CompetitorID);
+                }
+            }
 
             PagedResult<Match> retVal = new PagedResult<Match>()
             {
@@ -1107,6 +1117,92 @@ namespace Playground.Web.Controllers
                     Util.Constants.Images.DefaultProfileFemale;
             }
             return currentUser;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [ActionName("getdetails")]
+        public User GetDetails(long id)
+        {
+            User user = Uow.Users.GetById(id);
+            if (!String.IsNullOrEmpty(user.PictureUrl))
+            {
+                user.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+            }
+            else
+            {
+                user.PictureUrl = user.Gender == Gender.Male ?
+                    Util.Constants.Images.DefaultProfileMale :
+                    Util.Constants.Images.DefaultProfileFemale;
+            }
+            return user;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [ActionName("getuserstats")]
+        public UserStats GetUserStats(long id)
+        {
+            User user = GetDetails(id);
+            UserStats retVal = new UserStats(user);
+            retVal.TotalGames = Uow.Competitors
+                .GetAll()
+                .OfType<Player>()
+                .Where(c => c.UserID == user.UserID)
+                .SelectMany(c => c.Games)
+                .Select(g => g.Game.GameCategoryID)
+                .Distinct()
+                .Count();
+
+            List<int> gameids = Uow.Competitors
+                .GetAll()
+                .OfType<Player>()
+                .Where(c => c.UserID == user.UserID)
+                .SelectMany(c => c.Games)
+                .Select(g => g.GameID)
+                .Distinct()
+                .ToList();
+
+            retVal.TotalPlayers = Uow.Competitors
+                .GetAll()
+                .OfType<Player>()
+                .Where(p => p.UserID == user.UserID)
+                .Count();
+
+            retVal.TotalTeams = Uow.Competitors
+                .GetAll()
+                .OfType<Team>()
+                .Where(t => t.Players.Any(p => p.Player.UserID == user.UserID))
+                .Count();
+
+            List<Player> players = Uow.Competitors
+                .GetAll(p => ((Player)p).Teams)
+                .OfType<Player>()
+                .Where(p => p.UserID == user.UserID)
+                .ToList();
+
+            List<long> matchids = new List<long>();
+            foreach (Player player in players) 
+            {
+                matchids.AddRange(Uow.Matches
+                    .GetAll()
+                    .Where(m => m.Status == MatchStatus.Confirmed &&
+                        m.Scores.Any(p => p.CompetitorID == player.CompetitorID))
+                    .Select(m => m.MatchID));
+                    
+                foreach (TeamPlayer tp in player.Teams)
+                {
+                    matchids.AddRange(Uow.Matches
+                    .GetAll()
+                    .Where(m => m.Status == MatchStatus.Confirmed && 
+                        m.Scores.Any(t => t.CompetitorID == tp.TeamID))
+                    .Select(m => m.MatchID));
+                }
+            }
+            retVal.TotalMatches = matchids.Distinct().Count();
+
+
+            return retVal;
         }
 
         [HttpPut]

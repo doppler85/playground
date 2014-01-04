@@ -279,6 +279,12 @@ factory('UserResource', ['$resource', function (resource) {
             params: {
                 actionname: 'deleteautomaticconfirmation'
             }
+        },
+        getuserstats: {
+            method: 'GET',
+            params: {
+                actionname: 'getuserstats'
+            }
         }
     });
 }]).

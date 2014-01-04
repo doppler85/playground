@@ -239,6 +239,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\UserStats.cs" />
     <Compile Include="Models\TeamStats.cs" />
     <Compile Include="Models\CropingCoords.cs" />
     <Compile Include="Models\GameCategoryStats.cs" />
@@ -339,6 +340,10 @@
     <Content Include="app\templates\timepicker\timepicker.html" />
     <Content Include="app\templates\typeahead\typeahead-match.html" />
     <Content Include="app\templates\typeahead\typeahead-popup.html" />
+    <Content Include="app\templates\user\user-public-profile-matches.tpl.html" />
+    <Content Include="app\templates\user\user-public-profile-teams.tpl.html" />
+    <Content Include="app\templates\user\user-public-profile-players.tpl.html" />
+    <Content Include="app\templates\user\user-public-profile-info.tpl.html" />
     <Content Include="app\templates\user\user-profile.automatic-confirmations.tpl.html" />
     <Content Include="app\templates\user\user-profile.matches.tpl.html" />
     <Content Include="app\templates\user\user-profile.teams.tpl.html" />
@@ -351,7 +356,7 @@
     <Content Include="app\user\login.tpl.html" />
     <Content Include="app\user\login.js" />
     <Content Include="app\user\user-public-profile.js" />
-    <Content Include="app\user\user-public-profile.tpl.html" />
+    <Content Include="app\templates\user\user-public-profile.tpl.html" />
     <Content Include="app\user\user-status.js" />
     <Content Include="app\user\user-status.tpl.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />

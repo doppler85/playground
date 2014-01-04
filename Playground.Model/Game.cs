@@ -18,5 +18,6 @@ namespace Playground.Model
         public virtual GameCategory Category { get; set; }
         public virtual List<GameCompetitor> Competitors { get; set; }
         public virtual List<GameCompetitionType> CompetitionTypes { get; set; }
+        public virtual List<Match> Matches { get; set; }
     }
 }
