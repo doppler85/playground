@@ -32,23 +32,29 @@ namespace Playground.Web.Controllers
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<Player> players = Uow.Competitors
-                                        .GetAll(p => p.Games)
+                                        .GetAll(p => ((Player)p).Games)
                                         .OfType<Player>()
                                         .Where(p => p.UserID == currentUser.UserID)
                                         .OrderBy(p => p.Name)
                                         .ToList();
+            
+            // load only relevat data to increase eficiency
+            foreach (Player player in players)
+            {
+                if (player.Games.Count > 0)
+                {
+                    int gameID = player.Games[0].GameID;
 
-            List<int> gameIds = players
-                .SelectMany(p => p.Games)
-                .ToList()
-                .Select(g => g.GameID)
-                .ToList();
+                    player.Games[0].Game = new Game() 
+                    {
+                        GameID = gameID
+                    };
 
-            // fetch game categories for players
-            List<Game> games = Uow.Games
-                .GetAll(g => g.Category)
-                .Where(g => gameIds.Contains(g.GameID))
-                .ToList();
+                    player.Games[0].Game.Category = Uow.GameCategories
+                        .GetAll()
+                        .FirstOrDefault(gc => gc.Games.Any(g => g.GameID == gameID));
+                }
+            }
 
             return players;
         }
@@ -466,19 +472,25 @@ namespace Playground.Web.Controllers
                                         .Distinct()
                                         .OrderBy(t => t.Name)
                                         .ToList();
-            
-            List<int> gameIds = teams
-                .SelectMany(t => t.Games)
-                .ToList()
-                .Select(g => g.GameID)
-                .ToList();
 
-            // fetch game categories for players
-            List<Game> games = Uow.Games
-                .GetAll(g => g.Category)
-                .Where(g => gameIds.Contains(g.GameID))
-                .ToList();
-            
+            // load only relevat data to increase eficiency
+            foreach (Team team in teams)
+            {
+                if (team.Games.Count > 0)
+                {
+                    int gameID = team.Games[0].GameID;
+
+                    team.Games[0].Game = new Game()
+                    {
+                        GameID = gameID
+                    };
+
+                    team.Games[0].Game.Category = Uow.GameCategories
+                        .GetAll()
+                        .FirstOrDefault(gc => gc.Games.Any(g => g.GameID == gameID));
+                }
+            } 
+           
             return teams;
         }
 
@@ -922,42 +934,49 @@ namespace Playground.Web.Controllers
                                                     p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
                                         .OrderBy(p => p.Name)
                                         .ToList();
-            List<long> teamIds = players
-                .SelectMany(p => p.Teams)
-                .ToList()
-                .Select(t => t.TeamID)
-                .ToList();
 
-            List<Team> teams = Uow.Competitors
-                                        .GetAll(t => t.Games)
-                                        .OfType<Team>()
-                                        .Where(t => teamIds.Contains(t.CompetitorID))
-                                        .ToList();
-
-            foreach (Player p in players)
+            foreach (Player player in players)
             {
-                allMycompetitors.Add(p);
+                // serialization issue (we dont nee whole user here);
+                player.User = null;
+                allMycompetitors.Add(player);
+                foreach (TeamPlayer teamPlayer in player.Teams)
+                {
+                    Team team = (Team)Uow.Competitors.GetById(t => t.CompetitorID == teamPlayer.TeamID, t => t.Games);
+                    allMycompetitors.Add(team);
+                }
             }
 
-            foreach (Team t in teams)
+            // explicitelly load only relevant data
+            foreach (Competitor competitor in allMycompetitors)
             {
-                allMycompetitors.Add(t);
+                foreach (GameCompetitor gameCompetitor in competitor.Games)
+                {
+                    Game game = Uow.Games.GetById(g => g.GameID == gameCompetitor.GameID, g => g.CompetitionTypes);
+                    gameCompetitor.Game = new Game()
+                    {
+                        GameID = game.GameID,
+                        GameCategoryID = game.GameCategoryID,
+                        Title = game.Title,
+                        CompetitionTypes = new List<GameCompetitionType>()
+                    };
+                    foreach (GameCompetitionType gct in game.CompetitionTypes)
+                    {
+                        CompetitionType competitonType = Uow.CompetitionTypes.GetById(ct => ct.CompetitionTypeID == gct.CompetitionTypeID);
+                        gameCompetitor.Game.CompetitionTypes.Add(new GameCompetitionType()
+                        {
+                            CompetitionTypeID = competitonType.CompetitionTypeID,
+                            CompetitionType = new CompetitionType()
+                            {
+                                CompetitionTypeID = competitonType.CompetitionTypeID,
+                                CompetitorType = competitonType.CompetitorType,
+                                Name = competitonType.Name,
+                                CompetitorsCount = competitonType.CompetitorsCount
+                            }
+                        });
+                    }
+                }
             }
-
-            List<int> gameIds = allMycompetitors
-                .SelectMany(p => p.Games)
-                .ToList()
-                .Select(g => g.GameID)
-                .ToList();
-
-            List<Game> games = Uow.Games
-                                    .GetAll(g => g.CompetitionTypes)
-                                    .Where(g => gameIds.Contains(g.GameID))
-                                    .ToList();
-
-            List<GameCompetitionType> competitionTypes = Uow.GameCompetitionTypes.GetAll(gc => gc.CompetitionType)
-                .Where(gc => gameIds.Contains(gc.GameID))
-                .ToList();
 
             return allMycompetitors;
         }

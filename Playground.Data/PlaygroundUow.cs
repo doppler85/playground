@@ -99,7 +99,6 @@ namespace Playground.Data
 
             // Because Web API will perform validation, we don't need/want EF to do so
             DbContext.Configuration.ValidateOnSaveEnabled = false;
-
         }
 
         private IRepository<T> GetStandardRepo<T>() where T : class
