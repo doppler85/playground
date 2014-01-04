@@ -102,7 +102,34 @@
                     </span>
                     <table class="table">
                         <tr data-ng-repeat="competitor in availableCompetitors">
-                            <td data-ng-bind="competitor.name"></td>
+                            <td>
+                                <div class="img-holder"
+                                    data-ng-show="competitor.competitorType == 0" >
+                                    <a href="javascript:;" 
+                                        data-ui-sref="player-profile.info({id: competitor.competitorID})">
+                                        <img data-ng-src="{{competitor.pictureUrl}}" alt="" />
+                                    </a>
+                                </div>
+                                &nbsp;
+                                <a href="javascript:;" 
+                                    data-ui-sref="player-profile.info({id: competitor.competitorID})" 
+                                    data-ng-show="competitor.competitorType == 0" 
+                                    data-ng-bind="competitor.name">
+                                </a>
+                                <div class="img-holder"
+                                    data-ng-show="competitor.competitorType == 1" >
+                                    <a href="javascript:;" 
+                                        data-ui-sref="team-profile.info({id: competitor.competitorID})">
+                                        <img data-ng-src="{{competitor.pictureUrl}}" alt="" />
+                                    </a>
+                                </div>
+                                &nbsp;
+                                <a href="javascript:;" 
+                                    data-ui-sref="team-profile.info({id: competitor.competitorID})" 
+                                    data-ng-show="competitor.competitorType == 1" 
+                                    data-ng-bind="competitor.name">
+                                </a>
+                            </td>
                             <td>
                                 <button class="btn btn-primary" data-ng-click="addCompetitor(competitor, $index)">add</button>
                             </td>

@@ -30,8 +30,15 @@
             <table class="table">
                 <tr data-ng-repeat="user in automaticMatchConfirmationsUsers">
                     <td>
+                        <div class="img-holder">
+                            <a href="javascript:;" 
+                                data-ui-sref="public-profile.info({id: user.userID})">
+                                <img data-ng-src="{{user.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
                         <a href="javascript:;"
-                            data-ui-sref="public-profile({id: user.userID})"
+                            data-ui-sref="public-profile.info({id: user.userID})"
                             data-ng-bind="user | userfull"></a>
                     </td>
                     <td>

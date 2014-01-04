@@ -7,8 +7,15 @@
         </tr>
         <tr data-ng-repeat="game in games.items">
             <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="game-details.info({id: game.gameID})">
+                        <img data-ng-src="{{game.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
                 <a href="javascript:;" 
-                    data-ui-sref="game-details({id: game.gameID})" 
+                    data-ui-sref="game-details.info({id: game.gameID})" 
                     data-ng-bind="game.title"></a>
             </td>
         </tr>

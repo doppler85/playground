@@ -16,18 +16,41 @@
         </tr>
         <tr data-ng-repeat="team in teams.items">
             <td>
+                <div class="img-holder"
+                    data-ng-show="parentCategory == 'gamecategory'">
+                    <a href="javascript:;" 
+                        data-ui-sref="game-category-details.info({id: team.games[0].game.gameCategoryID})">
+                        <img data-ng-src="{{team.games[0].game.category.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
                 <a href="javascript:;" 
                     data-ng-show="parentCategory == 'gamecategory'"
                     data-ui-sref="game-category-details.info({id: team.games[0].game.gameCategoryID})" 
                     data-ng-bind="team.games[0].game.category.title"></a>
+                <div class="img-holder"
+                    data-ng-show="parentCategory == 'game'">
+                    <a href="javascript:;" 
+                        data-ui-sref="game-details.info({id: team.games[0].gameID})">
+                        <img data-ng-src="{{team.games[0].game.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
                 <a href="javascript:;" 
                     data-ng-show="parentCategory == 'game'"
                     data-ui-sref="game-details.info({id: team.games[0].gameID})" 
                     data-ng-bind="team.games[0].game.title"></a>
             </td>
             <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="team-profile.info({id: team.competitorID})">
+                        <img data-ng-src="{{team.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
                 <a href="javascript:;" 
-                    data-ui-sref="team-profile({id: team.competitorID})" 
+                    data-ui-sref="team-profile.info({id: team.competitorID})" 
                     data-ng-bind="team.name"></a>
             </td>
             <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>

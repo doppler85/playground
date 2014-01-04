@@ -10,7 +10,7 @@ angular.module('Playground.game-details', [
         function ($stateProvider) {
             $stateProvider
             .state('game-details', {
-                url: '/game/details/',
+                url: '/game/details',
                 abstract: true,
                 templateUrl: 'app/templates/games/game-details.tpl.html',
                 controller: 'GameDetailsController',

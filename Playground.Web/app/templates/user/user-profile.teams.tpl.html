@@ -11,11 +11,25 @@
         </tr>
         <tr data-ng-repeat="team in teams">
             <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="game-category-details.info({id: team.games[0].game.category.gameCategoryID})">
+                        <img data-ng-src="{{team.games[0].game.category.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
                 <a href="javascript:;"
                     data-ui-sref="game-category-details.info({id: team.games[0].game.gameCategoryID})"
                     data-ng-bind="team.games[0].game.category.title"></a>
             </td>
             <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="player-profile.info({id: team.competitorID})">
+                        <img data-ng-src="{{team.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
                 <a href="javascript:;"
                     data-ui-sref="team-profile({id: team.competitorID})"
                     data-ng-bind="team.name"></a>
