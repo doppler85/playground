@@ -8,6 +8,13 @@
         </tr>
         <tr data-ng-repeat="confirmation in automaticMatchConfirmations">
             <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="public-profile.info({id: confirmation.confirmeeID})">
+                        <img data-ng-src="{{confirmation.confirmee.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
                 <a href="javascript:;"
                     data-ui-sref="public-profile({id: confirmation.confirmeeID})"
                     data-ng-bind="confirmation.confirmee | userfull"></a>
