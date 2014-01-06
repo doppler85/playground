@@ -2,7 +2,6 @@
 angular.module('Playground.user-profile', [
     'ngResource',
     'ui.router',
-    'ui.bootstrap.tabs',
     'ui.bootstrap.pagination',
     'Playground.imageupload',
     'Playground.matches'])
@@ -11,9 +10,10 @@ angular.module('Playground.user-profile', [
             return user ? user.firstName + ' ' + user.lastName : '';
         };
     })
+
     .config([
         '$stateProvider',
-        function ($stateProvider) {
+        function ($stateProvider, security) {
             $stateProvider
             .state('profile', {
                 url: '/profile',
@@ -53,9 +53,18 @@ angular.module('Playground.user-profile', [
     '$scope',
     'security',
     'UserResource',
-    function ($scope, security, UserResource) {
+    'enums',
+    function ($scope, security, UserResource, enums) {
         $scope.$parent.tab = 'info';
-        $scope.profile = {};
+        $scope.genders = enums.gender;
+        $scope.profile =
+        {
+            gender: 1
+        };
+
+        $scope.getKey = function (key) {
+            return parseInt(key, 10);
+        };
 
         $scope.getProfile = function () {
             UserResource.getprofile(function (data, status, headers, config) {

@@ -14,7 +14,12 @@ angular.module('Playground.player-profile', [
                 url: '/competition/player',
                 templateUrl: 'app/templates/competition/player-profile.tpl.html',
                 controller: 'PlayerProfileController',
-                data: { pageTitle: 'Player profile' }
+                data: { pageTitle: 'Player profile' },
+                resolve: {
+                    currentUser: function (securityAuthorization) {
+                        return securityAuthorization.requireCurrentUser();
+                    }
+                }
             }).state('player-profile.info', {
                 url: '/info/:id',
                 controller: 'PlayerProfileInfoController',

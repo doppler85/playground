@@ -76,7 +76,12 @@ Playground.
                     url: '/home',
                     templateUrl: 'app/home/home.tpl.html',
                     controller: 'HomeController',
-                    data: { pageTitle: 'Playground' }
+                    data: { pageTitle: 'Playground' },
+                    resolve: {
+                        currentUser: function (securityAuthorization) {
+                            return securityAuthorization.requireCurrentUser();
+                        }
+                    }
                 }).state('game-categories', {
                     url: '/game/categories',
                     templateUrl: 'app/games/game-category.tpl.html',
@@ -191,12 +196,22 @@ Playground.
                     url: '/competition/match/list',
                     templateUrl: 'app/competition/match-list.tpl.html',
                     controller: 'MatchListController',
-                    data: { pageTitle: 'All matches' }
+                    data: { pageTitle: 'All matches' },
+                    resolve: {
+                        currentUser: function (securityAuthorization) {
+                            return securityAuthorization.requireCurrentUser();
+                        }
+                    }
                 }).state('competitors-list', {
                     url: '/competition/list',
                     templateUrl: 'app/competition/competitors-list.tpl.html',
                     controller: 'CompetitorsListController',
-                    data: { pageTitle: 'All competitors' }
+                    data: { pageTitle: 'All competitors' },
+                    resolve: {
+                        currentUser: function (securityAuthorization) {
+                            return securityAuthorization.requireCurrentUser();
+                        }
+                    }
                 });
            }]).
     run([

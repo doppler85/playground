@@ -4,6 +4,7 @@
 // You can add them as resolves to routes to require authorization levels
 // before allowing a route change to complete
 .provider('securityAuthorization', {
+    
 
     requireAdminUser: ['securityAuthorization', function (securityAuthorization) {
         return securityAuthorization.requireAdminUser();
@@ -13,8 +14,16 @@
         return securityAuthorization.requireAuthenticatedUser();
     }],
 
+    requireCurrentUser: ['securityAuthorization', '$state', function (securityAuthorization, $state) {
+        return securityAuthorization.requireCurrentUser();
+    }],
+
     $get: ['$state', 'security', 'securityRetryQueue', function ($state, security, queue) {
         var service = {
+            requireCurrentUser: function () {
+                var promise = security.requestCurrentUser();
+                return promise;
+            },
 
             // Require that there is an authenticated user
             // (use this in a route resolve to prevent non-authenticated users from entering that route)

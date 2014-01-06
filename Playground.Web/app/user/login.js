@@ -7,7 +7,7 @@ controller('LoginController', [
 '$rootScope',
 'security',
 function ($scope, $state, $stateParams, $rootScope, security) {
-    $scope.pageTitle = $state.current.data.pageTitle;
+    $scope.pageTitle = $state.current.data ? $state.current.data.pageTitle : "Login";
 
     $scope.user = {
         email: 'voja@playground.com',

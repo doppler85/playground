@@ -24,6 +24,14 @@
             </div>
         </div>
         <div class="control-group">
+            <label class="control-label">Gender</label>
+            <div class="controls">
+                <select 
+                    data-ng-model="profile.gender" 
+                    data-ng-options="getKey(k) as v for (k, v) in genders" />
+            </div>
+        </div>
+        <div class="control-group">
             <div class="controls">
                 <button class="btn" data-ng-click="updateProfile()">update</button>
             </div>
