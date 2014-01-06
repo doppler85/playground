@@ -1,5 +1,6 @@
 ﻿using Playground.Data.Contracts;
 using Playground.Model;
+using Playground.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,19 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("matches")]
-        public List<Match> GetMatches(int count)
+        public PagedResult<Match> GetMatches(int page, int count)
         {
+
+            int totalItems = Uow.Matches
+                                        .GetAll()
+                                        .Where(m => m.Status == MatchStatus.Confirmed)
+                                        .Count();
+ 
             List<Match> matches = Uow.Matches
                                         .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
                                         .Where(m => m.Status == MatchStatus.Confirmed)
                                         .OrderByDescending(s => s.Date)
+                                        .Skip((page - 1) * count)
                                         .Take(count)
                                         .ToList();
 
@@ -38,7 +46,15 @@ namespace Playground.Web.Controllers
                 .Where(c => competitorIds.Contains(c.CompetitorID))
                 .ToList();
 
-            return matches;
+            PagedResult<Match> retVal = new PagedResult<Match>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = matches
+            };
+
+            return retVal;
         }
 
         [HttpGet]

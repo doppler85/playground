@@ -257,6 +257,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\LiveScoresHub.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\UserStats.cs" />
     <Compile Include="Models\TeamStats.cs" />
@@ -291,6 +292,8 @@
     <Content Include="app\competition\player-add.js" />
     <Content Include="app\competition\player-add.tpl.html" />
     <Content Include="app\competition\player-profile.js" />
+    <Content Include="app\lib\jQuery\jquery.signalR-2.0.1.js" />
+    <Content Include="app\lib\jQuery\jquery.signalR-2.0.1.min.js" />
     <Content Include="app\templates\competition\team-profile-matches.tpl.html" />
     <Content Include="app\templates\competition\team-profile-players.tpl.html" />
     <Content Include="app\templates\competition\team-profile-info.tpl.html" />

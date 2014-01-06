@@ -14,6 +14,7 @@ using System.Web.Hosting;
 using System.Net.Http.Headers;
 using Playground.Web.Util;
 using Playground.Web.Models;
+using Playground.Web.Hubs;
 
 namespace Playground.Web.Controllers
 {
@@ -1091,6 +1092,9 @@ namespace Playground.Web.Controllers
             match.Status = match.Scores.Count(s => !s.Confirmed) > 0 ? MatchStatus.Submited : MatchStatus.Confirmed;
             Uow.Matches.Add(match);
             Uow.Commit();
+
+            int totalMatches = Uow.Matches.GetAll().Where(m => m.Status == MatchStatus.Confirmed).Count();
+            LiveScores.Instance.BroadcastTotalMatches(totalMatches);
 
             var response = Request.CreateResponse(HttpStatusCode.Created, match);
 

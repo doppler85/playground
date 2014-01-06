@@ -292,7 +292,6 @@ factory('HomeResource', ['$resource', function (resource) {
     return resource('api/home/:actionname/:id', {}, {
         lastMatches: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'matches'
             }
