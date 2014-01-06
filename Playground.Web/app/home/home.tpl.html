@@ -48,14 +48,14 @@
                             </div>
                             &nbsp;
                             <a href="javascript:;" 
-                                data-ui-sref="team-profile.info({id: score.competitor.competitorID})" 
+                                data-ui-sref="player-profile.info({id: score.competitor.competitorID})" 
                                 data-ng-show="score.competitor.competitorType == 0" 
                                 data-ng-bind="score.competitor.name">
                             </a>
                             <div class="img-holder"
                                 data-ng-show="score.competitor.competitorType == 1" >
                                 <a href="javascript:;" 
-                                    data-ui-sref="player-profile.info({id: score.competitor.competitorID})">
+                                    data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
                                     <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
                                 </a>
                             </div>
