@@ -9,7 +9,7 @@
             <th>Creation date</th>
             <th></th>
         </tr>
-        <tr data-ng-repeat="team in teams">
+        <tr data-ng-repeat="team in teams.items">
             <td>
                 <div class="img-holder">
                     <a href="javascript:;" 
@@ -41,6 +41,14 @@
             </td>
         </tr>
     </table>
+    <pagination 
+        total-items="teams.totalItems" 
+        page="teams.currentPage" 
+        num-page="teams.totalPages" 
+        items-per-page="5" 
+        on-select-page="onTeamPageSelect(page)">
+    </pagination>
+
     <a data-ui-sref="team-add">add team</a>
     <alert ng-repeat="alert in teamAlerts" type="alert.type" close="closeAlert(teamAlerts, $index)">{{alert.msg}}</alert>
 </div>

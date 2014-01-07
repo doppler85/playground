@@ -29,7 +29,7 @@ namespace Playground.Web.Controllers
         // api/user/getplayers
         [HttpGet]
         [ActionName("players")]
-        public List<Player> GetPlayers()
+        public PagedResult<Player> GetPlayers(int page, int count)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<Player> players = Uow.Competitors
@@ -37,11 +37,22 @@ namespace Playground.Web.Controllers
                                         .OfType<Player>()
                                         .Where(p => p.UserID == currentUser.UserID)
                                         .OrderBy(p => p.Name)
+                                        .Skip((page - 1) * count)
+                                        .Take(count)
                                         .ToList();
+
+
+            int totalItems = Uow.Competitors
+                .GetAll()
+                .OfType<Player>()
+                .Where(p => p.UserID == currentUser.UserID)
+                .Count();
             
             // load only relevat data to increase eficiency
             foreach (Player player in players)
             {
+                // we dont need whole user object here
+                player.User = null; 
                 if (player.Games.Count > 0)
                 {
                     int gameID = player.Games[0].GameID;
@@ -57,7 +68,15 @@ namespace Playground.Web.Controllers
                 }
             }
 
-            return players;
+            PagedResult<Player> retVal = new PagedResult<Player>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = players
+            };
+
+            return retVal;
         }
 
         private string GetPlayerPicturesRootFolder()
@@ -463,16 +482,25 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("teams")]
-        public List<Team> GetTeams()
+        public PagedResult<Team> GetTeams(int page, int count)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<Team> teams = Uow.Competitors
-                                        .GetAll(t => t.Games)
-                                        .OfType<Team>()
-                                        .Where(t => t.Players.Any(p => p.Player.UserID == currentUser.UserID))
-                                        .Distinct()
-                                        .OrderBy(t => t.Name)
-                                        .ToList();
+                .GetAll(t => t.Games)
+                .OfType<Team>()
+                .Where(t => t.Players.Any(p => p.Player.UserID == currentUser.UserID))
+                .Distinct()
+                .OrderBy(t => t.Name)
+                .Skip((page - 1) * count)
+                .Take(count)
+                .ToList();
+
+            int totalItems = Uow.Competitors
+                .GetAll()
+                .OfType<Team>()
+                .Where(t => t.Players.Any(p => p.Player.UserID == currentUser.UserID))
+                .Distinct()
+                .Count();
 
             // load only relevat data to increase eficiency
             foreach (Team team in teams)
@@ -490,9 +518,18 @@ namespace Playground.Web.Controllers
                         .GetAll()
                         .FirstOrDefault(gc => gc.Games.Any(g => g.GameID == gameID));
                 }
-            } 
-           
-            return teams;
+            }
+
+
+            PagedResult<Team> retVal = new PagedResult<Team>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = teams
+            }; 
+
+            return retVal;
         }
 
         [HttpPost]
@@ -907,26 +944,14 @@ namespace Playground.Web.Controllers
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<Competitor> allMycompetitors = new List<Competitor>();
-            allMycompetitors.AddRange(GetPlayers());
-            allMycompetitors.AddRange(GetTeams());
-
-            List<int> gameIds = allMycompetitors
-                .SelectMany(c => c.Games)
-                .ToList()
-                .Select(g => g.GameID)
-                .Distinct()
-                .ToList();
-
-            List<Game> games = Uow.Games
-                .GetAll(g => g.Category)
-                .Where(g => gameIds.Contains(g.GameID))
-                .ToList();
-
-            List<GameCategory> categories = games
-                .Select(g => g.Category)
-                .Distinct()
-                .ToList();
-
+            List<GameCategory> categories = Uow.Competitors
+                                        .GetAll(p => p.Games)
+                                        .OfType<Player>()
+                                        .Where(p => p.UserID == currentUser.UserID)
+                                        .SelectMany(p => p.Games)
+                                        .Select(g => g.Game.Category)
+                                        .Distinct()
+                                        .ToList();
             return categories;
         }
 
@@ -995,25 +1020,42 @@ namespace Playground.Web.Controllers
         // api/user/searchcompetitors
         [HttpGet]
         [ActionName("searchcompetitors")]
-        public List<Competitor> SearchCompetitors(int gameCategoryID, int competitorType, string search)
+        public PagedResult<Competitor> SearchCompetitors([FromUri]SearchCompetitorArgs args)
         {
-            if (search == null)
+            if (args.Search == null)
             {
-                search = String.Empty;
+                args.Search = String.Empty;
             }
-
-            List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
+            
+            List<Competitor> competitors = Uow.GameCompetitors
                 .GetAll(gc => gc.Competitor)
-                .Where(g => g.Game.GameCategoryID == gameCategoryID && 
-                            g.Competitor.CompetitorType == (CompetitorType)competitorType && 
-                            g.Competitor.Name.Contains(search))
-                .Distinct()
+                .Where(g => !args.Ids.Contains(g.CompetitorID) &&
+                            g.Game.GameCategoryID == args.GameCategoryID && 
+                            g.Competitor.CompetitorType == (CompetitorType)args.CompetitorType && 
+                            g.Competitor.Name.Contains(args.Search))
+                .OrderBy(g => g.Competitor.Name)
+                .Select(g => g.Competitor)
+                .Skip((args.Page - 1) * args.Count)
+                .Take(args.Count)
                 .ToList();
 
-            List<Competitor> retVal = gameCompetitors
-                                        .Select(gc => gc.Competitor)
-                                        .Distinct()
-                                        .ToList();
+            int totalItems = Uow.GameCompetitors
+                .GetAll(gc => gc.Competitor)
+                .Where(g => !args.Ids.Contains(g.CompetitorID) &&
+                            g.Game.GameCategoryID == args.GameCategoryID &&
+                            g.Competitor.CompetitorType == (CompetitorType)args.CompetitorType &&
+                            g.Competitor.Name.Contains(args.Search))
+                .Select(g => g.Competitor)
+                .Count();
+
+
+            PagedResult<Competitor> retVal = new PagedResult<Competitor>()
+            {
+                CurrentPage = args.Page,
+                TotalPages = (totalItems + args.Count - 1) / args.Count,
+                TotalItems = totalItems,
+                Items = competitors
+            };
 
             return retVal;
         }

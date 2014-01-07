@@ -184,7 +184,7 @@ Playground.
                     }
                 }).state('match-add', {
                     url: '/competition/match/add',
-                    templateUrl: 'app/competition/match-edit.tpl.html',
+                    templateUrl: 'app/competition/match-add.tpl.html',
                     controller: 'MatchAddController',
                     data: { pageTitle: 'Add match' },
                     resolve: {

@@ -1,5 +1,11 @@
 ﻿'use strict';
-angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap.alert', 'ui.bootstrap.datepicker', 'ui.bootstrap.timepicker'])
+angular.module('Playground.match-add', [
+    'ngResource',
+    'ui.router',
+    'ui.bootstrap.alert',
+    'ui.bootstrap.datepicker',
+    'ui.bootstrap.timepicker',
+    'ui.bootstrap.pagination'])
     .filter('gamefull', function () {
         return function (game) {
             return game ? '(' + game.category.title + ') ' + game.title : '';
@@ -44,20 +50,6 @@ angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap
         $scope.availableCompetitors = [];
         $scope.availableCometitionTypes = [];
         $scope.searchQuery = '';
-        $scope.competitorScores.indexOf = function (obj) {
-            console.log(obj);
-            var index = -1;
-            if (obj == null || obj.competitorID == null) {
-                return index;
-            }
-            for (var i = 0, imax = this.length; i < imax; i++) {
-                if (this[i].competitorID === obj.competitorID) {
-                    index = i;
-                    break;
-                }
-            }
-            return index;
-        };
 
         $scope.alerts = [];
 
@@ -135,23 +127,44 @@ angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap
         $scope.searchPlayers = function () {
             if ($scope.selectedGame != null) {
                 $scope.availableCompetitors = [];
+                var ids = [];
+                angular.forEach($scope.competitorScores, function (score) {
+                    ids.push(score.competitor.competitorID);
+                });
                 UserResource.searchcompetitors(
                     {
+                        page: 1,
+                        count: 5,
+                        ids: ids,
                         gameCategoryID: $scope.selectedGame.game.gameCategoryID,
                         competitorType: $scope.selectedCompetitor.competitorType,
-                        search: $scope.searchQuery
+                        earch: $scope.searchQuery
                     },
                     function (data, status, headers, config) {
-                        console.log(data);
-                        angular.forEach(data, function (competitor) {
-                            var idx = $scope.competitorScores.indexOf(competitor);
-                            if (idx == -1) {
-                                $scope.availableCompetitors.push(competitor);
-                            }
-                        });
+                        $scope.availableCompetitors = data;
                     }
                 );
             }
+        };
+
+        $scope.onAvailableCompetitorsPageSelect = function (page) {
+            var ids = [];
+            angular.forEach($scope.competitorScores, function (score) {
+                ids.push(score.competitor.competitorID);
+            });
+            UserResource.searchcompetitors(
+                {
+                    page: page,
+                    count: 5,
+                    ids: ids,
+                    gameCategoryID: $scope.selectedGame.game.gameCategoryID,
+                    competitorType: $scope.selectedCompetitor.competitorType,
+                    earch: $scope.searchQuery
+                },
+                function (data, status, headers, config) {
+                    $scope.availableCompetitors = data;
+                }
+            );
         };
 
         $scope.addCompetitor = function (competitor, index) {
@@ -160,7 +173,7 @@ angular.module('Playground.match-add', ['ngResource', 'ui.router', 'ui.bootstrap
                 competitorID: competitor.competitorID,
                 score: 0
             });
-            $scope.availableCompetitors.splice(index, 1);
+            $scope.availableCompetitors.items.splice(index, 1);
         };
 
         $scope.removeCompetitor = function (index) {

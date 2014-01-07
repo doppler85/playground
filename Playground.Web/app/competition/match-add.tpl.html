@@ -74,7 +74,24 @@
                     </span>
                     <table class="table">
                         <tr data-ng-repeat="competitorScore in competitorScores">
-                            <td data-ng-bind="competitorScore.competitor.name"></td>
+                            <td>
+                                <div class="img-holder"
+                                    data-ng-show="competitorScore.competitor.competitorType == 0" >
+                                    <a href="javascript:;" 
+                                        data-ui-sref="player-profile.info({id: competitorScore.competitor.competitorID})">
+                                        <img data-ng-src="{{competitorScore.competitor.pictureUrl}}" alt="" />
+                                    </a>
+                                </div>
+                                <div class="img-holder"
+                                    data-ng-show="competitorScore.competitor.competitorType == 1" >
+                                    <a href="javascript:;" 
+                                        data-ui-sref="team-profile.info({id: competitorScore.competitor.competitorID})">
+                                        <img data-ng-src="{{competitorScore.competitor.pictureUrl}}" alt="" />
+                                    </a>
+                                </div>
+                                &nbsp;
+                                {{competitorScore.competitor.name}}
+                            </td>
                             <td>
                                 <input 
                                     class="input-small"
@@ -98,10 +115,10 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <span data-ng-show="availablePlayers.length > 0">Results
+                    <span data-ng-show="availablePlayers.items.length > 0">Results
                     </span>
                     <table class="table">
-                        <tr data-ng-repeat="competitor in availableCompetitors">
+                        <tr data-ng-repeat="competitor in availableCompetitors.items">
                             <td>
                                 <div class="img-holder"
                                     data-ng-show="competitor.competitorType == 0" >
@@ -135,6 +152,13 @@
                             </td>
                         </tr>
                     </table>
+                    <pagination 
+                        total-items="availableCompetitors.totalItems" 
+                        page="availableCompetitors.currentPage" 
+                        num-page="availableCompetitors.totalPages" 
+                        items-per-page="5" 
+                        on-select-page="onAvailableCompetitorsPageSelect(page)">
+                    </pagination>
                 </div>
             </div>
             <div class="control-group">

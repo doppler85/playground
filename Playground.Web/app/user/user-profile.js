@@ -96,19 +96,24 @@ angular.module('Playground.user-profile', [
         $scope.playerAlerts = [];
 
         $scope.loadPlayers = function () {
-            UserResource.allPlayers(function (data, status, headers, config) {
-                $scope.players = data;
-            });
+            UserResource.allPlayers({
+                    page: 1,
+                    count: 5
+                }, function (data, status, headers, config) {
+                    $scope.players = data;
+                }
+            );
         }
 
-        $scope.deleteCompetitor = function (competitor, collection, index, msgCollection) {
-            UserResource.deletecompetitor({ id: competitor.competitorID },
-                function (data, status, headers, config) {
-                    collection.splice(index, 1);
-                }, function () {
-                    msgCollection.push({ type: 'error', msg: 'Error deleting competitor: ' + competitor.name });
-                });
-        };
+        $scope.onPlayerPageSelect = function (page) {
+            UserResource.allPlayers({
+                    page: page,
+                    count: 5
+                }, function (data, status, headers, config) {
+                    $scope.players = data;
+                }
+            );
+        }
 
         $scope.loadPlayers();
     }])
@@ -122,9 +127,23 @@ angular.module('Playground.user-profile', [
         $scope.teamAlerts = [];
 
         $scope.loadTeams = function () {
-            UserResource.allTeams(function (data, status, headers, config) {
-                $scope.teams = data;
-            });
+            UserResource.allTeams({
+                    page: 1,
+                    count: 5
+                }, function (data, status, headers, config) {
+                    $scope.teams = data;
+                }
+            );
+        }
+
+        $scope.onTeamPageSelect = function (page) {
+            UserResource.allTeams({
+                    page: page,
+                    count: 5
+                }, function (data, status, headers, config) {
+                    $scope.teams = data;
+                }
+            );
         }
 
         $scope.loadTeams();
@@ -222,5 +241,15 @@ angular.module('Playground.user-profile', [
 
         $scope.closeAlert = function (collection, index) {
             collection.splice(index, 1);
+        };
+
+        $scope.deleteCompetitor = function (competitor, collection, index, msgCollection) {
+            UserResource.deletecompetitor({ id: competitor.competitorID },
+                function (data, status, headers, config) {
+                    collection.splice(index, 1);
+                }, function () {
+                    msgCollection.push({ type: 'error', msg: 'Error deleting competitor: ' + competitor.name });
+                }
+            );
         };
     }]);

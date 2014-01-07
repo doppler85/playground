@@ -117,14 +117,12 @@ factory('UserResource', ['$resource', function (resource) {
     return resource('api/user/:actionname/:id', {}, {
         allPlayers: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'players'
             }
         },
         allTeams: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'teams'
             }
@@ -225,7 +223,6 @@ factory('UserResource', ['$resource', function (resource) {
         },
         searchcompetitors: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'searchcompetitors'
             }

@@ -259,6 +259,7 @@
     </Compile>
     <Compile Include="Hubs\LiveScoresHub.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\SearchCompetitorArgs.cs" />
     <Compile Include="Models\UserStats.cs" />
     <Compile Include="Models\TeamStats.cs" />
     <Compile Include="Models\CropingCoords.cs" />
@@ -288,7 +289,7 @@
     <Content Include="app\competition\match-list.js" />
     <Content Include="app\competition\match-list.tpl.html" />
     <Content Include="app\competition\match-add.js" />
-    <Content Include="app\competition\match-edit.tpl.html" />
+    <Content Include="app\competition\match-add.tpl.html" />
     <Content Include="app\competition\player-add.js" />
     <Content Include="app\competition\player-add.tpl.html" />
     <Content Include="app\competition\player-profile.js" />
