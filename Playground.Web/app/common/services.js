@@ -253,14 +253,12 @@ factory('UserResource', ['$resource', function (resource) {
         },
         automaticmatchconfirmations: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'automaticmatchconfirmations'
             }
         },
         automaticmatchconfirmationsusers: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'automaticmatchconfirmationsusers'
             }

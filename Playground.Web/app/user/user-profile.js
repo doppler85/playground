@@ -177,13 +177,39 @@ angular.module('Playground.user-profile', [
         $scope.$parent.tab = 'automaticconfirmations';
 
         $scope.loadAutomaticConfirmations = function () {
-            UserResource.automaticmatchconfirmations(function (data, status, headers, config) {
+            UserResource.automaticmatchconfirmations({
+                page: 1,
+                count: 5
+            }, function (data, status, headers, config) {
+                $scope.automaticMatchConfirmations = data;
+            });
+        };
+
+        $scope.onAutomaticMatchConfirmationsPageSelect = function (page) {
+            UserResource.automaticmatchconfirmations({
+                page: page,
+                count: 5
+            }, function (data, status, headers, config) {
                 $scope.automaticMatchConfirmations = data;
             });
         };
 
         $scope.searchAutomaticConfirmationUsers = function () {
-            UserResource.automaticmatchconfirmationsusers({ search: $scope.searchQuery }, function (data, status, headers, config) {
+            UserResource.automaticmatchconfirmationsusers({
+                search: $scope.searchQuery,
+                page: 1,
+                count: 5
+            }, function (data, status, headers, config) {
+                $scope.automaticMatchConfirmationsUsers = data;
+            });
+        };
+
+        $scope.onUsersPageSelect = function (page) {
+            UserResource.automaticmatchconfirmationsusers({
+                search: $scope.searchQuery,
+                page: page,
+                count: 5
+            }, function (data, status, headers, config) {
                 $scope.automaticMatchConfirmationsUsers = data;
             });
         };
@@ -191,7 +217,7 @@ angular.module('Playground.user-profile', [
         $scope.addAutomaticConfirmation = function (user, index) {
             UserResource.addautomaticconfirmation(user,
                 function (data, status, headers, config) {
-                    $scope.automaticMatchConfirmationsUsers.splice(index, 1);
+                    $scope.automaticMatchConfirmationsUsers.items.splice(index, 1);
                     $scope.loadAutomaticConfirmations();
                 }
             );
@@ -200,7 +226,7 @@ angular.module('Playground.user-profile', [
         $scope.deleteAutomaticConfirmation = function (user, index) {
             UserResource.deleteautomaticconfirmation({ confirmeeID: user.userID },
                 function (data, status, headers, config) {
-                    $scope.automaticMatchConfirmations.splice(index, 1);
+                    $scope.automaticMatchConfirmations.items.splice(index, 1);
                 }
             );
         };

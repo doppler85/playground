@@ -1269,21 +1269,37 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("automaticmatchconfirmations")]
-        public List<AutomaticMatchConfirmation> AutomaticMatchConfirmations()
+        public PagedResult<AutomaticMatchConfirmation> AutomaticMatchConfirmations(int page, int count)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
 
-            List<AutomaticMatchConfirmation> retVal = Uow.AutomaticMatchConfirmations
+            List<AutomaticMatchConfirmation> confirmations = Uow.AutomaticMatchConfirmations
                 .GetAll(ac => ac.Confirmee, ac => ac.Confirmer)
                 .Where(ac => ac.ConfirmerID == currentUser.UserID)
+                .OrderBy(ac => ac.Confirmee.FirstName)
+                .Skip((page - 1) * count)
+                .Take(count)
                 .ToList();
+
+            int totalItems = Uow.AutomaticMatchConfirmations
+                .GetAll()
+                .Where(ac => ac.ConfirmerID == currentUser.UserID)
+                .Count();
+
+            PagedResult<AutomaticMatchConfirmation> retVal = new PagedResult<AutomaticMatchConfirmation>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = confirmations
+            };
 
             return retVal;
         }
 
         [HttpGet]
         [ActionName("automaticmatchconfirmationsusers")]
-        public List<User> AutomaticMatchConfirmationUsers(string search)
+        public PagedResult<User> AutomaticMatchConfirmationUsers(int page, int count, string search)
         {
             if (search == null)
             {
@@ -1291,7 +1307,7 @@ namespace Playground.Web.Controllers
             }
             
             User currentUser = GetUserByEmail(User.Identity.Name);
-            List<User> retVal = Uow.Users
+            List<User> users = Uow.Users
                 .GetAll()
                 .Except(
                     Uow.AutomaticMatchConfirmations.GetAll()
@@ -1299,7 +1315,28 @@ namespace Playground.Web.Controllers
                     .Select(ac => ac.Confirmee))
                 .Where(u => u.UserID != currentUser.UserID && 
                         (u.FirstName.Contains(search) || u.LastName.Contains(search)))
+                .OrderBy(u => u.FirstName)
+                .Skip((page - 1) * count)
+                .Take(count)
                 .ToList();
+
+            int totalItems = Uow.Users
+                .GetAll()
+                .Except(
+                    Uow.AutomaticMatchConfirmations.GetAll()
+                    .Where(ac => ac.ConfirmerID == currentUser.UserID)
+                    .Select(ac => ac.Confirmee))
+                .Where(u => u.UserID != currentUser.UserID &&
+                        (u.FirstName.Contains(search) || u.LastName.Contains(search)))
+                .Count();
+
+            PagedResult<User> retVal = new PagedResult<User>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = users
+            };
                 
             return retVal;
         }

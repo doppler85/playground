@@ -56,5 +56,11 @@
             <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
         </tr>
     </table>
-    <pagination total-items="teams.totalItems" page="players.currentPage" num-page="teams.totalPages" items-per-page="5" on-select-page="onTeamPageSelect(page)"></pagination>
+    <pagination 
+        total-items="teams.totalItems" 
+        page="players.currentPage" 
+        num-page="teams.totalPages" 
+        items-per-page="5" 
+        on-select-page="onTeamPageSelect(page)">
+    </pagination>
 </div>

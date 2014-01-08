@@ -6,7 +6,7 @@
             </th>
             <th></th>
         </tr>
-        <tr data-ng-repeat="confirmation in automaticMatchConfirmations">
+        <tr data-ng-repeat="confirmation in automaticMatchConfirmations.items">
             <td>
                 <div class="img-holder">
                     <a href="javascript:;" 
@@ -16,7 +16,7 @@
                 </div>
                 &nbsp;
                 <a href="javascript:;"
-                    data-ui-sref="public-profile({id: confirmation.confirmeeID})"
+                    data-ui-sref="public-profile.info({id: confirmation.confirmeeID})"
                     data-ng-bind="confirmation.confirmee | userfull"></a>
             </td>
             <td>
@@ -24,6 +24,13 @@
             </td>
         </tr>
     </table>
+    <pagination 
+        total-items="automaticMatchConfirmations.totalItems" 
+        page="automaticMatchConfirmations.currentPage" 
+        num-page="automaticMatchConfirmations.totalPages" 
+        items-per-page="5" 
+        on-select-page="onAutomaticMatchConfirmationsPageSelect(page)">
+    </pagination>
     <div class="add-confirmation-wrapp">
         <a href="javascript:;" data-ng-click="toggleAddConfirmation(true)" data-ng-hide="addingconfirmation">add confirmation</a>
         <div class="add-confirmation-inner" data-ng-show="addingconfirmation">
@@ -35,7 +42,7 @@
             <span data-ng-show="automaticMatchConfirmationsUsers.length > 0">Results
             </span>
             <table class="table">
-                <tr data-ng-repeat="user in automaticMatchConfirmationsUsers">
+                <tr data-ng-repeat="user in automaticMatchConfirmationsUsers.items">
                     <td>
                         <div class="img-holder">
                             <a href="javascript:;" 
@@ -53,6 +60,13 @@
                     </td>
                 </tr>
             </table>
+            <pagination 
+                total-items="automaticMatchConfirmationsUsers.totalItems" 
+                page="automaticMatchConfirmationsUsers.currentPage" 
+                num-page="automaticMatchConfirmationsUsers.totalPages" 
+                items-per-page="5" 
+                on-select-page="onUsersPageSelect(page)">
+            </pagination>
         </div>
     </div>
 </div>
