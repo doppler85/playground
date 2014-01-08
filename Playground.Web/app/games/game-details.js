@@ -14,7 +14,12 @@ angular.module('Playground.game-details', [
                 abstract: true,
                 templateUrl: 'app/templates/games/game-details.tpl.html',
                 controller: 'GameDetailsController',
-                data: { pageTitle: 'Game details' }
+                data: { pageTitle: 'Game details' },
+                resolve: {
+                    currentUser: function (securityAuthorization) {
+                        return securityAuthorization.requireCurrentUser();
+                    }
+                }
             }).state('game-details.info', {
                 url: '/info/:id',
                 controller: 'GameDetailsInfoController',

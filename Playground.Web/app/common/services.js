@@ -9,7 +9,6 @@ factory('GameCategoryResource', ['$resource', function (resource) {
     return resource('api/gamecategory/:actionname/:id', {}, {
         getall: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'allcategories'
             }
@@ -18,6 +17,12 @@ factory('GameCategoryResource', ['$resource', function (resource) {
             method: 'GET',
             params: {
                 actionname: 'getcategory'
+            }
+        },
+        getgames: {
+            method: 'GET',
+            params: {
+                actionname: 'games'
             }
         },
         add: {

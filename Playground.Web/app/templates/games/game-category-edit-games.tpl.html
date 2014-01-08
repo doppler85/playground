@@ -1,0 +1,38 @@
+<div class="span12">
+    <h3>Games</h3>
+    <table class="table">
+        <tr data-ng-repeat="game in games.items">
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;" data-ui-sref="game-details.info({id: game.gameID})">
+                        <img data-ng-src="{{game.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+            </td>
+            <td>
+                <a data-ui-sref="game-details.info({id: game.gameID})">{{game.title}}</a>
+            </td>
+            <td>
+                <a class="btn btn-primary" data-ui-sref="game-edit({id: game.gameID})">edit</a>
+                <button class="btn btn-primary" data-ng-click="deleteGame(game, games.items, $index);">delete</button>
+            </td>
+        </tr>
+    </table>
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
+    <pagination 
+        total-items="games.totalItems" 
+        page="games.currentPage" 
+        num-page="games.totalPages" 
+        items-per-page="5" 
+        on-select-page="onGamePageSelect(page)">
+    </pagination>
+    <div class="add-game-wrapp">
+        <form class="form-inline" data-ng-show="addinggame">
+            <label>Title</label>
+            <input type="text" placeholder="Title" data-ng-model="newGame.title" />
+            <button class="btn" data-ng-click="addGame(gameCategory)">save</button>
+            <button class="btn" data-ng-click="toggleAddGame(false)">cancel</button>
+        </form>
+        <a href="javascript:;" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</a>
+    </div>
+</div>

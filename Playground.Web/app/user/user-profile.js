@@ -95,17 +95,7 @@ angular.module('Playground.user-profile', [
         $scope.players = {};
         $scope.playerAlerts = [];
 
-        $scope.loadPlayers = function () {
-            UserResource.allPlayers({
-                    page: 1,
-                    count: 5
-                }, function (data, status, headers, config) {
-                    $scope.players = data;
-                }
-            );
-        }
-
-        $scope.onPlayerPageSelect = function (page) {
+        $scope.loadPlayers = function (page) {
             UserResource.allPlayers({
                     page: page,
                     count: 5
@@ -115,7 +105,11 @@ angular.module('Playground.user-profile', [
             );
         }
 
-        $scope.loadPlayers();
+        $scope.onPlayerPageSelect = function (page) {
+            $scope.loadPlayers(page);
+        }
+
+        $scope.loadPlayers(1);
     }])
     .controller('ProfileTeamsController', [
     '$scope',
@@ -126,17 +120,7 @@ angular.module('Playground.user-profile', [
         $scope.teams = {};
         $scope.teamAlerts = [];
 
-        $scope.loadTeams = function () {
-            UserResource.allTeams({
-                    page: 1,
-                    count: 5
-                }, function (data, status, headers, config) {
-                    $scope.teams = data;
-                }
-            );
-        }
-
-        $scope.onTeamPageSelect = function (page) {
+        $scope.loadTeams = function (page) {
             UserResource.allTeams({
                     page: page,
                     count: 5
@@ -146,7 +130,11 @@ angular.module('Playground.user-profile', [
             );
         }
 
-        $scope.loadTeams();
+        $scope.onTeamPageSelect = function (page) {
+            $scope.loadTeams(page);
+        }
+
+        $scope.loadTeams(1);
     }])
     .controller('ProfileMatchesController', [
     '$scope',
@@ -176,9 +164,9 @@ angular.module('Playground.user-profile', [
     function ($scope, $state, UserResource) {
         $scope.$parent.tab = 'automaticconfirmations';
 
-        $scope.loadAutomaticConfirmations = function () {
+        $scope.loadAutomaticConfirmations = function (page) {
             UserResource.automaticmatchconfirmations({
-                page: 1,
+                page: page,
                 count: 5
             }, function (data, status, headers, config) {
                 $scope.automaticMatchConfirmations = data;
@@ -186,18 +174,13 @@ angular.module('Playground.user-profile', [
         };
 
         $scope.onAutomaticMatchConfirmationsPageSelect = function (page) {
-            UserResource.automaticmatchconfirmations({
-                page: page,
-                count: 5
-            }, function (data, status, headers, config) {
-                $scope.automaticMatchConfirmations = data;
-            });
+            $scope.loadAutomaticConfirmations(page);
         };
 
-        $scope.searchAutomaticConfirmationUsers = function () {
+        $scope.searchAutomaticConfirmationUsers = function (page) {
             UserResource.automaticmatchconfirmationsusers({
                 search: $scope.searchQuery,
-                page: 1,
+                page: page,
                 count: 5
             }, function (data, status, headers, config) {
                 $scope.automaticMatchConfirmationsUsers = data;
@@ -205,20 +188,14 @@ angular.module('Playground.user-profile', [
         };
 
         $scope.onUsersPageSelect = function (page) {
-            UserResource.automaticmatchconfirmationsusers({
-                search: $scope.searchQuery,
-                page: page,
-                count: 5
-            }, function (data, status, headers, config) {
-                $scope.automaticMatchConfirmationsUsers = data;
-            });
+            $scope.searchAutomaticConfirmationUsers(page);
         };
 
         $scope.addAutomaticConfirmation = function (user, index) {
             UserResource.addautomaticconfirmation(user,
                 function (data, status, headers, config) {
                     $scope.automaticMatchConfirmationsUsers.items.splice(index, 1);
-                    $scope.loadAutomaticConfirmations();
+                    $scope.loadAutomaticConfirmations($scope.automaticMatchConfirmations.currentPage);
                 }
             );
         };
@@ -238,7 +215,7 @@ angular.module('Playground.user-profile', [
             }
         };
 
-        $scope.loadAutomaticConfirmations();
+        $scope.loadAutomaticConfirmations(1);
     }])
     .controller('ProfileController', [
     '$scope',

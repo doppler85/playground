@@ -11,7 +11,12 @@ angular.module('Playground.team-profile', [
                 abstract: true,
                 templateUrl: 'app/templates/competition/team-profile.tpl.html',
                 controller: 'TeamProfileController',
-                data: { pageTitle: 'Team profile' }
+                data: { pageTitle: 'Team profile' },
+                resolve: {
+                    currentUser: function (securityAuthorization) {
+                        return securityAuthorization.requireCurrentUser();
+                    }
+                }
             }).state('team-profile.info', {
                 url: '/info/:id',
                 controller: 'TeamProfileInfoController',

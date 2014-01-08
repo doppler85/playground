@@ -10,7 +10,6 @@ var Playground = angular.module('Playground', [
     'Playground.main-menu',
     'Playground.home',
     'Playground.game-category',
-    'Playground.game-list',
     'Playground.game-edit',
     'Playground.game-details',
     'Playground.game-category-details',
@@ -84,19 +83,9 @@ Playground.
                     }
                 }).state('game-categories', {
                     url: '/game/categories',
-                    templateUrl: 'app/games/game-category.tpl.html',
+                    templateUrl: 'app/templates/games/game-category-list.tpl.html',
                     controller: 'GameCategoryController',
-                    data: { pageTitle: 'Games' },
-                    resolve: {
-                        authenticaated: function (securityAuthorization) {
-                            return securityAuthorization.requireAuthenticatedUser();
-                        }
-                    }
-                }).state('game-category-edit', {
-                    url: '/game/category/edit/:id',
-                    templateUrl: 'app/games/game-category-edit.tpl.html',
-                    controller: 'EditGameCategoryController',
-                    data: { pageTitle: 'Edit game category' },
+                    data: { pageTitle: 'Game categories' },
                     resolve: {
                         authenticaated: function (securityAuthorization) {
                             return securityAuthorization.requireAuthenticatedUser();
@@ -124,7 +113,7 @@ Playground.
                     }
                 }).state('game-edit', {
                     url: '/game/edit/:id',
-                    templateUrl: 'app/games/game-edit.tpl.html',
+                    templateUrl: 'app/templates/games/game-edit.tpl.html',
                     controller: 'EditGameController',
                     data: { pageTitle: 'Edit game' },
                     resolve: {

@@ -1,12 +1,14 @@
 'use strict';
-angular.module('Playground.game-category', ['ngResource', 'ui.router']).
+angular.module('Playground.game-category', [
+    'ngResource',
+    'ui.router',
+    'ui.bootstrap.pagination']).
     controller('GameCategoryController', [
     '$scope',
     '$stateParams',
     '$rootScope',
     '$state',
     'GameCategoryResource',
-    'GameResource',
     function ($scope, $stateParams, $rootScope, $state, GameCategoryResource, GameResource) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.gameCategories = {};
@@ -18,12 +20,19 @@ angular.module('Playground.game-category', ['ngResource', 'ui.router']).
             };
         };
 
-        $scope.newCategory = $scope.createCategory();
+        $scope.newCategory = $scope.createCategory(page);
 
-        $scope.loadGameCategories = function () {
-            GameCategoryResource.getall(function (data) {
+        $scope.loadGameCategories = function (page) {
+            GameCategoryResource.getall({
+                page: page,
+                count: 5
+            }, function (data) {
                 $scope.gameCategories = data;
             });
+        };
+
+        $scope.onCategoryPageSelect = function (page) {
+            $scope.loadGameCategories(page);
         };
 
         $scope.toggleAddCategory = function (show) {
@@ -35,8 +44,8 @@ angular.module('Playground.game-category', ['ngResource', 'ui.router']).
 
         $scope.addCategory = function() {
             GameCategoryResource.add($scope.newCategory, function (data, status, headers, config) {
-                $scope.gameCategories.push(data);
-                $scope.toggleAddCategory(false);
+                $scope.loadGameCategories($scope.gameCategories.currentPage);
+                $scope.addingcategory = false;
             });
         };
 
@@ -46,11 +55,5 @@ angular.module('Playground.game-category', ['ngResource', 'ui.router']).
             });
         };
 
-        $scope.deleteGame = function (game, collection, index) {
-            GameResource.remove({ id: game.gameID }, function (data, status, headers, config) {
-                collection.splice(index, 1);
-            });
-        };
-
-        $scope.loadGameCategories();
+        $scope.loadGameCategories(1);
     }]);

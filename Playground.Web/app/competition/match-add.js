@@ -124,7 +124,7 @@ angular.module('Playground.match-add', [
             }
         };
 
-        $scope.searchPlayers = function () {
+        $scope.searchPlayers = function (page) {
             if ($scope.selectedGame != null) {
                 $scope.availableCompetitors = [];
                 var ids = [];
@@ -133,7 +133,7 @@ angular.module('Playground.match-add', [
                 });
                 UserResource.searchcompetitors(
                     {
-                        page: 1,
+                        page: page,
                         count: 5,
                         ids: ids,
                         gameCategoryID: $scope.selectedGame.game.gameCategoryID,
@@ -148,23 +148,7 @@ angular.module('Playground.match-add', [
         };
 
         $scope.onAvailableCompetitorsPageSelect = function (page) {
-            var ids = [];
-            angular.forEach($scope.competitorScores, function (score) {
-                ids.push(score.competitor.competitorID);
-            });
-            UserResource.searchcompetitors(
-                {
-                    page: page,
-                    count: 5,
-                    ids: ids,
-                    gameCategoryID: $scope.selectedGame.game.gameCategoryID,
-                    competitorType: $scope.selectedCompetitor.competitorType,
-                    earch: $scope.searchQuery
-                },
-                function (data, status, headers, config) {
-                    $scope.availableCompetitors = data;
-                }
-            );
+            $scope.searchPlayers(page);
         };
 
         $scope.addCompetitor = function (competitor, index) {

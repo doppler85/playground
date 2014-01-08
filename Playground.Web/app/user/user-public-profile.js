@@ -14,7 +14,12 @@ angular.module('Playground.user-public-profile', [
                 abstract: true,
                 templateUrl: 'app/templates/user/user-public-profile.tpl.html',
                 controller: 'PublicProfileController',
-                data: { pageTitle: 'Public profile' }
+                data: { pageTitle: 'Public profile' },
+                resolve: {
+                    currentUser: function (securityAuthorization) {
+                        return securityAuthorization.requireCurrentUser();
+                    }
+                }
             }).state('public-profile.info', {
                 url: '/info/:id',
                 controller: 'PublicProfileInfoController',

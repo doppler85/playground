@@ -1,0 +1,28 @@
+<div class="span12">
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="logo">logo</label>
+            <div class="controls">
+                <image-upload
+                    data-object-id="gameCategory.gameCategoryID"
+                    data-img-src="gameCategory.gameCategoryPictureUrl"
+                    data-upload-url="api/gamecategory/uploadgamecategorypicture"
+                    data-crop-url="api/gamecategory/cropgamecategorypicture"
+                    data-on-image-cropped="onImageCropped(data);" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="title">Title</label>
+            <div class="controls">
+                <input id="title" type="text" data-ng-model="gameCategory.title">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn" data-ng-click="updateGameCategory()">Save</button>
+                <a href="javascript:;" class="btn" data-ui-sref="game-categories">back to games</a>
+            </div>
+        </div>
+    </form>
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+</div>

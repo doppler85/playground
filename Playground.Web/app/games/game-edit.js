@@ -81,6 +81,10 @@ angular.module('Playground.game-edit', ['ngResource', 'ui.router', 'Playground.i
             );
         };
 
+        $scope.cancel = function () {
+            window.history.back();
+        };
+
         $scope.addAlert = function (msg) {
             $scope.alerts.push(msg);
         };

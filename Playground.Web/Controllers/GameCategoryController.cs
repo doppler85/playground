@@ -24,28 +24,34 @@ namespace Playground.Web.Controllers
         // api/gamecategory/allcategories
         [HttpGet]
         [ActionName("allcategories")]
-        public List<GameCategory> Get()
+        public PagedResult<GameCategory> GetCategories(int page, int count)
         {
-            List<GameCategory> retVal = Uow.GameCategories.GetAll(p => p.Games).OrderBy(gc => gc.Title).ToList();
-            foreach (GameCategory gameCategory in retVal)
+            List<GameCategory> categories = Uow.GameCategories.GetAll()
+                .OrderBy(gc => gc.Title)
+                .Skip((page - 1) * count)
+                .Take(count)
+                .ToList();
+
+            int totalItems = Uow.GameCategories
+                .GetAll()
+                .Count();
+
+            foreach (GameCategory gameCategory in categories)
             {
                 if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
                 {
                     gameCategory.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
                 }
-
-                foreach (Game game in gameCategory.Games)
-                {
-                    if (!String.IsNullOrEmpty(game.PictureUrl))
-                    {
-                        game.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
-                    }
-                    else
-                    {
-                        game.PictureUrl = gameCategory.PictureUrl;
-                    }
-                }
             }
+
+            PagedResult<GameCategory> retVal = new PagedResult<GameCategory>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = categories
+            };
+
             return retVal;
         }
 
