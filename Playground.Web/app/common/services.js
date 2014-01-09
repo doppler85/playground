@@ -114,8 +114,36 @@ factory('GameResource', ['$resource', function (resource) {
 }]).
 factory('CompetitionTypeResource', ['$resource', function (resource) {
     return resource('api/competitiontype/:actionname/:id', {}, {
-        all: { method: 'GET', isArray: true },
-        add: { method: 'POST' }
+        getcompetitiontype: {
+            method: 'GET',
+            params: {
+                actionname: 'getcompetitiontype'
+            }
+        },
+        getcompetitiontypes: {
+            method: 'GET',
+            params: {
+                actionname: 'getcompetitiontypes'
+            }
+        },
+        add: {
+            method: 'POST',
+            params: {
+                actionname: 'addcompetitiontype'
+            }
+        },
+        update: {
+            method: 'PUT',
+            params: {
+                actionname: 'updatecompetitiontype'
+            }
+        },
+        remove: {
+            method: 'DELETE',
+            params: {
+                actionname: 'deletecompetitiontype'
+            }
+        }
     });
 }]).
 factory('UserResource', ['$resource', function (resource) {

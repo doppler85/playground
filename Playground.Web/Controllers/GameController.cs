@@ -109,7 +109,7 @@ namespace Playground.Web.Controllers
             return response;
         }
 
-        // Create a new Game
+        // Update an existing Game
         // POST /api/game/updategame
         [HttpPut]
         [ActionName("updategame")]

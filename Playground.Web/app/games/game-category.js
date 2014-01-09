@@ -20,7 +20,7 @@ angular.module('Playground.game-category', [
             };
         };
 
-        $scope.newCategory = $scope.createCategory(page);
+        $scope.newCategory = $scope.createCategory();
 
         $scope.loadGameCategories = function (page) {
             GameCategoryResource.getall({

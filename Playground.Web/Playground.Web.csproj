@@ -293,6 +293,7 @@
     <Content Include="app\competition\player-add.js" />
     <Content Include="app\competition\player-add.tpl.html" />
     <Content Include="app\competition\player-profile.js" />
+    <Content Include="app\games\competition-type-edit.js" />
     <Content Include="app\lib\jQuery\jquery.signalR-2.0.1.js" />
     <Content Include="app\lib\jQuery\jquery.signalR-2.0.1.min.js" />
     <Content Include="app\templates\competition\team-profile-matches.tpl.html" />
@@ -307,10 +308,11 @@
     <Content Include="app\competition\team-profile.js" />
     <Content Include="app\templates\competition\team-profile.tpl.html" />
     <Content Include="app\games\competition-type-list.js" />
-    <Content Include="app\games\competition-type-list.tpl.html" />
+    <Content Include="app\templates\games\competition-type-list.tpl.html" />
     <Content Include="app\games\competition-type-add.js" />
-    <Content Include="app\games\competition-type-add.tpl.html" />
+    <Content Include="app\templates\games\competition-type-add.tpl.html" />
     <Content Include="app\games\game-category-edit.js" />
+    <Content Include="app\templates\games\competition-type-edit.tpl.html" />
     <Content Include="app\templates\games\game-category-edit-games.tpl.html" />
     <Content Include="app\templates\games\game-category-edit-info.tpl.html" />
     <Content Include="app\templates\games\game-category-edit.tpl.html" />

@@ -16,6 +16,7 @@ var Playground = angular.module('Playground', [
     'Playground.game-category-edit',
     'Playground.competition-type-list',
     'Playground.competition-type-add',
+    'Playground.competition-type-edit',
     'Playground.register',
     'Playground.login',
     'Playground.user-status',
@@ -93,7 +94,7 @@ Playground.
                     }
                 }).state('competition-types', {
                     url: '/competition-types',
-                    templateUrl: 'app/games/competition-type-list.tpl.html',
+                    templateUrl: 'app/templates/games/competition-type-list.tpl.html',
                     controller: 'CompetitionTypeListController',
                     data: { pageTitle: 'Competition types' },
                     resolve: {
@@ -103,9 +104,19 @@ Playground.
                     }
                 }).state('competition-type-add', {
                     url: '/competition-type/add',
-                    templateUrl: 'app/games/competition-type-add.tpl.html',
+                    templateUrl: 'app/templates/games/competition-type-add.tpl.html',
                     controller: 'CompetitionTypeAddController',
                     data: { pageTitle: 'Add competition type' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
+                }).state('competition-type-edit', {
+                    url: '/competition-type/edit/:id',
+                    templateUrl: 'app/templates/games/competition-type-edit.tpl.html',
+                    controller: 'CompetitionTypeEditController',
+                    data: { pageTitle: 'Edit competition type' },
                     resolve: {
                         authenticaated: function (securityAuthorization) {
                             return securityAuthorization.requireAuthenticatedUser();

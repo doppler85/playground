@@ -1,5 +1,8 @@
 'use strict';
-angular.module('Playground.competition-type-list', ['ngResource', 'ui.router']).
+angular.module('Playground.competition-type-list', [
+    'ngResource',
+    'ui.router',
+    'ui.bootstrap.pagination']).
     controller('CompetitionTypeListController', [
     '$scope',
     '$stateParams',
@@ -12,15 +15,29 @@ angular.module('Playground.competition-type-list', ['ngResource', 'ui.router']).
         $scope.competitorTypes = enums.competitionType;
         $scope.competitionTypes = {};
 
-        $scope.loadCompetitionTypes = function () {
-            CompetitionTypeResource.all(function (data) {
+        $scope.loadCompetitionTypes = function (page) {
+            CompetitionTypeResource.getcompetitiontypes({
+                page: page,
+                count: 5
+            },
+            function (data) {
                 $scope.competitionTypes = data;
             });
         };
+        
+        $scope.onCompetitionTypePageSelect = function (page) {
+            $scope.loadCompetitionTypes(page);
+        };
 
-        $scope.deleteCompetitionType = function (competitionType, index) {
-            console.log('not impelmented');
-        }
+        $scope.deleteCompetitionType = function (competitionType) {
+            CompetitionTypeResource.remove({ 
+                id: competitionType.competitionTypeID 
+            },
+            function (data) {
+                $scope.loadCompetitionTypes($scope.competitionTypes.currentPage)
+            });
+        };
+    
 
-        $scope.loadCompetitionTypes();
+        $scope.loadCompetitionTypes(1);
     }]);
