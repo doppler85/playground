@@ -1,4 +1,5 @@
-﻿using Playground.Data.Contracts;
+﻿using Playground.Business.Contracts;
+using Playground.Data.Contracts;
 using Playground.Model;
 using Playground.Web.Models;
 using System;
@@ -12,15 +13,18 @@ namespace Playground.Web.Controllers
 {  
     public class CompetitionTypeController : ApiBaseController
     {
-        public CompetitionTypeController(IPlaygroundUow uow)
+        private ICompetitionTypeBusiness competitionTypeBusiness;
+
+        public CompetitionTypeController(IPlaygroundUow uow, ICompetitionTypeBusiness ctBusiness)
         {
             this.Uow = uow;
+            this.competitionTypeBusiness = ctBusiness;
         }
 
         // GET /api/competitiontype/5
         [HttpGet]
         [ActionName("getcompetitiontype")]
-        public CompetitionType GetAll(int id)
+        public CompetitionType GetById(int id)
         {
             CompetitionType retVal = Uow.CompetitionTypes.GetById(id);
 
@@ -55,22 +59,23 @@ namespace Playground.Web.Controllers
             return retVal;
         }
 
-        // Create a new Game
-        // POST /api/competitiontype
+        // POST /api/competitiontype/addcompetitiontype 
         [HttpPost]
         [ActionName("addcompetitiontype")]
         public HttpResponseMessage AddCompetitionType(CompetitionType competitionType)
         {
-            Uow.CompetitionTypes.Add(competitionType);
-            Uow.Commit();
+            ResponseObject<CompetitionType> res = 
+                competitionTypeBusiness.CreateCompetitionType(competitionType);
 
-            var response = Request.CreateResponse(HttpStatusCode.Created, competitionType);
-
-            // Compose location header that tells how to get this game 
-            // e.g. ~/api/game/5
-
-            response.Headers.Location =
-                new Uri(Url.Link(RouteConfig.ControllerAndId, new { id = competitionType.CompetitionTypeID }));
+            HttpResponseMessage response;
+            if (res.Sucess)
+            {
+                response = Request.CreateResponse(HttpStatusCode.Created, res.Data);
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+            }
 
             return response;
         }
@@ -81,9 +86,20 @@ namespace Playground.Web.Controllers
         [ActionName("updatecompetitiontype")]
         public HttpResponseMessage UpdateCompetitionType(CompetitionType competitionType)
         {
-            Uow.CompetitionTypes.Update(competitionType, competitionType.CompetitionTypeID);
-            Uow.Commit();
-            var response = Request.CreateResponse(HttpStatusCode.OK, competitionType);
+            ResponseObject<CompetitionType> res =
+                competitionTypeBusiness.CreateCompetitionType(competitionType);
+
+            HttpResponseMessage response;
+            if (res.Sucess)
+            {
+                response = Request.CreateResponse(HttpStatusCode.Created, res.Data);
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+            }
+
+            // var response = Request.CreateResponse(HttpStatusCode.OK, competitionType);
 
             return response;
         }

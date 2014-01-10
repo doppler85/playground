@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0C83816E-16ED-4F2D-A161-A0B488E34F5A}</ProjectGuid>
+    <ProjectGuid>{2FEC4884-E090-46BF-A64C-D12FA5BC8C1E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.Business</RootNamespace>
-    <AssemblyName>Playground.Business</AssemblyName>
+    <RootNamespace>Playground.Business.Contracts</RootNamespace>
+    <AssemblyName>Playground.Business.Contracts</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,23 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompetitionTypeBusiness.cs" />
-    <Compile Include="PlaygroundBusinessBase.cs" />
+    <Compile Include="ICompetitionTypeBusiness.cs" />
+    <Compile Include="ResponseObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Playground.Business.Contracts\Playground.Business.Contracts.csproj">
-      <Project>{2fec4884-e090-46bf-a64c-d12fa5bc8c1e}</Project>
-      <Name>Playground.Business.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Data.Contracts\Playground.Data.Contracts.csproj">
-      <Project>{10eb47b4-a289-430b-9597-8d5a8e92338d}</Project>
-      <Name>Playground.Data.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Data\Playground.Data.csproj">
-      <Project>{3e62c55b-0a4a-422e-ac8c-fcf9767f1e98}</Project>
-      <Name>Playground.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Playground.Model\Playground.Model.csproj">
       <Project>{a8e4b48c-df5f-45a0-b7b6-ec7e0e93aba0}</Project>
       <Name>Playground.Model</Name>

@@ -8,6 +8,8 @@ using Playground.Data.Helpers;
 using Playground.Data.Contracts;
 using Playground.Data;
 using System.Web.Http.Dispatcher;
+using Playground.Business.Contracts;
+using Playground.Business;
 
 namespace Playground.Web.App_Start
 {
@@ -16,6 +18,8 @@ namespace Playground.Web.App_Start
         public static void RegisterIoc(HttpConfiguration config)
         {
             var unityContainer = new UnityContainer();
+
+            unityContainer.RegisterType<ICompetitionTypeBusiness, CompetitionTypeBusiness>();
 
             unityContainer.RegisterType<IRepositoryProvider, RepositoryProvider>();
 

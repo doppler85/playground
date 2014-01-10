@@ -52,8 +52,8 @@ namespace Playground.Web
             //config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling 
             //    = Newtonsoft.Json.PreserveReferencesHandling.Objects; 
 
-            // todo add validation action
-            // config.Filters.Add(new ValidationActionFilter());
+             //todo add validation action
+             config.Filters.Add(new ValidationActionFilter());
 
         }
     }

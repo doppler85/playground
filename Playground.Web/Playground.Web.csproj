@@ -226,6 +226,7 @@
     <Compile Include="App_Start\ScopeContainer.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\UnityHttpControllerActivator.cs" />
+    <Compile Include="App_Start\ValidationActionFilter.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
@@ -580,6 +581,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.Business.Contracts\Playground.Business.Contracts.csproj">
+      <Project>{2fec4884-e090-46bf-a64c-d12fa5bc8c1e}</Project>
+      <Name>Playground.Business.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Business\Playground.Business.csproj">
+      <Project>{0c83816e-16ed-4f2d-a161-a0b488e34f5a}</Project>
+      <Name>Playground.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Data.Contracts\Playground.Data.Contracts.csproj">
       <Project>{10eb47b4-a289-430b-9597-8d5a8e92338d}</Project>
       <Name>Playground.Data.Contracts</Name>
