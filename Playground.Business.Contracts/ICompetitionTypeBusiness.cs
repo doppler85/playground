@@ -9,8 +9,8 @@ namespace Playground.Business.Contracts
 {
     public interface ICompetitionTypeBusiness
     {
-        ResponseObject<CompetitionType> CreateCompetitionType(CompetitionType competitionType);
-        ResponseObject<CompetitionType> UpdateCompetitionType(CompetitionType competitionType);
-        ResponseObject<CompetitionType> DeleteCompetitionType(int id);
+        Result<CompetitionType> CreateCompetitionType(CompetitionType competitionType);
+        Result<CompetitionType> UpdateCompetitionType(CompetitionType competitionType);
+        Result<CompetitionType> DeleteCompetitionType(int id);
     }
 }

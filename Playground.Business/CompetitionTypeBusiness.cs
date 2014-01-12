@@ -16,9 +16,9 @@ namespace Playground.Business
             this.Uow = uow;
         }
 
-        public ResponseObject<CompetitionType> CreateCompetitionType(CompetitionType competitionType)
+        public Result<CompetitionType> CreateCompetitionType(CompetitionType competitionType)
         {
-            ResponseObject<CompetitionType> retVal = new ResponseObject<CompetitionType>()
+            Result<CompetitionType> retVal = new Result<CompetitionType>()
             {
                 Sucess = true
             };
@@ -37,9 +37,9 @@ namespace Playground.Business
             return retVal;
         }
 
-        public ResponseObject<CompetitionType> UpdateCompetitionType(CompetitionType competitionType)
+        public Result<CompetitionType> UpdateCompetitionType(CompetitionType competitionType)
         {
-            ResponseObject<CompetitionType> retVal = new ResponseObject<CompetitionType>()
+            Result<CompetitionType> retVal = new Result<CompetitionType>()
             {
                 Sucess = true
             };
@@ -58,7 +58,7 @@ namespace Playground.Business
             return retVal;
         }
 
-        public ResponseObject<CompetitionType> DeleteCompetitionType(int id)
+        public Result<CompetitionType> DeleteCompetitionType(int id)
         {
             throw new NotImplementedException();
         }

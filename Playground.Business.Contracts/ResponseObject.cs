@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Playground.Business.Contracts
 {
     
-    public class ResponseObject<T> where T : class
+    public class Result<T> where T : class
     {
         public T Data { get; set; }
         public bool Sucess { get; set; }

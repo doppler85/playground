@@ -64,7 +64,7 @@ namespace Playground.Web.Controllers
         [ActionName("addcompetitiontype")]
         public HttpResponseMessage AddCompetitionType(CompetitionType competitionType)
         {
-            ResponseObject<CompetitionType> res = 
+            Result<CompetitionType> res = 
                 competitionTypeBusiness.CreateCompetitionType(competitionType);
 
             HttpResponseMessage response;
@@ -86,7 +86,7 @@ namespace Playground.Web.Controllers
         [ActionName("updatecompetitiontype")]
         public HttpResponseMessage UpdateCompetitionType(CompetitionType competitionType)
         {
-            ResponseObject<CompetitionType> res =
+            Result<CompetitionType> res =
                 competitionTypeBusiness.CreateCompetitionType(competitionType);
 
             HttpResponseMessage response;

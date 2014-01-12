@@ -226,7 +226,6 @@
     <Compile Include="App_Start\ScopeContainer.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\UnityHttpControllerActivator.cs" />
-    <Compile Include="App_Start\ValidationActionFilter.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
@@ -266,7 +265,6 @@
     <Compile Include="Models\CropingCoords.cs" />
     <Compile Include="Models\GameCategoryStats.cs" />
     <Compile Include="Models\GameStats.cs" />
-    <Compile Include="Models\PagedResult.cs" />
     <Compile Include="Models\PlayerStats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Constants.cs" />

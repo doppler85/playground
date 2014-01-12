@@ -1,4 +1,5 @@
-﻿using Playground.Data.Contracts;
+﻿using Playground.Business.Contracts;
+using Playground.Data.Contracts;
 using Playground.Model;
 using Playground.Web.Models;
 using Playground.Web.Util;

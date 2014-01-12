@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using Playground.Web.Util;
 using Playground.Web.Models;
 using Playground.Web.Hubs;
+using Playground.Business.Contracts;
 
 namespace Playground.Web.Controllers
 {
