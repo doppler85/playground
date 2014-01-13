@@ -11,52 +11,43 @@ using System.Web.Http;
 
 namespace Playground.Web.Controllers
 {  
-    public class CompetitionTypeController : ApiBaseController
+    public class CompetitionTypeController : ApiController
     {
         private ICompetitionTypeBusiness competitionTypeBusiness;
 
-        public CompetitionTypeController(IPlaygroundUow uow, ICompetitionTypeBusiness ctBusiness)
+        public CompetitionTypeController(ICompetitionTypeBusiness ctBusiness)
         {
-            this.Uow = uow;
             this.competitionTypeBusiness = ctBusiness;
         }
 
         // GET /api/competitiontype/5
         [HttpGet]
         [ActionName("getcompetitiontype")]
-        public CompetitionType GetById(int id)
+        public HttpResponseMessage GetById(int id)
         {
-            CompetitionType retVal = Uow.CompetitionTypes.GetById(id);
+            Result<CompetitionType> res =
+                competitionTypeBusiness.GetById(id);
 
-            return retVal;
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
-        // GET /api/competitiontype
+        // GET /api/competitiontypes?page=1&count=5
         [HttpGet]
         [ActionName("getcompetitiontypes")]
-        public PagedResult<CompetitionType> GetAll(int page, int count)
+        public HttpResponseMessage GetAll(int page, int count)
         {
-            List<CompetitionType> competitionTypes = Uow.CompetitionTypes
-                .GetAll()
-                .OrderBy(ct => ct.CompetitorType)
-                .ThenBy(ct => ct.Name)
-                .Skip((page - 1) * count)
-                .Take(count)
-                .ToList();
+            Result<PagedResult<CompetitionType>> res =
+                competitionTypeBusiness.GetCompetitionTypes(page, count);
 
-            int totalItems = Uow.CompetitionTypes
-                .GetAll()
-                .Count();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            PagedResult<CompetitionType> retVal = new PagedResult<CompetitionType>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = competitionTypes
-            };
-
-            return retVal;
+            return response;
         }
 
         // POST /api/competitiontype/addcompetitiontype 
@@ -67,50 +58,39 @@ namespace Playground.Web.Controllers
             Result<CompetitionType> res = 
                 competitionTypeBusiness.CreateCompetitionType(competitionType);
 
-            HttpResponseMessage response;
-            if (res.Sucess)
-            {
-                response = Request.CreateResponse(HttpStatusCode.Created, res.Data);
-            }
-            else
-            {
-                response = Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-            }
+            HttpResponseMessage response = res.Sucess ? 
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
 
-        // Update an existing Game
-        // POST /api/game/updategame
+        // PUT /api/competitiontype/updatecompetitiontype
         [HttpPut]
         [ActionName("updatecompetitiontype")]
         public HttpResponseMessage UpdateCompetitionType(CompetitionType competitionType)
         {
             Result<CompetitionType> res =
-                competitionTypeBusiness.CreateCompetitionType(competitionType);
+                competitionTypeBusiness.UpdateCompetitionType(competitionType);
 
-            HttpResponseMessage response;
-            if (res.Sucess)
-            {
-                response = Request.CreateResponse(HttpStatusCode.Created, res.Data);
-            }
-            else
-            {
-                response = Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-            }
-
-            // var response = Request.CreateResponse(HttpStatusCode.OK, competitionType);
+            HttpResponseMessage response = res.Sucess ? 
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
 
+        // DELETE /api/competitiontype/deletecompetitiontype
         [HttpDelete]
         [ActionName("deletecompetitiontype")]
         public HttpResponseMessage Delete(int id)
         {
-            Uow.CompetitionTypes.Delete(id);
-            Uow.Commit();
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            Result<CompetitionType> res =
+                competitionTypeBusiness.DeleteCompetitionType(id);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }

@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="ICompetitionTypeBusiness.cs" />
     <Compile Include="PagedResult.cs" />
-    <Compile Include="ResponseObject.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

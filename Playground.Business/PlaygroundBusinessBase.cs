@@ -10,5 +10,15 @@ namespace Playground.Business
     public class PlaygroundBusinessBase
     {
         protected IPlaygroundUow Uow { get; set; }
+
+        protected int GetPage(int totalItems, int page, int count)
+        {
+            if (totalItems < page * count)
+            {
+                page = (int)Math.Ceiling((decimal)totalItems / (decimal)count);
+            }
+
+            return page;
+        }
     }
 }

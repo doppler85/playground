@@ -32,7 +32,7 @@ angular.module('Playground.competition-type-add', ['ngResource', 'ui.router', 'u
             $scope.alerts.push(msg);
         };
 
-        $scope.closeAlert = function () {
+        $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
         };
     }]);

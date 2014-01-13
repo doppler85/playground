@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Playground.Business.Contracts
 {
-    
     public class Result<T> where T : class
     {
         public T Data { get; set; }

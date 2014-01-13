@@ -27,6 +27,47 @@ namespace Playground.Web.Controllers
             this.Uow = uow;
         }
 
+        [HttpGet]
+        [ActionName("users")]
+        public PagedResult<User> GetUsers(int page, int count)
+        {
+            List<User> users = Uow.Users
+                .GetAll()
+                .OrderBy(u => u.FirstName)
+                .ThenBy(u => u.LastName)
+                .Skip((page - 1) * count)
+                .Take(count)
+                .ToList();
+
+            int totalItems = Uow.Users
+                .GetAll()
+                .Count();
+
+            foreach (User user in users)
+            {
+                if (!String.IsNullOrEmpty(user.PictureUrl))
+                {
+                    user.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                }
+                else
+                {
+                    user.PictureUrl = user.Gender == Gender.Male ?
+                        Util.Constants.Images.DefaultProfileMale :
+                        Util.Constants.Images.DefaultProfileFemale;
+                }
+            }
+
+            PagedResult<User> retVal = new PagedResult<User>()
+            {
+                CurrentPage = page,
+                TotalPages = (totalItems + count - 1) / count,
+                TotalItems = totalItems,
+                Items = users
+            };
+
+            return retVal;
+        }
+
         // api/user/getplayers
         [HttpGet]
         [ActionName("players")]
