@@ -62,6 +62,10 @@
     <Compile Include="Migrations\201401141218479_InitialCreate.Designer.cs">
       <DependentUpon>201401141218479_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401142052488_PlayersPerTeam.cs" />
+    <Compile Include="Migrations\201401142052488_PlayersPerTeam.Designer.cs">
+      <DependentUpon>201401142052488_PlayersPerTeam.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PlaygroundDbContext.cs" />
     <Compile Include="PlaygroundUow.cs" />
@@ -85,6 +89,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201401141218479_InitialCreate.resx">
       <DependentUpon>201401141218479_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401142052488_PlayersPerTeam.resx">
+      <DependentUpon>201401142052488_PlayersPerTeam.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

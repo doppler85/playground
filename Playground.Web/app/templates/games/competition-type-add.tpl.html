@@ -8,7 +8,7 @@
                 <label class="control-label">Title</label>
                 <div class="controls">
                     <input type="text" data-ng-model="competitionType.name" name="name" data-required="true">
-                    <span ng-show="showError(competitionTypeForm.name, 'required')" class="help-inline">This field is required</span>
+                    <span data-ng-show="showError(competitionTypeForm.name, 'required')" class="help-inline">This field is required</span>
                 </div>
             </div>
             <div class="control-group">
@@ -17,6 +17,19 @@
                     <select 
                         data-ng-model="competitionType.competitorType" 
                         data-ng-options="getKey(k) as v for (k, v) in competitorTypes" />
+                </div>
+            </div>
+            <div data-ng-show="competitionType.competitorType == 1" class="control-group" data-ng-class="getCssClasses(competitionTypeForm.playersPerTeam)">
+                <label class="control-label">Players per team</label>
+                <div class="controls">
+                    <input type="number" 
+                        name="playersPerTeam"
+                        data-required="true" 
+                        data-ng-model="competitionType.playersPerTeam" 
+                        data-playersperteam="true">
+                    <span data-ng-show="showError(competitionTypeForm.playersPerTeam, 'playersperteam')" class="help-inline">
+                        The value must be in range 2 to 20
+                    </span>
                 </div>
             </div>
             <div class="control-group" data-ng-class="getCssClasses(competitionTypeForm.competitorsCount)">
@@ -29,9 +42,9 @@
                         min="1" 
                         max="20" 
                         data-integer="true">
-                    <span ng-show="showError(competitionTypeForm.competitorsCount, 'required')" class="help-inline">This field is required</span>
-                    <span ng-show="showError(competitionTypeForm.competitorsCount, 'integer')" class="help-inline">This field is not valid integer</span>
-                    <span ng-show="competitionTypeForm.competitorsCount.$error.min || competitionTypeForm.competitorsCount.$error.max" class="help-inline">
+                    <span data-ng-show="showError(competitionTypeForm.competitorsCount, 'required')" class="help-inline">This field is required</span>
+                    <span data-ng-show="showError(competitionTypeForm.competitorsCount, 'integer')" class="help-inline">This field is not valid integer</span>
+                    <span data-ng-show="competitionTypeForm.competitorsCount.$error.min || competitionTypeForm.competitorsCount.$error.max" class="help-inline">
                         The value must be in range 1 to 20
                     </span>
                 </div>

@@ -54,6 +54,7 @@
     <Compile Include="Team.cs" />
     <Compile Include="TeamPlayer.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Validation\CompetitionTypeValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
