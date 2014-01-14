@@ -62,10 +62,6 @@ angular.module('Playground.user-profile', [
             gender: 1
         };
 
-        $scope.getKey = function (key) {
-            return parseInt(key, 10);
-        };
-
         $scope.getProfile = function () {
             UserResource.getprofile(function (data, status, headers, config) {
                 $scope.profile = data;

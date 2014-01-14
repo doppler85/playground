@@ -230,6 +230,7 @@
     <Compile Include="App_Start\ScopeContainer.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\UnityHttpControllerActivator.cs" />
+    <Compile Include="App_Start\ValidationActionFilter.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />

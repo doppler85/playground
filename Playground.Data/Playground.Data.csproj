@@ -58,6 +58,11 @@
     <Compile Include="Helpers\IRepositoryProvider.cs" />
     <Compile Include="Helpers\RepositoryFactories.cs" />
     <Compile Include="Helpers\RepositoryProvider.cs" />
+    <Compile Include="Migrations\201401141218479_InitialCreate.cs" />
+    <Compile Include="Migrations\201401141218479_InitialCreate.Designer.cs">
+      <DependentUpon>201401141218479_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PlaygroundDbContext.cs" />
     <Compile Include="PlaygroundUow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,7 +82,11 @@
       <Name>Playground.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201401141218479_InitialCreate.resx">
+      <DependentUpon>201401141218479_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

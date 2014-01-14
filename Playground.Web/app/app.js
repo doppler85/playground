@@ -240,6 +240,11 @@ Playground.
             $rootScope.changeLocation = function (path) {
                 $state.go(path);
             }
+
+            $rootScope.getKey = function (key) {
+                return parseInt(key, 10);
+            };
+
         }]).
     controller('AppCtrl', [
         '$scope',

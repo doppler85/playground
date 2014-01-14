@@ -53,8 +53,7 @@ namespace Playground.Web
             //    = Newtonsoft.Json.PreserveReferencesHandling.Objects; 
 
              //todo add validation action
-             //config.Filters.Add(new ValidationActionFilter());
-
+             config.Filters.Add(new ValidationActionFilter());
         }
     }
 }

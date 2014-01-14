@@ -52,9 +52,5 @@ angular.module('Playground.competition-type-edit', [
             $scope.alerts.splice(index, 1);
         };
 
-        $scope.getKey = function (key) {
-            return parseInt(key, 10);
-        };
-
         $scope.loadCompetitionType();
     }]);

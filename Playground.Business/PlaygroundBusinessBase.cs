@@ -15,7 +15,7 @@ namespace Playground.Business
         {
             if (totalItems < page * count)
             {
-                page = (int)Math.Ceiling((decimal)totalItems / (decimal)count);
+                page = Math.Max((int)Math.Ceiling((decimal)totalItems / (decimal)count), 1);
             }
 
             return page;

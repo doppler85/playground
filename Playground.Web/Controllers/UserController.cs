@@ -1328,6 +1328,20 @@ namespace Playground.Web.Controllers
                 .Where(ac => ac.ConfirmerID == currentUser.UserID)
                 .Count();
 
+            foreach (AutomaticMatchConfirmation confirmation in confirmations)
+            {
+                if (!String.IsNullOrEmpty(confirmation.Confirmee.PictureUrl))
+                {
+                    confirmation.Confirmee.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                }
+                else
+                {
+                    confirmation.Confirmee.PictureUrl = confirmation.Confirmee.Gender == Gender.Male ?
+                        Util.Constants.Images.DefaultProfileMale :
+                        Util.Constants.Images.DefaultProfileFemale;
+                }
+            }
+
             PagedResult<AutomaticMatchConfirmation> retVal = new PagedResult<AutomaticMatchConfirmation>()
             {
                 CurrentPage = page,
