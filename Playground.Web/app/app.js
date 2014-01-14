@@ -19,6 +19,7 @@ var Playground = angular.module('Playground', [
     'Playground.competition-type-edit',
     'Playground.register',
     'Playground.login',
+    'Playground.user-list',
     'Playground.user-status',
     'Playground.user-profile',
     'Playground.competitors-list',
@@ -127,6 +128,16 @@ Playground.
                     templateUrl: 'app/templates/games/game-edit.tpl.html',
                     controller: 'EditGameController',
                     data: { pageTitle: 'Edit game' },
+                    resolve: {
+                        authenticaated: function (securityAuthorization, $state) {
+                            return securityAuthorization.requireAuthenticatedUser();
+                        }
+                    }
+                }).state('user-list', {
+                    url: '/user/list',
+                    templateUrl: 'app/templates/user/user-list.tpl.html',
+                    controller: 'UserListController',
+                    data: { pageTitle: 'Users' },
                     resolve: {
                         authenticaated: function (securityAuthorization, $state) {
                             return securityAuthorization.requireAuthenticatedUser();

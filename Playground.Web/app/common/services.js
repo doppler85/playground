@@ -313,6 +313,12 @@ factory('UserResource', ['$resource', function (resource) {
             params: {
                 actionname: 'getuserstats'
             }
+        },
+        users: {
+            method: 'GET',
+            params: {
+                actionname: 'users'
+            }
         }
     });
 }]).

@@ -369,6 +369,7 @@
     <Content Include="app\templates\timepicker\timepicker.html" />
     <Content Include="app\templates\typeahead\typeahead-match.html" />
     <Content Include="app\templates\typeahead\typeahead-popup.html" />
+    <Content Include="app\templates\user\user-list.tpl.html" />
     <Content Include="app\templates\user\user-public-profile-matches.tpl.html" />
     <Content Include="app\templates\user\user-public-profile-teams.tpl.html" />
     <Content Include="app\templates\user\user-public-profile-players.tpl.html" />
@@ -378,7 +379,7 @@
     <Content Include="app\templates\user\user-profile.teams.tpl.html" />
     <Content Include="app\templates\user\user-profile.info.tpl.html" />
     <Content Include="app\templates\user\user-profile.players.tpl.html" />
-    <Content Include="app\user\users-list.js" />
+    <Content Include="app\user\user-list.js" />
     <Content Include="app\user\register.js" />
     <Content Include="app\user\register.tpl.html" />
     <Content Include="app\user\user-profile.js" />

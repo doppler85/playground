@@ -1,0 +1,31 @@
+<div class="span12">
+        <h3>{{pageTitle}}</h3>
+        <table class="table">
+            <tr>
+                <th>
+                    User
+                </th>
+            </tr>
+            <tr data-ng-repeat="user in users.items">
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;" 
+                            data-ui-sref="public-profile.info({id: user.userID})">
+                            <img data-ng-src="{{user.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;"
+                        data-ui-sref="public-profile.info({id: user.userID})"
+                        data-ng-bind="user | userfull"></a>
+                </td>
+            </tr>
+        </table>
+        <pagination 
+            total-items="users.totalItems" 
+            page="users.currentPage" 
+            num-page="users.totalPages" 
+            items-per-page="5" 
+            on-select-page="onUserPageSelect(page)">
+        </pagination>
+</div>
