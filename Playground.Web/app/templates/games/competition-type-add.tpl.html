@@ -58,8 +58,10 @@
                 </div>
             </div>
         </form>
-        <pre>{{competitionType | json}}</pre>
-        <pre>{{competitionTypeForm.$valid}} | {{competitionTypeForm.$dirty}} | {{canSave(competitionTypeForm)}}</pre>
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <div data-ng-show="settings.debug">
+            <pre>{{competitionType | json}}</pre>
+            <pre>{{competitionTypeForm.$valid}} | {{competitionTypeForm.$dirty}} | {{canSave(competitionTypeForm)}}</pre>
+        </div>
     </div>
 </div>

@@ -38,7 +38,8 @@ var Playground = angular.module('Playground', [
     'Playground.security.security-authorization'
 ]);
 
-Playground.constant('settingss', {
+Playground.constant('settings', {
+    debug: true
 }).constant('enums', {
     competitionType: {
         0: 'Individual',
@@ -229,9 +230,11 @@ Playground.
         '$rootScope',
         '$location',
         '$state',
-        function ($rootScope, $location, $state) { //*** Bootstrap the app, init config etc.
+        'settings',
+        function ($rootScope, $location, $state, settings) { //*** Bootstrap the app, init config etc.
             $rootScope.ShowTitle = true;
             $rootScope.ShowMenu = true;
+            $rootScope.settings = settings;
 
             $rootScope.IsActive = function (state) {
                 return $state.is(state);
@@ -243,6 +246,15 @@ Playground.
 
             $rootScope.getKey = function (key) {
                 return parseInt(key, 10);
+            };
+
+            // alserts
+            $rootScope.addAlert = function (arr, msg) {
+                arr.push(msg);
+            };
+
+            $rootScope.closeAlert = function (arr, index) {
+                arr.splice(index, 1);
             };
 
             // validation

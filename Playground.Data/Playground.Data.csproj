@@ -66,6 +66,10 @@
     <Compile Include="Migrations\201401142052488_PlayersPerTeam.Designer.cs">
       <DependentUpon>201401142052488_PlayersPerTeam.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401151307174_GameCategoryValidation.cs" />
+    <Compile Include="Migrations\201401151307174_GameCategoryValidation.Designer.cs">
+      <DependentUpon>201401151307174_GameCategoryValidation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PlaygroundDbContext.cs" />
     <Compile Include="PlaygroundUow.cs" />
@@ -92,6 +96,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201401142052488_PlayersPerTeam.resx">
       <DependentUpon>201401142052488_PlayersPerTeam.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401151307174_GameCategoryValidation.resx">
+      <DependentUpon>201401151307174_GameCategoryValidation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

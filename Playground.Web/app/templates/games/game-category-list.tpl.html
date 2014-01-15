@@ -18,11 +18,12 @@
             </td>
             <td>
                 <a class="btn btn-primary" href="javascript:;" data-ui-sref="game-category-edit.info({id: gameCategory.gameCategoryID })">edit</a>
-                <a class="btn btn-primary" href="javascript:;" data-ng-click="deleteCategory(gameCategory, $index);">delete</a>
+                <a class="btn btn-primary" href="javascript:;" data-ng-click="deleteCategory(gameCategory);">delete</a>
             </td>
         </tr>
     </table>
     <pagination 
+        data-ng-show="gameCategories.totalPages > 1"
         total-items="gameCategories.totalItems" 
         page="gameCategories.currentPage" 
         num-page="gameCategories.totalPages" 
@@ -31,11 +32,17 @@
     </pagination>
 </div>
 <div class="row">
-    <form class="form-inline" data-ng-show="addingcategory">
+    <form name="gameCagegoryForm" class="form-inline" data-ng-show="addingcategory">
         <label>Title</label>
-        <input type="text" placeholder="Category title" data-ng-model="newCategory.title" />
-        <button class="btn" data-ng-click="addCategory()">save</button>
+        <input type="text" 
+            placeholder="Category title" 
+            name="title" 
+            data-ng-model="newCategory.title" 
+            data-required="true"/>
+        <span data-ng-show="showError(gameCagegoryForm.title, 'required')" class="help-inline">This field is required</span>
+        <button class="btn" data-ng-click="addCategory()" data-ng-disabled="!canSave(gameCagegoryForm)">save</button>
         <button class="btn" data-ng-click="toggleAddCategory(false)">cancel</button>
     </form>
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     <a href="javascript:;" data-ng-click="toggleAddCategory(true)" data-ng-hide="addinggame">add category</a>
 </div>

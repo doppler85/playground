@@ -22,6 +22,7 @@ namespace Playground.Model
         [Required]
         public CompetitorType CompetitorType { get; set; }
         [Required]
+        [MaxLength(100)]
         public string Name { get; set; }
         [Range(1, 20)]
         public int CompetitorsCount { get; set; }

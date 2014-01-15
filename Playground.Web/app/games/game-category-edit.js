@@ -11,7 +11,6 @@ angular.module('Playground.game-category-edit', [
             .state('game-category-edit', {
                 abstract: true,
                 url: '/game/category/edit',
-                controller: 'GameCategoryEditController',
                 templateUrl: 'app/templates/games/game-category-edit.tpl.html',
                 data: { pageTitle: 'Edit game category' },
                 resolve: {
@@ -30,19 +29,6 @@ angular.module('Playground.game-category-edit', [
             })
         }
     ])
-    .controller('GameCategoryEditController', [
-    '$scope',
-    '$state',
-    '$stateParams',
-    function ($scope, $state, $stateParams, $rootScope, GameCategoryResource) {
-        $scope.addAlert = function (arr, msg) {
-            arr.push(msg);
-        };
-
-        $scope.closeAlert = function (arr, index) {
-            arr.splice(index, 1);
-        };
-    }])
     .controller('GameCategoryEditInfoController', [
     '$scope',
     '$state',
@@ -70,9 +56,9 @@ angular.module('Playground.game-category-edit', [
             GameCategoryResource.update($scope.gameCategory,
                 function (data, status, headers, config) {
                     $scope.addAlert($scope.alerts, { type: 'success', msg: 'Game category sucessfully updated' });
-                },
-                function () {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error saving game' });
+                }, function (err) {
+                    var msg = err.data ? err.data.replace(/"/g, "") : "Error updating game category";
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: msg });
                 }
             );
         };

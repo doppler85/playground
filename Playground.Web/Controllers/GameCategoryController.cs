@@ -17,9 +17,12 @@ namespace Playground.Web.Controllers
 {
     public class GameCategoryController : ApiBaseController
     {
-        public GameCategoryController(IPlaygroundUow uow)
+        private IGameCategoryBusiness gameCategoryBusiness;
+
+        public GameCategoryController(IPlaygroundUow uow, IGameCategoryBusiness gcBusiness)
         {
             this.Uow = uow;
+            this.gameCategoryBusiness = gcBusiness;
         }
 
         // api/gamecategory/allcategories
@@ -111,7 +114,7 @@ namespace Playground.Web.Controllers
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 // This illustrates how to get the file names for uploaded files.
-                User currentUser = GetUserByEmail(User.Identity.Name);
+                // User currentUser = GetUserByEmail(User.Identity.Name);
 
                 if (String.IsNullOrEmpty(provider.FormData["ID"]))
                 {
@@ -194,53 +197,53 @@ namespace Playground.Web.Controllers
                     Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
                 };
             }
-            catch (System.Exception e)
+            catch (System.Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
-        // POST /api/gamecategory
+        // POST /api/gamecategory/addgamecategory
         [HttpPost]
         [ActionName("addgamecategory")]
         public HttpResponseMessage AddGameCategory(GameCategory gameCategory)
         {
-            Uow.GameCategories.Add(gameCategory);
-            Uow.Commit();
+            Result<GameCategory> res =
+                gameCategoryBusiness.AddGameCategory(gameCategory);
 
-            var response = Request.CreateResponse(HttpStatusCode.Created, gameCategory);
-
-            // Compose location header that tells how to get this game category
-            // e.g. ~/api/gamecategory/5
-
-            response.Headers.Location =
-                new Uri(Url.Link(RouteConfig.ControllerAndId, new { id = gameCategory.GameCategoryID }));
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
 
+        // POST /api/gamecategory/updategamecategory
         [HttpPut]
         [ActionName("updategamecategory")]
         public HttpResponseMessage UpdateGameCategory(GameCategory gameCategory)
         {
-            Uow.GameCategories.Update(gameCategory, gameCategory.GameCategoryID);
+            Result<GameCategory> res =
+                gameCategoryBusiness.UpdateGameCategory(gameCategory);
 
-            Uow.Commit();
-
-            var response = Request.CreateResponse(HttpStatusCode.OK, gameCategory);
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
 
 
+        // DELETE /api/gamecategory
         [HttpDelete]
         public HttpResponseMessage Delete(int id)
         {
-            Uow.GameCategories.Delete(id);
+            Result<GameCategory> res =
+                gameCategoryBusiness.DeleteGameCategory(id);
 
-            Uow.Commit();
-
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }

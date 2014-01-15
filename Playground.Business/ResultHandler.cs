@@ -19,7 +19,7 @@ namespace Playground.Business
             };
         }
 
-        public static Result<T> Erorr(String message, Exception ex)
+        public static Result<T> Erorr(String message)
         {
             return new Result<T>()
             {

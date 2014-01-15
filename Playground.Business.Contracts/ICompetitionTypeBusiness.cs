@@ -11,7 +11,7 @@ namespace Playground.Business.Contracts
     {
         Result<CompetitionType> GetById(int id);
         Result<PagedResult<CompetitionType>> GetCompetitionTypes(int page, int count);
-        Result<CompetitionType> CreateCompetitionType(CompetitionType competitionType);
+        Result<CompetitionType> AddCompetitionType(CompetitionType competitionType);
         Result<CompetitionType> UpdateCompetitionType(CompetitionType competitionType);
         Result<CompetitionType> DeleteCompetitionType(int id);
     }

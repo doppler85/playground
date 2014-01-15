@@ -56,7 +56,7 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage AddCompetitionType(CompetitionType competitionType)
         {
             Result<CompetitionType> res = 
-                competitionTypeBusiness.CreateCompetitionType(competitionType);
+                competitionTypeBusiness.AddCompetitionType(competitionType);
 
             HttpResponseMessage response = res.Sucess ? 
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :

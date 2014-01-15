@@ -30,7 +30,7 @@ namespace Playground.Business
             catch (Exception ex)
             {
                 log.Error(String.Format("Error retreiving competition type with following id: {0}", id), ex);
-                retVal = ResultHandler<CompetitionType>.Erorr("Error retreiving competition type", ex);
+                retVal = ResultHandler<CompetitionType>.Erorr("Error retreiving competition type");
             }
 
             return retVal;
@@ -69,13 +69,13 @@ namespace Playground.Business
             catch (Exception ex)
             {
                 log.Error(String.Format("Error retreiving list of competition types. page: {0}, count: {1}", page, count), ex);
-                retVal = ResultHandler<PagedResult<CompetitionType>>.Erorr("Error retreiving competition types", ex);
+                retVal = ResultHandler<PagedResult<CompetitionType>>.Erorr("Error retreiving competition types");
             }
 
             return retVal;
         }
 
-        public Result<CompetitionType> CreateCompetitionType(CompetitionType competitionType)
+        public Result<CompetitionType> AddCompetitionType(CompetitionType competitionType)
         {
             Result<CompetitionType> retVal = null;
             try
@@ -87,7 +87,7 @@ namespace Playground.Business
             catch (Exception ex)
             {
                 log.Error("Error creating competition type", ex);
-                retVal = ResultHandler<CompetitionType>.Erorr("Error creating competition type", ex);
+                retVal = ResultHandler<CompetitionType>.Erorr("Error creating competition type");
             }
 
             return retVal;
@@ -105,7 +105,7 @@ namespace Playground.Business
             catch (Exception ex)
             {
                 log.Error("Error updating competition type", ex);
-                retVal = ResultHandler<CompetitionType>.Erorr("Error updating competition type", ex);
+                retVal = ResultHandler<CompetitionType>.Erorr("Error updating competition type");
             }
 
             return retVal;
@@ -123,7 +123,7 @@ namespace Playground.Business
             catch (Exception ex)
             {
                 log.Error(String.Format("Error deleting  competition type with following id: {0}", id), ex);
-                retVal = ResultHandler<CompetitionType>.Erorr("Error deleting competition type", ex);
+                retVal = ResultHandler<CompetitionType>.Erorr("Error deleting competition type");
             }
 
             return retVal;

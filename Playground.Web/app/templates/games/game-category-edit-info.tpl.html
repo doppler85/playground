@@ -1,5 +1,5 @@
 <div class="span12">
-    <form class="form-horizontal">
+    <form name="gameCategoryForm" class="form-horizontal">
         <div class="control-group">
             <label class="control-label" for="logo">logo</label>
             <div class="controls">
@@ -14,12 +14,13 @@
         <div class="control-group">
             <label class="control-label" for="title">Title</label>
             <div class="controls">
-                <input id="title" type="text" data-ng-model="gameCategory.title">
+                <input id="title" type="text" data-ng-model="gameCategory.title" name="title" data-required="true">
+                <span data-ng-show="showError(gameCategoryForm.title, 'required')" class="help-inline">This field is required</span>
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <button class="btn" data-ng-click="updateGameCategory()">Save</button>
+                <button class="btn" data-ng-click="updateGameCategory()" data-ng-disabled="!canSave(gameCategoryForm)">save</button>
                 <a href="javascript:;" class="btn" data-ui-sref="game-categories">back to games</a>
             </div>
         </div>

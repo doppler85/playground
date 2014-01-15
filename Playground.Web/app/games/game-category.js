@@ -13,13 +13,14 @@ angular.module('Playground.game-category', [
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.gameCategories = {};
         $scope.addingcategory = false;
+        $scope.alerts = [];
         $scope.createCategory = function () {
             var retVal = {
                 title: '',
                 games: []
             };
         };
-
+        
         $scope.newCategory = $scope.createCategory();
 
         $scope.loadGameCategories = function (page) {
@@ -42,16 +43,22 @@ angular.module('Playground.game-category', [
             }
         };
 
-        $scope.addCategory = function() {
-            GameCategoryResource.add($scope.newCategory, function (data, status, headers, config) {
-                $scope.loadGameCategories($scope.gameCategories.currentPage);
-                $scope.addingcategory = false;
-            });
+        $scope.addCategory = function () {
+            $scope.alerts = [];
+            GameCategoryResource.add($scope.newCategory,
+                function (data, status, headers, config) {
+                    $scope.loadGameCategories($scope.gameCategories.currentPage);
+                    $scope.addingcategory = false;
+                    $scope.newCategory = $scope.createCategory();
+                }, function (err) {
+                    var msg = err.data ? err.data.replace(/"/g, "") : "Error adding game category";
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: msg });
+                });
         };
 
-        $scope.deleteCategory = function (category, index) {
+        $scope.deleteCategory = function (category) {
             GameCategoryResource.remove({ id: category.gameCategoryID }, function (data, status, headers, config) {
-                $scope.gameCategories.splice(index, 1);
+                $scope.loadGameCategories($scope.gameCategories.currentPage);
             });
         };
 

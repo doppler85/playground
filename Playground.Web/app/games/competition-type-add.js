@@ -12,8 +12,9 @@ angular.module('Playground.competition-type-add', [
     '$rootScope',
     '$state',
     'CompetitionTypeResource',
+    'settings',
     'enums',
-    function ($scope, $stateParams, $rootScope, $state, CompetitionTypeResource, enums) {
+    function ($scope, $stateParams, $rootScope, $state, CompetitionTypeResource, settings, enums) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.competitorTypes = enums.competitionType;
         $scope.competitionType = {
