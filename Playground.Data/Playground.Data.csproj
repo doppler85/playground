@@ -70,6 +70,10 @@
     <Compile Include="Migrations\201401151307174_GameCategoryValidation.Designer.cs">
       <DependentUpon>201401151307174_GameCategoryValidation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401151816438_GameValidation.cs" />
+    <Compile Include="Migrations\201401151816438_GameValidation.Designer.cs">
+      <DependentUpon>201401151816438_GameValidation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PlaygroundDbContext.cs" />
     <Compile Include="PlaygroundUow.cs" />
@@ -99,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201401151307174_GameCategoryValidation.resx">
       <DependentUpon>201401151307174_GameCategoryValidation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401151816438_GameValidation.resx">
+      <DependentUpon>201401151816438_GameValidation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -12,6 +12,8 @@ namespace Playground.Model
     {
         public int GameID { get; set; }
         public int GameCategoryID { get; set; }
+        [Required]
+        [MaxLength(100)]
         public string Title { get; set; }
         public string PictureUrl { get; set; }
 
