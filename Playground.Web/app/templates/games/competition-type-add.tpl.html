@@ -24,11 +24,13 @@
                 <div class="controls">
                     <input type="number" 
                         name="playersPerTeam"
-                        data-required="true" 
                         data-ng-model="competitionType.playersPerTeam" 
+                        data-condition="competitionType.competitorType == 1"
+                        data-minvalue="2"
+                        data-maxvalue="20"
                         data-playersperteam="true">
                     <span data-ng-show="showError(competitionTypeForm.playersPerTeam, 'playersperteam')" class="help-inline">
-                        The value must be in range 2 to 20
+                        The value must be in range from 2 to 20
                     </span>
                 </div>
             </div>

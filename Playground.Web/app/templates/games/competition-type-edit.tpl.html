@@ -3,11 +3,12 @@
 </div>
 <div class="row">
     <div class="span6">
-        <form class="form-horizontal">
-            <div class="control-group">
+        <form name="competitionTypeForm" class="form-horizontal">
+            <div class="control-group" data-ng-class="getCssClasses(competitionTypeForm.name)">
                 <label class="control-label">Title</label>
                 <div class="controls">
-                    <input type="text" data-ng-model="competitionType.name">
+                    <input type="text" data-ng-model="competitionType.name" name="name" data-required="true">
+                    <span data-ng-show="showError(competitionTypeForm.name, 'required')" class="help-inline">This field is required</span>
                 </div>
             </div>
             <div class="control-group">
@@ -18,15 +19,41 @@
                         data-ng-options="getKey(k) as v for (k, v) in competitorTypes" />
                 </div>
             </div>
-            <div class="control-group">
+            <div data-ng-show="competitionType.competitorType == 1" class="control-group" data-ng-class="getCssClasses(competitionTypeForm.playersPerTeam)">
+                <label class="control-label">Players per team</label>
+                <div class="controls">
+                    <input type="number" 
+                        name="playersPerTeam"
+                        data-ng-model="competitionType.playersPerTeam" 
+                        data-condition="competitionType.competitorType == 1"
+                        data-minvalue="2"
+                        data-maxvalue="20"
+                        data-playersperteam="true">
+                    <span data-ng-show="showError(competitionTypeForm.playersPerTeam, 'playersperteam')" class="help-inline">
+                        The value must be in range from 2 to 20
+                    </span>
+                </div>
+            </div>
+            <div class="control-group" data-ng-class="getCssClasses(competitionTypeForm.competitorsCount)">
                 <label class="control-label">Competitors count</label>
                 <div class="controls">
-                    <input type="text" data-ng-model="competitionType.competitorsCount">
+                    <input type="number" 
+                        name="competitorsCount"
+                        data-ng-model="competitionType.competitorsCount" 
+                        data-required="true" 
+                        min="1" 
+                        max="20" 
+                        data-integer="true">
+                    <span data-ng-show="showError(competitionTypeForm.competitorsCount, 'required')" class="help-inline">This field is required</span>
+                    <span data-ng-show="showError(competitionTypeForm.competitorsCount, 'integer')" class="help-inline">This field is not valid integer</span>
+                    <span data-ng-show="competitionTypeForm.competitorsCount.$error.min || competitionTypeForm.competitorsCount.$error.max" class="help-inline">
+                        The value must be in range 1 to 20
+                    </span>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn" data-ng-click="updateCompetitionType()">Save</button>
+                    <button class="btn" data-ng-click="updateCompetitionType()" data-ng-disabled="!canSave(competitionTypeForm)">Save</button>
                     <button class="btn" data-ng-click="cancel()">Cancel</button>
                 </div>
             </div>

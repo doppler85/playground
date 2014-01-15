@@ -245,6 +245,22 @@ Playground.
                 return parseInt(key, 10);
             };
 
+            // validation
+            $rootScope.getCssClasses = function (ngModelContoller) {
+                return {
+                    error: ngModelContoller.$invalid && ngModelContoller.$dirty,
+                    success: ngModelContoller.$valid && ngModelContoller.$dirty
+                };
+            };
+
+            $rootScope.showError = function (ngModelController, error) {
+                return ngModelController.$error[error];
+            };
+
+            $rootScope.canSave = function (ngFormController) {
+                return ngFormController.$valid && ngFormController.$dirty;
+            };
+
         }]).
     controller('AppCtrl', [
         '$scope',

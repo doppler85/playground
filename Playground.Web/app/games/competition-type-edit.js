@@ -2,7 +2,9 @@
 angular.module('Playground.competition-type-edit', [
     'ngResource',
     'ui.router',
-    'ui.bootstrap.alert'
+    'ui.bootstrap.alert',
+    'Playground.validation',
+    'Playground.competition-type.validation'
     ])
     .controller('CompetitionTypeEditController', [
     '$scope',

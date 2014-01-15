@@ -284,6 +284,7 @@
     <Content Include="app\common\players.js" />
     <Content Include="app\common\services.js" />
     <Content Include="app\common\teams.js" />
+    <Content Include="app\common\validation.js" />
     <Content Include="app\competition\competitors-list.js" />
     <Content Include="app\competition\competitors-list.tpl.html" />
     <Content Include="app\competition\team-edit.js" />
@@ -298,6 +299,7 @@
     <Content Include="app\competition\player-add.tpl.html" />
     <Content Include="app\competition\player-profile.js" />
     <Content Include="app\games\competition-type-edit.js" />
+    <Content Include="app\games\competition-type.validation.js" />
     <Content Include="app\lib\jQuery\jquery.signalR-2.0.1.js" />
     <Content Include="app\lib\jQuery\jquery.signalR-2.0.1.min.js" />
     <Content Include="app\templates\competition\team-profile-matches.tpl.html" />

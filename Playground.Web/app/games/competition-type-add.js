@@ -1,48 +1,11 @@
 'use strict';
-angular.module('Playground.competition-type-add', ['ngResource', 'ui.router', 'ui.bootstrap.alert'])
-    .directive('integer', function() {
-        return {
-            require: 'ngModel',
-            link: function (scope, elm, attrs, ctrl) {
-                var INTEGER_REGEXP = /^\-?\d+$/;
-                ctrl.$parsers.unshift(function(viewValue) {
-                    if (INTEGER_REGEXP.test(viewValue)) {
-                        // it is valid
-                        ctrl.$setValidity('integer', true);
-                        return viewValue;
-                    } else {
-                        // it is invalid, return undefined (no model update)
-                        ctrl.$setValidity('integer', false);
-                        return undefined;
-                    }
-                });
-            }
-        };
-    }).directive('playersperteam', function () {
-        return {
-            require: 'ngModel',
-            link: function (scope, elm, attrs, ctrl) {
-                var INTEGER_REGEXP = /^\-?\d+$/,
-                    MIN_VALUE = 2,
-                    MAX_VALUE = 20
-                ctrl.$parsers.unshift(function (viewValue) {
-                    var valid = true;
-                    if (scope.competitionType.competitorType == 1) {
-                        valid = false;
-                        if (INTEGER_REGEXP.test(viewValue)) {
-                            var value = parseInt(viewValue);
-                            if (value >= MIN_VALUE && value <= MAX_VALUE) {
-                                // it is valid
-                                valid = true;
-                            }
-                        }
-                    }
-                    ctrl.$setValidity('playersperteam', valid);
-                    return valid ? viewValue : undefined;
-                });
-            }
-        };
-    })
+angular.module('Playground.competition-type-add', [
+    'ngResource',
+    'ui.router',
+    'ui.bootstrap.alert',
+    'Playground.validation',
+    'Playground.competition-type.validation'
+    ])
     .controller('CompetitionTypeAddController', [
     '$scope',
     '$stateParams',
@@ -55,7 +18,7 @@ angular.module('Playground.competition-type-add', ['ngResource', 'ui.router', 'u
         $scope.competitorTypes = enums.competitionType;
         $scope.competitionType = {
             competitorType: 0,
-            playersPerTeam: 0
+            playersPerTeam : 2
         };
         $scope.alerts = [];
 
@@ -80,21 +43,5 @@ angular.module('Playground.competition-type-add', ['ngResource', 'ui.router', 'u
 
         $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
-        };
-
-        // todo: add this to separate module or directive validation 
-        $scope.getCssClasses = function (ngModelContoller) {
-            return {
-                error: ngModelContoller.$invalid && ngModelContoller.$dirty,
-                success: ngModelContoller.$valid && ngModelContoller.$dirty
-            };
-        };
-
-        $scope.showError = function (ngModelController, error) {
-            return ngModelController.$error[error];
-        };
-
-        $scope.canSave = function (ngFormController) {
-            return ngFormController.$valid && ngFormController.$dirty;
         };
     }]);

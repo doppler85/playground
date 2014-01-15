@@ -28,6 +28,7 @@ namespace Playground.Web
                     { 
                         errors[key] = state.Errors.First().ErrorMessage;
                         log.ErrorFormat("Error validating model. key: {0}, message: {1}", key, state.Errors.First().ErrorMessage);
+                        log.Error("Exception: ", state.Errors.First().Exception);
                     } 
                 } 
  
