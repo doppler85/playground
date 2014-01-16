@@ -35,6 +35,21 @@ namespace Playground.Web.Controllers
             return response;
         }
 
+        // GET /api/gealltcompetitiontypes
+        [HttpGet]
+        [ActionName("gealltcompetitiontypes")]
+        public HttpResponseMessage GetAll()
+        {
+            Result<List<CompetitionType>> res =
+                competitionTypeBusiness.GetAllCompetitionTypes();
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
         // GET /api/competitiontypes?page=1&count=5
         [HttpGet]
         [ActionName("getcompetitiontypes")]

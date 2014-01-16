@@ -64,6 +64,11 @@ namespace Playground.Web.Controllers
             Result<GameCategory> res =
                 gameCategoryBusiness.GetById(id);
 
+            if (res.Sucess && !String.IsNullOrEmpty(res.Data.PictureUrl))
+            {
+                res.Data.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+            }
+
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
@@ -291,21 +296,38 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("games")]
-        public PagedResult<Game> GetGames(string id, int page, int count)
+        public PagedResult<Game> GetGames(int id, int page, int count)
         {
-            int gameCategoryId = Int32.Parse(id);
+            // int gameCategoryId = Int32.Parse(id);
             int totalItems = Uow.Games
                                         .GetAll()
-                                        .Where(g => g.GameCategoryID == gameCategoryId)
+                                        .Where(g => g.GameCategoryID == id)
                                         .Count();
 
             List<Game> games = Uow.Games
                                         .GetAll()
-                                        .Where(g => g.GameCategoryID == gameCategoryId)
+                                        .Where(g => g.GameCategoryID == id)
                                         .OrderBy(g => g.Title)
                                         .Skip((page - 1) * count)
                                         .Take(count)
                                         .ToList();
+
+            GameCategory category = gameCategoryBusiness.GetById(id).Data;
+            string gameCategoryPictureUrl = !String.IsNullOrEmpty(category.PictureUrl) ?
+                category.PictureUrl + String.Format("?nocache={0}", DateTime.Now.Ticks) :
+                String.Empty;
+
+            foreach (Game game in games)
+            {
+                if (!String.IsNullOrEmpty(game.PictureUrl))
+                {
+                    game.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                }
+                else
+                {
+                    game.PictureUrl = gameCategoryPictureUrl;
+                }
+            }
 
             PagedResult<Game> retVal = new PagedResult<Game>()
             {

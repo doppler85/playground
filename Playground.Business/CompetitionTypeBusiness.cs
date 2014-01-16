@@ -36,6 +36,28 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<List<CompetitionType>> GetAllCompetitionTypes()
+        {
+            Result<List<CompetitionType>> retVal = null;
+            try
+            {
+                List<CompetitionType> competitionTypes = Uow.CompetitionTypes
+                    .GetAll()
+                    .OrderBy(ct => ct.CompetitorType)
+                    .ThenBy(ct => ct.Name)
+                    .ToList();
+
+                retVal = ResultHandler<List<CompetitionType>>.Sucess(competitionTypes);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error retreiving list of competition types.", ex);
+                retVal = ResultHandler<List<CompetitionType>>.Erorr("Error retreiving list of competition types");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<CompetitionType>> GetCompetitionTypes(int page, int count)
         {
             Result<PagedResult<CompetitionType>> retVal = null;

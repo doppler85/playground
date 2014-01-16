@@ -8,7 +8,7 @@ namespace Playground.Model.Validation
         {
             ValidationResult retVal = ValidationResult.Success;
 
-            if (competitionType.CompetitorType == CompetitorType.Team)
+            if (competitionType != null && competitionType.CompetitorType == CompetitorType.Team)
             {
                 if (competitionType.PlayersPerTeam < 2 || competitionType.PlayersPerTeam > 20)
                 {

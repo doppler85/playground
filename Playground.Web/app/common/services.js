@@ -120,6 +120,13 @@ factory('CompetitionTypeResource', ['$resource', function (resource) {
                 actionname: 'getcompetitiontype'
             }
         },
+        getallcompetitiontypes: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'gealltcompetitiontypes'
+            }
+        },
         getcompetitiontypes: {
             method: 'GET',
             params: {

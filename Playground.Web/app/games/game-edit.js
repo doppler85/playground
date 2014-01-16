@@ -38,7 +38,7 @@ angular.module('Playground.game-edit', ['ngResource', 'ui.router', 'Playground.i
                 });
             }, $scope.selectedCompetitionTypes);
         }).$promise.then(function () {
-            CompetitionTypeResource.all(function (data, status, headers, config) {
+            CompetitionTypeResource.getallcompetitiontypes(function (data, status, headers, config) {
                 $scope.availableCompetitionTypes = data;
                 angular.forEach($scope.availableCompetitionTypes, function (competitionType) {
                     var ct = {

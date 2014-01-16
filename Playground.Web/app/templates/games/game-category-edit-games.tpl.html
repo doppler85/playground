@@ -20,6 +20,7 @@
     </table>
     <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     <pagination 
+        data-ng-show="games.totalPages > 1"
         total-items="games.totalItems" 
         page="games.currentPage" 
         num-page="games.totalPages" 
