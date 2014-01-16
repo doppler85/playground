@@ -25,54 +25,57 @@ namespace Playground.Web.Controllers
             this.gameCategoryBusiness = gcBusiness;
         }
 
+        private string GetGameCategpryPicturesRootFolder()
+        {
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.GameCategoryPictureRoot));
+        }
+
         // api/gamecategory/allcategories
         [HttpGet]
         [ActionName("allcategories")]
-        public PagedResult<GameCategory> GetCategories(int page, int count)
+        public HttpResponseMessage GetCategories(int page, int count)
         {
-            List<GameCategory> categories = Uow.GameCategories.GetAll()
-                .OrderBy(gc => gc.Title)
-                .Skip((page - 1) * count)
-                .Take(count)
-                .ToList();
+            Result<PagedResult<GameCategory>> res =
+                gameCategoryBusiness.GetGameCategories(page, count);
 
-            int totalItems = Uow.GameCategories
-                .GetAll()
-                .Count();
-
-            foreach (GameCategory gameCategory in categories)
+            if (res.Sucess)
             {
-                if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
+                foreach (GameCategory gameCategory in res.Data.Items)
                 {
-                    gameCategory.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                    if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
+                    {
+                        gameCategory.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                    }
                 }
             }
 
-            PagedResult<GameCategory> retVal = new PagedResult<GameCategory>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = categories
-            };
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            return retVal;
+            return response;
         }
 
         // api/gamecategory/getcategory/5
         [HttpGet]
         [ActionName("getcategory")]
-        public GameCategory GetCategory(int id)
+        public HttpResponseMessage GetCategory(int id)
         {
-            GameCategory retVal = Uow.GameCategories.GetById(id);
-            return retVal;
+            Result<GameCategory> res =
+                gameCategoryBusiness.GetById(id);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
         
         [HttpGet]
         [ActionName("getcategorystats")]
         public GameCategoryStats GetStats(int id)
         {
-            GameCategory gameCategory = GetCategory(id);
+            GameCategory gameCategory = Uow.GameCategories.GetById(id);
             GameCategoryStats retVal = new GameCategoryStats(gameCategory);
             retVal.TotalGames = Uow.Games
                 .GetAll()
@@ -88,11 +91,6 @@ namespace Playground.Web.Controllers
                 .Count();
 
             return retVal;
-        }
-
-        private string GetGameCategpryPicturesRootFolder()
-        {
-            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.GameCategoryPictureRoot));
         }
 
         [HttpPost]

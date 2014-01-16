@@ -29,6 +29,59 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<GameCategory> GetById(int id)
+        {
+            Result<GameCategory> retVal = null;
+            try
+            {
+                GameCategory gameCategory = Uow.GameCategories.GetById(id);
+                retVal = ResultHandler<GameCategory>.Sucess(gameCategory);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving game category. id: {0}", id), ex);
+                retVal = ResultHandler<GameCategory>.Erorr("Error retreiving game category");
+            }
+
+            return retVal;
+        }
+
+        public Result<PagedResult<GameCategory>> GetGameCategories(int page, int count)
+        {
+            Result<PagedResult<GameCategory>> retVal = null;
+            try
+            {
+                int totalItems = Uow.GameCategories
+                    .GetAll()
+                    .Count();
+
+                // check for last page
+                page = GetPage(totalItems, page, count);
+
+                List<GameCategory> categories = Uow.GameCategories.GetAll()
+                    .OrderBy(gc => gc.Title)
+                    .Skip((page - 1) * count)
+                    .Take(count)
+                    .ToList();
+
+                PagedResult<GameCategory> result = new PagedResult<GameCategory>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = categories
+                };
+
+                retVal = ResultHandler<PagedResult<GameCategory>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of game categories types. page: {0}, count: {1}", page, count), ex);
+                retVal = ResultHandler<PagedResult<GameCategory>>.Erorr("Error retreiving game categories");
+            }
+            return retVal;
+        }
+
         public Result<GameCategory> AddGameCategory(GameCategory gameCategory)
         {
             Result<GameCategory> retVal = null;
