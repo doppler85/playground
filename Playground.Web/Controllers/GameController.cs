@@ -17,9 +17,12 @@ namespace Playground.Web.Controllers
 {  
     public class GameController : ApiBaseController
     {
-        public GameController(IPlaygroundUow uow)
+        private ICompetitionTypeBusiness competitionTypeBusiness;
+
+        public GameController(IPlaygroundUow uow, ICompetitionTypeBusiness ctBusiness)
         {
             this.Uow = uow;
+            this.competitionTypeBusiness = ctBusiness;
         }
 
         private List<GameCompetitionType> GetByGameId(int gameID)
@@ -36,7 +39,6 @@ namespace Playground.Web.Controllers
         {
             Game retVal = Uow.Games.GetById(id);
             retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
-            retVal.CompetitionTypes = GetByGameId(retVal.GameID);
             if (!String.IsNullOrEmpty(retVal.PictureUrl))
             {
                 retVal.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
@@ -63,6 +65,16 @@ namespace Playground.Web.Controllers
                 .GetAll()
                 .Where(m => m.Scores.Any(s => s.Match.GameID == retVal.GameID))
                 .Count();
+
+            return retVal;
+        }
+
+        [HttpGet]
+        [ActionName("getupdategame")]
+        public Game GetUpdateGame(int id)
+        {
+            Game retVal = GameDetails(id);
+            retVal.CompetitionTypes = competitionTypeBusiness.GetGameCompetitionTypes(id).Data;
 
             return retVal;
         }
@@ -122,8 +134,10 @@ namespace Playground.Web.Controllers
             {
                 Uow.GameCompetitionTypes.Delete(ct);
             }
-            foreach (GameCompetitionType ct in game.CompetitionTypes)
+            foreach (GameCompetitionType ct in game.CompetitionTypes.Where(ct => ct.Selected))
             {
+                ct.Game = null;
+                ct.CompetitionType = null;
                 Uow.GameCompetitionTypes.Add(ct);
             }
             Uow.Games.Update(game, game.GameID);

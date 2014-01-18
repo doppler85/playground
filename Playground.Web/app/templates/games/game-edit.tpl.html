@@ -23,15 +23,15 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">Competition tyeps</label>
-                <div class="controls" data-ng-repeat="competitionType in availableCompetitionTypes">
+                <label class="control-label">Competition types</label>
+                <div class="controls" data-ng-repeat="gameCompetitionType in game.competitionTypes">
                     <label>
                         <input 
                             type="checkbox" 
-                            value="competitionType.competitionTypeId" 
-                            data-ng-checked="competitionType.checked"
-                            data-ng-click="toggleCompetitionType(competitionType)"/> 
-                        {{competitionType.name}} {{competitionTypes[competitionType.competitorType]}} ({{competitionType.competitorsCount}})
+                            value="gameCompetitionType.competitionType.competitionTypeId" 
+                            data-ng-checked="gameCompetitionType.selected"
+                            data-ng-click="gameCompetitionType.selected = !gameCompetitionType.selected" />
+                        {{gameCompetitionType.competitionType.name}} {{competitionTypes[gameCompetitionType.competitionType.competitorType]}} ({{gameCompetitionType.competitionType.competitorsCount}})
                     </label>
                 </div>
             </div>
@@ -42,5 +42,8 @@
                 </div>
             </div>
         </form>
-        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
+        <div class="span12">
+            <pre>{{game | json}}</pre>
+        </div>
 </div>

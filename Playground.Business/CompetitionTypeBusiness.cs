@@ -58,6 +58,45 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<List<GameCompetitionType>> GetGameCompetitionTypes(int gameID)
+        {
+            Result<List<GameCompetitionType>> retVal = null;
+            try
+            {
+                List<CompetitionType> competitionTypes = Uow.CompetitionTypes
+                    .GetAll()
+                    .ToList();
+
+                List<CompetitionType> gameComeptitionTypes = Uow.Games
+                    .GetAll(g => g.CompetitionTypes)
+                    .Where(g => g.GameID == gameID)
+                    .SelectMany(g => g.CompetitionTypes)
+                    .Select(gct => gct.CompetitionType)
+                    .ToList();
+
+                List<GameCompetitionType> result = new List<GameCompetitionType>();
+                foreach (CompetitionType competitionType in competitionTypes)
+                {
+                    result.Add(new GameCompetitionType()
+                    {
+                        GameID = gameID,
+                        CompetitionType = competitionType,
+                        CompetitionTypeID = competitionType.CompetitionTypeID,
+                        Selected = gameComeptitionTypes.Any(gct => gct.CompetitionTypeID == competitionType.CompetitionTypeID)
+                    });
+                }
+
+                retVal = ResultHandler<List<GameCompetitionType>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of competition types for gameID: {0}", gameID), ex);
+                retVal = ResultHandler<List<GameCompetitionType>>.Erorr("Error retreiving list of competition types for game");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<CompetitionType>> GetCompetitionTypes(int page, int count)
         {
             Result<PagedResult<CompetitionType>> retVal = null;

@@ -71,6 +71,13 @@ factory('GameResource', ['$resource', function (resource) {
                 actionname: 'details'
             }
         },
+        getupdategame: {
+            method: 'GET',
+            isArray: false,
+            params: {
+                actionname: 'getupdategame'
+            }
+        },
         availablecomptypes: {
             method: 'GET',
             isArray: true,
