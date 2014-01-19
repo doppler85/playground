@@ -25,6 +25,7 @@
         </tr>
     </table>
     <pagination 
+        data-ng-show="automaticMatchConfirmations.totalPages > 1"
         total-items="automaticMatchConfirmations.totalItems" 
         page="automaticMatchConfirmations.currentPage" 
         num-page="automaticMatchConfirmations.totalPages" 
@@ -61,6 +62,7 @@
                 </tr>
             </table>
             <pagination 
+                data-ng-show="automaticMatchConfirmationsUsers.totalPages > 1"
                 total-items="automaticMatchConfirmationsUsers.totalItems" 
                 page="automaticMatchConfirmationsUsers.currentPage" 
                 num-page="automaticMatchConfirmationsUsers.totalPages" 

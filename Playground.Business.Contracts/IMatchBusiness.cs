@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Playground.Business.Contracts
 {
-    public interface IGameBusiness
+    public interface IMatchBusiness
     {
-        Result<Game> GetById(Game game);
+        Result<PagedResult<Match>> FilterByUser(int page, int count, int userID);
 
-        Result<Game> AddGameCategory(Game game);
+        Result<PagedResult<Match>> FilterByStatus(int page, int count, MatchStatus status);
     }
 }

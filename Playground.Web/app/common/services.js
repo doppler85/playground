@@ -338,15 +338,14 @@ factory('UserResource', ['$resource', function (resource) {
 }]).
 factory('HomeResource', ['$resource', function (resource) {
     return resource('api/home/:actionname/:id', {}, {
-        lastMatches: {
+        lastmatches: {
             method: 'GET',
             params: {
                 actionname: 'matches'
             }
         },
-        lastCompetitors: {
+        lastcompetitors: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'competitors'
             }

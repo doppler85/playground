@@ -45,6 +45,7 @@
     <Compile Include="CompetitionTypeBusiness.cs" />
     <Compile Include="GameBusiness.cs" />
     <Compile Include="GameCategoryBusiness.cs" />
+    <Compile Include="MatchBusiness.cs" />
     <Compile Include="PlaygroundBusinessBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultHandler.cs" />

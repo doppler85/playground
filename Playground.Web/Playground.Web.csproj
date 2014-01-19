@@ -256,7 +256,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MatchController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Filters\ValidateHttpAntiForgeryTokenAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -264,6 +263,7 @@
     </Compile>
     <Compile Include="Hubs\LiveScoresHub.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\SearchArgs.cs" />
     <Compile Include="Models\SearchCompetitorArgs.cs" />
     <Compile Include="Models\UserStats.cs" />
     <Compile Include="Models\TeamStats.cs" />
@@ -329,7 +329,7 @@
     <Content Include="app\games\game-category.js" />
     <Content Include="app\templates\games\game-category-list.tpl.html" />
     <Content Include="app\home\home.js" />
-    <Content Include="app\home\home.tpl.html" />
+    <Content Include="app\templates\home\home.tpl.html" />
     <Content Include="app\lib\angular\angular-ui-router.js" />
     <Content Include="app\lib\angular\angular-ui-router.min.js" />
     <Content Include="app\lib\angular\angular-ui.js" />

@@ -76,7 +76,7 @@ Playground.
             $stateProvider.
                 state('home', {
                     url: '/home',
-                    templateUrl: 'app/home/home.tpl.html',
+                    templateUrl: 'app/templates/home/home.tpl.html',
                     controller: 'HomeController',
                     data: { pageTitle: 'Playground' },
                     resolve: {

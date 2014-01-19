@@ -11,17 +11,19 @@ angular.module('Playground.home', ['ngResource', 'ui.router']).
         $scope.matches = [];
         $scope.totalMatches = 0;
         $scope.competitors = [];
+        $scope.totalCompetitors = 0;
 
         $scope.loadMatches = function () {
-            HomeResource.lastMatches({ count: 5, page: 1 }, function (data, status, headers, config) {
+            HomeResource.lastmatches({ page: 1, count: 5 }, function (data, status, headers, config) {
                 $scope.matches = data.items;
                 $scope.totalMatches = data.totalItems;
             });
         }
 
         $scope.loadCompetitors = function () {
-            HomeResource.lastCompetitors({ count: 5 }, function (data, status, headers, config) {
-                $scope.competitors = data;
+            HomeResource.lastcompetitors({ page: 1, count: 5 }, function (data, status, headers, config) {
+                $scope.competitors = data.items;
+                $scope.totalCompetitors = data.totalItems;
             });
         }
 

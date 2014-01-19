@@ -5,6 +5,8 @@ using Playground.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 
@@ -12,49 +14,26 @@ namespace Playground.Web.Controllers
 {
     public class MatchController : ApiBaseController
     {
-        public MatchController(IPlaygroundUow uow)
+        private IMatchBusiness matchBusiness;
+
+        public MatchController(IPlaygroundUow uow, IMatchBusiness mBusiness)
         {
             this.Uow = uow;
+            this.matchBusiness = mBusiness;
         }
 
         [HttpGet]
         [ActionName("matches")]
-        public PagedResult<Match> GetMatches(int page, int count)
+        public HttpResponseMessage GetMatches(int page, int count)
         {
-            int totalItems = Uow.Matches
-                                        .GetAll()
-                                        .Where(m => m.Status == MatchStatus.Confirmed)
-                                        .Count();
+            Result<PagedResult<Match>> res =
+                matchBusiness.FilterByStatus(page, count, MatchStatus.Confirmed);
 
-            List<Match> matches = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.Status == MatchStatus.Confirmed)
-                                        .OrderByDescending(s => s.Date)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-
-            List<long> competitorIds = matches
-                .SelectMany(m => m.Scores)
-                .ToList()
-                .Select(s => s.CompetitorID)
-                .ToList();
-
-            List<Competitor> competitors = Uow.Competitors
-                .GetAll()
-                .Where(c => competitorIds.Contains(c.CompetitorID))
-                .ToList();
-
-            PagedResult<Match> retVal = new PagedResult<Match>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = matches
-            };
-
-            return retVal;
+            return response;
         }
     }
 }

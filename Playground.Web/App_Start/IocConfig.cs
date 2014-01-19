@@ -23,6 +23,8 @@ namespace Playground.Web.App_Start
 
             unityContainer.RegisterType<IGameCategoryBusiness, GameCategoryBusiness>();
 
+            unityContainer.RegisterType<IMatchBusiness, MatchBusiness>();
+
             unityContainer.RegisterType<IRepositoryProvider, RepositoryProvider>();
 
             unityContainer.RegisterType<IPlaygroundUow, PlaygroundUow>();

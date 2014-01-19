@@ -1355,13 +1355,13 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("automaticmatchconfirmationsusers")]
-        public PagedResult<User> AutomaticMatchConfirmationUsers(int page, int count, string search)
+        public PagedResult<User> AutomaticMatchConfirmationUsers([FromUri]SearchArgs args)
         {
-            if (search == null)
+            if (args.Search == null)
             {
-                search = String.Empty;
+                args.Search = String.Empty;
             }
-            
+
             User currentUser = GetUserByEmail(User.Identity.Name);
             List<User> users = Uow.Users
                 .GetAll()
@@ -1370,10 +1370,10 @@ namespace Playground.Web.Controllers
                     .Where(ac => ac.ConfirmerID == currentUser.UserID)
                     .Select(ac => ac.Confirmee))
                 .Where(u => u.UserID != currentUser.UserID && 
-                        (u.FirstName.Contains(search) || u.LastName.Contains(search)))
+                        (u.FirstName.Contains(args.Search) || u.LastName.Contains(args.Search)))
                 .OrderBy(u => u.FirstName)
-                .Skip((page - 1) * count)
-                .Take(count)
+                .Skip((args.Page - 1) * args.Count)
+                .Take(args.Count)
                 .ToList();
 
             int totalItems = Uow.Users
@@ -1383,13 +1383,13 @@ namespace Playground.Web.Controllers
                     .Where(ac => ac.ConfirmerID == currentUser.UserID)
                     .Select(ac => ac.Confirmee))
                 .Where(u => u.UserID != currentUser.UserID &&
-                        (u.FirstName.Contains(search) || u.LastName.Contains(search)))
+                        (u.FirstName.Contains(args.Search) || u.LastName.Contains(args.Search)))
                 .Count();
 
             PagedResult<User> retVal = new PagedResult<User>()
             {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
+                CurrentPage = args.Page,
+                TotalPages = (totalItems + args.Count - 1) / args.Count,
                 TotalItems = totalItems,
                 Items = users
             };
