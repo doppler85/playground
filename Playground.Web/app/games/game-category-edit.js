@@ -107,11 +107,16 @@ angular.module('Playground.game-category-edit', [
         };
 
         $scope.addGame = function (gameCategory) {
+            $scope.alerts = [];
             $scope.newGame.gameCategoryID = $scope.gameCategoryID;
 
-            GameResource.add($scope.newGame, function (data, status, headers, config) {
-                $state.go('game-edit', { id: data.gameID });
-            });
+            GameResource.add($scope.newGame,
+                function (data, status, headers, config) {
+                    $state.go('game-edit', { id: data.gameID });
+                }, function (err) {
+                    var msg = err.data ? err.data.replace(/"/g, "") : "Error adding game";
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: msg });
+                });
         };
 
         $scope.deleteGame = function (game, collection, index) {

@@ -3,7 +3,7 @@
 </div>
 <div class="row">
     <div class="span12">
-        <form class="form-horizontal">
+        <form name="gameForm" class="form-horizontal">
             <div class="control-group">
                 <label class="control-label" for="logo">logo</label>
                 <div class="controls">
@@ -19,7 +19,11 @@
             <div class="control-group">
                 <label class="control-label" for="title">Title</label>
                 <div class="controls">
-                    <input id="title" type="text" data-ng-model="game.title">
+                    <input type="text"  
+                        name="title" 
+                        data-ng-model="game.title"
+                        data-required="true">
+                    <span data-ng-show="showError(gameForm.title, 'required')" class="help-inline">This field is required</span>
                 </div>
             </div>
             <div class="control-group">
@@ -37,7 +41,7 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn" data-ng-click="updateGame()">Save</button>
+                    <button class="btn" data-ng-click="updateGame()" data-ng-disabled="!canSave(gameForm)">Save</button>
                     <button class="btn" data-ng-click="cancel()">Back to list</button>
                 </div>
             </div>
