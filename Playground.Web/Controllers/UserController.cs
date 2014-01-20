@@ -22,9 +22,12 @@ namespace Playground.Web.Controllers
     [Authorize]
     public class UserController : ApiBaseController
     {
-        public UserController(IPlaygroundUow uow)
+        private IMatchBusiness matchBusiness;
+
+        public UserController(IPlaygroundUow uow, IMatchBusiness mBusiness)
         {
             this.Uow = uow;
+            this.matchBusiness = mBusiness;
         }
 
         [HttpGet]
@@ -785,69 +788,18 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("matches")]
-        public PagedResult<Match> GetMatches(int page, int count)
+        public HttpResponseMessage GetMatches(int page, int count)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
-            List<long> teamsIds = Uow.Competitors
-                                        .GetAll()
-                                        .OfType<Team>()
-                                        .Where(t => t.Players.Any(p => p.Player.User.UserID == currentUser.UserID))
-                                        .Select(t => t.CompetitorID)
-                                        .Distinct()
-                                        .ToList();
-            List<long> playerIds = Uow.Competitors
-                                        .GetAll()
-                                        .OfType<Player>()
-                                        .Where(p => p.UserID == currentUser.UserID)
-                                        .Select(p => p.CompetitorID)
-                                        .ToList();
 
-            List<long> ids = teamsIds.Concat(playerIds).ToList();
+            Result<PagedResult<Match>> res =
+                matchBusiness.FilterByUser(page, count, currentUser.UserID);
 
-            int totalItems = Uow.Matches
-                                        .GetAll()
-                                        .Where(m => m.Scores
-                                                        .Any(s => ids.Contains(s.CompetitorID)))
-                                        .Count();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            List<Match> matches = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.Scores
-                                                        .Any(s => ids.Contains(s.CompetitorID)))
-                                        .OrderByDescending(s => s.Date)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
-
-                         
-            List<long> competitorIds = matches
-                .SelectMany(m => m.Scores)
-                .ToList()
-                .Select(s => s.CompetitorID)
-                .ToList();
-
-            List<Competitor> competitors = Uow.Competitors
-                .GetAll()
-                .Where(c => competitorIds.Contains(c.CompetitorID))
-                .ToList();
-
-            foreach (Competitor competitor in competitors)
-            {
-                if (ids.Contains(competitor.CompetitorID))
-                {
-                    competitor.IsCurrentUserCompetitor = true;
-                }
-            }
-
-            PagedResult<Match> retVal = new PagedResult<Match>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = matches
-            };
-
-            return retVal;
+            return response;
         }
 
         

@@ -24,24 +24,57 @@ namespace Playground.Business
             Result<PagedResult<Match>> retVal = null;
             try
             {
-                throw new NotImplementedException();
-                
-                // retVal = ResultHandler<PagedResult<Match>>.Sucess(result);
-                //Uow.Competitors.GetAll(p => ((Player)p).Teams)
-                //    .OfType<Player>()
-                //    .Where(p => p.UserID == userID)
-
-                IQueryable<Player> myPlayers = Uow.Competitors
-                    .GetAll(p => ((Player)p).Teams)
+                List<long> playerIds = Uow.Competitors
+                    .GetAll()
                     .OfType<Player>()
-                    .Where(p => p.UserID == userID);
-                
-                // IQueryable<Team> myTeams = myPlayers.SelectMany(p => p.Teams)
+                    .Where(p => p.UserID == userID)
+                    .Select(p => p.CompetitorID)
+                    .ToList();
 
-                Uow.Matches.GetAll()
-                    .SelectMany(s => s.Scores)
-                    .Select(s => s.Match)
-                    .OrderBy(m => m.Date);
+                List<long> teamIds = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .Where(p => p.UserID == userID)
+                    .SelectMany(p => p.Teams)
+                    .Select(t => t.Team.CompetitorID)
+                    .ToList();
+
+                List<long> competitorIds = playerIds.Concat(teamIds).ToList();
+
+                int totalItems = Uow.Matches
+                                            .GetAll()
+                                            .Where(m => m.Scores
+                                                            .Any(s => competitorIds.Contains(s.CompetitorID)))
+                                            .Count();
+
+                page = GetPage(totalItems, page, count);
+
+
+                List<Match> matches = Uow.Matches
+                                            .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                            .Where(m => m.Scores
+                                                            .Any(s => competitorIds.Contains(s.CompetitorID)))
+                                            .OrderByDescending(s => s.Date)
+                                            .Skip((page - 1) * count)
+                                            .Take(count)
+                                            .ToList();
+
+                foreach (CompetitorScore competitorScore in matches.SelectMany(m => m.Scores))
+                {
+                    competitorScore.Competitor = Uow.Competitors.GetById(competitorScore.CompetitorID);
+                    competitorScore.Competitor.IsCurrentUserCompetitor = competitorIds.Contains(competitorScore.Competitor.CompetitorID);
+                }
+
+                PagedResult<Match> result = new PagedResult<Match>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = matches
+                };
+
+                retVal = ResultHandler<PagedResult<Match>>.Sucess(result);
+
             }
             catch (Exception ex)
             {
