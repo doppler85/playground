@@ -14,9 +14,12 @@ namespace Playground.Business
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public MatchBusiness(IPlaygroundUow uow)
+        private ICompetitorBusiness competitorBusiness;
+
+        public MatchBusiness(IPlaygroundUow uow, ICompetitorBusiness cBusiness)
         {
             this.Uow = uow;
+            this.competitorBusiness = cBusiness;
         }
 
         public Result<PagedResult<Match>> FilterByUser(int page, int count, int userID)
@@ -24,22 +27,7 @@ namespace Playground.Business
             Result<PagedResult<Match>> retVal = null;
             try
             {
-                List<long> playerIds = Uow.Competitors
-                    .GetAll()
-                    .OfType<Player>()
-                    .Where(p => p.UserID == userID)
-                    .Select(p => p.CompetitorID)
-                    .ToList();
-
-                List<long> teamIds = Uow.Competitors
-                    .GetAll()
-                    .OfType<Player>()
-                    .Where(p => p.UserID == userID)
-                    .SelectMany(p => p.Teams)
-                    .Select(t => t.Team.CompetitorID)
-                    .ToList();
-
-                List<long> competitorIds = playerIds.Concat(teamIds).ToList();
+                List<long> competitorIds = competitorBusiness.GetCompetitorIdsForUser(userID);
 
                 int totalItems = Uow.Matches
                                             .GetAll()
@@ -119,6 +107,58 @@ namespace Playground.Business
                 };
 
                 retVal = ResultHandler<PagedResult<Match>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting list of matches", ex);
+                retVal = ResultHandler<PagedResult<Match>>.Erorr("Error getting list of matches");
+            }
+
+            return retVal;
+        }
+
+        public Result<PagedResult<Match>> FilterByStatusAndUser(int page, int count, MatchStatus status, int userID)
+        {
+            Result<PagedResult<Match>> retVal = null;
+            try
+            {
+                List<long> competitorIds = competitorBusiness.GetCompetitorIdsForUser(userID);
+
+                int totalItems = Uow.Matches
+                                            .GetAll()
+                                            .Where(m => m.Status == status &&
+                                                        m.Scores
+                                                            .Any(s => competitorIds.Contains(s.CompetitorID)))
+                                            .Count();
+
+                page = GetPage(totalItems, page, count);
+
+
+                List<Match> matches = Uow.Matches
+                                            .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                            .Where(m => m.Status == status &&
+                                                        m.Scores
+                                                            .Any(s => competitorIds.Contains(s.CompetitorID)))
+                                            .OrderByDescending(s => s.Date)
+                                            .Skip((page - 1) * count)
+                                            .Take(count)
+                                            .ToList();
+
+                foreach (CompetitorScore competitorScore in matches.SelectMany(m => m.Scores))
+                {
+                    competitorScore.Competitor = Uow.Competitors.GetById(competitorScore.CompetitorID);
+                }
+
+                PagedResult<Match> result = new PagedResult<Match>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = matches
+                };
+
+                retVal = ResultHandler<PagedResult<Match>>.Sucess(result);
+
             }
             catch (Exception ex)
             {

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompetitionTypeBusiness.cs" />
+    <Compile Include="CompetitorBusiness.cs" />
     <Compile Include="GameBusiness.cs" />
     <Compile Include="GameCategoryBusiness.cs" />
     <Compile Include="MatchBusiness.cs" />

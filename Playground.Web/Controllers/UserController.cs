@@ -806,59 +806,18 @@ namespace Playground.Web.Controllers
         [HttpGet]
         [AllowAnonymous]
         [ActionName("publicmatches")]
-        public PagedResult<Match> GetMatches(string id, int page, int count)
+        public HttpResponseMessage GetMatches(string id, int page, int count)
         {
             int userId = Int32.Parse(id);
-            List<long> teamsIds = Uow.Competitors
-                                        .GetAll()
-                                        .OfType<Team>()
-                                        .Where(t => t.Players.Any(p => p.Player.User.UserID == userId))
-                                        .Select(t => t.CompetitorID)
-                                        .Distinct()
-                                        .ToList();
-            List<long> playerIds = Uow.Competitors
-                                        .GetAll()
-                                        .OfType<Player>()
-                                        .Where(p => p.UserID == userId)
-                                        .Select(p => p.CompetitorID)
-                                        .ToList();
 
-            List<long> ids = teamsIds.Concat(playerIds).ToList();
+            Result<PagedResult<Match>> res =
+                matchBusiness.FilterByStatusAndUser(page, count, MatchStatus.Confirmed, userId);
 
-            int totalItems = Uow.Matches
-                                        .GetAll()
-                                        .Where(m => m.Status == MatchStatus.Confirmed &&
-                                                    m.Scores
-                                                        .Any(s => ids.Contains(s.CompetitorID)))
-                                        .Count();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            List<Match> matches = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.Status == MatchStatus.Confirmed && 
-                                                    m.Scores
-                                                        .Any(s => ids.Contains(s.CompetitorID)))
-                                        .OrderByDescending(s => s.Date)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
-            
-            foreach (Match match in matches)
-            {
-                foreach (CompetitorScore cs in match.Scores)
-                {
-                    cs.Competitor = Uow.Competitors.GetById(cs.CompetitorID);
-                }
-            }
-
-            PagedResult<Match> retVal = new PagedResult<Match>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = matches
-            };
-
-            return retVal;
+            return response;
         }
 
         [HttpGet]
