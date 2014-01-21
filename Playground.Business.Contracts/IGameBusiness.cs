@@ -12,5 +12,7 @@ namespace Playground.Business.Contracts
         Result<Game> GetById(Game game);
 
         Result<Game> AddGameCategory(Game game);
+
+        Result<List<Game>> FilterByCategoryAndCompetitionType(int gameCategoryID, CompetitorType competitorType);
     }
 }

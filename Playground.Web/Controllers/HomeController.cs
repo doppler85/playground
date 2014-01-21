@@ -14,11 +14,15 @@ namespace Playground.Web.Controllers
     public class HomeController : ApiBaseController
     {
         private IMatchBusiness matchBusiness;
+        private ICompetitorBusiness competitorBusiness;
 
-        public HomeController(IPlaygroundUow uow, IMatchBusiness mBusiness)
+        public HomeController(IPlaygroundUow uow, 
+            IMatchBusiness mBusiness, 
+            ICompetitorBusiness cBusiness)
         {
             this.Uow = uow;
             this.matchBusiness = mBusiness;
+            this.competitorBusiness = cBusiness;
         }
 
         [HttpGet]
@@ -37,39 +41,19 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("competitors")]
-        public PagedResult<Competitor> GetCompetitors(int page, int count)
+        public HttpResponseMessage GetCompetitors(int page, int count)
         {
-            List<Competitor> competitors = Uow.Competitors
-                                                .GetAll(c => c.Games)
-                                                .OrderByDescending(c => c.CreationDate)
-                                                .Skip((page - 1) * count)
-                                                .Take(count)
-                                                .ToList();
-
-            int totalItems = Uow.Competitors
-                                        .GetAll()
-                                        .Count();
-
-            List<int> gameIds = competitors
-                                                .SelectMany(c => c.Games)
-                                                .ToList()
-                                                .Select(g => g.GameID)
-                                                .ToList();
-
-            List<Game> categories = Uow.Games
-                                                .GetAll(g => g.Category)
-                                                .Where(g => gameIds.Contains(g.GameID))
-                                                .ToList();
-
-            PagedResult<Competitor> retVal = new PagedResult<Competitor>()
+            Result<PagedResult<Competitor>> res = competitorBusiness.GetCompetitors(page, count);
+            if (res.Sucess)
             {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = competitors
-            };
+                competitorBusiness.LoadCategories(res.Data.Items);
+            }
 
-            return retVal;
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
     }
 }

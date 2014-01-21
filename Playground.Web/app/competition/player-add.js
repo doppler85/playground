@@ -32,18 +32,23 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
             $scope.alerts.splice(index, 1);
         };
 
-        $scope.loadGames = function () {
-            GameResource.individualGames(function (data, status, headers, config) {
+        $scope.loadCategories = function () {
+            GameResource.individualcategories(function (data, status, headers, config) {
                 $scope.categories = data;
             });
         };
 
+        $scope.loadGames = function (categoryID) {
+            GameResource.individualgames({ id: categoryID },
+                function (data, status, headers, config) {
+                    $scope.games = data;
+            });
+        };
+
         $scope.categoryChanged = function () {
+            $scope.games = [];
             if ($scope.selectedCategory != null) {
-                $scope.games = $scope.selectedCategory.games;
-            }
-            else {
-                $scope.games = [];
+                $scope.loadGames($scope.selectedCategory.gameCategoryID);
             }
         };
 
@@ -75,5 +80,5 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
             $state.go('profile.players');
         };
 
-        $scope.loadGames();
+        $scope.loadCategories();
     }]);

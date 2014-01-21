@@ -14,5 +14,7 @@ namespace Playground.Business.Contracts
         Result<PagedResult<Match>> FilterByStatus(int page, int count, MatchStatus status);
 
         Result<PagedResult<Match>> FilterByStatusAndUser(int page, int count, MatchStatus status, int userID);
+
+        Result<PagedResult<Match>> FilterByStatusAndGame(int page, int count, MatchStatus status, int gameID);
     }
 }

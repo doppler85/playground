@@ -156,7 +156,7 @@ Playground.
                     data: { pageTitle: 'Register' }
                 }).state('player-add', {
                     url: '/user/competition/player/add',
-                    templateUrl: 'app/competition/player-add.tpl.html',
+                    templateUrl: 'app/templates/competition/player-add.tpl.html',
                     controller: 'PlayerAddController',
                     data: { pageTitle: 'Add player' },
                     resolve: {
@@ -176,7 +176,7 @@ Playground.
                     }
                 }).state('team-add', {
                     url: '/competition/team/add',
-                    templateUrl: 'app/competition/team-add.tpl.html',
+                    templateUrl: 'app/templates/competition/team-add.tpl.html',
                     controller: 'TeamAddController',
                     data: { pageTitle: 'Add team' },
                     resolve: {

@@ -56,16 +56,33 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
             $scope.alerts.splice(index, 1);
         };
 
-        $scope.loadGames = function () {
-            GameResource.teamGames(function (data, status, headers, config) {
+        $scope.loadCategories = function () {
+            GameResource.teamcategories(function (data, status, headers, config) {
                 $scope.categories = data;
             });
         };
 
-        $scope.loadMyPlayers = function () {
-            GameResource.teamGames(function (data, status, headers, config) {
-                $scope.games = data;
-            });
+        $scope.loadGames = function (categoryID) {
+            GameResource.teamgames({id: categoryID}, 
+                function (data, status, headers, config) {
+                    $scope.games = data;
+                }
+            );
+        };
+
+        $scope.loadMyPlayer = function (categoryID) {
+            UserResource.myteamplayer({ gameCategoryID: $scope.selectedCategory.gameCategoryID },
+                function (data, status, headers, config) {
+                    $scope.myplayer = data;
+                    $scope.team.players.push({
+                        playerID: data.competitorID,
+                        player: data
+                    });
+                },
+                function () {
+                    $scope.myplayer = {};
+                }
+            );
         };
 
         $scope.addTeam = function () {
@@ -89,20 +106,10 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         };
 
         $scope.categoryChanged = function () {
+            $scope.games = [];
             if ($scope.selectedCategory != null) {
-                $scope.games = $scope.selectedCategory.games;
-                UserResource.myteamplayer({ gameCategoryID: $scope.selectedCategory.gameCategoryID },
-                    function (data, status, headers, config) {
-                        $scope.myplayer = data;
-                        $scope.team.players.push({
-                            playerID: data.competitorID,
-                            player:data
-                        });
-                    },
-                    function () {
-                        $scope.myplayer = {};
-                    }
-                );
+                $scope.loadGames($scope.selectedCategory.gameCategoryID);
+                $scope.loadMyPlayer($scope.selectedCategory.gameCategoryID);
             }
             else {
                 $scope.team.gameID = null;
@@ -147,5 +154,5 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
             window.history.back();
         };
 
-        $scope.loadGames();
+        $scope.loadCategories();
     }]);

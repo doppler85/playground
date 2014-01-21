@@ -18,11 +18,21 @@ namespace Playground.Web.Controllers
     public class GameController : ApiBaseController
     {
         private ICompetitionTypeBusiness competitionTypeBusiness;
+        private IMatchBusiness matchBusiness;
+        private IGameCategoryBusiness gameCategoryBusiness;
+        private IGameBusiness gameBusiness;
 
-        public GameController(IPlaygroundUow uow, ICompetitionTypeBusiness ctBusiness)
+        public GameController(IPlaygroundUow uow, 
+            IMatchBusiness mBusiness,
+            ICompetitionTypeBusiness ctBusiness,
+            IGameCategoryBusiness gcBusiness,
+            IGameBusiness gBusiness)
         {
             this.Uow = uow;
+            this.matchBusiness = mBusiness;
             this.competitionTypeBusiness = ctBusiness;
+            this.gameCategoryBusiness = gcBusiness;
+            this.gameBusiness = gBusiness;
         }
 
         private List<GameCompetitionType> GetByGameId(int gameID)
@@ -273,43 +283,18 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("matches")]
-        public PagedResult<Match> GetMatches(string id, int page, int count)
+        public HttpResponseMessage GetMatches(string id, int page, int count)
         {
-            int gameId = Int32.Parse(id);
-            int totalItems = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.GameID == gameId && m.Status == MatchStatus.Confirmed)
-                                        .Count();
+            int gameID = Int32.Parse(id);
 
-            List<Match> matches = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.GameID == gameId && m.Status == MatchStatus.Confirmed)
-                                        .OrderByDescending(s => s.Date)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
+            Result<PagedResult<Match>> res =
+                matchBusiness.FilterByStatusAndGame(page, count, MatchStatus.Confirmed, gameID);
 
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            List<long> competitorIds = matches
-                .SelectMany(m => m.Scores)
-                .ToList()
-                .Select(s => s.CompetitorID)
-                .ToList();
-
-            List<Competitor> competitors = Uow.Competitors
-                .GetAll()
-                .Where(c => competitorIds.Contains(c.CompetitorID))
-                .ToList();
-
-            PagedResult<Match> retVal = new PagedResult<Match>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = matches
-            };
-
-            return retVal;
+            return response;
         }
 
         [HttpGet]
@@ -380,46 +365,68 @@ namespace Playground.Web.Controllers
             return retVal;
         }
 
+        // api/game/individualcategories
+        [HttpGet]
+        [ActionName("individualcategories")]
+        public HttpResponseMessage GetIndividualCategories()
+        {
+            Result<List<GameCategory>> res =
+                gameCategoryBusiness.GetGameCategoriesByCompetitorType(CompetitorType.Individual);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
         // api/game/individualgames
         [HttpGet]
         [ActionName("individualgames")]
-        public List<GameCategory> GetIndividualGames()
+        public HttpResponseMessage GetIndividualGames(string id)
         {
-            List<Game> games = Uow.Games
-                                .GetAll(g => g.Category)
-                                .Where(g => g.CompetitionTypes.Any(ct => ct.CompetitionType.CompetitorType == CompetitorType.Individual))
-                                .OrderBy(g => g.Category.Title)
-                                .ThenBy(g => g.Title)
-                                .ToList();
+            int cateogryID = Int32.Parse(id);
 
-            List<GameCategory> categories = games
-                .Select(g => g.Category)
-                .Distinct()
-                .ToList();
+            Result<List<Game>> res =
+                gameBusiness.FilterByCategoryAndCompetitionType(cateogryID, CompetitorType.Individual);
 
-            return categories;
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
-        // api/game/teamgames 
+        // api/game/teamcategories
+        [HttpGet]
+        [ActionName("teamcategories")]
+        public HttpResponseMessage GetTeamCategories()
+        {
+            Result<List<GameCategory>> res =
+                gameCategoryBusiness.GetGameCategoriesByCompetitorType(CompetitorType.Team);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        // api/game/teamgames
         [HttpGet]
         [ActionName("teamgames")]
-        public List<GameCategory> GetTeamGames()
+        public HttpResponseMessage GetTeamGames(string id)
         {
-            User currentUser = GetUserByEmail(User.Identity.Name);
-            List<Game> games = Uow.Games
-                                .GetAll(g => g.Category)
-                                .Where(g => g.CompetitionTypes.Any(ct => ct.CompetitionType.CompetitorType == CompetitorType.Team) &&
-                                            g.Competitors.Count > 0)
-                                .OrderBy(g => g.Category.Title)
-                                .ThenBy(g => g.Title)
-                                .ToList();
+            int cateogryID = Int32.Parse(id);
 
-            List<GameCategory> categories = games
-                .Select(g => g.Category)
-                .Distinct()
-                .ToList();
+            Result<List<Game>> res =
+                gameBusiness.FilterByCategoryAndCompetitionType(cateogryID, CompetitorType.Team);
 
-            return categories;
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
     }
 }

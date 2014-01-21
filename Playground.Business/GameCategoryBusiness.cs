@@ -46,6 +46,18 @@ namespace Playground.Business
             return retVal;
         }
 
+        public GameCategory GetByCompetitorId(long competitorID)
+        {
+            GameCategory retVal = Uow.Competitors
+                    .GetAll()
+                    .Where(c => c.CompetitorID == competitorID)
+                    .SelectMany(c => c.Games)
+                    .Select(g => g.Game.Category)
+                    .FirstOrDefault();
+
+            return retVal;
+        }
+
         public Result<PagedResult<GameCategory>> GetGameCategories(int page, int count)
         {
             Result<PagedResult<GameCategory>> retVal = null;
@@ -82,6 +94,27 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<List<GameCategory>> GetGameCategoriesByCompetitorType(CompetitorType competitorType)
+        {
+            Result<List<GameCategory>> retVal = null;
+            try
+            {
+                List<GameCategory> categories = Uow.GameCompetitionTypes
+                    .GetAll()
+                    .Where(gc => gc.CompetitionType.CompetitorType == competitorType)
+                    .Select(gc => gc.Game.Category)
+                    .ToList();
+
+                retVal = ResultHandler<List<GameCategory>>.Sucess(categories);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of game categories by competitor type. competitor type: {0}", competitorType), ex);
+                retVal = ResultHandler<List<GameCategory>>.Erorr("Error retreiving list of game categories by competitor type");
+            }
+            return retVal;
+        }
+
         public Result<GameCategory> AddGameCategory(GameCategory gameCategory)
         {
             Result<GameCategory> retVal = null;
@@ -106,7 +139,6 @@ namespace Playground.Business
 
             return retVal;
         }
-
 
         public Result<GameCategory> UpdateGameCategory(GameCategory gameCategory)
         {

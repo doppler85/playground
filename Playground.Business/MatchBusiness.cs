@@ -133,7 +133,6 @@ namespace Playground.Business
 
                 page = GetPage(totalItems, page, count);
 
-
                 List<Match> matches = Uow.Matches
                                             .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
                                             .Where(m => m.Status == status &&
@@ -159,6 +158,57 @@ namespace Playground.Business
 
                 retVal = ResultHandler<PagedResult<Match>>.Sucess(result);
 
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting list of matches", ex);
+                retVal = ResultHandler<PagedResult<Match>>.Erorr("Error getting list of matches");
+            }
+
+            return retVal;
+        }
+
+        public Result<PagedResult<Match>> FilterByStatusAndGame(int page, int count, MatchStatus status, int gameID)
+        {
+            Result<PagedResult<Match>> retVal = null;
+            try
+            {
+                int totalItems = Uow.Matches
+                                            .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                            .Where(m => m.GameID == gameID && m.Status == status)
+                                            .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<Match> matches = Uow.Matches
+                                            .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                            .Where(m => m.GameID == gameID && m.Status == status)
+                                            .OrderByDescending(s => s.Date)
+                                            .Skip((page - 1) * count)
+                                            .Take(count)
+                                            .ToList();
+
+
+                List<long> competitorIds = matches
+                    .SelectMany(m => m.Scores)
+                    .ToList()
+                    .Select(s => s.CompetitorID)
+                    .ToList();
+
+                List<Competitor> competitors = Uow.Competitors
+                    .GetAll()
+                    .Where(c => competitorIds.Contains(c.CompetitorID))
+                    .ToList();
+
+                PagedResult<Match> result = new PagedResult<Match>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = matches
+                };
+
+                retVal = ResultHandler<PagedResult<Match>>.Sucess(result);
             }
             catch (Exception ex)
             {

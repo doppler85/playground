@@ -296,7 +296,7 @@
     <Content Include="app\competition\match-add.js" />
     <Content Include="app\competition\match-add.tpl.html" />
     <Content Include="app\competition\player-add.js" />
-    <Content Include="app\competition\player-add.tpl.html" />
+    <Content Include="app\templates\competition\player-add.tpl.html" />
     <Content Include="app\competition\player-profile.js" />
     <Content Include="app\games\competition-type-edit.js" />
     <Content Include="app\games\competition-type.validation.js" />
@@ -310,7 +310,7 @@
     <Content Include="app\templates\competition\player-profile-info.tpl.html" />
     <Content Include="app\templates\competition\player-profile.tpl.html" />
     <Content Include="app\competition\team-add.js" />
-    <Content Include="app\competition\team-add.tpl.html" />
+    <Content Include="app\templates\competition\team-add.tpl.html" />
     <Content Include="app\competition\team-profile.js" />
     <Content Include="app\templates\competition\team-profile.tpl.html" />
     <Content Include="app\games\competition-type-list.js" />

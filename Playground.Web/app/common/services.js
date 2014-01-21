@@ -103,14 +103,28 @@ factory('GameResource', ['$resource', function (resource) {
             }
         },
         remove: { method: 'DELETE' },
-        individualGames: {
+        individualcategories: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'individualcategories'
+            }
+        },
+        individualgames: {
             method: 'GET',
             isArray: true,
             params: {
                 actionname: 'individualgames'
             }
         },
-        teamGames: {
+        teamcategories: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'teamcategories'
+            }
+        },
+        teamgames: {
             method: 'GET',
             isArray: true,
             params: {

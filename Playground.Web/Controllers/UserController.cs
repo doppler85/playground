@@ -23,11 +23,25 @@ namespace Playground.Web.Controllers
     public class UserController : ApiBaseController
     {
         private IMatchBusiness matchBusiness;
+        private ICompetitorBusiness competitorBusiness;
 
-        public UserController(IPlaygroundUow uow, IMatchBusiness mBusiness)
+        public UserController(IPlaygroundUow uow, 
+            IMatchBusiness mBusiness,
+            ICompetitorBusiness cBusiness)
         {
             this.Uow = uow;
             this.matchBusiness = mBusiness;
+            this.competitorBusiness = cBusiness;
+        }
+
+        private string GetPlayerPicturesRootFolder()
+        {
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.PlayerPictureRoot));
+        }
+
+        private string GetTeamPicturesRootFolder()
+        {
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.TeamPictureRoot));
         }
 
         [HttpGet]
@@ -74,64 +88,21 @@ namespace Playground.Web.Controllers
         // api/user/getplayers
         [HttpGet]
         [ActionName("players")]
-        public PagedResult<Player> GetPlayers(int page, int count)
+        public HttpResponseMessage GetPlayers(int page, int count)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
-            List<Player> players = Uow.Competitors
-                                        .GetAll(p => ((Player)p).Games)
-                                        .OfType<Player>()
-                                        .Where(p => p.UserID == currentUser.UserID)
-                                        .OrderBy(p => p.Name)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
 
-
-            int totalItems = Uow.Competitors
-                .GetAll()
-                .OfType<Player>()
-                .Where(p => p.UserID == currentUser.UserID)
-                .Count();
-            
-            // load only relevat data to increase eficiency
-            foreach (Player player in players)
+            Result<PagedResult<Player>> res = competitorBusiness.GetPlayersForUser(page, count, currentUser.UserID);
+            if (res.Sucess)
             {
-                // we dont need whole user object here
-                player.User = null; 
-                if (player.Games.Count > 0)
-                {
-                    int gameID = player.Games[0].GameID;
-
-                    player.Games[0].Game = new Game() 
-                    {
-                        GameID = gameID
-                    };
-
-                    player.Games[0].Game.Category = Uow.GameCategories
-                        .GetAll()
-                        .FirstOrDefault(gc => gc.Games.Any(g => g.GameID == gameID));
-                }
+                competitorBusiness.LoadCategories(res.Data.Items);
             }
 
-            PagedResult<Player> retVal = new PagedResult<Player>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = players
-            };
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            return retVal;
-        }
-
-        private string GetPlayerPicturesRootFolder()
-        {
-            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.PlayerPictureRoot));
-        }
-
-        private string GetTeamPicturesRootFolder()
-        {
-            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.TeamPictureRoot));
+            return response;
         }
 
         [HttpPost]
@@ -527,54 +498,21 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("teams")]
-        public PagedResult<Team> GetTeams(int page, int count)
+        public HttpResponseMessage GetTeams(int page, int count)
         {
             User currentUser = GetUserByEmail(User.Identity.Name);
-            List<Team> teams = Uow.Competitors
-                .GetAll(t => t.Games)
-                .OfType<Team>()
-                .Where(t => t.Players.Any(p => p.Player.UserID == currentUser.UserID))
-                .Distinct()
-                .OrderBy(t => t.Name)
-                .Skip((page - 1) * count)
-                .Take(count)
-                .ToList();
 
-            int totalItems = Uow.Competitors
-                .GetAll()
-                .OfType<Team>()
-                .Where(t => t.Players.Any(p => p.Player.UserID == currentUser.UserID))
-                .Distinct()
-                .Count();
-
-            // load only relevat data to increase eficiency
-            foreach (Team team in teams)
+            Result<PagedResult<Team>> res = competitorBusiness.GetTeamsForUser(page, count, currentUser.UserID);
+            if (res.Sucess)
             {
-                if (team.Games.Count > 0)
-                {
-                    int gameID = team.Games[0].GameID;
-
-                    team.Games[0].Game = new Game()
-                    {
-                        GameID = gameID
-                    };
-
-                    team.Games[0].Game.Category = Uow.GameCategories
-                        .GetAll()
-                        .FirstOrDefault(gc => gc.Games.Any(g => g.GameID == gameID));
-                }
+                competitorBusiness.LoadCategories(res.Data.Items);
             }
 
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            PagedResult<Team> retVal = new PagedResult<Team>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = teams
-            }; 
-
-            return retVal;
+            return response;
         }
 
         [HttpPost]
