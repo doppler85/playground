@@ -7,6 +7,7 @@ using WebMatrix.WebData;
 using Playground.Web.Models;
 using System.Web.Http.Filters;
 using Playground.Web.Util;
+using Playground.Common;
 
 namespace Playground.Web.Filters
 {

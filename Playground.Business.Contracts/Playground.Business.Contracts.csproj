@@ -44,6 +44,7 @@
     <Compile Include="IGameCategoryBusiness.cs" />
     <Compile Include="ICompetitionTypeBusiness.cs" />
     <Compile Include="IMatchBusiness.cs" />
+    <Compile Include="IUserBusiness.cs" />
     <Compile Include="PagedResult.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

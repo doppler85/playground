@@ -36,7 +36,8 @@ namespace Playground.Business
             {
                 List<Game> games = Uow.GameCompetitionTypes
                     .GetAll()
-                    .Where(gc => gc.CompetitionType.CompetitorType == competitorType)
+                    .Where(g => g.Game.GameCategoryID == gameCategoryID && 
+                           g.CompetitionType.CompetitorType == competitorType)
                     .Select(gc => gc.Game)
                     .ToList();
 

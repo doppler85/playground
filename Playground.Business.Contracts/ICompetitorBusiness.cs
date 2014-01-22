@@ -19,6 +19,8 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<Team>> GetTeamsForGame(int page, int count, int gameID);
 
+        //Result<Player> GetTeamPlayer(int page, int count, int gameID);
+
         void LoadCategories(List<Competitor> competitors);
 
         void LoadCategories(List<Player> players);
@@ -28,5 +30,7 @@ namespace Playground.Business.Contracts
         void LoadUsers(List<Player> players);
 
         List<long> GetCompetitorIdsForUser(long userID);
+
+        Result<Player> AddPlayer(Player player);
     }
 }

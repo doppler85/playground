@@ -103,6 +103,7 @@ namespace Playground.Business
                     .GetAll()
                     .Where(gc => gc.CompetitionType.CompetitorType == competitorType)
                     .Select(gc => gc.Game.Category)
+                    .Distinct()
                     .ToList();
 
                 retVal = ResultHandler<List<GameCategory>>.Sucess(categories);

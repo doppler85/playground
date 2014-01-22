@@ -272,7 +272,6 @@
     <Compile Include="Models\GameStats.cs" />
     <Compile Include="Models\PlayerStats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\Constants.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Util\ImageUtil.cs" />
   </ItemGroup>
@@ -595,6 +594,10 @@
     <ProjectReference Include="..\Playground.Business\Playground.Business.csproj">
       <Project>{0c83816e-16ed-4f2d-a161-a0b488e34f5a}</Project>
       <Name>Playground.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Common\Playground.Common.csproj">
+      <Project>{74c5ce9b-4193-4f4d-a06e-b7d005c29286}</Project>
+      <Name>Playground.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.Data.Contracts\Playground.Data.Contracts.csproj">
       <Project>{10eb47b4-a289-430b-9597-8d5a8e92338d}</Project>

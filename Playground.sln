@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Business", "Play
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Business.Contracts", "Playground.Business.Contracts\Playground.Business.Contracts.csproj", "{2FEC4884-E090-46BF-A64C-D12FA5BC8C1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Common", "Playground.Common\Playground.Common.csproj", "{74C5CE9B-4193-4F4D-A06E-B7D005C29286}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{2FEC4884-E090-46BF-A64C-D12FA5BC8C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FEC4884-E090-46BF-A64C-D12FA5BC8C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FEC4884-E090-46BF-A64C-D12FA5BC8C1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74C5CE9B-4193-4F4D-A06E-B7D005C29286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74C5CE9B-4193-4F4D-A06E-B7D005C29286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74C5CE9B-4193-4F4D-A06E-B7D005C29286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74C5CE9B-4193-4F4D-A06E-B7D005C29286}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

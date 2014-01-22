@@ -346,5 +346,10 @@ namespace Playground.Business
             }
             return retVal;
         }
+
+        public Result<Player> AddPlayer(Player player)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

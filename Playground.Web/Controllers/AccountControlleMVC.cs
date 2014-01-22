@@ -11,6 +11,7 @@ using Playground.Web.Models;
 using Playground.Web.Filters;
 using Microsoft.Web.WebPages.OAuth;
 using Playground.Web.Util;
+using Playground.Common;
 
 namespace Playground.Web.Controllers
 {

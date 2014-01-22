@@ -19,6 +19,8 @@ namespace Playground.Web.App_Start
         {
             var unityContainer = new UnityContainer();
 
+            unityContainer.RegisterType<IUserBusiness, UserBusiness>();
+
             unityContainer.RegisterType<ICompetitionTypeBusiness, CompetitionTypeBusiness>();
 
             unityContainer.RegisterType<IGameCategoryBusiness, GameCategoryBusiness>();
