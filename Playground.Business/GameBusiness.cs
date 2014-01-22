@@ -50,5 +50,22 @@ namespace Playground.Business
 
             return retVal;
         }
+
+        public bool DeleteGame(int gameID)
+        {
+            bool retVal = true;
+            try
+            {
+                Uow.Games.Delete(gameID);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error deleting  game with following id: {0}", gameID), ex);
+                retVal = false;
+            }
+
+            return retVal;
+        }
     }
 }

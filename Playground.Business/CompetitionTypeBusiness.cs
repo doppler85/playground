@@ -172,19 +172,18 @@ namespace Playground.Business
             return retVal;
         }
 
-        public Result<CompetitionType> DeleteCompetitionType(int id)
+        public bool DeleteCompetitionType(int id)
         {
-            Result<CompetitionType> retVal = null;
+            bool retVal = true;
             try
             {
                 Uow.CompetitionTypes.Delete(id);
                 Uow.Commit();
-                retVal = ResultHandler<CompetitionType>.Sucess(null);
             }
             catch (Exception ex)
             {
                 log.Error(String.Format("Error deleting  competition type with following id: {0}", id), ex);
-                retVal = ResultHandler<CompetitionType>.Erorr("Error deleting competition type");
+                retVal = false;
             }
 
             return retVal;

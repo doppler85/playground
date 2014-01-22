@@ -14,5 +14,7 @@ namespace Playground.Business.Contracts
         Result<Game> AddGameCategory(Game game);
 
         Result<List<Game>> FilterByCategoryAndCompetitionType(int gameCategoryID, CompetitorType competitorType);
+
+        bool DeleteGame(int gameID);
     }
 }

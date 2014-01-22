@@ -21,6 +21,6 @@ namespace Playground.Business.Contracts
 
         Result<CompetitionType> UpdateCompetitionType(CompetitionType competitionType);
 
-        Result<CompetitionType> DeleteCompetitionType(int id);
+        bool DeleteCompetitionType(int id);
     }
 }

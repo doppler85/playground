@@ -100,12 +100,11 @@ namespace Playground.Web.Controllers
         [ActionName("deletecompetitiontype")]
         public HttpResponseMessage Delete(int id)
         {
-            Result<CompetitionType> res =
-                competitionTypeBusiness.DeleteCompetitionType(id);
+            bool res = competitionTypeBusiness.DeleteCompetitionType(id);
 
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+            HttpResponseMessage response = res ?
+                Request.CreateResponse(HttpStatusCode.OK) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, "Error deleting competition type");
 
             return response;
         }

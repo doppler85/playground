@@ -38,6 +38,11 @@ namespace Playground.Web.Controllers
             this.competitorBusiness = cBusiness;
         }
 
+        private string GetGamePicturesRootFolder()
+        {
+            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.GamePictureRoot));
+        }
+
         private List<GameCompetitionType> GetByGameId(int gameID)
         {
             return Uow.GameCompetitionTypes
@@ -164,17 +169,141 @@ namespace Playground.Web.Controllers
         [ActionName("deletegame")]
         public HttpResponseMessage Delete(int id)
         {
-            Uow.Games.Delete(id);
-            Uow.Commit();
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            bool res = gameBusiness.DeleteGame(id);
+
+            HttpResponseMessage response = res ?
+                Request.CreateResponse(HttpStatusCode.OK) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, "Error deleting game");
 
             return response;
         }
 
-        private string GetGamePicturesRootFolder()
+        // api/game/matches
+        [HttpGet]
+        [ActionName("matches")]
+        public HttpResponseMessage GetMatches(string id, int page, int count)
         {
-            return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.GamePictureRoot));
+            int gameID = Int32.Parse(id);
+
+            Result<PagedResult<Match>> res =
+                matchBusiness.FilterByStatusAndGame(page, count, MatchStatus.Confirmed, gameID);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
+
+        // api/game/players
+        [HttpGet]
+        [ActionName("players")]
+        public HttpResponseMessage GetPlayers(string id, int page, int count)
+        {
+            int gameID = Int32.Parse(id);
+
+            Result<PagedResult<Player>> res =
+                competitorBusiness.GetPlayersForGame(page, count, gameID);
+
+            if (res.Sucess)
+            {
+                competitorBusiness.LoadUsers(res.Data.Items);
+                competitorBusiness.LoadCategories(res.Data.Items);
+            }
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+            
+            return response;
+        }
+
+        // api/game/teams
+        [HttpGet]
+        [ActionName("teams")]
+        public HttpResponseMessage GetTeams(string id, int page, int count)
+        {
+            int gameID = Int32.Parse(id);
+
+            Result<PagedResult<Team>> res =
+                competitorBusiness.GetTeamsForGame(page, count, gameID);
+            
+            if (res.Sucess)
+            {
+                competitorBusiness.LoadCategories(res.Data.Items);
+            }
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        // api/game/individualcategories
+        [HttpGet]
+        [ActionName("individualcategories")]
+        public HttpResponseMessage GetIndividualCategories()
+        {
+            Result<List<GameCategory>> res =
+                gameCategoryBusiness.GetGameCategoriesByCompetitorType(CompetitorType.Individual);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        // api/game/individualgames
+        [HttpGet]
+        [ActionName("individualgames")]
+        public HttpResponseMessage GetIndividualGames(string id)
+        {
+            int cateogryID = Int32.Parse(id);
+
+            Result<List<Game>> res =
+                gameBusiness.FilterByCategoryAndCompetitionType(cateogryID, CompetitorType.Individual);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        // api/game/teamcategories
+        [HttpGet]
+        [ActionName("teamcategories")]
+        public HttpResponseMessage GetTeamCategories()
+        {
+            Result<List<GameCategory>> res =
+                gameCategoryBusiness.GetGameCategoriesByCompetitorType(CompetitorType.Team);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        // api/game/teamgames
+        [HttpGet]
+        [ActionName("teamgames")]
+        public HttpResponseMessage GetTeamGames(string id)
+        {
+            int cateogryID = Int32.Parse(id);
+
+            Result<List<Game>> res =
+                gameBusiness.FilterByCategoryAndCompetitionType(cateogryID, CompetitorType.Team);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
 
         [HttpPost]
         [ActionName("uploadgamepicture")]
@@ -197,7 +326,7 @@ namespace Playground.Web.Controllers
                 // This illustrates how to get the file names for uploaded files.
                 User currentUser = GetUserByEmail(User.Identity.Name);
 
-                
+
                 if (String.IsNullOrEmpty(provider.FormData["ID"]))
                 {
                     throw new Exception("No ID for the game specified");
@@ -283,129 +412,6 @@ namespace Playground.Web.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-        }
-
-        [HttpGet]
-        [ActionName("matches")]
-        public HttpResponseMessage GetMatches(string id, int page, int count)
-        {
-            int gameID = Int32.Parse(id);
-
-            Result<PagedResult<Match>> res =
-                matchBusiness.FilterByStatusAndGame(page, count, MatchStatus.Confirmed, gameID);
-
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-
-            return response;
-        }
-
-        [HttpGet]
-        [ActionName("players")]
-        public HttpResponseMessage GetPlayers(string id, int page, int count)
-        {
-            int gameID = Int32.Parse(id);
-
-            Result<PagedResult<Player>> res =
-                competitorBusiness.GetPlayersForGame(page, count, gameID);
-
-            if (res.Sucess)
-            {
-                competitorBusiness.LoadUsers(res.Data.Items);
-                competitorBusiness.LoadCategories(res.Data.Items);
-            }
-
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-            
-            return response;
-        }
-
-        [HttpGet]
-        [ActionName("teams")]
-        public HttpResponseMessage GetTeams(string id, int page, int count)
-        {
-            int gameID = Int32.Parse(id);
-
-            Result<PagedResult<Team>> res =
-                competitorBusiness.GetTeamsForGame(page, count, gameID);
-            
-            if (res.Sucess)
-            {
-                competitorBusiness.LoadCategories(res.Data.Items);
-            }
-
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-
-            return response;
-        }
-
-        // api/game/individualcategories
-        [HttpGet]
-        [ActionName("individualcategories")]
-        public HttpResponseMessage GetIndividualCategories()
-        {
-            Result<List<GameCategory>> res =
-                gameCategoryBusiness.GetGameCategoriesByCompetitorType(CompetitorType.Individual);
-
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-
-            return response;
-        }
-
-        // api/game/individualgames
-        [HttpGet]
-        [ActionName("individualgames")]
-        public HttpResponseMessage GetIndividualGames(string id)
-        {
-            int cateogryID = Int32.Parse(id);
-
-            Result<List<Game>> res =
-                gameBusiness.FilterByCategoryAndCompetitionType(cateogryID, CompetitorType.Individual);
-
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-
-            return response;
-        }
-
-        // api/game/teamcategories
-        [HttpGet]
-        [ActionName("teamcategories")]
-        public HttpResponseMessage GetTeamCategories()
-        {
-            Result<List<GameCategory>> res =
-                gameCategoryBusiness.GetGameCategoriesByCompetitorType(CompetitorType.Team);
-
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-
-            return response;
-        }
-
-        // api/game/teamgames
-        [HttpGet]
-        [ActionName("teamgames")]
-        public HttpResponseMessage GetTeamGames(string id)
-        {
-            int cateogryID = Int32.Parse(id);
-
-            Result<List<Game>> res =
-                gameBusiness.FilterByCategoryAndCompetitionType(cateogryID, CompetitorType.Team);
-
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-
-            return response;
         }
     }
 }
