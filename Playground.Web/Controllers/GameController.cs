@@ -17,6 +17,7 @@ namespace Playground.Web.Controllers
 {  
     public class GameController : ApiBaseController
     {
+        private ICompetitorBusiness competitorBusiness;
         private ICompetitionTypeBusiness competitionTypeBusiness;
         private IMatchBusiness matchBusiness;
         private IGameCategoryBusiness gameCategoryBusiness;
@@ -26,13 +27,15 @@ namespace Playground.Web.Controllers
             IMatchBusiness mBusiness,
             ICompetitionTypeBusiness ctBusiness,
             IGameCategoryBusiness gcBusiness,
-            IGameBusiness gBusiness)
+            IGameBusiness gBusiness,
+            ICompetitorBusiness cBusiness)
         {
             this.Uow = uow;
             this.matchBusiness = mBusiness;
             this.competitionTypeBusiness = ctBusiness;
             this.gameCategoryBusiness = gcBusiness;
             this.gameBusiness = gBusiness;
+            this.competitorBusiness = cBusiness;
         }
 
         private List<GameCompetitionType> GetByGameId(int gameID)
@@ -158,6 +161,7 @@ namespace Playground.Web.Controllers
         }
 
         [HttpDelete]
+        [ActionName("deletegame")]
         public HttpResponseMessage Delete(int id)
         {
             Uow.Games.Delete(id);
@@ -299,70 +303,45 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("players")]
-        public PagedResult<Player> GetPlayers(string id, int page, int count)
+        public HttpResponseMessage GetPlayers(string id, int page, int count)
         {
-            int gameId = Int32.Parse(id);
-            int totalItems = Uow.Competitors
-                                        .GetAll(c => ((Player)c).User)
-                                        .OfType<Player>()
-                                        .Where(c => c.Games.Any(g => g.GameID == gameId))
-                                        .Count();
+            int gameID = Int32.Parse(id);
 
-            List<Player> players = Uow.Competitors
-                                        .GetAll(c => ((Player)c).User, c => c.Games)
-                                        .OfType<Player>()
-                                        .Where(c => c.Games.Any(g => g.GameID == gameId))
-                                        .OrderByDescending(c => c.CreationDate)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
-            
-            PagedResult<Player> retVal = new PagedResult<Player>()
+            Result<PagedResult<Player>> res =
+                competitorBusiness.GetPlayersForGame(page, count, gameID);
+
+            if (res.Sucess)
             {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = players
-            };
+                competitorBusiness.LoadUsers(res.Data.Items);
+                competitorBusiness.LoadCategories(res.Data.Items);
+            }
 
-            return retVal;
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+            
+            return response;
         }
 
         [HttpGet]
         [ActionName("teams")]
-        public PagedResult<Team> GetTeams(string id, int page, int count)
+        public HttpResponseMessage GetTeams(string id, int page, int count)
         {
-            int gameId = Int32.Parse(id);
-            int totalItems = Uow.Competitors
-                                        .GetAll()
-                                        .OfType<Team>()
-                                        .Where(c => c.Games.Any(g => g.GameID == gameId))
-                                        .Count();
+            int gameID = Int32.Parse(id);
 
-            List<Team> teams = Uow.Competitors
-                                        .GetAll(c => c.Games)
-                                        .OfType<Team>()
-                                        .Where(c => c.Games.Any(g => g.GameID == gameId))
-                                        .OrderByDescending(c => c.CreationDate)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
-
-            List<int> gameIds = teams.SelectMany(t => t.Games).Select(g => g.GameID).ToList();
-            List<Game> games = Uow.Games
-                                        .GetAll(g => g.Category)
-                                        .Where(g => gameIds.Contains(g.GameID))
-                                        .ToList();
-
-            PagedResult<Team> retVal = new PagedResult<Team>()
+            Result<PagedResult<Team>> res =
+                competitorBusiness.GetTeamsForGame(page, count, gameID);
+            
+            if (res.Sucess)
             {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = teams
-            };
+                competitorBusiness.LoadCategories(res.Data.Items);
+            }
 
-            return retVal;
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
         // api/game/individualcategories

@@ -102,7 +102,11 @@ factory('GameResource', ['$resource', function (resource) {
                 actionname: 'getgamestats'
             }
         },
-        remove: { method: 'DELETE' },
+        remove: { method: 'DELETE',
+            params: {
+                actionname: 'deletegame'
+            }
+        },
         individualcategories: {
             method: 'GET',
             isArray: true,
