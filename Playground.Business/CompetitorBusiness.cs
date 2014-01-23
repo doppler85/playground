@@ -318,6 +318,86 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<Player>> GetPlayersForGameCategory(int page, int count, int gameCategoryID)
+        {
+            Result<PagedResult<Player>> retVal = null;
+            try
+            {
+                int totalItems = Uow.Competitors
+                                            .GetAll()
+                                            .OfType<Player>()
+                                            .Where(c => c.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
+                                            .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<Player> players = Uow.Competitors
+                                            .GetAll()
+                                            .OfType<Player>()
+                                            .Where(c => c.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
+                                            .OrderByDescending(c => c.CreationDate)
+                                            .Skip((page - 1) * count)
+                                            .Take(count)
+                                            .ToList();
+                
+                PagedResult<Player> result = new PagedResult<Player>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = players
+                };
+
+                retVal = ResultHandler<PagedResult<Player>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting list of players for game category. ID: {0}", gameCategoryID), ex);
+                retVal = ResultHandler<PagedResult<Player>>.Erorr("Error getting list of players");
+            }
+            return retVal;
+        }
+
+        public Result<PagedResult<Team>> GetTeamsForGameCategory(int page, int count, int gameCategoryID)
+        {
+            Result<PagedResult<Team>> retVal = null;
+            try
+            {
+                int totalItems = Uow.Competitors
+                                            .GetAll()
+                                            .OfType<Team>()
+                                            .Where(c => c.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
+                                            .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<Team> teams = Uow.Competitors
+                                            .GetAll(c => c.Games)
+                                            .OfType<Team>()
+                                            .Where(c => c.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
+                                            .OrderByDescending(c => c.CreationDate)
+                                            .Skip((page - 1) * count)
+                                            .Take(count)
+                                            .ToList();
+
+                PagedResult<Team> result = new PagedResult<Team>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = teams
+                };
+
+                retVal = ResultHandler<PagedResult<Team>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting list of teams for game category. ID: {0}", gameCategoryID), ex);
+                retVal = ResultHandler<PagedResult<Team>>.Erorr("Error getting list of teams");
+            }
+            return retVal;
+        }
+
         public List<long> GetCompetitorIdsForUser(long userID)
         {
             List<long> retVal = null;
