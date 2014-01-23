@@ -29,15 +29,17 @@
     </pagination>
     <div class="add-game-wrapp">
         <form name="gameForm" class="form-inline" data-ng-show="addinggame">
-            <label>Title</label>
-            <input type="text" 
-                name="title" 
-                placeholder="Title" 
-                data-ng-model="newGame.title" 
-                data-required="true">
-            <span data-ng-show="showError(gameForm.title, 'required')" class="help-inline">This field is required</span>
-            <button class="btn" data-ng-click="addGame(gameCategory)" data-ng-disabled="!canSave(gameForm)">save</button>
-            <button class="btn" data-ng-click="toggleAddGame(false)">cancel</button>
+            <div class="control-group" data-ng-class="getCssClasses(gameForm.title)">            
+                <label>Title</label>
+                <input type="text" 
+                    name="title" 
+                    placeholder="Title" 
+                    data-ng-model="newGame.title" 
+                    data-required="true">
+                <span data-ng-show="showError(gameForm.title, 'required')" class="help-inline">This field is required</span>
+                <button class="btn" data-ng-click="addGame(gameCategory)" data-ng-disabled="!canSave(gameForm)">save</button>
+                <button class="btn" data-ng-click="toggleAddGame(false)">cancel</button>
+            </div>
         </form>
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
         <a href="javascript:;" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</a>

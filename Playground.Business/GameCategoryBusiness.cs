@@ -35,12 +35,70 @@ namespace Playground.Business
             try
             {
                 GameCategory gameCategory = Uow.GameCategories.GetById(id);
+                if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
+                {
+                    gameCategory.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                }
                 retVal = ResultHandler<GameCategory>.Sucess(gameCategory);
             }
             catch (Exception ex)
             {
                 log.Error(String.Format("Error retreiving game category. id: {0}", id), ex);
                 retVal = ResultHandler<GameCategory>.Erorr("Error retreiving game category");
+            }
+
+            return retVal;
+        }
+
+        public int TotalGamesCount(int gameCategoryID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Games
+                    .GetAll()
+                    .Where(g => g.GameCategoryID == gameCategoryID)
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error gettign games count for game category, ID: {0}", gameCategoryID), ex);
+            }
+
+            return retVal;
+        }
+
+        public int TotalCompetitorsCount(int gameCategoryID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Competitors
+                    .GetAll()
+                    .Where(c => c.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting competitors count for game category, ID: {0}", gameCategoryID), ex);
+            }
+
+            return retVal;
+        }
+
+        public int TotalMatchesCount(int gameCategoryID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Matches
+                    .GetAll()
+                    .Where(m => m.Scores.Any(s => s.Match.Game.GameCategoryID == gameCategoryID))
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting competitors count for game category, ID: {0}", gameCategoryID), ex);
             }
 
             return retVal;
@@ -75,6 +133,14 @@ namespace Playground.Business
                     .Skip((page - 1) * count)
                     .Take(count)
                     .ToList();
+
+                foreach (GameCategory gameCategory in categories)
+                {
+                    if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
+                    {
+                        gameCategory.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                    }
+                }
 
                 PagedResult<GameCategory> result = new PagedResult<GameCategory>()
                 {

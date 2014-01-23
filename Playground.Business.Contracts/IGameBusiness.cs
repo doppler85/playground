@@ -13,8 +13,12 @@ namespace Playground.Business.Contracts
 
         Result<Game> AddGameCategory(Game game);
 
+        Result<PagedResult<Game>> FilterByCategory(int page, int count, int gameCategoryID);
+
         Result<List<Game>> FilterByCategoryAndCompetitionType(int gameCategoryID, CompetitorType competitorType);
 
         bool DeleteGame(int gameID);
+
+        void LoadImages(List<Game> games);
     }
 }

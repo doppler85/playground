@@ -29,6 +29,44 @@ namespace Playground.Business
             throw new NotImplementedException();
         }
 
+        public Result<PagedResult<Game>> FilterByCategory(int page, int count, int gameCategoryID)
+        {
+            Result<PagedResult<Game>> retVal = null;
+            try
+            {
+                int totalItems = Uow.Games
+                                            .GetAll()
+                                            .Where(g => g.GameCategoryID == gameCategoryID)
+                                            .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<Game> games = Uow.Games
+                                            .GetAll()
+                                            .Where(g => g.GameCategoryID == gameCategoryID)
+                                            .OrderBy(g => g.Title)
+                                            .Skip((page - 1) * count)
+                                            .Take(count)
+                                            .ToList();
+
+                PagedResult<Game> result = new PagedResult<Game>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = games
+                };
+
+                retVal = ResultHandler<PagedResult<Game>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of games for category. categoryid: {0}", gameCategoryID), ex);
+                retVal = ResultHandler<PagedResult<Game>>.Erorr("Error retreiving list of games for category");
+            }
+            return retVal;
+        }
+
         public Result<List<Game>> FilterByCategoryAndCompetitionType(int gameCategoryID, CompetitorType competitorType)
         {
             Result<List<Game>> retVal = null;
@@ -67,6 +105,36 @@ namespace Playground.Business
             }
 
             return retVal;
+        }
+
+        public void LoadImages(List<Game> games)
+        {
+            try
+            {
+                int gmaeCategoryID = games.FirstOrDefault().GameCategoryID;
+
+                GameCategory category = Uow.GameCategories.GetById(gmaeCategoryID);
+
+                string gameCategoryPictureUrl = !String.IsNullOrEmpty(category.PictureUrl) ?
+                    category.PictureUrl + String.Format("?nocache={0}", DateTime.Now.Ticks) :
+                    String.Empty;
+
+                foreach (Game game in games)
+                {
+                    if (!String.IsNullOrEmpty(game.PictureUrl))
+                    {
+                        game.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                    }
+                    else
+                    {
+                        game.PictureUrl = gameCategoryPictureUrl;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error loading images for games", ex);
+            }
         }
     }
 }

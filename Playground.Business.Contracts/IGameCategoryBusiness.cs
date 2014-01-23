@@ -10,6 +10,12 @@ namespace Playground.Business.Contracts
     public interface IGameCategoryBusiness
     {
         Result<GameCategory> GetById(int id);
+
+        int TotalGamesCount(int gameCategoryID);
+
+        int TotalCompetitorsCount(int gameCategoryID);
+
+        int TotalMatchesCount(int gameCategoryID);
         
         GameCategory GetByCompetitorId(long competitorID);
 
