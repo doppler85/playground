@@ -4,6 +4,7 @@ using Playground.Data.Contracts;
 using Playground.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +17,22 @@ namespace Playground.Business
         
         private IGameCategoryBusiness gameCategoryBusiness;
         
-
         public CompetitorBusiness(IPlaygroundUow uow, IGameCategoryBusiness gcBusiness)
         {
             this.Uow = uow;
             this.gameCategoryBusiness = gcBusiness;
+        }
+
+        private bool CheckExistPerCategory(Player player, int gameCategoryID)
+        {
+            bool retVal = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .FirstOrDefault(p => p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID) && 
+                        p.UserID == player.UserID && 
+                        p.CompetitorID != player.CompetitorID) != null;
+
+            return retVal;
         }
 
         public Result<PagedResult<Competitor>> GetCompetitors(int page, int count)
@@ -429,7 +441,75 @@ namespace Playground.Business
 
         public Result<Player> AddPlayer(Player player)
         {
-            throw new NotImplementedException();
+            Result<Player> retVal = null;
+            try
+            {
+                Game game = Uow.Games.GetById(player.Games[0].GameID);
+                if (CheckExistPerCategory(player, game.GameCategoryID))
+                {
+                    retVal = ResultHandler<Player>.Erorr("Only one player per game category allowed");
+                }
+                else
+                {
+                    player.CompetitorType = CompetitorType.Individual;
+                    player.CreationDate = DateTime.Now;
+                    Uow.Competitors.Add(player);
+                    Uow.Commit();
+
+                    retVal = ResultHandler<Player>.Sucess(player);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error adding player", ex);
+                retVal = ResultHandler<Player>.Erorr("Erorr adding player");
+            }
+
+            return retVal;
+        }
+
+        public void AssignImage(Competitor competitor, int userID, string fileSystemRoot, string urlRoot, string prefix, string extension)
+        {
+            try
+            {
+                // temp picture
+                string sourceFilePath = String.Format("{0}{1}_{2}_{3}.{4}",
+                                                                        fileSystemRoot,
+                                                                        prefix,
+                                                                        userID,
+                                                                        0,
+                                                                        extension);
+
+                string destFilePath = String.Format("{0}{1}_{2}.{3}",
+                                                                        fileSystemRoot,
+                                                                        prefix,
+                                                                        competitor.CompetitorID,
+                                                                        extension);
+
+                string destUrl = String.Format("{0}{1}_{2}.{3}",
+                                                                        urlRoot,
+                                                                        prefix,
+                                                                        competitor.CompetitorID,
+                                                                        extension);
+
+                if (File.Exists(sourceFilePath))
+                {
+                    competitor.PictureUrl = destUrl;
+                    File.Move(sourceFilePath, destFilePath);
+                    File.Delete(sourceFilePath);
+                }
+                else
+                {
+                    competitor.PictureUrl = String.Empty;
+                }
+
+                Uow.Competitors.Update(competitor, competitor.CompetitorID);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error assigning picture for competitor", ex);
+            }
         }
     }
 }

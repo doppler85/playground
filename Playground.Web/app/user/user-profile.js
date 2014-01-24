@@ -105,6 +105,16 @@ angular.module('Playground.user-profile', [
             $scope.loadPlayers(page);
         }
 
+        $scope.deletePlayer = function (player) {
+            UserResource.deletecompetitor({ id: player.competitorID },
+                function (data, status, headers, config) {
+                    $scope.loadPlayers($scope.players.currentPage);
+                }, function () {
+                    $scope.playerAlerts.push({ type: 'error', msg: 'Error deleting competitor: ' + player.name });
+                }
+            );
+        };
+
         $scope.loadPlayers(1);
     }])
     .controller('ProfileTeamsController', [
@@ -129,6 +139,16 @@ angular.module('Playground.user-profile', [
         $scope.onTeamPageSelect = function (page) {
             $scope.loadTeams(page);
         }
+
+        $scope.deleteTeam = function (team) {
+            UserResource.deletecompetitor({ id: team.competitorID },
+                function (data, status, headers, config) {
+                    $scope.loadTeams($scope.teams.currentPage);
+                }, function () {
+                    $scope.teamAlerts.push({ type: 'error', msg: 'Error deleting competitor: ' + team.name });
+                }
+            );
+        };
 
         $scope.loadTeams(1);
     }])
@@ -240,15 +260,5 @@ angular.module('Playground.user-profile', [
 
         $scope.closeAlert = function (collection, index) {
             collection.splice(index, 1);
-        };
-
-        $scope.deleteCompetitor = function (competitor, collection, index, msgCollection) {
-            UserResource.deletecompetitor({ id: competitor.competitorID },
-                function (data, status, headers, config) {
-                    collection.splice(index, 1);
-                }, function () {
-                    msgCollection.push({ type: 'error', msg: 'Error deleting competitor: ' + competitor.name });
-                }
-            );
         };
     }]);

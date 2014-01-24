@@ -39,7 +39,7 @@
                 <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                 <td>
                     <a class="btn btn-primary" data-ui-sref="player-edit({id: player.competitorID})" href="javascript:;">edit</a> 
-                    <a class="btn btn-primary" href="javascript:;" data-ng-click="deleteCompetitor(player, players, $index, playerAlerts);">delete</a>
+                    <a class="btn btn-primary" href="javascript:;" data-ng-click="deletePlayer(player);">delete</a>
                 </td>
             </tr>
         </table>

@@ -34,5 +34,7 @@ namespace Playground.Business.Contracts
         List<long> GetCompetitorIdsForUser(long userID);
 
         Result<Player> AddPlayer(Player player);
+
+        void AssignImage(Competitor competitor, int userID, string fileSystemRoot, string urlRoot, string prefix, string extension);
     }
 }

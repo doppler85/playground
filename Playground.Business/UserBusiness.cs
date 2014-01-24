@@ -20,6 +20,26 @@ namespace Playground.Business
             this.Uow = uow;
         }
 
+        public Result<User> GetUserByEmail(string email)
+        {
+            Result<User> retVal = null;
+            try
+            {
+                User user = Uow.Users
+                    .GetAll()
+                    .FirstOrDefault(u => u.EmailAddress == email);
+
+                retVal = ResultHandler<User>.Sucess(user);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving user by email. email: {0}", email), ex);
+                retVal = ResultHandler<User>.Erorr("Error retreiving user by email");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<User>> GetUsers(int page, int count)
         {
             Result<PagedResult<User>> retVal = null;

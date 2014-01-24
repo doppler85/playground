@@ -37,7 +37,7 @@
             <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
             <td>
                 <a class="btn btn-primary" href="javascript:;" data-ui-sref="team-edit({id: team.competitorID})">edit</a>
-                <button class="btn btn-primary" data-ng-click="deleteCompetitor(team, teams, $index, teamAlerts);">delete</button>
+                <button class="btn btn-primary" data-ng-click="deleteTeam(team);">delete</button>
             </td>
         </tr>
     </table>

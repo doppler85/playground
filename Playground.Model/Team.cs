@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Playground.Model.Validation;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Playground.Model
 {
+    [CustomValidation(typeof(TeamValidator), "ValidateGames")]
     public class Team : Competitor
     {
         public int CreatorID { get; set; }

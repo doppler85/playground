@@ -13,9 +13,12 @@ namespace Playground.Web.Controllers
 {
     public class CompetitorController : ApiBaseController
     {
-        public CompetitorController(IPlaygroundUow uow)
+        private IUserBusiness userBusiness;
+
+        public CompetitorController(IPlaygroundUow uow, IUserBusiness uBusiness)
         {
             this.Uow = uow;
+            this.userBusiness = uBusiness;
         }
 
         [HttpGet]
@@ -87,25 +90,23 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("matches")]
-        public PagedResult<Match> GetMatches(string id, int page, int count)
+        public PagedResult<Match> GetMatches(int id, int page, int count)
         {
-            int competitorId = Int32.Parse(id);
-            User currentUser = GetUserByEmail(User.Identity.Name);
+            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
             int totalItems = Uow.Matches
                                         .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
                                         .Where(m => m.Status == MatchStatus.Confirmed && 
-                                                    m.Scores.Any(s => s.CompetitorID == competitorId))
+                                                    m.Scores.Any(s => s.CompetitorID == id))
                                         .Count();
 
             List<Match> matches = Uow.Matches
                                         .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
                                         .Where(m => m.Status == MatchStatus.Confirmed && 
-                                                    m.Scores.Any(s => s.CompetitorID == competitorId))
+                                                    m.Scores.Any(s => s.CompetitorID == id))
                                         .OrderByDescending(s => s.Date)
                                         .Skip((page - 1) * count)
                                         .Take(count)
                                         .ToList();
-
 
             List<long> competitorIds = matches
                 .SelectMany(m => m.Scores)

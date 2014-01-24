@@ -18,13 +18,15 @@ namespace Playground.Web.Controllers
 {  
     public class GameController : ApiBaseController
     {
+        private IUserBusiness userBusiness;
         private ICompetitorBusiness competitorBusiness;
         private ICompetitionTypeBusiness competitionTypeBusiness;
         private IMatchBusiness matchBusiness;
         private IGameCategoryBusiness gameCategoryBusiness;
         private IGameBusiness gameBusiness;
 
-        public GameController(IPlaygroundUow uow, 
+        public GameController(IPlaygroundUow uow,
+            IUserBusiness uBusiness,
             IMatchBusiness mBusiness,
             ICompetitionTypeBusiness ctBusiness,
             IGameCategoryBusiness gcBusiness,
@@ -32,6 +34,7 @@ namespace Playground.Web.Controllers
             ICompetitorBusiness cBusiness)
         {
             this.Uow = uow;
+            this.userBusiness = uBusiness;
             this.matchBusiness = mBusiness;
             this.competitionTypeBusiness = ctBusiness;
             this.gameCategoryBusiness = gcBusiness;
@@ -82,6 +85,7 @@ namespace Playground.Web.Controllers
             return response;
         }
 
+        // api/game/availablecomptypes
         [HttpGet]
         [ActionName("availablecomptypes")]
         public HttpResponseMessage AvailableCompetitionTypes(int id)
@@ -95,8 +99,6 @@ namespace Playground.Web.Controllers
             return response;
         }
 
-
-        // Create a new Game
         // POST /api/game/addgame
         [HttpPost]
         [ActionName("addgame")]
@@ -126,6 +128,7 @@ namespace Playground.Web.Controllers
             return response;
         }
 
+        // api/game/deletegame
         [HttpDelete]
         [ActionName("deletegame")]
         public HttpResponseMessage Delete(int id)
@@ -277,8 +280,6 @@ namespace Playground.Web.Controllers
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 // This illustrates how to get the file names for uploaded files.
-                User currentUser = GetUserByEmail(User.Identity.Name);
-
 
                 if (String.IsNullOrEmpty(provider.FormData["ID"]))
                 {
@@ -323,7 +324,6 @@ namespace Playground.Web.Controllers
         [ActionName("cropgamepicture")]
         public HttpResponseMessage CropGamePicture(CropingArgs coords)
         {
-            //User currentUser = GetUserByEmail(User.Identity.Name);
             string root = GetGamePicturesRootFolder();
             string filePath = String.Format("{0}{1}_{2}_temp.{3}",
                                                         root,

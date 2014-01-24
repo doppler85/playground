@@ -9,6 +9,8 @@ namespace Playground.Business.Contracts
 {
     public interface IUserBusiness
     {
+        Result<User> GetUserByEmail(string email);
+        
         Result<PagedResult<User>> GetUsers(int page, int count);
     }
 }
