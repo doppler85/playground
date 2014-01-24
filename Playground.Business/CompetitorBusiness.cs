@@ -17,7 +17,8 @@ namespace Playground.Business
         
         private IGameCategoryBusiness gameCategoryBusiness;
         
-        public CompetitorBusiness(IPlaygroundUow uow, IGameCategoryBusiness gcBusiness)
+        public CompetitorBusiness(IPlaygroundUow uow, 
+            IGameCategoryBusiness gcBusiness)
         {
             this.Uow = uow;
             this.gameCategoryBusiness = gcBusiness;
@@ -463,6 +464,37 @@ namespace Playground.Business
             {
                 log.Error("Error adding player", ex);
                 retVal = ResultHandler<Player>.Erorr("Erorr adding player");
+            }
+
+            return retVal;
+        }
+
+        public Result<Player> UpdatePlayer(Player player)
+        {
+            Result<Player> retVal = null;
+            try
+            {
+                List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
+                    .GetAll()
+                    .Where(gc => gc.CompetitorID == player.CompetitorID)
+                    .ToList();
+                foreach (GameCompetitor gc in gameCompetitors)
+                {
+                    Uow.GameCompetitors.Delete(gc);
+                }
+                foreach (GameCompetitor gc in player.Games.Where(g => g.Selected))
+                {
+                    gc.Competitor = null;
+                    gc.Game = null;
+                    Uow.GameCompetitors.Add(gc);
+                }
+                Uow.Competitors.Update(player, player.CompetitorID);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error updating player", ex);
+                retVal = ResultHandler<Player>.Erorr("Erorr updating player");
             }
 
             return retVal;

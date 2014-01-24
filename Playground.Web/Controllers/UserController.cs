@@ -118,23 +118,11 @@ namespace Playground.Web.Controllers
         [ActionName("updateplayer")]
         public HttpResponseMessage UpdatePlayer(Player player)
         {
-            List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
-                .GetAll()
-                .Where(gc => gc.CompetitorID == player.CompetitorID)
-                .ToList();
-            foreach (GameCompetitor gc in gameCompetitors)
-            {
-                Uow.GameCompetitors.Delete(gc);
-            }
-            foreach (GameCompetitor gc in player.Games.Where(g => g.Selected))
-            {
-                gc.Competitor = null;
-                gc.Game = null;
-                Uow.GameCompetitors.Add(gc);
-            }
-            Uow.Competitors.Update(player, player.CompetitorID);
-            Uow.Commit();
-            var response = Request.CreateResponse(HttpStatusCode.OK, player);
+            Result<Player> res = competitorBusiness.UpdatePlayer(player);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
