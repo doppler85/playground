@@ -41,8 +41,7 @@ angular.module('Playground.teams', ['ui.bootstrap.pagination'])
         }])
 
     .constant('teamsConfig', {
-        itemsPerPage: 5,
-        parentCategory: 'gamecategory'
+        itemsPerPage: 5
     })
 
     .directive('teams', ['teamsConfig', function (config) {
@@ -52,16 +51,12 @@ angular.module('Playground.teams', ['ui.bootstrap.pagination'])
             replace: true,
             scope: {
                 objectId: '=',
-                parentCategory: '@',
                 resourceUrl: '@',
                 itemsPerPage: '@'
             },
             controller: 'TeamsController',
             // set default values in compile time
             compile: function(element, attrs){
-                if (!attrs.parentCategory) {
-                    attrs.parentCategory = config.parentCategory
-                }
                 if (!attrs.itemsPerPage) {
                     attrs.itemsPerPage = config.itemsPerPage
                 }

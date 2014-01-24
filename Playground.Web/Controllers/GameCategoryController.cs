@@ -123,12 +123,12 @@ namespace Playground.Web.Controllers
         [HttpDelete]
         public HttpResponseMessage Delete(int id)
         {
-            Result<GameCategory> res =
+            bool res =
                 gameCategoryBusiness.DeleteGameCategory(id);
 
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+            HttpResponseMessage response = res ?
+                Request.CreateResponse(HttpStatusCode.OK) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, "Error deleting game category");
 
             return response;
         }

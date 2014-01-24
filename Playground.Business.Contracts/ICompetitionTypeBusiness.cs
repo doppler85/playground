@@ -13,7 +13,9 @@ namespace Playground.Business.Contracts
 
         Result<List<CompetitionType>> GetAllCompetitionTypes();
 
-        Result<List<GameCompetitionType>> GetGameCompetitionTypes(int gameID);
+        Result<List<GameCompetitionType>> FilterByGame(int gameID);
+
+        Result<List<GameCompetitionType>> FilterByGameAvailable(int gameID);
 
         Result<PagedResult<CompetitionType>> GetCompetitionTypes(int page, int count);
 

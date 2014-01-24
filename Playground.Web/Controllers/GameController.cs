@@ -44,80 +44,55 @@ namespace Playground.Web.Controllers
             return HttpContext.Current.Server.MapPath(String.Format("~{0}", Constants.Images.GamePictureRoot));
         }
 
-        private List<GameCompetitionType> GetByGameId(int gameID)
-        {
-            return Uow.GameCompetitionTypes
-                                        .GetAll(ct => ct.CompetitionType)
-                                        .Where(ct => ct.GameID == gameID)
-                                        .ToList();
-        }
-
-        [HttpGet]
-        [ActionName("details")]
-        public Game GameDetails(int id)
-        {
-            Game retVal = Uow.Games.GetById(id);
-            retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
-            if (!String.IsNullOrEmpty(retVal.PictureUrl))
-            {
-                retVal.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
-            }
-            else if (!String.IsNullOrEmpty(retVal.Category.PictureUrl))
-            {
-                retVal.PictureUrl = String.Format("{0}?nocache={1}", retVal.Category.PictureUrl, DateTime.Now.Ticks);
-            }
-            return retVal;
-        }
-
         [HttpGet]
         [ActionName("getgamestats")]
-        public GameStats GetStats(int id)
+        public HttpResponseMessage GetStats(int id)
         {
-            Game game = GameDetails(id);
-            GameStats retVal = new GameStats(game);
-            retVal.Category = Uow.GameCategories.GetById(retVal.GameCategoryID);
-            retVal.TotalCompetitors = Uow.Competitors
-                .GetAll()
-                .Where(c => c.Games.Any(g => g.GameID == retVal.GameID))
-                .Count();
-            retVal.TotalMatches = Uow.Matches
-                .GetAll()
-                .Where(m => m.Scores.Any(s => s.Match.GameID == retVal.GameID))
-                .Count();
+            Result<Game> gameRes = gameBusiness.GetById(id);
+            GameStats stats = null;
+            if (gameRes.Sucess)
+            {
+                gameRes.Data.Category = gameCategoryBusiness.GetById(gameRes.Data.GameCategoryID).Data;
+                stats = new GameStats(gameRes.Data);
+                stats.TotalCompetitors = gameBusiness.TotalCompetitorsCount(stats.GameID);
+                stats.TotalMatches = gameBusiness.TotalMatchesCount(stats.GameID);
+            }
 
-            return retVal;
+            HttpResponseMessage response = gameRes.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, stats) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, gameRes.Message);
+
+            return response;
         }
 
         [HttpGet]
         [ActionName("getupdategame")]
-        public Game GetUpdateGame(int id)
+        public HttpResponseMessage GetUpdateGame(int id)
         {
-            Game retVal = GameDetails(id);
-            retVal.CompetitionTypes = competitionTypeBusiness.GetGameCompetitionTypes(id).Data;
+            Result<Game> res = gameBusiness.GetById(id);
+            if (res.Sucess)
+            {
+                res.Data.CompetitionTypes = competitionTypeBusiness.FilterByGame(id).Data;
+            }
 
-            return retVal;
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
         [HttpGet]
         [ActionName("availablecomptypes")]
-        public List<GameCompetitionType> AvailableCompetitionTypes(int id)
+        public HttpResponseMessage AvailableCompetitionTypes(int id)
         {
-            List<GameCompetitionType> retVal = new List<GameCompetitionType>();
-            IQueryable<CompetitionType> availableCompetitionTypes = Uow.CompetitionTypes
-                .GetAll()
-                .Where(ct => !ct.Games.Any(g => g.GameID == id))
-                .Distinct();
-            foreach (CompetitionType ct in availableCompetitionTypes)
-            {
-                retVal.Add(new GameCompetitionType()
-                {
-                    CompetitionType = ct,
-                    CompetitionTypeID = ct.CompetitionTypeID,
-                    GameID = id
-                });
-            }
-            
-            return retVal;
+            Result<List<GameCompetitionType>> res = competitionTypeBusiness.FilterByGameAvailable(id);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
 
@@ -127,16 +102,11 @@ namespace Playground.Web.Controllers
         [ActionName("addgame")]
         public HttpResponseMessage AddGame(Game game)
         {
-            Uow.Games.Add(game);
-            Uow.Commit();
+            Result<Game> res = gameBusiness.AddGame(game);
 
-            var response = Request.CreateResponse(HttpStatusCode.Created, game);
-
-            // Compose location header that tells how to get this game 
-            // e.g. ~/api/game/5
-
-            response.Headers.Location =
-                new Uri(Url.Link(RouteConfig.ControllerAndId, new { id = game.GameID }));
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
@@ -147,21 +117,11 @@ namespace Playground.Web.Controllers
         [ActionName("updategame")]
         public HttpResponseMessage UpdateGame(Game game)
         {
-            // clear prvious competition types
-            List<GameCompetitionType> currentCompetitionTypes = GetByGameId(game.GameID); 
-            foreach (GameCompetitionType ct in currentCompetitionTypes)
-            {
-                Uow.GameCompetitionTypes.Delete(ct);
-            }
-            foreach (GameCompetitionType ct in game.CompetitionTypes.Where(ct => ct.Selected))
-            {
-                ct.Game = null;
-                ct.CompetitionType = null;
-                Uow.GameCompetitionTypes.Add(ct);
-            }
-            Uow.Games.Update(game, game.GameID);
-            Uow.Commit();
-            var response = Request.CreateResponse(HttpStatusCode.OK, game);
+            Result<Game> res = gameBusiness.UpdateGame(game);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
@@ -199,12 +159,10 @@ namespace Playground.Web.Controllers
         // api/game/players
         [HttpGet]
         [ActionName("players")]
-        public HttpResponseMessage GetPlayers(string id, int page, int count)
+        public HttpResponseMessage GetPlayers(int id, int page, int count)
         {
-            int gameID = Int32.Parse(id);
-
             Result<PagedResult<Player>> res =
-                competitorBusiness.GetPlayersForGame(page, count, gameID);
+                competitorBusiness.GetPlayersForGame(page, count, id);
 
             if (res.Sucess)
             {
@@ -222,12 +180,10 @@ namespace Playground.Web.Controllers
         // api/game/teams
         [HttpGet]
         [ActionName("teams")]
-        public HttpResponseMessage GetTeams(string id, int page, int count)
+        public HttpResponseMessage GetTeams(int id, int page, int count)
         {
-            int gameID = Int32.Parse(id);
-
             Result<PagedResult<Team>> res =
-                competitorBusiness.GetTeamsForGame(page, count, gameID);
+                competitorBusiness.GetTeamsForGame(page, count, id);
             
             if (res.Sucess)
             {
@@ -259,12 +215,10 @@ namespace Playground.Web.Controllers
         // api/game/individualgames
         [HttpGet]
         [ActionName("individualgames")]
-        public HttpResponseMessage GetIndividualGames(string id)
+        public HttpResponseMessage GetIndividualGames(int id)
         {
-            int cateogryID = Int32.Parse(id);
-
             Result<List<Game>> res =
-                gameBusiness.FilterByCategoryAndCompetitionType(cateogryID, CompetitorType.Individual);
+                gameBusiness.FilterByCategoryAndCompetitionType(id, CompetitorType.Individual);
 
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
@@ -291,12 +245,10 @@ namespace Playground.Web.Controllers
         // api/game/teamgames
         [HttpGet]
         [ActionName("teamgames")]
-        public HttpResponseMessage GetTeamGames(string id)
+        public HttpResponseMessage GetTeamGames(int id)
         {
-            int cateogryID = Int32.Parse(id);
-
             Result<List<Game>> res =
-                gameBusiness.FilterByCategoryAndCompetitionType(cateogryID, CompetitorType.Team);
+                gameBusiness.FilterByCategoryAndCompetitionType(id, CompetitorType.Team);
 
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :

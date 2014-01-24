@@ -58,7 +58,7 @@ namespace Playground.Business
             return retVal;
         }
 
-        public Result<List<GameCompetitionType>> GetGameCompetitionTypes(int gameID)
+        public Result<List<GameCompetitionType>> FilterByGame(int gameID)
         {
             Result<List<GameCompetitionType>> retVal = null;
             try
@@ -97,6 +97,38 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<List<GameCompetitionType>> FilterByGameAvailable(int gameID)
+        {
+            Result<List<GameCompetitionType>> retVal = null;
+            try
+            {
+                List<GameCompetitionType> competitionTypes = new List<GameCompetitionType>();
+                IQueryable<CompetitionType> availableCompetitionTypes = Uow.CompetitionTypes
+                    .GetAll()
+                    .Where(ct => !ct.Games.Any(g => g.GameID == gameID))
+                    .Distinct();
+
+                foreach (CompetitionType ct in availableCompetitionTypes)
+                {
+                    competitionTypes.Add(new GameCompetitionType()
+                    {
+                        CompetitionType = ct,
+                        CompetitionTypeID = ct.CompetitionTypeID,
+                        GameID = gameID
+                    });
+                }
+
+                retVal = ResultHandler<List<GameCompetitionType>>.Sucess(competitionTypes);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of available competition types for gameID: {0}", gameID), ex);
+                retVal = ResultHandler<List<GameCompetitionType>>.Erorr("Error retreiving list of available competition types for game");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<CompetitionType>> GetCompetitionTypes(int page, int count)
         {
             Result<PagedResult<CompetitionType>> retVal = null;
@@ -105,8 +137,6 @@ namespace Playground.Business
                 int totalItems = Uow.CompetitionTypes
                     .GetAll()
                     .Count();
-
-                // check for last page
                 page = GetPage(totalItems, page, count);
 
                 List<CompetitionType> competitionTypes = Uow.CompetitionTypes

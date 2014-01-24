@@ -2,11 +2,8 @@
     <table class="table">
         <tr>
             <th>
-                <span data-ng-show="parentCategory == 'gamecategory'">
+                <span>
                     Game category
-                </span>
-                <span data-ng-show="parentCategory == 'game'">
-                    Game
                 </span>
             </th>
             <th>
@@ -16,8 +13,7 @@
         </tr>
         <tr data-ng-repeat="team in teams.items">
             <td>
-                <div class="img-holder"
-                    data-ng-show="parentCategory == 'gamecategory'">
+                <div class="img-holder">
                     <a href="javascript:;" 
                         data-ui-sref="game-category-details.info({id: team.games[0].game.gameCategoryID})">
                         <img data-ng-src="{{team.games[0].game.category.pictureUrl}}" alt="" />
@@ -25,21 +21,8 @@
                 </div>
                 &nbsp;
                 <a href="javascript:;" 
-                    data-ng-show="parentCategory == 'gamecategory'"
                     data-ui-sref="game-category-details.info({id: team.games[0].game.gameCategoryID})" 
                     data-ng-bind="team.games[0].game.category.title"></a>
-                <div class="img-holder"
-                    data-ng-show="parentCategory == 'game'">
-                    <a href="javascript:;" 
-                        data-ui-sref="game-details.info({id: team.games[0].gameID})">
-                        <img data-ng-src="{{team.games[0].game.pictureUrl}}" alt="" />
-                    </a>
-                </div>
-                &nbsp;
-                <a href="javascript:;" 
-                    data-ng-show="parentCategory == 'game'"
-                    data-ui-sref="game-details.info({id: team.games[0].gameID})" 
-                    data-ng-bind="team.games[0].game.title"></a>
             </td>
             <td>
                 <div class="img-holder">

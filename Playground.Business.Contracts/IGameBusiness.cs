@@ -9,13 +9,19 @@ namespace Playground.Business.Contracts
 {
     public interface IGameBusiness
     {
-        Result<Game> GetById(Game game);
+        Result<Game> GetById(int gameID);
 
-        Result<Game> AddGameCategory(Game game);
+        int TotalCompetitorsCount(int gameID);
+
+        int TotalMatchesCount(int gameID);
 
         Result<PagedResult<Game>> FilterByCategory(int page, int count, int gameCategoryID);
 
         Result<List<Game>> FilterByCategoryAndCompetitionType(int gameCategoryID, CompetitorType competitorType);
+
+        Result<Game> AddGame(Game game);
+
+        Result<Game> UpdateGame(Game game);
 
         bool DeleteGame(int gameID);
 

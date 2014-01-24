@@ -27,6 +27,6 @@ namespace Playground.Business.Contracts
 
         Result<GameCategory> UpdateGameCategory(GameCategory gameCategory);
         
-        Result<GameCategory> DeleteGameCategory(int id);
+        bool DeleteGameCategory(int id);
     }
 }

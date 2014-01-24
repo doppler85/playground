@@ -232,19 +232,18 @@ namespace Playground.Business
             return retVal;
         }
 
-        public Result<GameCategory> DeleteGameCategory(int id)
+        public bool DeleteGameCategory(int id)
         {
-            Result<GameCategory> retVal = null;
+            bool retVal = true;
             try
             {
                 Uow.GameCategories.Delete(id);
                 Uow.Commit();
-                retVal = ResultHandler<GameCategory>.Sucess(null);
             }
             catch (Exception ex)
             {
                 log.Error("Error deleting game category", ex);
-                retVal = ResultHandler<GameCategory>.Erorr("Error deleting game category");
+                retVal = false;
             }
 
             return retVal;

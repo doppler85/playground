@@ -56,5 +56,11 @@ namespace Playground.Common
             public static string DefaultGameImage = "";
                 
         }
+
+        public static class Validation
+        {
+            public const int MinPlyersCountPerTeam = 2;
+            public const int MaxPlayersCountPerTeam = 20;
+        }
     }
 }

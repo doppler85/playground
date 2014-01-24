@@ -14,19 +14,86 @@ namespace Playground.Business
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public GameBusiness(IPlaygroundUow uow)
+        private ICompetitionTypeBusiness competitionTypeBusiness;
+
+        public GameBusiness(IPlaygroundUow uow, ICompetitionTypeBusiness ctBusiness)
         {
             this.Uow = uow;
+            this.competitionTypeBusiness = ctBusiness;
         }
 
-        public Result<Game> AddGameCategory(Game game)
+        private bool CheckExisting(Game game)
         {
-            throw new NotImplementedException();
+            bool retVal = Uow.Games
+                .GetAll()
+                .FirstOrDefault(g => g.Title == game.Title &&
+                                     g.GameCategoryID == game.GameCategoryID &&
+                                     g.GameID != game.GameID) != null;
+
+            return retVal;
         }
 
-        public Result<Game> GetById(Game game)
+        public Result<Game> GetById(int gameID)
         {
-            throw new NotImplementedException();
+            Result<Game> retVal = null;
+            try
+            {
+                Game game = Uow.Games.GetById(gameID);
+                GameCategory category = Uow.GameCategories.GetById(game.GameCategoryID);
+
+                if (!String.IsNullOrEmpty(game.PictureUrl))
+                {
+                    game.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                }
+                else if (!String.IsNullOrEmpty(category.PictureUrl))
+                {
+                    game.PictureUrl = String.Format("{0}?nocache={1}", category.PictureUrl, DateTime.Now.Ticks);
+                }
+
+                retVal = ResultHandler<Game>.Sucess(game);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving game. ID: {0}", gameID), ex);
+                retVal = ResultHandler<Game>.Erorr("Error retreiving game");
+            }
+            return retVal;
+        }
+
+        public int TotalCompetitorsCount(int gameID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Competitors
+                    .GetAll()
+                    .Where(c => c.Games.Any(g => g.GameID == gameID))
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting competitors count for game. ID: {0}", gameID), ex);
+            }
+
+            return retVal;
+        }
+
+        public int TotalMatchesCount(int gameID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Matches
+                    .GetAll()
+                    .Where(m => m.Scores.Any(s => s.Match.GameID == gameID))
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting competitors count for game, ID: {0}", gameID), ex);
+            }
+
+            return retVal;
         }
 
         public Result<PagedResult<Game>> FilterByCategory(int page, int count, int gameCategoryID)
@@ -85,6 +152,70 @@ namespace Playground.Business
             {
                 log.Error(String.Format("Error retreiving list of games for category and comeptitor type.  categoryid: {0}, competitor type: {1}", gameCategoryID, competitorType), ex);
                 retVal = ResultHandler<List<Game>>.Erorr("Error retreiving list of games for category and competitor type");
+            }
+
+            return retVal;
+        }
+
+        public Result<Game> AddGame(Game game)
+        {
+            Result<Game> retVal = null;
+            try
+            {
+                if (CheckExisting(game))
+                {
+                    retVal = ResultHandler<Game>.Erorr("Duplicate game");
+                }
+                else
+                {
+                    Uow.Games.Add(game);
+                    Uow.Commit();
+                    retVal = ResultHandler<Game>.Sucess(game);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error creating game", ex);
+                retVal = ResultHandler<Game>.Erorr("Error creating game");
+            }
+
+            return retVal;
+        }
+
+        public Result<Game> UpdateGame(Game game)
+        {
+            Result<Game> retVal = null;
+            try
+            {
+                if (CheckExisting(game))
+                {
+                    retVal = ResultHandler<Game>.Erorr("Duplicate game");
+                }
+                else
+                {
+                    List<GameCompetitionType> currentCompetitionTypes = competitionTypeBusiness.FilterByGame(game.GameID).Data;
+
+                    foreach (GameCompetitionType ct in currentCompetitionTypes)
+                    {
+                        Uow.GameCompetitionTypes.Delete(ct);
+                    }
+                    foreach (GameCompetitionType ct in game.CompetitionTypes.Where(ct => ct.Selected))
+                    {
+                        ct.Game = null;
+                        ct.CompetitionType = null;
+                        Uow.GameCompetitionTypes.Add(ct);
+                    }
+                    Uow.Games.Update(game, game.GameID);
+                    Uow.Commit();
+
+                    retVal = ResultHandler<Game>.Sucess(game);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error updating game", ex);
+                retVal = ResultHandler<Game>.Erorr("Error updating game");
             }
 
             return retVal;
