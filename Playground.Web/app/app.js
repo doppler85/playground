@@ -186,7 +186,7 @@ Playground.
                     }
                 }).state('team-edit', {
                     url: '/competition/team/edit/:id',
-                    templateUrl: 'app/competition/team-edit.tpl.html',
+                    templateUrl: 'app/templates/competition/team-edit.tpl.html',
                     controller: 'TeamEditController',
                     data: { pageTitle: 'Edit team' },
                     resolve: {

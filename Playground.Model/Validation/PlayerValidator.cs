@@ -13,7 +13,7 @@ namespace Playground.Model.Validation
         {
             ValidationResult retVal = ValidationResult.Success;
 
-            if (player != null && player.Games != null && player.Games.Count < 1)
+            if (player != null && (player.Games == null || player.Games.Count < 1))
             {
                 retVal = new ValidationResult("Player must have at least one game to compete in",
                     new string[] { "Player", "Games" }

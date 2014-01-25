@@ -287,7 +287,7 @@
     <Content Include="app\competition\competitors-list.js" />
     <Content Include="app\competition\competitors-list.tpl.html" />
     <Content Include="app\competition\team-edit.js" />
-    <Content Include="app\competition\team-edit.tpl.html" />
+    <Content Include="app\templates\competition\team-edit.tpl.html" />
     <Content Include="app\competition\player-edit.js" />
     <Content Include="app\competition\player-edit.tpl.html" />
     <Content Include="app\competition\match-list.js" />

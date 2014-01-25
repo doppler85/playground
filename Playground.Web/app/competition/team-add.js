@@ -26,6 +26,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         };
 
         $scope.games = [];
+        $scope.players = [];
         $scope.categories = [];
         $scope.selectedCategory = null;
         $scope.myplayer = {};
@@ -34,7 +35,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         $scope.selectedPlayers = [];
         $scope.alerts = [];
 
-        $scope.team.players.indexOf = function (obj) {
+        $scope.players.indexOf = function (obj) {
             var index = -1;
             if (obj == null || obj.competitorID == null) {
                 return index;
@@ -74,7 +75,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
             UserResource.myteamplayer({ gameCategoryID: $scope.selectedCategory.gameCategoryID },
                 function (data, status, headers, config) {
                     $scope.myplayer = data;
-                    $scope.team.players.push({
+                    $scope.players.push({
                         playerID: data.competitorID,
                         player: data
                     });
@@ -86,12 +87,19 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         };
 
         $scope.addTeam = function () {
+            $scope.team.players = [];
+            $scope.team.games = [];
             angular.forEach($scope.games, function (game) {
                 if (game.checked) {
                     $scope.team.games.push({
                         gameID: game.gameID
                     });
                 }
+            });
+            angular.forEach($scope.players, function (player) {
+                $scope.team.players.push({
+                    playerID: player.playerID
+                });
             });
             UserResource.addTeam($scope.team,
                 function (data, status, headers, config) {
@@ -128,7 +136,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
                 UserResource.searchplayers({ gameCategoryID: $scope.selectedCategory.gameCategoryID, search: $scope.searchQuery },
                     function (data, status, headers, config) {
                         angular.forEach(data, function (player) {
-                            var idx = $scope.team.players.indexOf(player);
+                            var idx = $scope.players.indexOf(player);
                             if (idx == -1) {
                                 $scope.availablePlayers.push(player);
                             }
@@ -139,7 +147,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         }
 
         $scope.addPlayer = function (player, index) {
-            $scope.team.players.push({
+            $scope.players.push({
                 playerID: player.competitorID,
                 player:player
             });
@@ -147,7 +155,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         }
 
         $scope.removePlayer = function (player, index) {
-            $scope.team.players.splice(index, 1);
+            $scope.players.splice(index, 1);
         }
 
         $scope.cancel = function () {

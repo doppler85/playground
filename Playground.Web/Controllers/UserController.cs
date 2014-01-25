@@ -129,74 +129,26 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("getupdateplayer")]
-        public Player GetUpdatePlayer(long id)
+        public HttpResponseMessage GetUpdatePlayer(long id)
         {
-            Player retVal = Uow.Competitors
-                .GetAll(c => c.Games)
-                .OfType<Player>()
-                .Where(p => p.CompetitorID == id)
-                .First();
-            List<int> gameIds = retVal.Games.Select(g => g.GameID).ToList();
-            List<Game> games = Uow.Games
-                .GetAll(g => g.Category)
-                .Where(g => gameIds.Contains(g.GameID))
-                .ToList();
-            
-            // assume that there should always be at least one game that player comeptes in
-            int gameCategory = games[0].GameCategoryID;
-            List<Game> allGames = Uow.Games
-                .GetAll(g => g.Category)
-                .Where(g => g.GameCategoryID == gameCategory)
-                .ToList();
+            Result<Player> res = competitorBusiness.GetUpdatePlayer(id);
 
-            foreach (Game game in allGames)
-            {
-                GameCompetitor gameCompetitor = retVal.Games.FirstOrDefault(gc => gc.GameID == game.GameID);
-                if (gameCompetitor != null)
-                {
-                    gameCompetitor.Selected = true;
-                }
-                else
-                {
-                    retVal.Games.Add(new GameCompetitor()
-                    {
-                        CompetitorID = retVal.CompetitorID,
-                        Competitor = retVal,
-                        Game = game,
-                        GameID = game.GameID
-                    });
-                }
-            }
-            retVal.Games = retVal.Games.OrderBy(g => g.Game.Title).ToList();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-             return retVal;
+            return response;
         }
 
         [HttpDelete]
         [ActionName("delete")]
         public HttpResponseMessage DeleteCompetitor(long id)
         {
-            List<TeamPlayer> players = Uow.TeamPlayers
-                .GetAll()
-                .Where(p => p.TeamID == id)
-                .ToList();
-            foreach (TeamPlayer player in players)
-            {
-                Uow.TeamPlayers.Delete(player);
-            }
+            bool res = competitorBusiness.DeleteCompetitor(id);
 
-            List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
-                .GetAll()
-                .Where(gc => gc.CompetitorID == id)
-                .ToList();
-            foreach (GameCompetitor gameCompetitor in gameCompetitors)
-            {
-                Uow.GameCompetitors.Delete(gameCompetitor);
-            }
-                        
-            Uow.Competitors.Delete(id);
-            Uow.Commit();
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            HttpResponseMessage response = res ?
+                 Request.CreateResponse(HttpStatusCode.OK) :
+                 Request.CreateResponse(HttpStatusCode.InternalServerError, "Error deleting competitor");
 
             return response;
         }
@@ -225,28 +177,51 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage AddTeam(Team team)
         {
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            foreach (TeamPlayer tp in team.Players)
-            {
-                // put to null to avoid adding of additional players
-                tp.Player = null;
-            }
             team.CreatorID = currentUser.UserID;
-            team.CompetitorType = CompetitorType.Team;
-            team.CreationDate = DateTime.Now;
-            Uow.Competitors.Add(team);
-            Uow.Commit();
-            competitorBusiness.AssignImage(team, 
-                currentUser.UserID,
-                GetTeamPicturesRootFolder(),
-                Constants.Images.TeamPictureRoot,
-                Constants.Images.TeamPicturePrefix,
-                Constants.Images.TeamPictureExtension);
 
-            var response = Request.CreateResponse(HttpStatusCode.Created, team);
+            Result<Team> res = competitorBusiness.AddTeam(team);
 
-            // Compose location header that tells how to get this game 
-            response.Headers.Location =
-                new Uri(Url.Link(RouteConfig.ControllerAndId, new { id = team.CompetitorID }));
+            if (res.Sucess)
+            {
+                competitorBusiness.AssignImage(team,
+                    currentUser.UserID,
+                    GetTeamPicturesRootFolder(),
+                    Constants.Images.TeamPictureRoot,
+                    Constants.Images.TeamPicturePrefix,
+                    Constants.Images.TeamPictureExtension);
+            }
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        [HttpPut]
+        [ActionName("updateteam")]
+        public HttpResponseMessage UpdateTeam(Team team)
+        {
+            Result<Team> res = competitorBusiness.UpdateTeam(team);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        [HttpGet]
+        [ActionName("getupdateteam")]
+        public HttpResponseMessage GetUpdateTeam(long id)
+        {
+            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            
+            Result<Team> res = competitorBusiness.GetUpdateTeam(id, currentUser.UserID);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
@@ -291,7 +266,7 @@ namespace Playground.Web.Controllers
         // api/user/searchplayers
         [HttpGet]
         [ActionName("searchteamplayers")]
-        public List<Player> SearchPlayers(long teamId, string search)
+        public List<Player> SearchPlayers([FromUri]long teamId, [FromUri]string search)
         {
             if (search == null)
             {
@@ -344,91 +319,6 @@ namespace Playground.Web.Controllers
             return response;
         }
 
-        [HttpPut]
-        [ActionName("updateteam")]
-        public HttpResponseMessage UpdateTeam(Team team)
-        {
-            List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
-                .GetAll()
-                .Where(gc => gc.CompetitorID == team.CompetitorID)
-                .ToList();
-            foreach (GameCompetitor gc in gameCompetitors)
-            {
-                Uow.GameCompetitors.Delete(gc);
-            }
-            foreach (GameCompetitor gc in team.Games.Where(g => g.Selected))
-            {
-                gc.Competitor = null;
-                gc.Game = null;
-                Uow.GameCompetitors.Add(gc);
-            }
-            Uow.Competitors.Update(team, team.CompetitorID);
-            Uow.Commit();
-            var response = Request.CreateResponse(HttpStatusCode.OK, team);
-
-            return response;
-        }
-
-        [HttpGet]
-        [ActionName("getupdateteam")]
-        public Team GetUpdateTeam(long id)
-        {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-
-            Team retVal = Uow.Competitors
-                .GetAll(c => c.Games, c => ((Team)c).Players)
-                .OfType<Team>()
-                .Where(p => p.CompetitorID == id)
-                .First();
-            List<int> gameIds = retVal.Games.Select(g => g.GameID).ToList();
-
-            List<Game> games = Uow.Games
-                .GetAll(g => g.Category)
-                .Where(g => gameIds.Contains(g.GameID))
-                .ToList();
-
-            // assume that there should always be at least one game that player comeptes in
-            int gameCategory = games[0].GameCategoryID;
-            List<Game> allGames = Uow.Games
-                .GetAll(g => g.Category)
-                .Where(g => g.GameCategoryID == gameCategory)
-                .ToList();
-
-            foreach (Game game in allGames)
-            {
-                GameCompetitor gameCompetitor = retVal.Games.FirstOrDefault(gc => gc.GameID == game.GameID);
-                if (gameCompetitor != null)
-                {
-                    gameCompetitor.Selected = true;
-                }
-                else
-                {
-                    retVal.Games.Add(new GameCompetitor()
-                    {
-                        CompetitorID = retVal.CompetitorID,
-                        Competitor = retVal,
-                        Game = game,
-                        GameID = game.GameID
-                    });
-                }
-            }
-
-            // load players
-            foreach (TeamPlayer teamPlayer in retVal.Players)
-            {
-                teamPlayer.Player = Uow.Competitors
-                    .GetAll(p => ((Player)p).User)
-                    .OfType<Player>()
-                    .FirstOrDefault(p => p.CompetitorID == teamPlayer.PlayerID);
-                    
-                teamPlayer.Player.IsCurrentUserCompetitor = teamPlayer.Player.UserID == currentUser.UserID;
-            }
-
-            retVal.Games = retVal.Games.OrderBy(g => g.Game.Title).ToList();
-
-
-            return retVal;
-        }
 
 
         [HttpGet]

@@ -37,6 +37,16 @@ namespace Playground.Business.Contracts
 
         Result<Player> UpdatePlayer(Player player);
 
+        Result<Player> GetUpdatePlayer(long playerID);
+
+        Result<Team> AddTeam(Team team);
+
+        Result<Team> UpdateTeam(Team team);
+
+        Result<Team> GetUpdateTeam(long teamID, int userID);
+
+        bool DeleteCompetitor(long competitorID);
+
         void AssignImage(Competitor competitor, int userID, string fileSystemRoot, string urlRoot, string prefix, string extension);
     }
 }

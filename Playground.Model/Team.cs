@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Playground.Model
 {
-    [CustomValidation(typeof(TeamValidator), "ValidateGames")]
     public class Team : Competitor
     {
         public int CreatorID { get; set; }

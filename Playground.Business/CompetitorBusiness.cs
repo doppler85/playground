@@ -500,6 +500,224 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<Player> GetUpdatePlayer(long playerID)
+        {
+            Result<Player> retVal = null;
+            try
+            {
+                Player player = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .Where(p => p.CompetitorID == playerID)
+                    .First();
+                
+                List<Game> games = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .Where(p => p.CompetitorID == playerID)
+                    .SelectMany(p => p.Games)
+                    .Select(g => g.Game)
+                    .ToList();
+
+                games[0].Category = Uow.GameCategories.GetById(games[0].GameCategoryID);
+
+                // assume that there should always be at least one game that player comeptes in
+                int gameCategory = games[0].GameCategoryID;
+                List<Game> allGames = Uow.Games
+                    .GetAll()
+                    .Where(g => g.GameCategoryID == gameCategory)
+                    .ToList();
+
+                player.Games = new List<GameCompetitor>();
+
+                foreach (Game game in allGames)
+                {
+                    bool selected = games.FirstOrDefault(gc => gc.GameID == game.GameID) != null;
+
+                    player.Games.Add(new GameCompetitor()
+                    {
+                        CompetitorID = player.CompetitorID,
+                        Competitor = player,
+                        Game = game,
+                        GameID = game.GameID,
+                        Selected = selected
+                    });
+                }
+
+                player.Games = player.Games.OrderBy(g => g.Game.Title).ToList();
+
+                retVal = ResultHandler<Player>.Sucess(player);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting player for update, ID: {0}", playerID), ex);
+                retVal = ResultHandler<Player>.Erorr("Erorr getting player for update");
+            }
+
+            return retVal;
+        }
+
+        public Result<Team> AddTeam(Team team)
+        {
+            Result<Team> retVal = null;
+            try
+            {
+                foreach (TeamPlayer tp in team.Players)
+                {
+                    tp.Player = null;
+                }
+                team.CompetitorType = CompetitorType.Team;
+                team.CreationDate = DateTime.Now;
+                Uow.Competitors.Add(team);
+                Uow.Commit();
+
+                retVal = ResultHandler<Team>.Sucess(team);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error adding team", ex);
+                retVal = ResultHandler<Team>.Erorr("Error adding team");
+            }
+
+            return retVal;
+        }
+
+        public Result<Team> UpdateTeam(Team team)
+        {
+            Result<Team> retVal = null;
+            try
+            {
+                List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
+                    .GetAll()
+                    .Where(gc => gc.CompetitorID == team.CompetitorID)
+                    .ToList();
+                foreach (GameCompetitor gc in gameCompetitors)
+                {
+                    Uow.GameCompetitors.Delete(gc);
+                }
+                foreach (GameCompetitor gc in team.Games.Where(g => g.Selected))
+                {
+                    gc.Competitor = null;
+                    gc.Game = null;
+                    Uow.GameCompetitors.Add(gc);
+                }
+                Uow.Competitors.Update(team, team.CompetitorID);
+                Uow.Commit();
+
+                retVal = ResultHandler<Team>.Sucess(team);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error adding team", ex);
+                retVal = ResultHandler<Team>.Erorr("Error adding team");
+            }
+
+            return retVal;
+        }
+
+        public Result<Team> GetUpdateTeam(long teamID, int userID)
+        {
+            Result<Team> retVal = null;
+            try
+            {
+                Team team = Uow.Competitors
+                    .GetAll(c => ((Team)c).Players)
+                    .OfType<Team>()
+                    .Where(p => p.CompetitorID == teamID)
+                    .First();
+
+                List<Game> games = Uow.Competitors
+                    .GetAll()
+                    .OfType<Team>()
+                    .Where(p => p.CompetitorID == teamID)
+                    .SelectMany(p => p.Games)
+                    .Select(g => g.Game)
+                    .ToList();
+
+                games[0].Category = Uow.GameCategories.GetById(games[0].GameCategoryID);
+
+                // assume that there should always be at least one game that player comeptes in
+                int gameCategory = games[0].GameCategoryID;
+                List<Game> allGames = Uow.Games
+                    .GetAll(g => g.Category)
+                    .Where(g => g.GameCategoryID == gameCategory)
+                    .ToList();
+
+                team.Games = new List<GameCompetitor>();
+
+                foreach (Game game in allGames)
+                {
+                    bool selected = games.FirstOrDefault(gc => gc.GameID == game.GameID) != null;
+
+                    team.Games.Add(new GameCompetitor()
+                    {
+                        CompetitorID = team.CompetitorID,
+                        Competitor = team,
+                        Game = game,
+                        GameID = game.GameID,
+                        Selected = selected
+                    });
+                }
+
+                // load players
+                foreach (TeamPlayer teamPlayer in team.Players)
+                {
+                    teamPlayer.Player = Uow.Competitors
+                        .GetAll(p => ((Player)p).User)
+                        .OfType<Player>()
+                        .FirstOrDefault(p => p.CompetitorID == teamPlayer.PlayerID);
+
+                    teamPlayer.Player.IsCurrentUserCompetitor = teamPlayer.Player.UserID == userID;
+                    teamPlayer.Player.User = null;
+                }
+                team.Creator = null;
+                team.Games = team.Games.OrderBy(g => g.Game.Title).ToList();
+
+                retVal = ResultHandler<Team>.Sucess(team);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting team for update, ID: {0}", teamID), ex);
+                retVal = ResultHandler<Team>.Erorr("Erorr getting team for update");
+            }
+
+            return retVal;
+        }
+
+        public bool DeleteCompetitor(long competitorID)
+        {
+            bool retVal = true;
+            try
+            {
+                List<TeamPlayer> players = Uow.TeamPlayers
+                    .GetAll()
+                    .Where(p => p.TeamID == competitorID)
+                    .ToList();
+                foreach (TeamPlayer player in players)
+                {
+                    Uow.TeamPlayers.Delete(player);
+                }
+
+                List<GameCompetitor> gameCompetitors = Uow.GameCompetitors
+                    .GetAll()
+                    .Where(gc => gc.CompetitorID == competitorID)
+                    .ToList();
+                foreach (GameCompetitor gameCompetitor in gameCompetitors)
+                {
+                    Uow.GameCompetitors.Delete(gameCompetitor);
+                }
+
+                Uow.Competitors.Delete(competitorID);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error deleting competitor", ex);
+                retVal = false;
+            }
+            return retVal;
+        }
+
         public void AssignImage(Competitor competitor, int userID, string fileSystemRoot, string urlRoot, string prefix, string extension)
         {
             try

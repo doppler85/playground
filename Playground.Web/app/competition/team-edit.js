@@ -21,9 +21,9 @@ angular.module('Playground.team-edit', ['ngResource', 'ui.router', 'ui.bootstrap
         $scope.alerts = [];
         $scope.team = {
             competitorID: 0,
-            players: [],
             games: []
         };
+        $scope.players = [];
         $scope.myplayer = {};
         $scope.availablePlayers = [];
         $scope.searchQuery = '';
@@ -39,7 +39,9 @@ angular.module('Playground.team-edit', ['ngResource', 'ui.router', 'ui.bootstrap
         $scope.getTeam = function () {
             UserResource.getUpdateTeam({ id: $stateParams.id }, function (data, status, headers, config) {
                 $scope.team = data;
-                angular.forEach(data.players, function (player) {
+                $scope.players = data.players;
+                $scope.team.players = [];
+                angular.forEach($scope.players, function (player) {
                     if (player.player.isCurrentUserCompetitor) {
                         $scope.myplayer = player.player;
                     }
@@ -59,7 +61,7 @@ angular.module('Playground.team-edit', ['ngResource', 'ui.router', 'ui.bootstrap
         $scope.removePlayer = function (player, index) {
             UserResource.deleteteamplayer({ teamID: player.teamID, playerID: player.playerID },
                 function (data, status, headers, config) {
-                    $scope.team.players.splice(index, 1);
+                    $scope.players.splice(index, 1);
                 }
             );
         };
@@ -67,7 +69,7 @@ angular.module('Playground.team-edit', ['ngResource', 'ui.router', 'ui.bootstrap
         $scope.addPlayer = function (player, index) {
             UserResource.addteamplayer({ teamID: $scope.team.competitorID, playerID: player.competitorID },
                 function (data, status, headers, config) {
-                    $scope.team.players.push({
+                    $scope.players.push({
                         teamID: $scope.team.competitorID,
                         playerID: player.competitorID,
                         player: player
