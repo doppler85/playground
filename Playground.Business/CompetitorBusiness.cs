@@ -368,6 +368,7 @@ namespace Playground.Business
                 log.Error(String.Format("Error getting list of players for game category. ID: {0}", gameCategoryID), ex);
                 retVal = ResultHandler<PagedResult<Player>>.Erorr("Error getting list of players");
             }
+
             return retVal;
         }
 
@@ -411,6 +412,29 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<Player> GetPlayerForGameCategory(int userID, int gameCategoryID)
+        {
+            Result<Player> retVal = null;
+            try
+            {
+                Player player = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .Where(p => p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID) &&
+                        p.User.UserID == userID)
+                    .FirstOrDefault();
+
+                retVal = ResultHandler<Player>.Sucess(player);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting player for game category. userID: {0}, gameCategoryID: {1}", userID, gameCategoryID), ex);
+                retVal = ResultHandler<Player>.Erorr("Error getting player");
+            }
+
+            return retVal;
+        }
+
         public List<long> GetCompetitorIdsForUser(long userID)
         {
             List<long> retVal = null;
@@ -437,6 +461,7 @@ namespace Playground.Business
             {
                 log.Error("Error retrieving competitor ids", ex);
             }
+
             return retVal;
         }
 

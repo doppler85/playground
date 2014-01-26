@@ -26,16 +26,19 @@ namespace Playground.Web.Controllers
         private IMatchBusiness matchBusiness;
         private ICompetitorBusiness competitorBusiness;
         private IUserBusiness userBusiness;
+        private IAutomaticConfirmationBusiness automaticConfirmationBusiness;
 
         public UserController(IPlaygroundUow uow, 
             IMatchBusiness mBusiness,
             ICompetitorBusiness cBusiness,
-            IUserBusiness uBusiness)
+            IUserBusiness uBusiness,
+            IAutomaticConfirmationBusiness iacBusiness)
         {
             this.Uow = uow;
             this.matchBusiness = mBusiness;
             this.competitorBusiness = cBusiness;
             this.userBusiness = uBusiness;
+            this.automaticConfirmationBusiness = iacBusiness;
         }
 
         private string GetPlayerPicturesRootFolder()
@@ -229,17 +232,16 @@ namespace Playground.Web.Controllers
         // api/user/myteamplayer
         [HttpGet]
         [ActionName("myteamplayer")]
-        public Player MyTeamPlayer(int gameCategoryID)
+        public HttpResponseMessage MyTeamPlayer(int gameCategoryID)
         {
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            Player player = Uow.Competitors
-                .GetAll()
-                .OfType<Player>()
-                .Where(p => p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID) &&
-                    p.User.UserID == currentUser.UserID)
-                .FirstOrDefault();
+            Result<Player> res = competitorBusiness.GetPlayerForGameCategory(currentUser.UserID, gameCategoryID);
 
-            return player;
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
         // api/user/searchplayers
@@ -605,104 +607,48 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("getprofile")]
-        public User GetProfile()
+        public HttpResponseMessage GetProfile()
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            if (!String.IsNullOrEmpty(currentUser.PictureUrl))
-            {
-                currentUser.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
-            }
-            else
-            {
-                currentUser.PictureUrl = currentUser.Gender == Gender.Male ?
-                    Constants.Images.DefaultProfileMale :
-                    Constants.Images.DefaultProfileFemale;
-            }
-            return currentUser;
+            Result<User> res = userBusiness.GetUserByEmail(User.Identity.Name);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
         [HttpGet]
         [AllowAnonymous]
         [ActionName("getdetails")]
-        public User GetDetails(long id)
+        public HttpResponseMessage GetDetails(int id)
         {
-            User user = Uow.Users.GetById(id);
-            if (!String.IsNullOrEmpty(user.PictureUrl))
-            {
-                user.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
-            }
-            else
-            {
-                user.PictureUrl = user.Gender == Gender.Male ?
-                    Constants.Images.DefaultProfileMale :
-                    Constants.Images.DefaultProfileFemale;
-            }
-            return user;
+            Result<User> res = userBusiness.GetUserById(id);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
         [HttpGet]
         [AllowAnonymous]
         [ActionName("getuserstats")]
-        public UserStats GetUserStats(long id)
+        public UserStats GetUserStats(int id)
         {
-            User user = GetDetails(id);
-            UserStats retVal = new UserStats(user);
-            retVal.TotalGames = Uow.Competitors
-                .GetAll()
-                .OfType<Player>()
-                .Where(c => c.UserID == user.UserID)
-                .SelectMany(c => c.Games)
-                .Select(g => g.Game.GameCategoryID)
-                .Distinct()
-                .Count();
+            UserStats retVal = null;
+            Result<User> userRes = userBusiness.GetUserById(id);
 
-            List<int> gameids = Uow.Competitors
-                .GetAll()
-                .OfType<Player>()
-                .Where(c => c.UserID == user.UserID)
-                .SelectMany(c => c.Games)
-                .Select(g => g.GameID)
-                .Distinct()
-                .ToList();
-
-            retVal.TotalPlayers = Uow.Competitors
-                .GetAll()
-                .OfType<Player>()
-                .Where(p => p.UserID == user.UserID)
-                .Count();
-
-            retVal.TotalTeams = Uow.Competitors
-                .GetAll()
-                .OfType<Team>()
-                .Where(t => t.Players.Any(p => p.Player.UserID == user.UserID))
-                .Count();
-
-            List<Player> players = Uow.Competitors
-                .GetAll(p => ((Player)p).Teams)
-                .OfType<Player>()
-                .Where(p => p.UserID == user.UserID)
-                .ToList();
-
-            List<long> matchids = new List<long>();
-            foreach (Player player in players) 
+            if (userRes.Sucess)
             {
-                matchids.AddRange(Uow.Matches
-                    .GetAll()
-                    .Where(m => m.Status == MatchStatus.Confirmed &&
-                        m.Scores.Any(p => p.CompetitorID == player.CompetitorID))
-                    .Select(m => m.MatchID));
-                    
-                foreach (TeamPlayer tp in player.Teams)
-                {
-                    matchids.AddRange(Uow.Matches
-                    .GetAll()
-                    .Where(m => m.Status == MatchStatus.Confirmed && 
-                        m.Scores.Any(t => t.CompetitorID == tp.TeamID))
-                    .Select(m => m.MatchID));
-                }
-            }
-            retVal.TotalMatches = matchids.Distinct().Count();
+                retVal = new UserStats(userRes.Data);
 
+                retVal.TotalGames = userBusiness.TotalGamesCount(id);
+                retVal.TotalPlayers = userBusiness.TotalPlayersCount(id);
+                retVal.TotalTeams = userBusiness.TotalTeamsCount(id);
+                retVal.TotalMatches = userBusiness.TotalMatchesCount(id);
+            }
 
             return retVal;
         }
@@ -711,60 +657,28 @@ namespace Playground.Web.Controllers
         [ActionName("updateprofile")]
         public HttpResponseMessage UpdateProfile(User user)
         {
-            User userToUpdate = Uow.Users.GetById(user.UserID);
-            userToUpdate.FirstName = user.FirstName;
-            userToUpdate.LastName = user.LastName;
-            userToUpdate.Gender = user.Gender;
+            Result<User> res = userBusiness.UpdateUser(user);
 
-            Uow.Users.Update(userToUpdate);
-            Uow.Commit();
-
-            var response = Request.CreateResponse(HttpStatusCode.OK, userToUpdate);
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+            
             return response;
         }
 
         [HttpGet]
         [ActionName("automaticmatchconfirmations")]
-        public PagedResult<AutomaticMatchConfirmation> AutomaticMatchConfirmations(int page, int count)
+        public HttpResponseMessage AutomaticMatchConfirmations(int page, int count)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;            
+            Result<PagedResult<AutomaticMatchConfirmation>> res = 
+                automaticConfirmationBusiness.FilterByUser(page, count, currentUser.UserID);
 
-            List<AutomaticMatchConfirmation> confirmations = Uow.AutomaticMatchConfirmations
-                .GetAll(ac => ac.Confirmee, ac => ac.Confirmer)
-                .Where(ac => ac.ConfirmerID == currentUser.UserID)
-                .OrderBy(ac => ac.Confirmee.FirstName)
-                .Skip((page - 1) * count)
-                .Take(count)
-                .ToList();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            int totalItems = Uow.AutomaticMatchConfirmations
-                .GetAll()
-                .Where(ac => ac.ConfirmerID == currentUser.UserID)
-                .Count();
-
-            foreach (AutomaticMatchConfirmation confirmation in confirmations)
-            {
-                if (!String.IsNullOrEmpty(confirmation.Confirmee.PictureUrl))
-                {
-                    confirmation.Confirmee.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
-                }
-                else
-                {
-                    confirmation.Confirmee.PictureUrl = confirmation.Confirmee.Gender == Gender.Male ?
-                        Constants.Images.DefaultProfileMale :
-                        Constants.Images.DefaultProfileFemale;
-                }
-            }
-
-            PagedResult<AutomaticMatchConfirmation> retVal = new PagedResult<AutomaticMatchConfirmation>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = confirmations
-            };
-
-            return retVal;
+            return response;
         }
 
         [HttpGet]

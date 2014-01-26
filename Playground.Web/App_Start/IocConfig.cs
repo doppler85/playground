@@ -21,6 +21,8 @@ namespace Playground.Web.App_Start
 
             unityContainer.RegisterType<IUserBusiness, UserBusiness>();
 
+            unityContainer.RegisterType<IAutomaticConfirmationBusiness, AutomaticConfirmationBusiness>();
+
             unityContainer.RegisterType<ICompetitionTypeBusiness, CompetitionTypeBusiness>();
 
             unityContainer.RegisterType<IGameCategoryBusiness, GameCategoryBusiness>();

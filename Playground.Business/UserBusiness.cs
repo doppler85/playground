@@ -15,9 +15,27 @@ namespace Playground.Business
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UserBusiness(IPlaygroundUow uow)
+        private ICompetitorBusiness competitorBusiness; 
+
+        public UserBusiness(IPlaygroundUow uow,
+            ICompetitorBusiness cBusiness)
         {
             this.Uow = uow;
+            this.competitorBusiness = cBusiness;
+        }
+
+        public void SetUserPictureUrl(User user)
+        {
+            if (!String.IsNullOrEmpty(user.PictureUrl))
+            {
+                user.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+            }
+            else
+            {
+                user.PictureUrl = user.Gender == Gender.Male ?
+                    Constants.Images.DefaultProfileMale :
+                    Constants.Images.DefaultProfileFemale;
+            }
         }
 
         public Result<User> GetUserByEmail(string email)
@@ -28,6 +46,8 @@ namespace Playground.Business
                 User user = Uow.Users
                     .GetAll()
                     .FirstOrDefault(u => u.EmailAddress == email);
+
+                SetUserPictureUrl(user);
 
                 retVal = ResultHandler<User>.Sucess(user);
             }
@@ -40,6 +60,107 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<User> GetUserById(int userID)
+        {
+            Result<User> retVal = null;
+            try
+            {
+                User user = Uow.Users.GetById(userID);
+
+                SetUserPictureUrl(user);
+
+                retVal = ResultHandler<User>.Sucess(user);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving user by ID. ID: {0}", userID), ex);
+                retVal = ResultHandler<User>.Erorr("Error retreiving user by email");
+            }
+
+            return retVal;
+        }
+                
+        public int TotalGamesCount(int userID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .Where(c => c.UserID == userID)
+                    .SelectMany(c => c.Games)
+                    .Select(g => g.Game.GameCategoryID)
+                    .Distinct()
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting games count for user. ID: {0}", userID), ex);
+            }
+
+            return retVal;
+        }
+
+        public int TotalPlayersCount(int userID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .Where(p => p.UserID == userID)
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting players count for user. ID: {0}", userID), ex);
+            }
+
+            return retVal;
+        }
+
+        public int TotalTeamsCount(int userID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Competitors
+                    .GetAll()
+                    .OfType<Team>()
+                    .Where(t => t.Players.Any(p => p.Player.UserID == userID))
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting teams count for user. ID: {0}", userID), ex);
+            }
+
+            return retVal;
+        }
+
+        public int TotalMatchesCount(int userID)
+        {
+            int retVal = 0;
+            try
+            {
+                List<long> competitorIds = competitorBusiness.GetCompetitorIdsForUser(userID);
+                retVal = Uow.Matches
+                    .GetAll()
+                    .Where(m => m.Status == MatchStatus.Confirmed &&
+                        m.Scores.Any(s => competitorIds.Contains(s.CompetitorID)))
+                    .Distinct()
+                    .Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting teams count for user. ID: {0}", userID), ex);
+            }
+
+            return retVal;
+        }
+        
         public Result<PagedResult<User>> GetUsers(int page, int count)
         {
             Result<PagedResult<User>> retVal = null;
@@ -87,6 +208,30 @@ namespace Playground.Business
             {
                 log.Error(String.Format("Error retreiving list of users. page: {0}, count: {1}", page, count), ex);
                 retVal = ResultHandler<PagedResult<User>>.Erorr("Error retreiving users");
+            }
+
+            return retVal;
+        }
+
+        public Result<User> UpdateUser(User user)
+        {
+            Result<User> retVal = null;
+            try
+            {
+                User userToUpdate = Uow.Users.GetById(user.UserID);
+                userToUpdate.FirstName = user.FirstName;
+                userToUpdate.LastName = user.LastName;
+                userToUpdate.Gender = user.Gender;
+
+                Uow.Users.Update(userToUpdate);
+                Uow.Commit();
+
+                retVal = ResultHandler<User>.Sucess(userToUpdate);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error updating user, userID: {0}", user.UserID), ex);
+                retVal = ResultHandler<User>.Erorr("Error updating user");
             }
 
             return retVal;

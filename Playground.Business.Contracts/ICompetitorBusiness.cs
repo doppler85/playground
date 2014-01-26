@@ -23,6 +23,8 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<Team>> GetTeamsForGameCategory(int page, int count, int gameCategoryID);
 
+        Result<Player> GetPlayerForGameCategory(int userID, int gameCategoryID);
+
         void LoadCategories(List<Competitor> competitors);
 
         void LoadCategories(List<Player> players);

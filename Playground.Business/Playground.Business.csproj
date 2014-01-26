@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutomaticConfirmationBusiness.cs" />
     <Compile Include="CompetitionTypeBusiness.cs" />
     <Compile Include="CompetitorBusiness.cs" />
     <Compile Include="GameBusiness.cs" />
