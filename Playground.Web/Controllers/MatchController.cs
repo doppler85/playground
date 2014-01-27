@@ -40,22 +40,5 @@ namespace Playground.Web.Controllers
 
             return response;
         }
-
-        [HttpPost]
-        [ActionName("addmatch")]
-        public HttpResponseMessage AddMath(Match match)
-        {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            Result<Match> res = matchBusiness.AddMatch(currentUser.UserID, match);
-
-            int totalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed);
-            LiveScores.Instance.BroadcastTotalMatches(totalMatches);
-
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-
-            return response;
-        }
     }
 }
