@@ -49,13 +49,22 @@ angular.module('Playground.team-edit', ['ngResource', 'ui.router', 'ui.bootstrap
             });
         };
 
-        $scope.searchPlayers = function () {
+        $scope.searchPlayers = function (page, count) {
             $scope.availablePlayers = [];
-            UserResource.searchteamplayers({ teamID: $scope.team.competitorID, search: $scope.searchQuery },
+            UserResource.searchteamplayers({
+                    id: $scope.team.competitorID,
+                    page: page,
+                    count: count,
+                    search: $scope.searchQuery
+                },
                 function (data, status, headers, config) {
                     $scope.availablePlayers = data;
                 }
             );
+        };
+
+        $scope.onAvailablePlayersPageSelect = function (page) {
+            $scope.searchPlayers(page, 5);
         };
 
         $scope.removePlayer = function (player, index) {
@@ -74,7 +83,7 @@ angular.module('Playground.team-edit', ['ngResource', 'ui.router', 'ui.bootstrap
                         playerID: player.competitorID,
                         player: player
                     });
-                    $scope.availablePlayers.splice(index, 1);
+                    $scope.searchPlayers($scope.availablePlayers.currentPage, 5);
                 }
             );
         }

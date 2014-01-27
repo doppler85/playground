@@ -204,16 +204,14 @@ factory('UserResource', ['$resource', function (resource) {
                 actionname: 'myteamplayer'
             }
         },
-        searchplayers: {
+        searchplayersbycategory: {
             method: 'GET',
-            isArray: true,
             params: {
-                actionname: 'searchplayers'
+                actionname: 'searchplayersbycategory'
             }
         },
         searchteamplayers: {
             method: 'GET',
-            isArray: true,
             params: {
                 actionname: 'searchteamplayers'
             }

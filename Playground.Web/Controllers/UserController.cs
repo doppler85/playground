@@ -25,18 +25,21 @@ namespace Playground.Web.Controllers
     {
         private IMatchBusiness matchBusiness;
         private ICompetitorBusiness competitorBusiness;
+        private IGameCategoryBusiness gameCategoryBusiness;
         private IUserBusiness userBusiness;
         private IAutomaticConfirmationBusiness automaticConfirmationBusiness;
 
         public UserController(IPlaygroundUow uow, 
             IMatchBusiness mBusiness,
             ICompetitorBusiness cBusiness,
+            IGameCategoryBusiness gcBusiness,
             IUserBusiness uBusiness,
             IAutomaticConfirmationBusiness iacBusiness)
         {
             this.Uow = uow;
             this.matchBusiness = mBusiness;
             this.competitorBusiness = cBusiness;
+            this.gameCategoryBusiness = gcBusiness;
             this.userBusiness = uBusiness;
             this.automaticConfirmationBusiness = iacBusiness;
         }
@@ -221,6 +224,12 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
             
             Result<Team> res = competitorBusiness.GetUpdateTeam(id, currentUser.UserID);
+            
+            if (res.Sucess)
+            {
+                List<Player> players = res.Data.Players.Select(p => p.Player).ToList();
+                competitorBusiness.LoadUsers(players);
+            }
 
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
@@ -237,6 +246,11 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
             Result<Player> res = competitorBusiness.GetPlayerForGameCategory(currentUser.UserID, gameCategoryID);
 
+            if (res.Sucess)
+            {
+                competitorBusiness.LoadUsers(new List<Player>() { res.Data });
+            }
+
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
@@ -246,57 +260,59 @@ namespace Playground.Web.Controllers
 
         // api/user/searchplayers
         [HttpGet]
-        [ActionName("searchplayers")]
-        public List<Player> SearchPlayers(int gameCategoryID, string search) {
-            if (search == null)
+        [ActionName("searchplayersbycategory")]
+        public HttpResponseMessage SearchPlayers([FromUri]SearchCompetitorArgs args)
+        {
+            if (args.Search == null)
             {
-                search = String.Empty;
+                args.Search = String.Empty;
             }
 
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            List<Player> players = Uow.Competitors
-                .GetAll(p => ((Player)p).User)
-                .OfType<Player>()
-                .Where(p => p.Games.Any(g => g.Game.Category.GameCategoryID == gameCategoryID) &&
-                            p.User.UserID != currentUser.UserID &&
-                            (p.Name.Contains(search) || p.User.FirstName.Contains(search) || p.User.LastName.Contains(search)))
-                .ToList();
+            Result<PagedResult<Player>> res = competitorBusiness.SearchPlayersForGameCategory(args.Page, args.Count, currentUser.UserID, args.GameCategoryID, args.Ids, args.Search);
 
-            return players;
+            if (res.Sucess)
+            {
+                competitorBusiness.LoadUsers(res.Data.Items);
+            }
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
         // api/user/searchplayers
         [HttpGet]
         [ActionName("searchteamplayers")]
-        public List<Player> SearchPlayers([FromUri]long teamId, [FromUri]string search)
+        public HttpResponseMessage SearchPlayers([FromUri]AdvancedSearchArgs args)
         {
-            if (search == null)
+            if (args.Search == null)
             {
-                search = String.Empty;
+                args.Search = String.Empty;
             }
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            Team team = Uow.Competitors
-                .GetAll(t => ((Team)t).Players, t => t.Games)
-                .OfType<Team>()
-                .First(t => t.CompetitorID == teamId);
-            List<int> gameIds = team.Games.Select(g => g.GameID).ToList();
-            List<Game> games = Uow.Games
-                .GetAll(g => g.Category)
-                .Where(g => gameIds.Contains(g.GameID))
-                .ToList();
+            GameCategory gameCategory = gameCategoryBusiness.GetByCompetitorId(args.ID);
+            List<long> playerIDs = competitorBusiness.GetPlayerIdsForTeam(args.ID);
 
-            int gameCategoryID = games[0].GameCategoryID;
-            List<long> teamPlayerIds = team.Players.Select(tp => tp.PlayerID).ToList();
-            List<Player> players = Uow.Competitors
-                .GetAll(p => ((Player)p).User)
-                .OfType<Player>()
-                .Where(p => p.Games.Any(g => g.Game.Category.GameCategoryID == gameCategoryID) &&
-                            p.User.UserID != currentUser.UserID &&
-                            !teamPlayerIds.Contains(p.CompetitorID) &&
-                            (p.Name.Contains(search) || p.User.FirstName.Contains(search) || p.User.LastName.Contains(search)))
-                .ToList();
+            Result<PagedResult<Player>> res = competitorBusiness.SearchPlayersForGameCategory(args.Page, 
+                args.Count, 
+                currentUser.UserID, 
+                gameCategory.GameCategoryID,
+                playerIDs,
+                args.Search);
 
-            return players;
+            if (res.Sucess)
+            {
+                competitorBusiness.LoadUsers(res.Data.Items);
+            }
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
         [HttpPost]

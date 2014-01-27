@@ -35,20 +35,6 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         $scope.selectedPlayers = [];
         $scope.alerts = [];
 
-        $scope.players.indexOf = function (obj) {
-            var index = -1;
-            if (obj == null || obj.competitorID == null) {
-                return index;
-            }
-            for (var i = 0, imax = this.length; i < imax; i++) {
-                if (this[i].playerID === obj.competitorID) {
-                    index = i;
-                    break;
-                }
-            }
-            return index;
-        };
-        
         $scope.addAlert = function (msg) {
             $scope.alerts.push(msg);
         };
@@ -130,28 +116,38 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
             game.checked = !game.checked;
         };
 
-        $scope.searchPlayers = function () {
+        $scope.searchPlayers = function (page, count) {
             if ($scope.selectedCategory != null) {
                 $scope.availablePlayers = [];
-                UserResource.searchplayers({ gameCategoryID: $scope.selectedCategory.gameCategoryID, search: $scope.searchQuery },
+                var playerIds = [];
+                angular.forEach($scope.players, function (player) {
+                    playerIds.push(player.playerID);
+                });
+
+                UserResource.searchplayersbycategory({
+                        page: page,
+                        count: count,
+                        gameCategoryID: $scope.selectedCategory.gameCategoryID,
+                        ids: playerIds,
+                        search: $scope.searchQuery
+                    },
                     function (data, status, headers, config) {
-                        angular.forEach(data, function (player) {
-                            var idx = $scope.players.indexOf(player);
-                            if (idx == -1) {
-                                $scope.availablePlayers.push(player);
-                            }
-                        });
+                        $scope.availablePlayers = data;
                     }
                 );
             }
         }
+
+        $scope.onAvailablePlayersPageSelect = function (page) {
+            $scope.searchPlayers(page, 5);
+        };
 
         $scope.addPlayer = function (player, index) {
             $scope.players.push({
                 playerID: player.competitorID,
                 player:player
             });
-            $scope.availablePlayers.splice(index, 1);
+            $scope.searchPlayers($scope.availablePlayers.currentPage, 5);
         }
 
         $scope.removePlayer = function (player, index) {

@@ -372,6 +372,54 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<Player>> SearchPlayersForGameCategory(int page, int count, int userID, int gameCategoryID, List<long> ids, string search)
+        {
+            Result<PagedResult<Player>> retVal = null;
+            try
+            {
+                int totalItems = Uow.Competitors
+                                            .GetAll()
+                                            .OfType<Player>()
+                                            .Where(p => p.Games.Any(g => g.Game.Category.GameCategoryID == gameCategoryID) &&
+                                                    !ids.Contains(p.CompetitorID) && 
+                                                    p.User.UserID != userID &&
+                                                    (p.Name.Contains(search) || p.User.FirstName.Contains(search) || p.User.LastName.Contains(search)))
+                                            .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<Player> players = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .Where(p => p.Games.Any(g => g.Game.Category.GameCategoryID == gameCategoryID) &&
+                                !ids.Contains(p.CompetitorID) && 
+                                p.User.UserID != userID &&
+                                (p.Name.Contains(search) || p.User.FirstName.Contains(search) || p.User.LastName.Contains(search)))
+                    .OrderBy(p => p.User.FirstName)
+                    .ThenBy(p => p.User.LastName)
+                    .Skip((page - 1) * count)
+                    .Take(count)
+                    .ToList();
+
+                PagedResult<Player> result = new PagedResult<Player>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = players
+                };
+
+                retVal = ResultHandler<PagedResult<Player>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error searching players for game category. ID: {0}, search: {1}", gameCategoryID, search), ex);
+                retVal = ResultHandler<PagedResult<Player>>.Erorr("Error searching players");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<Team>> GetTeamsForGameCategory(int page, int count, int gameCategoryID)
         {
             Result<PagedResult<Team>> retVal = null;
@@ -460,6 +508,27 @@ namespace Playground.Business
             catch (Exception ex)
             {
                 log.Error("Error retrieving competitor ids", ex);
+            }
+
+            return retVal;
+        }
+
+        public List<long> GetPlayerIdsForTeam(long teamID)
+        {
+            List<long> retVal = null;
+            try
+            {
+                retVal = Uow.Competitors
+                    .GetAll()
+                    .OfType<Team>()
+                    .Where(t => t.CompetitorID == teamID)
+                    .SelectMany(t => t.Players)
+                    .Select(p => p.PlayerID)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error retrieving player ids", ex);
             }
 
             return retVal;

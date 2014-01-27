@@ -263,6 +263,7 @@
     </Compile>
     <Compile Include="Hubs\LiveScoresHub.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\AdvancedSearchArgs.cs" />
     <Compile Include="Models\SearchArgs.cs" />
     <Compile Include="Models\SearchCompetitorArgs.cs" />
     <Compile Include="Models\UserStats.cs" />

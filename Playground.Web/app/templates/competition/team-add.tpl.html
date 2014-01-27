@@ -77,13 +77,13 @@
         <form class="form-inline"
               data-ng-show="players.length > 0">
             <input type="text" data-ng-model="searchQuery" placeholder="Search players">
-            <button class="btn" data-ng-disabled="!selectedCategory.gameCategoryID" data-ng-click="searchPlayers()">Search</button>
+            <button class="btn" data-ng-disabled="!selectedCategory.gameCategoryID" data-ng-click="searchPlayers(1, 5)">Search</button>
         </form>
         <span data-ng-show="availablePlayers.length > 0">
             Results
         </span>
         <table class="table">
-            <tr data-ng-repeat="player in availablePlayers">
+            <tr data-ng-repeat="player in availablePlayers.items">
                 <td data-ng-bind="player | playeruserfull"></td>
                 <td data-ng-bind="player.name"></td>
                 <td>
@@ -91,6 +91,15 @@
                 </td>
             </tr>
         </table>
+        <pagination 
+            data-ng-show="availablePlayers.totalPages > 1"
+            total-items="availablePlayers.totalItems" 
+            page="availablePlayers.currentPage" 
+            num-page="availablePlayers.totalPages" 
+            items-per-page="5" 
+            on-select-page="onAvailablePlayersPageSelect(page)">
+        </pagination>
+
     </div>
 <!--    <div class="span12">
         <pre>{{team | json}}</pre>

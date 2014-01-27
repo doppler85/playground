@@ -21,6 +21,8 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<Player>> GetPlayersForGameCategory(int page, int count, int gameCategoryID);
 
+        Result<PagedResult<Player>> SearchPlayersForGameCategory(int page, int count, int userID, int gameCategoryID, List<long> ids, string search);
+
         Result<PagedResult<Team>> GetTeamsForGameCategory(int page, int count, int gameCategoryID);
 
         Result<Player> GetPlayerForGameCategory(int userID, int gameCategoryID);
@@ -34,6 +36,8 @@ namespace Playground.Business.Contracts
         void LoadUsers(List<Player> players);
 
         List<long> GetCompetitorIdsForUser(long userID);
+
+        List<long> GetPlayerIdsForTeam(long teamID);
 
         Result<Player> AddPlayer(Player player);
 
