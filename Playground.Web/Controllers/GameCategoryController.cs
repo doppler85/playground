@@ -174,7 +174,7 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage GetPlayers(int id, int page, int count)
         {
             Result<PagedResult<Player>> res =
-                competitorBusiness.GetPlayersForGameCategory(page, count, id);
+                competitorBusiness.FilterPlayersByGameCategory(page, count, id);
 
             if (res.Sucess)
             {
@@ -194,7 +194,7 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage GetTeams(int id, int page, int count)
         {
             Result<PagedResult<Team>> res =
-                competitorBusiness.GetTeamsForGameCategory(page, count, id);
+                competitorBusiness.FilterTeamsByGameCategory(page, count, id);
 
             if (res.Sucess)
             {

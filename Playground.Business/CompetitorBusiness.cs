@@ -36,6 +36,50 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<Player> GetPlayerById(long playerID)
+        {
+            Result<Player> retVal = null;
+            try
+            {
+                Player player = Uow.Competitors
+                    .GetAll()
+                    .OfType<Player>()
+                    .FirstOrDefault(p => p.CompetitorID == playerID);
+
+                retVal = ResultHandler<Player>.Sucess(player);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving player, ID: {0}", playerID), ex);
+                retVal = ResultHandler<Player>.Erorr("Error retreiving player");
+
+            }
+
+            return retVal;
+        }
+
+        public Result<Team> GetTeamById(long teamID)
+        {
+            Result<Team> retVal = null;
+            try
+            {
+                Team team = Uow.Competitors
+                    .GetAll()
+                    .OfType<Team>()
+                    .FirstOrDefault(p => p.CompetitorID == teamID);
+
+                retVal = ResultHandler<Team>.Sucess(team);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving team, ID: {0}", teamID), ex);
+                retVal = ResultHandler<Team>.Erorr("Error retreiving team");
+            }
+
+            return retVal;
+        }
+
+
         public Result<PagedResult<Competitor>> GetCompetitors(int page, int count)
         {
             Result<PagedResult<Competitor>> retVal = null;
@@ -68,6 +112,129 @@ namespace Playground.Business
             {
                 log.Error("Error getting list of competitors", ex);
                 retVal = ResultHandler<PagedResult<Competitor>>.Erorr("Error getting list of competitors");
+            }
+
+            return retVal;
+        }
+
+        public Result<List<Competitor>> FilterByUserAndCategory(int userID, int gameCategoryID)
+        {
+            Result<List<Competitor>> retVal = null;
+            try
+            {
+                List<Competitor> allMycompetitors = new List<Competitor>();
+
+                List<Player> players = Uow.Competitors
+                                            .GetAll(p => p.Games, p => ((Player)p).Teams)
+                                            .OfType<Player>()
+                                            .Where(p => p.UserID == userID &&
+                                                        p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
+                                            .OrderBy(p => p.Name)
+                                            .ToList();
+
+                foreach (Player player in players)
+                {
+                    // serialization issue (we dont nee whole user here);
+                    player.User = null;
+                    allMycompetitors.Add(player);
+                    foreach (TeamPlayer teamPlayer in player.Teams)
+                    {
+                        Team team = (Team)Uow.Competitors.GetById(t => t.CompetitorID == teamPlayer.TeamID, t => t.Games);
+                        allMycompetitors.Add(team);
+                    }
+                }
+
+                // explicitelly load only relevant data
+                foreach (Competitor competitor in allMycompetitors)
+                {
+                    foreach (GameCompetitor gameCompetitor in competitor.Games)
+                    {
+                        Game game = Uow.Games.GetById(g => g.GameID == gameCompetitor.GameID, g => g.CompetitionTypes);
+                        gameCompetitor.Game = new Game()
+                        {
+                            GameID = game.GameID,
+                            GameCategoryID = game.GameCategoryID,
+                            Title = game.Title,
+                            CompetitionTypes = new List<GameCompetitionType>()
+                        };
+                        foreach (GameCompetitionType gct in game.CompetitionTypes)
+                        {
+                            CompetitionType competitonType = Uow.CompetitionTypes.GetById(ct => ct.CompetitionTypeID == gct.CompetitionTypeID);
+                            gameCompetitor.Game.CompetitionTypes.Add(new GameCompetitionType()
+                            {
+                                CompetitionTypeID = competitonType.CompetitionTypeID,
+                                CompetitionType = new CompetitionType()
+                                {
+                                    CompetitionTypeID = competitonType.CompetitionTypeID,
+                                    CompetitorType = competitonType.CompetitorType,
+                                    Name = competitonType.Name,
+                                    CompetitorsCount = competitonType.CompetitorsCount
+                                }
+                            });
+                        }
+                    }
+                }
+
+                retVal = ResultHandler<List<Competitor>>.Sucess(allMycompetitors);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting list of competitors for user id: {0}, categoryID: {1}", userID, gameCategoryID), ex);
+                retVal = ResultHandler<List<Competitor>>.Erorr("Error getting list of competitors");
+            }
+
+            return retVal;
+        }
+
+        public Result<PagedResult<Competitor>> SearchAndExcludeByCategoryAndCompetitorType(
+            int page,
+            int count,
+            List<long> excludeIds,
+            int gameCategoryID,
+            CompetitorType competitorType,
+            string search)
+        {
+            Result<PagedResult<Competitor>> retVal = null;
+            try
+            {
+                int totalItems = Uow.GameCompetitors
+                    .GetAll(gc => gc.Competitor)
+                    .Where(g => !excludeIds.Contains(g.CompetitorID) &&
+                                g.Game.GameCategoryID == gameCategoryID &&
+                                g.Competitor.CompetitorType == competitorType &&
+                                g.Competitor.Name.Contains(search))
+                    .Select(g => g.Competitor)
+                    .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<Competitor> competitors = Uow.GameCompetitors
+                    .GetAll(gc => gc.Competitor)
+                    .Where(g => !excludeIds.Contains(g.CompetitorID) &&
+                                g.Game.GameCategoryID == gameCategoryID &&
+                                g.Competitor.CompetitorType == competitorType &&
+                                g.Competitor.Name.Contains(search))
+                    .OrderBy(g => g.Competitor.Name)
+                    .Select(g => g.Competitor)
+                    .Skip((page - 1) * count)
+                    .Take(count)
+                    .ToList();
+
+                PagedResult<Competitor> result = new PagedResult<Competitor>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = competitors
+                };
+
+                retVal = ResultHandler<PagedResult<Competitor>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error searching competitors by competition type and category. Competitor type: {0}, game category: {1}",
+                    competitorType, gameCategoryID), ex);
+                retVal = ResultHandler<PagedResult<Competitor>>.Erorr("Error searching competitors");
             }
 
             return retVal;
@@ -331,7 +498,7 @@ namespace Playground.Business
             return retVal;
         }
 
-        public Result<PagedResult<Player>> GetPlayersForGameCategory(int page, int count, int gameCategoryID)
+        public Result<PagedResult<Player>> FilterPlayersByGameCategory(int page, int count, int gameCategoryID)
         {
             Result<PagedResult<Player>> retVal = null;
             try
@@ -420,7 +587,7 @@ namespace Playground.Business
             return retVal;
         }
 
-        public Result<PagedResult<Team>> GetTeamsForGameCategory(int page, int count, int gameCategoryID)
+        public Result<PagedResult<Team>> FilterTeamsByGameCategory(int page, int count, int gameCategoryID)
         {
             Result<PagedResult<Team>> retVal = null;
             try
@@ -854,6 +1021,77 @@ namespace Playground.Business
             {
                 log.Error("Error assigning picture for competitor", ex);
             }
+        }
+
+        public bool CheckUserCompetitor(int userID, long competitorID)
+        {
+            bool retVal = false;
+            try
+            {
+                Competitor competitor = Uow.Competitors.GetById(competitorID);
+                retVal = (competitor is Player && ((Player)competitor).UserID == userID);
+                if (!retVal && competitor is Team)
+                {
+                    retVal = Uow.Competitors
+                        .GetAll()
+                        .OfType<Team>()
+                        .Where(t => t.CompetitorID == competitorID &&
+                            t.Players.Any(p => p.Player.UserID == userID))
+                        .Count() > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error checking competitor for user", ex);
+            }
+
+            return retVal;
+        }
+
+        public bool ConfirmScore(CompetitorScore competitorScore)
+        {
+            bool retVal = false;
+            try 
+            {
+                Uow.CompetitorScores.Update(competitorScore, competitorScore.CompetitorID, competitorScore.MatchID);
+                Uow.Commit();
+
+                bool matchConfirmed = !Uow.CompetitorScores
+                    .GetAll()
+                    .Any(cs => cs.MatchID == competitorScore.MatchID &&
+                               !cs.Confirmed);
+                Match match = Uow.Matches.GetById(competitorScore.MatchID);
+
+                if (matchConfirmed)
+                {
+                    match.Status = MatchStatus.Confirmed;
+                    Uow.Matches.Update(match, match.MatchID);
+                    Uow.Commit();
+                }
+
+                retVal = true;
+            }
+            catch (Exception ex) 
+            {
+                log.Error("Error confirming score", ex);
+            }
+
+            return retVal;
+        }
+
+        public int TotalMatchesCount(long competitorID)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Matches.GetAll(m => m.Scores.Any(s => s.CompetitorID == competitorID)).Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error gettign count of matches for competitor. ID: {0}", competitorID), ex);
+            }
+
+            return retVal;
         }
     }
 }

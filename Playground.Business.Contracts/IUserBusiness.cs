@@ -24,6 +24,8 @@ namespace Playground.Business.Contracts
         int TotalMatchesCount(int userID);
 
         Result<PagedResult<User>> GetUsers(int page, int count);
+
+        Result<PagedResult<User>> SearchAndExcludeByAutomaticConfirmation(int page, int count, int userID, string search);
         
         Result<User> UpdateUser(User user);
     }

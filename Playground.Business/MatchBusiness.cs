@@ -15,11 +15,49 @@ namespace Playground.Business
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private ICompetitorBusiness competitorBusiness;
+        private IAutomaticConfirmationBusiness automaticConfirmationsBusiness;
 
-        public MatchBusiness(IPlaygroundUow uow, ICompetitorBusiness cBusiness)
+        public MatchBusiness(IPlaygroundUow uow, 
+            ICompetitorBusiness cBusiness,
+            IAutomaticConfirmationBusiness acBusiness)
         {
             this.Uow = uow;
             this.competitorBusiness = cBusiness;
+            this.automaticConfirmationsBusiness = acBusiness;
+        }
+
+        public Result<Match> AddMatch(int userID, Match match)
+        {
+            Result<Match> retVal = null;
+            try
+            {
+                foreach (CompetitorScore competitorScore in match.Scores)
+                {
+                    if (competitorBusiness.CheckUserCompetitor(userID, competitorScore.CompetitorID))
+                    {
+                        competitorScore.Confirmed = true;
+                    }
+                    else if (automaticConfirmationsBusiness.CheckConfirmation(userID, competitorScore.CompetitorID))
+                    {
+                        competitorScore.Confirmed = true;
+                    }
+                }
+
+                match.CreatorID = userID;
+                match.WinnerID = match.Scores.OrderByDescending(s => s.Score).First().CompetitorID;
+                match.Status = match.Scores.Count(s => !s.Confirmed) > 0 ? MatchStatus.Submited : MatchStatus.Confirmed;
+                Uow.Matches.Add(match);
+                Uow.Commit();
+
+                retVal = ResultHandler<Match>.Sucess(match);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error adding match", ex);
+                retVal = ResultHandler<Match>.Erorr("Error adding match");
+            }
+
+            return retVal;
         }
 
         public Result<PagedResult<Match>> FilterByUser(int page, int count, int userID)
@@ -251,6 +289,21 @@ namespace Playground.Business
             {
                 log.Error("Error getting list of matches", ex);
                 retVal = ResultHandler<PagedResult<Match>>.Erorr("Error getting list of matches");
+            }
+
+            return retVal;
+        }
+
+        public int TotalMatchesByStatus(MatchStatus status)
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Matches.GetAll().Where(m => m.Status == status).Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error gettign matches count", ex);
             }
 
             return retVal;

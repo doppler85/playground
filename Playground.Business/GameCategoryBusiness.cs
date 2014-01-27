@@ -160,7 +160,7 @@ namespace Playground.Business
             return retVal;
         }
 
-        public Result<List<GameCategory>> GetGameCategoriesByCompetitorType(CompetitorType competitorType)
+        public Result<List<GameCategory>> FilterByCompetitorType(CompetitorType competitorType)
         {
             Result<List<GameCategory>> retVal = null;
             try
@@ -179,6 +179,31 @@ namespace Playground.Business
                 log.Error(String.Format("Error retreiving list of game categories by competitor type. competitor type: {0}", competitorType), ex);
                 retVal = ResultHandler<List<GameCategory>>.Erorr("Error retreiving list of game categories by competitor type");
             }
+            return retVal;
+        }
+
+        public Result<List<GameCategory>> FilterByUser(int userID)
+        {
+            Result<List<GameCategory>> retVal = null;
+            try
+            {
+                List<GameCategory> categories = Uow.Competitors
+                                            .GetAll()
+                                            .OfType<Player>()
+                                            .Where(p => p.UserID == userID)
+                                            .SelectMany(p => p.Games)
+                                            .Select(g => g.Game.Category)
+                                            .Distinct()
+                                            .ToList();
+
+                retVal = ResultHandler<List<GameCategory>>.Sucess(categories);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error retreiving game categories list", ex);
+                retVal = ResultHandler<List<GameCategory>>.Erorr("Error retreiving game categories list");
+            }
+
             return retVal;
         }
 

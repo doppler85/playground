@@ -213,6 +213,56 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<User>> SearchAndExcludeByAutomaticConfirmation(int page, int count, int userID, string search)
+        {
+            Result<PagedResult<User>> retVal = null;
+            try
+            {
+                int totalItems = Uow.Users
+                    .GetAll()
+                    .Except(
+                        Uow.AutomaticMatchConfirmations.GetAll()
+                        .Where(ac => ac.ConfirmerID == userID)
+                        .Select(ac => ac.Confirmee))
+                    .Where(u => u.UserID != userID &&
+                            (u.FirstName.Contains(search) || u.LastName.Contains(search)))
+                    .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<User> users = Uow.Users
+                    .GetAll()
+                    .Except(
+                        Uow.AutomaticMatchConfirmations.GetAll()
+                        .Where(ac => ac.ConfirmerID == userID)
+                        .Select(ac => ac.Confirmee))
+                    .Where(u => u.UserID != userID &&
+                            (u.FirstName.Contains(search) || u.LastName.Contains(search)))
+                    .OrderBy(u => u.FirstName)
+                    .Skip((page - 1) * count)
+                    .Take(count)
+                    .ToList();
+
+                PagedResult<User> result = new PagedResult<User>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = users
+                };
+
+                retVal = ResultHandler<PagedResult<User>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of users for automatic confirmation. page: {0}, count: {1}, searhc: {2}", 
+                    page, count, search), ex);
+                retVal = ResultHandler<PagedResult<User>>.Erorr("Error retreiving users");
+            }
+
+            return retVal;
+        }
+
         public Result<User> UpdateUser(User user)
         {
             Result<User> retVal = null;

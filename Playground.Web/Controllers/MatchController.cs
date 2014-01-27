@@ -1,6 +1,7 @@
 ﻿using Playground.Business.Contracts;
 using Playground.Data.Contracts;
 using Playground.Model;
+using Playground.Web.Hubs;
 using Playground.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,15 @@ namespace Playground.Web.Controllers
     public class MatchController : ApiBaseController
     {
         private IMatchBusiness matchBusiness;
+        private IUserBusiness userBusiness;
 
-        public MatchController(IPlaygroundUow uow, IMatchBusiness mBusiness)
+        public MatchController(IPlaygroundUow uow, 
+            IMatchBusiness mBusiness,
+            IUserBusiness uBusiness)
         {
             this.Uow = uow;
             this.matchBusiness = mBusiness;
+            this.userBusiness = uBusiness;
         }
 
         [HttpGet]
@@ -31,6 +36,23 @@ namespace Playground.Web.Controllers
 
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        [HttpPost]
+        [ActionName("addmatch")]
+        public HttpResponseMessage AddMath(Match match)
+        {
+            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            Result<Match> res = matchBusiness.AddMatch(currentUser.UserID, match);
+
+            int totalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed);
+            LiveScores.Instance.BroadcastTotalMatches(totalMatches);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;

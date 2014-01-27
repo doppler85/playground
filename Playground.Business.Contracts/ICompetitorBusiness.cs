@@ -9,7 +9,20 @@ namespace Playground.Business.Contracts
 {
     public interface ICompetitorBusiness
     {
+        Result<Player> GetPlayerById(long playerID);
+
+        Result<Team> GetTeamById(long teamID);
+
         Result<PagedResult<Competitor>> GetCompetitors(int page, int count);
+
+        Result<List<Competitor>> FilterByUserAndCategory(int userID, int gameCategoryID);
+
+        Result<PagedResult<Competitor>> SearchAndExcludeByCategoryAndCompetitorType(int page, 
+            int count, 
+            List<long> excludeIds, 
+            int gameCategoryID,
+            CompetitorType competitorType,
+            string search);
 
         Result<PagedResult<Player>> GetPlayersForUser(int page, int count, int userID);
 
@@ -19,11 +32,11 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<Team>> GetTeamsForGame(int page, int count, int gameID);
 
-        Result<PagedResult<Player>> GetPlayersForGameCategory(int page, int count, int gameCategoryID);
+        Result<PagedResult<Player>> FilterPlayersByGameCategory(int page, int count, int gameCategoryID);
 
         Result<PagedResult<Player>> SearchPlayersForGameCategory(int page, int count, int userID, int gameCategoryID, List<long> ids, string search);
 
-        Result<PagedResult<Team>> GetTeamsForGameCategory(int page, int count, int gameCategoryID);
+        Result<PagedResult<Team>> FilterTeamsByGameCategory(int page, int count, int gameCategoryID);
 
         Result<Player> GetPlayerForGameCategory(int userID, int gameCategoryID);
 
@@ -54,5 +67,11 @@ namespace Playground.Business.Contracts
         bool DeleteCompetitor(long competitorID);
 
         void AssignImage(Competitor competitor, int userID, string fileSystemRoot, string urlRoot, string prefix, string extension);
+
+        bool CheckUserCompetitor(int userID, long competitorID);
+
+        bool ConfirmScore(CompetitorScore competitorScore);
+
+        int TotalMatchesCount(long competitorID);
     }
 }

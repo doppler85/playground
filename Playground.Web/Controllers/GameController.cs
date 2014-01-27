@@ -206,7 +206,7 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage GetIndividualCategories()
         {
             Result<List<GameCategory>> res =
-                gameCategoryBusiness.GetGameCategoriesByCompetitorType(CompetitorType.Individual);
+                gameCategoryBusiness.FilterByCompetitorType(CompetitorType.Individual);
 
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
@@ -236,7 +236,7 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage GetTeamCategories()
         {
             Result<List<GameCategory>> res =
-                gameCategoryBusiness.GetGameCategoriesByCompetitorType(CompetitorType.Team);
+                gameCategoryBusiness.FilterByCompetitorType(CompetitorType.Team);
 
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :

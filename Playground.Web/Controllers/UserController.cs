@@ -414,212 +414,58 @@ namespace Playground.Web.Controllers
         // api/user/mycompeatinggames
         [HttpGet]
         [ActionName("mycompeatinggames")]
-        public List<GameCategory> MyCompeatingGames()
+        public HttpResponseMessage MyCompeatingGames()
         {
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            List<Competitor> allMycompetitors = new List<Competitor>();
-            List<GameCategory> categories = Uow.Competitors
-                                        .GetAll(p => p.Games)
-                                        .OfType<Player>()
-                                        .Where(p => p.UserID == currentUser.UserID)
-                                        .SelectMany(p => p.Games)
-                                        .Select(g => g.Game.Category)
-                                        .Distinct()
-                                        .ToList();
-            return categories;
+            Result<List<GameCategory>> res = gameCategoryBusiness.FilterByUser(currentUser.UserID);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
         }
 
         // api/user/mycompeatinggames
         [HttpGet]
         [ActionName("mycompeatitors")]
-        public List<Competitor> MyCompetitors(int gameCategoryID)
+        public HttpResponseMessage MyCompetitors(int gameCategoryID)
         {
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            List<Competitor> allMycompetitors = new List<Competitor>();
+            Result<List<Competitor>> res = competitorBusiness.FilterByUserAndCategory(currentUser.UserID, gameCategoryID);
 
-            List<Player> players = Uow.Competitors
-                                        .GetAll(p => p.Games, p => ((Player)p).Teams)
-                                        .OfType<Player>()
-                                        .Where(p => p.UserID == currentUser.UserID && 
-                                                    p.Games.Any(g => g.Game.GameCategoryID == gameCategoryID))
-                                        .OrderBy(p => p.Name)
-                                        .ToList();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            foreach (Player player in players)
-            {
-                // serialization issue (we dont nee whole user here);
-                player.User = null;
-                allMycompetitors.Add(player);
-                foreach (TeamPlayer teamPlayer in player.Teams)
-                {
-                    Team team = (Team)Uow.Competitors.GetById(t => t.CompetitorID == teamPlayer.TeamID, t => t.Games);
-                    allMycompetitors.Add(team);
-                }
-            }
-
-            // explicitelly load only relevant data
-            foreach (Competitor competitor in allMycompetitors)
-            {
-                foreach (GameCompetitor gameCompetitor in competitor.Games)
-                {
-                    Game game = Uow.Games.GetById(g => g.GameID == gameCompetitor.GameID, g => g.CompetitionTypes);
-                    gameCompetitor.Game = new Game()
-                    {
-                        GameID = game.GameID,
-                        GameCategoryID = game.GameCategoryID,
-                        Title = game.Title,
-                        CompetitionTypes = new List<GameCompetitionType>()
-                    };
-                    foreach (GameCompetitionType gct in game.CompetitionTypes)
-                    {
-                        CompetitionType competitonType = Uow.CompetitionTypes.GetById(ct => ct.CompetitionTypeID == gct.CompetitionTypeID);
-                        gameCompetitor.Game.CompetitionTypes.Add(new GameCompetitionType()
-                        {
-                            CompetitionTypeID = competitonType.CompetitionTypeID,
-                            CompetitionType = new CompetitionType()
-                            {
-                                CompetitionTypeID = competitonType.CompetitionTypeID,
-                                CompetitorType = competitonType.CompetitorType,
-                                Name = competitonType.Name,
-                                CompetitorsCount = competitonType.CompetitorsCount
-                            }
-                        });
-                    }
-                }
-            }
-
-            return allMycompetitors;
+            return response;
         }
 
         // api/user/searchcompetitors
         [HttpGet]
         [ActionName("searchcompetitors")]
-        public PagedResult<Competitor> SearchCompetitors([FromUri]SearchCompetitorArgs args)
+        public HttpResponseMessage SearchCompetitors([FromUri]SearchCompetitorArgs args)
         {
             if (args.Search == null)
             {
                 args.Search = String.Empty;
             }
-            
-            List<Competitor> competitors = Uow.GameCompetitors
-                .GetAll(gc => gc.Competitor)
-                .Where(g => !args.Ids.Contains(g.CompetitorID) &&
-                            g.Game.GameCategoryID == args.GameCategoryID && 
-                            g.Competitor.CompetitorType == (CompetitorType)args.CompetitorType && 
-                            g.Competitor.Name.Contains(args.Search))
-                .OrderBy(g => g.Competitor.Name)
-                .Select(g => g.Competitor)
-                .Skip((args.Page - 1) * args.Count)
-                .Take(args.Count)
-                .ToList();
+            Result<PagedResult<Competitor>> res = competitorBusiness.SearchAndExcludeByCategoryAndCompetitorType(
+                args.Page,
+                args.Count,
+                args.Ids,
+                args.GameCategoryID,
+                (CompetitorType)args.CompetitorType,
+                args.Search);
 
-            int totalItems = Uow.GameCompetitors
-                .GetAll(gc => gc.Competitor)
-                .Where(g => !args.Ids.Contains(g.CompetitorID) &&
-                            g.Game.GameCategoryID == args.GameCategoryID &&
-                            g.Competitor.CompetitorType == (CompetitorType)args.CompetitorType &&
-                            g.Competitor.Name.Contains(args.Search))
-                .Select(g => g.Competitor)
-                .Count();
-
-
-            PagedResult<Competitor> retVal = new PagedResult<Competitor>()
-            {
-                CurrentPage = args.Page,
-                TotalPages = (totalItems + args.Count - 1) / args.Count,
-                TotalItems = totalItems,
-                Items = competitors
-            };
-
-            return retVal;
-        }
-
-        private bool CheckMyCompetitor(long competitorID)
-        {
-            bool retVal = false;
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            Competitor competitor = Uow.Competitors.GetById(competitorID);
-            retVal = (competitor is Player && ((Player)competitor).UserID == currentUser.UserID);
-            if (!retVal && competitor is Team)
-            {
-                retVal = Uow.Competitors
-                    .GetAll()
-                    .OfType<Team>()
-                    .Where(t => t.CompetitorID == competitorID && 
-                        t.Players.Any(p => p.Player.UserID == currentUser.UserID))
-                    .Count() > 0;
-            }
-
-            return retVal;
-        }
-
-        private bool CheckConfirmation(long competitorID)
-        {
-            bool retVal = false;
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            Competitor competitor = Uow.Competitors.GetById(competitorID);
-            if (competitor is Player)
-            {
-                int competitorUserid = ((Player)competitor).UserID;
-                AutomaticMatchConfirmation amc = Uow.AutomaticMatchConfirmations
-                    .GetAll()
-                    .FirstOrDefault(a => a.ConfirmeeID == currentUser.UserID && 
-                                         a.ConfirmerID == competitorUserid);
-                
-                retVal = amc != null;
-            }
-            else
-            {
-                List<int> userIds = Uow.TeamPlayers
-                    .GetAll(tp => tp.Player)
-                    .Where(tp => tp.TeamID == competitorID)
-                    .Select(tp => tp.Player.UserID)
-                    .ToList();
-
-                AutomaticMatchConfirmation amc = Uow.AutomaticMatchConfirmations
-                    .GetAll()
-                    .FirstOrDefault(a => a.ConfirmeeID == currentUser.UserID &&
-                                         userIds.Contains(a.ConfirmerID));
-
-                retVal = amc != null;
-            }
-            return retVal;
-        }
-
-        [HttpPost]
-        [ActionName("addmatch")]
-        public HttpResponseMessage AddMath(Match match)
-        {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            foreach (CompetitorScore competitorScore in match.Scores)
-            {
-                if (CheckMyCompetitor(competitorScore.CompetitorID))
-                {
-                    competitorScore.Confirmed = true;
-                }
-                else if (CheckConfirmation(competitorScore.CompetitorID))
-                {
-                    competitorScore.Confirmed = true;
-                }
-            }
-
-            match.CreatorID = currentUser.UserID;
-            match.WinnerID = match.Scores.OrderByDescending(s => s.Score).First().CompetitorID;
-            match.Status = match.Scores.Count(s => !s.Confirmed) > 0 ? MatchStatus.Submited : MatchStatus.Confirmed;
-            Uow.Matches.Add(match);
-            Uow.Commit();
-
-            int totalMatches = Uow.Matches.GetAll().Where(m => m.Status == MatchStatus.Confirmed).Count();
-            LiveScores.Instance.BroadcastTotalMatches(totalMatches);
-
-            var response = Request.CreateResponse(HttpStatusCode.Created, match);
-
-            // Compose location header that tells how to get this game 
-            response.Headers.Location =
-                new Uri(Url.Link(RouteConfig.ControllerAndId, new { id = match.MatchID }));
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
+
+
 
         [HttpGet]
         [ActionName("getprofile")]
@@ -699,7 +545,7 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("automaticmatchconfirmationsusers")]
-        public PagedResult<User> AutomaticMatchConfirmationUsers([FromUri]SearchArgs args)
+        public HttpResponseMessage AutomaticMatchConfirmationUsers([FromUri]SearchArgs args)
         {
             if (args.Search == null)
             {
@@ -707,38 +553,14 @@ namespace Playground.Web.Controllers
             }
 
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            List<User> users = Uow.Users
-                .GetAll()
-                .Except(
-                    Uow.AutomaticMatchConfirmations.GetAll()
-                    .Where(ac => ac.ConfirmerID == currentUser.UserID)
-                    .Select(ac => ac.Confirmee))
-                .Where(u => u.UserID != currentUser.UserID && 
-                        (u.FirstName.Contains(args.Search) || u.LastName.Contains(args.Search)))
-                .OrderBy(u => u.FirstName)
-                .Skip((args.Page - 1) * args.Count)
-                .Take(args.Count)
-                .ToList();
+            Result<PagedResult<User>> res =
+                userBusiness.SearchAndExcludeByAutomaticConfirmation(args.Page, args.Count, currentUser.UserID, args.Search);
 
-            int totalItems = Uow.Users
-                .GetAll()
-                .Except(
-                    Uow.AutomaticMatchConfirmations.GetAll()
-                    .Where(ac => ac.ConfirmerID == currentUser.UserID)
-                    .Select(ac => ac.Confirmee))
-                .Where(u => u.UserID != currentUser.UserID &&
-                        (u.FirstName.Contains(args.Search) || u.LastName.Contains(args.Search)))
-                .Count();
-
-            PagedResult<User> retVal = new PagedResult<User>()
-            {
-                CurrentPage = args.Page,
-                TotalPages = (totalItems + args.Count - 1) / args.Count,
-                TotalItems = totalItems,
-                Items = users
-            };
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
                 
-            return retVal;
+            return response;
         }
 
         [HttpPost]
@@ -746,15 +568,11 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage AddAutomaticConfirmation(User user)
         {
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            AutomaticMatchConfirmation amc = new AutomaticMatchConfirmation()
-            {
-                ConfirmeeID = user.UserID,
-                ConfirmerID = currentUser.UserID
-            };
-            Uow.AutomaticMatchConfirmations.Add(amc);
-            Uow.Commit();
+            Result<AutomaticMatchConfirmation> res = automaticConfirmationBusiness.AddConfirmation(currentUser.UserID, user.UserID);
 
-            var response = Request.CreateResponse(HttpStatusCode.Created, amc);
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return response;
         }
@@ -764,11 +582,11 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage DeleteAutomaticConfirmation(int confirmeeID)
         {
             User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            Uow.AutomaticMatchConfirmations.Delete(ac => ac.ConfirmeeID == confirmeeID &&
-                                                         ac.ConfirmerID == currentUser.UserID);
-            Uow.Commit();
-                
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            bool res = automaticConfirmationBusiness.DeleteConfirmation(confirmeeID, currentUser.UserID);
+
+            HttpResponseMessage response = res ?
+                Request.CreateResponse(HttpStatusCode.OK) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, "Error deleting automatic confirmation");
 
             return response;
         }
@@ -777,23 +595,11 @@ namespace Playground.Web.Controllers
         [ActionName("confirmscore")]
         public HttpResponseMessage ConfirmScore(CompetitorScore competitorScore)
         {
-            Uow.CompetitorScores.Update(competitorScore, competitorScore.CompetitorID, competitorScore.MatchID);
-            Uow.Commit();
+            bool res = competitorBusiness.ConfirmScore(competitorScore);
 
-            bool matchConfirmed = !Uow.CompetitorScores
-                .GetAll()
-                .Any(cs => cs.MatchID == competitorScore.MatchID &&
-                           !cs.Confirmed);
-            Match match = Uow.Matches.GetById(competitorScore.MatchID);
-
-            if (matchConfirmed)
-            {
-                match.Status = MatchStatus.Confirmed;
-                Uow.Matches.Update(match, match.MatchID);
-                Uow.Commit();
-            }
-
-            var response = Request.CreateResponse(HttpStatusCode.OK, match);
+            HttpResponseMessage response = res ?
+                Request.CreateResponse(HttpStatusCode.OK) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, "Error confirming score");
 
             return response;
         }

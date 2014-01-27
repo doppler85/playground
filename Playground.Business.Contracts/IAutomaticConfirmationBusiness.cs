@@ -9,6 +9,12 @@ namespace Playground.Business.Contracts
 {
     public interface IAutomaticConfirmationBusiness
     {
+        Result<AutomaticMatchConfirmation> AddConfirmation(int userID, int confirmeeID);
+
         Result<PagedResult<AutomaticMatchConfirmation>> FilterByUser(int page, int count, int userID);
+
+        bool CheckConfirmation(int userID, long competitorID);
+
+        bool DeleteConfirmation(int confirmeeID, int confirmerID);
     }
 }

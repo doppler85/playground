@@ -6,6 +6,8 @@ using Playground.Web.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 
@@ -13,46 +15,40 @@ namespace Playground.Web.Controllers
 {
     public class CompetitorController : ApiBaseController
     {
+        private ICompetitorBusiness competitorBusiness;
+        private IGameCategoryBusiness gameCategoryBusiness;
         private IUserBusiness userBusiness;
 
-        public CompetitorController(IPlaygroundUow uow, IUserBusiness uBusiness)
+        public CompetitorController(IPlaygroundUow uow, 
+            ICompetitorBusiness cBusiness, 
+            IGameCategoryBusiness gcBusiness,
+            IUserBusiness uBusiness)
         {
             this.Uow = uow;
+            this.competitorBusiness = cBusiness;
+            this.gameCategoryBusiness = gcBusiness;
             this.userBusiness = uBusiness;
-        }
 
-        [HttpGet]
-        [ActionName("details")]
-        public Player PlayerDetails(long id)
-        {
-            Player retVal = Uow.Competitors
-                .GetAll(p => ((Player)p).Games, p => ((Player)p).User)
-                .OfType<Player>()
-                .Where(p => p.CompetitorID == id)
-                .FirstOrDefault();
-           
-            return retVal;
         }
 
         [HttpGet]
         [ActionName("getplayerstats")]
-        public PlayerStats GetStats(long id)
+        public HttpResponseMessage GetStats(long id)
         {
-            Player palyer = PlayerDetails(id);
-            PlayerStats retVal = new PlayerStats(palyer);
-            List<int> gameIds = retVal.Games
-                .Select(p => p.GameID)
-                .ToList();
-            GameCategory gameCategory = Uow.GameCategories
-                .GetAll(gc => gc.Games)
-                .FirstOrDefault(gc => gc.Games.Any(g => gameIds.Contains(g.GameID)));
-            retVal.GameCategory = gameCategory;
-            retVal.TotalMatches = Uow.Matches
-                .GetAll()
-                .Where(m => m.Scores.Any(s => s.CompetitorID == id))
-                .Count();
+            Result<Player> playerRes = competitorBusiness.GetPlayerById(id);
+            PlayerStats result = null;
+            if (playerRes.Sucess)
+            {
+                result = new PlayerStats(playerRes.Data);
+                result.GameCategory = gameCategoryBusiness.GetByCompetitorId(id);
+                result.TotalMatches = competitorBusiness.TotalMatchesCount(id);
+            }
 
-            return retVal;
+            HttpResponseMessage response = playerRes.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, result) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, playerRes.Message);
+
+            return response;
         }
 
         [HttpGet]
@@ -69,23 +65,22 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("getteamstats")]
-        public TeamStats GetTeamStats(long id)
+        public HttpResponseMessage GetTeamStats(long id)
         {
-            Team team = TeamDetails(id);
-            TeamStats retVal = new TeamStats(team);
-            List<int> gameIds = retVal.Games
-                .Select(p => p.GameID)
-                .ToList();
-            GameCategory gameCategory = Uow.GameCategories
-                .GetAll(gc => gc.Games)
-                .FirstOrDefault(gc => gc.Games.Any(g => gameIds.Contains(g.GameID)));
-            retVal.GameCategory = gameCategory;
-            retVal.TotalMatches = Uow.Matches
-                .GetAll()
-                .Where(m => m.Scores.Any(s => s.CompetitorID == id))
-                .Count();
+            Result<Team> teamRes = competitorBusiness.GetTeamById(id);
+            TeamStats result = null;
+            if (teamRes.Sucess)
+            {
+                result = new TeamStats(teamRes.Data);
+                result.GameCategory = gameCategoryBusiness.GetByCompetitorId(id);
+                result.TotalMatches = competitorBusiness.TotalMatchesCount(id);
+            }
 
-            return retVal;
+            HttpResponseMessage response = teamRes.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, result) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, teamRes.Message);
+
+            return response;
         }
 
         [HttpGet]
@@ -132,19 +127,18 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("players")]
-        public PagedResult<Player> GetPlayers(string id, int page, int count)
+        public PagedResult<Player> GetPlayers(long id, int page, int count)
         {
-            int teamId = Int32.Parse(id);
             int totalItems = Uow.Competitors
                                         .GetAll(c => ((Player)c).User)
                                         .OfType<Player>()
-                                        .Where(c => c.Teams.Any(t => t.TeamID == teamId))
+                                        .Where(c => c.Teams.Any(t => t.TeamID == id))
                                         .Count();
 
             List<Player> players = Uow.Competitors
                                         .GetAll(c => ((Player)c).User, c => c.Games)
                                         .OfType<Player>()
-                                        .Where(c => c.Teams.Any(t => t.TeamID == teamId))
+                                        .Where(c => c.Teams.Any(t => t.TeamID == id))
                                         .OrderByDescending(c => c.CreationDate)
                                         .Skip((page - 1) * count)
                                         .Take(count)
@@ -163,19 +157,18 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("teams")]
-        public PagedResult<Team> GetTeams(string id, int page, int count)
+        public PagedResult<Team> GetTeams(long id, int page, int count)
         {
-            int playerId = Int32.Parse(id);
             int totalItems = Uow.Competitors
                                         .GetAll()
                                         .OfType<Team>()
-                                        .Where(c => c.Players.Any(p => p.PlayerID == playerId))
+                                        .Where(c => c.Players.Any(p => p.PlayerID == id))
                                         .Count();
 
             List<Team> teams = Uow.Competitors
                                         .GetAll(c => c.Games)
                                         .OfType<Team>()
-                                        .Where(c => c.Players.Any(p => p.PlayerID == playerId))
+                                        .Where(c => c.Players.Any(p => p.PlayerID == id))
                                         .OrderByDescending(c => c.CreationDate)
                                         .Skip((page - 1) * count)
                                         .Take(count)

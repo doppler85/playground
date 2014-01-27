@@ -21,7 +21,9 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<GameCategory>> GetGameCategories(int page, int count);
 
-        Result<List<GameCategory>> GetGameCategoriesByCompetitorType(CompetitorType competitorType);
+        Result<List<GameCategory>> FilterByCompetitorType(CompetitorType competitorType);
+
+        Result<List<GameCategory>> FilterByUser(int userID);
 
         Result<GameCategory> AddGameCategory(GameCategory gameCategory);
 
