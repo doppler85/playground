@@ -111,6 +111,52 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<Match>> FilterByCompetitor(int page, int count, long competitorID)
+        {
+            Result<PagedResult<Match>> retVal = null;
+            try
+            {
+                int totalItems = Uow.Matches
+                                            .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                            .Where(m => m.Status == MatchStatus.Confirmed &&
+                                                        m.Scores.Any(s => s.CompetitorID == competitorID))
+                                            .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<Match> matches = Uow.Matches
+                                            .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
+                                            .Where(m => m.Status == MatchStatus.Confirmed &&
+                                                        m.Scores.Any(s => s.CompetitorID == competitorID))
+                                            .OrderByDescending(s => s.Date)
+                                            .Skip((page - 1) * count)
+                                            .Take(count)
+                                            .ToList();
+
+                foreach (CompetitorScore competitorScore in matches.SelectMany(m => m.Scores))
+                {
+                    competitorScore.Competitor = Uow.Competitors.GetById(competitorScore.CompetitorID);
+                }
+
+                PagedResult<Match> result = new PagedResult<Match>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = matches
+                };
+
+                retVal = ResultHandler<PagedResult<Match>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error getting list of matches for competitor, ID: {0}", competitorID), ex);
+                retVal = ResultHandler<PagedResult<Match>>.Erorr("Error getting list of matches for competitor");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<Match>> FilterByStatus(int page, int count, MatchStatus status)
         {
             Result<PagedResult<Match>> retVal = null;

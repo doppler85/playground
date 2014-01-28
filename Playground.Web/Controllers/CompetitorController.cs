@@ -17,18 +17,20 @@ namespace Playground.Web.Controllers
     {
         private ICompetitorBusiness competitorBusiness;
         private IGameCategoryBusiness gameCategoryBusiness;
+        private IMatchBusiness matchBusiness;
         private IUserBusiness userBusiness;
 
         public CompetitorController(IPlaygroundUow uow, 
             ICompetitorBusiness cBusiness, 
             IGameCategoryBusiness gcBusiness,
+            IMatchBusiness mBusiness,
             IUserBusiness uBusiness)
         {
             this.Uow = uow;
             this.competitorBusiness = cBusiness;
             this.gameCategoryBusiness = gcBusiness;
+            this.matchBusiness = mBusiness;
             this.userBusiness = uBusiness;
-
         }
 
         [HttpGet]
@@ -85,172 +87,67 @@ namespace Playground.Web.Controllers
 
         [HttpGet]
         [ActionName("matches")]
-        public PagedResult<Match> GetMatches(int id, int page, int count)
+        public HttpResponseMessage GetMatches(int id, int page, int count)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
-            int totalItems = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.Status == MatchStatus.Confirmed && 
-                                                    m.Scores.Any(s => s.CompetitorID == id))
-                                        .Count();
+            Result<PagedResult<Match>> res = matchBusiness.FilterByCompetitor(page, count, id);
 
-            List<Match> matches = Uow.Matches
-                                        .GetAll(m => m.Winner, m => m.Game, m => m.Scores)
-                                        .Where(m => m.Status == MatchStatus.Confirmed && 
-                                                    m.Scores.Any(s => s.CompetitorID == id))
-                                        .OrderByDescending(s => s.Date)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            List<long> competitorIds = matches
-                .SelectMany(m => m.Scores)
-                .ToList()
-                .Select(s => s.CompetitorID)
-                .ToList();
-
-            List<Competitor> competitors = Uow.Competitors
-                .GetAll()
-                .Where(c => competitorIds.Contains(c.CompetitorID))
-                .ToList();
-
-            PagedResult<Match> retVal = new PagedResult<Match>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = matches
-            };
-
-            return retVal;
+            return response;
         }
 
         [HttpGet]
         [ActionName("players")]
-        public PagedResult<Player> GetPlayers(long id, int page, int count)
+        public HttpResponseMessage GetPlayers(long id, int page, int count)
         {
-            int totalItems = Uow.Competitors
-                                        .GetAll(c => ((Player)c).User)
-                                        .OfType<Player>()
-                                        .Where(c => c.Teams.Any(t => t.TeamID == id))
-                                        .Count();
+            Result<PagedResult<Player>> res = competitorBusiness.FilterPlayersByTeam(page, count, id);
 
-            List<Player> players = Uow.Competitors
-                                        .GetAll(c => ((Player)c).User, c => c.Games)
-                                        .OfType<Player>()
-                                        .Where(c => c.Teams.Any(t => t.TeamID == id))
-                                        .OrderByDescending(c => c.CreationDate)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
-            
-            PagedResult<Player> retVal = new PagedResult<Player>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = players
-            };
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            return retVal;
+            return response;
         }
 
         [HttpGet]
         [ActionName("teams")]
-        public PagedResult<Team> GetTeams(long id, int page, int count)
+        public HttpResponseMessage GetTeams(long id, int page, int count)
         {
-            int totalItems = Uow.Competitors
-                                        .GetAll()
-                                        .OfType<Team>()
-                                        .Where(c => c.Players.Any(p => p.PlayerID == id))
-                                        .Count();
+            Result<PagedResult<Team>> res = competitorBusiness.FilterTeamsByPlayer(page, count, id);
 
-            List<Team> teams = Uow.Competitors
-                                        .GetAll(c => c.Games)
-                                        .OfType<Team>()
-                                        .Where(c => c.Players.Any(p => p.PlayerID == id))
-                                        .OrderByDescending(c => c.CreationDate)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            List<int> gameIds = teams.SelectMany(t => t.Games).Select(g => g.GameID).ToList();
-            List<Game> games = Uow.Games
-                                        .GetAll(g => g.Category)
-                                        .Where(g => gameIds.Contains(g.GameID))
-                                        .ToList();
-
-            PagedResult<Team> retVal = new PagedResult<Team>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = teams
-            };
-
-            return retVal;
+            return response;
         }
 
         [HttpGet]
         [ActionName("allplayers")]
-        public PagedResult<Player> GetAllPlayers(int page, int count)
+        public HttpResponseMessage GetAllPlayers(int page, int count)
         {
-            int totalItems = Uow.Competitors
-                                        .GetAll(c => ((Player)c).User)
-                                        .OfType<Player>()
-                                        .Count();
+            Result<PagedResult<Player>> res = competitorBusiness.GetPlayers(page, count);
 
-            List<Player> players = Uow.Competitors
-                                        .GetAll(c => ((Player)c).User, c => c.Games)
-                                        .OfType<Player>()
-                                        .OrderByDescending(c => c.CreationDate)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            PagedResult<Player> retVal = new PagedResult<Player>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = players
-            };
-
-            return retVal;
+            return response;
         }
 
         [HttpGet]
         [ActionName("allteams")]
-        public PagedResult<Team> GetAllTeams(int page, int count)
+        public HttpResponseMessage GetAllTeams(int page, int count)
         {
-            int totalItems = Uow.Competitors
-                                        .GetAll()
-                                        .OfType<Team>()
-                                        .Count();
+            Result<PagedResult<Team>> res = competitorBusiness.GetTeams(page, count);
 
-            List<Team> teams = Uow.Competitors
-                                        .GetAll(c => c.Games)
-                                        .OfType<Team>()
-                                        .OrderByDescending(c => c.CreationDate)
-                                        .Skip((page - 1) * count)
-                                        .Take(count)
-                                        .ToList();
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            List<int> gameIds = teams.SelectMany(t => t.Games).Select(g => g.GameID).ToList();
-            List<Game> games = Uow.Games
-                                        .GetAll(g => g.Category)
-                                        .Where(g => gameIds.Contains(g.GameID))
-                                        .ToList();
-
-            PagedResult<Team> retVal = new PagedResult<Team>()
-            {
-                CurrentPage = page,
-                TotalPages = (totalItems + count - 1) / count,
-                TotalItems = totalItems,
-                Items = teams
-            };
-
-            return retVal;
+            return response;
         }
     }
 }

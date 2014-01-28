@@ -15,6 +15,10 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<Competitor>> GetCompetitors(int page, int count);
 
+        Result<PagedResult<Player>> GetPlayers(int page, int count);
+
+        Result<PagedResult<Team>> GetTeams(int page, int count);
+
         Result<List<Competitor>> FilterByUserAndCategory(int userID, int gameCategoryID);
 
         Result<PagedResult<Competitor>> SearchAndExcludeByCategoryAndCompetitorType(int page, 
@@ -37,6 +41,10 @@ namespace Playground.Business.Contracts
         Result<PagedResult<Player>> SearchPlayersForGameCategory(int page, int count, int userID, int gameCategoryID, List<long> ids, string search);
 
         Result<PagedResult<Team>> FilterTeamsByGameCategory(int page, int count, int gameCategoryID);
+
+        Result<PagedResult<Player>> FilterPlayersByTeam(int page, int count, long teamID);
+
+        Result<PagedResult<Team>> FilterTeamsByPlayer(int page, int count, long playerID);
 
         Result<Player> GetPlayerForGameCategory(int userID, int gameCategoryID);
 
