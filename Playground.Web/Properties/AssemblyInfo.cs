@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: OwinStartup(typeof(Playground.Web.App_Start.Startup))]
+[assembly: OwinStartup(typeof(Playground.Web.Startup))]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

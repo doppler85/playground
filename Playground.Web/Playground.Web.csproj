@@ -228,6 +228,7 @@
     <Compile Include="App_Start\IoCContainer.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\ScopeContainer.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\UnityHttpControllerActivator.cs" />
     <Compile Include="App_Start\ValidationActionFilter.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountControlleMVC.cs" />
+    <Compile Include="Controllers\AccountControllerOwin.cs" />
     <Compile Include="Controllers\ApiBaseController.cs" />
     <Compile Include="Controllers\CompetitionTypeController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
