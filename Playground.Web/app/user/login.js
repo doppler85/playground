@@ -1,12 +1,14 @@
 ﻿'use strict';
 angular.module('Playground.login', ['ngResource', 'ui.router']).
 controller('LoginController', [
+'$location',
+'$http',
 '$scope',
 '$state',
 '$stateParams',
 '$rootScope',
 'security',
-function ($scope, $state, $stateParams, $rootScope, security) {
+function ($location, $http, $scope, $state, $stateParams, $rootScope, security) {
     $scope.pageTitle = $state.current.data ? $state.current.data.pageTitle : "Login";
 
     $scope.user = {
@@ -17,6 +19,7 @@ function ($scope, $state, $stateParams, $rootScope, security) {
 
     $scope.authError = null;
     $scope.authReason = null;
+    $scope.externallogins = null;
 
     if (security.getLoginReason()) {
         $scope.authReason = (security.isAuthenticated()) ?
@@ -42,6 +45,26 @@ function ($scope, $state, $stateParams, $rootScope, security) {
         });
     };
 
+    $scope.loginExternal = function (loginprovider) {
+        $location.path(loginprovider.url);
+    };
+
+    $scope.LoadExternalLogins = function () {
+        $http(
+        {
+            method: 'GET',
+            url: '/api/account/externallogins',
+            params: {
+                returnurl: '/',
+                generatestate: true
+            },
+        }).success(function (data, status, headers, config) {
+            $scope.externallogins = data;
+        }).error(function (error) {
+            console.log('something went wrong ');
+        });
+    };
+
     $scope.clearForm = function () {
         $scope.user = {};
     };
@@ -53,4 +76,6 @@ function ($scope, $state, $stateParams, $rootScope, security) {
     $scope.toggleRememberMe = function () {
         $scope.user.rememberMe = !$scope.user.rememberMe;
     };
+
+    $scope.LoadExternalLogins();
 }]);

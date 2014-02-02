@@ -3,7 +3,7 @@
 </div>
 
 <div class="row">
-    <div class="span5">
+    <div class="span6">
         <div class="alert alert-warning" data-ng-show="authReason">
             {{authReason}}
         </div>
@@ -44,5 +44,10 @@
             {{authError}}
         </div>
         <pre>{{user | json}}</pre>
+    </div>
+    <div class="span6">
+        <div data-ng-repeat="loginprovider in externallogins">
+            <button class="btn" data-ng-click="loginExternal(loginprovider)">{{loginprovider.name}}</button>
+        </div>
     </div>
 </div>

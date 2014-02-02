@@ -17,22 +17,22 @@ namespace Playground.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                name: ControllerOnly,
-                url: "api/{controller}"
-            );
+            //routes.MapRoute(
+            //    name: ControllerOnly,
+            //    url: "api/{controller}"
+            //);
 
-            routes.MapRoute(
-                name: ControllerAndId,
-                url: "api/{controller}/{id}",
-                defaults: null, //defaults: new { id = RouteParameter.Optional } //,
-                constraints: new { id = @"^\d+$" } // id must be all digits
-            );
+            //routes.MapRoute(
+            //    name: ControllerAndId,
+            //    url: "api/{controller}/{id}",
+            //    defaults: null, //defaults: new { id = RouteParameter.Optional } //,
+            //    constraints: new { id = @"^\d+$" } // id must be all digits
+            //);
 
-            routes.MapRoute(
-                name: ControllerAction,
-                url: "api/{controller}/{action}"
-            );
+            //routes.MapRoute(
+            //    name: ControllerAction,
+            //    url: "api/{controller}/{action}"
+            //);
 
             /*
             routes.MapRoute(
