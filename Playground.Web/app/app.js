@@ -19,6 +19,7 @@ var Playground = angular.module('Playground', [
     'Playground.competition-type-edit',
     'Playground.register',
     'Playground.login',
+    'Playground.external-login',
     'Playground.user-list',
     'Playground.user-status',
     'Playground.user-profile',
@@ -63,17 +64,27 @@ Playground.
         '$routeProvider',
         '$httpProvider',
         '$locationProvider',
-        function ($stateProvider, $urlRouterProvider, $routeProvider, $httpProvider, $locationProvider) {
+        '$injector',
+        function ($stateProvider,
+            $urlRouterProvider, 
+            $routeProvider, 
+            $httpProvider, 
+            $locationProvider)
+        {
             $locationProvider.html5Mode(false)//.hashPrefix('!');
             delete $httpProvider.defaults.headers.common["X-Requested-With"];
             $urlRouterProvider.otherwise('/home');
-        }]).
-    config([
+        }])
+    .config([
         '$compileProvider',
         '$stateProvider',
         '$injector',
         function ($compileProvider, $stateProvider, $injector) {
             $stateProvider.
+                state('externallogin', {
+                    url: '/access_token={token:[^/]*}',
+                    controller: 'ExternalLoginController'
+                }).
                 state('home', {
                     url: '/home',
                     templateUrl: 'app/templates/home/home.tpl.html',
@@ -228,10 +239,9 @@ Playground.
            }]).
     run([
         '$rootScope',
-        '$location',
         '$state',
         'settings',
-        function ($rootScope, $location, $state, settings) { //*** Bootstrap the app, init config etc.
+        function ($rootScope, $state, settings) { //*** Bootstrap the app, init config etc.
             $rootScope.ShowTitle = true;
             $rootScope.ShowMenu = true;
             $rootScope.settings = settings;
@@ -273,6 +283,33 @@ Playground.
                 return ngFormController.$valid && ngFormController.$dirty;
             };
 
+
+            // external loging 
+            $rootScope.archiveSessionStorageToLocalStorage = function () {
+                var backup = {};
+
+                for (var i = 0; i < sessionStorage.length; i++) {
+                    backup[sessionStorage.key(i)] = sessionStorage[sessionStorage.key(i)];
+                }
+
+                localStorage["sessionStorageBackup"] = JSON.stringify(backup);
+                sessionStorage.clear();
+            };
+
+            $rootScope.restoreSessionStorageFromLocalStorage = function () {
+                var backupText = localStorage["sessionStorageBackup"],
+                    backup;
+
+                if (backupText) {
+                    backup = JSON.parse(backupText);
+
+                    for (var key in backup) {
+                        sessionStorage[key] = backup[key];
+                    }
+
+                    localStorage.removeItem("sessionStorageBackup");
+                }
+            };
         }]).
     controller('AppCtrl', [
         '$scope',

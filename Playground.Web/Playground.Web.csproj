@@ -414,6 +414,7 @@
     <Content Include="app\templates\user\user-profile.teams.tpl.html" />
     <Content Include="app\templates\user\user-profile.info.tpl.html" />
     <Content Include="app\templates\user\user-profile.players.tpl.html" />
+    <Content Include="app\user\external-login.js" />
     <Content Include="app\user\user-list.js" />
     <Content Include="app\user\register.js" />
     <Content Include="app\user\register.tpl.html" />
