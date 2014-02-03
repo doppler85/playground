@@ -1,14 +1,15 @@
 ﻿'use strict';
-angular.module('Playground.external-login', ['ngResource', 'ui.router']).
+angular.module('Playground.external-login', ['ng', 'ngResource', 'ui.router']).
 controller('ExternalLoginController', [
 '$location',
 '$http',
 '$scope',
+'$window',
 '$state',
 '$stateParams',
 '$rootScope',
 'security',
-function ($location, $http, $scope, $state, $stateParams, $rootScope, security) {
+function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, security) {
 
     $scope.cleanUpLocation = function (){
         //window.location.hash = "";
@@ -19,8 +20,8 @@ function ($location, $http, $scope, $state, $stateParams, $rootScope, security) 
     }
 
     $scope.getFragment = function (){
-        if (window.location.hash.indexOf("#/") === 0) {
-            return $scope.parseQueryString(window.location.hash.substr(2));
+        if ($window.location.hash.indexOf("#/") === 0) {
+            return $scope.parseQueryString($window.location.hash.substr(2));
         } else {
             return {};
         }
@@ -61,15 +62,14 @@ function ($location, $http, $scope, $state, $stateParams, $rootScope, security) 
         var state;
 
         if (typeof (fragment.access_token) !== "undefined") {
-            state = sessionStorage["state"];
-            sessionStorage.removeItem("state");
+            state = $window.sessionStorage["state"];
+            $window.sessionStorage.removeItem("state");
 
             if (state === null || fragment.state !== state) {
                 fragment.error = "invalid_state";
             }
         }
     }
-
 
     $scope.init = function () {
         var fragment = $scope.getFragment(),

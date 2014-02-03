@@ -293,6 +293,7 @@ namespace Playground.Web.Controllers
                 }
                 else
                 {
+                    // TODO: Register new user automatically here by setting username from external login claims
                     IEnumerable<Claim> claims = externalLogin.GetClaims();
                     ClaimsIdentity identity = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
                     Authentication.SignIn(identity);

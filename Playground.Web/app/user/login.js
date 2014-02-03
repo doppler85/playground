@@ -1,14 +1,15 @@
 ﻿'use strict';
-angular.module('Playground.login', ['ngResource', 'ui.router']).
+angular.module('Playground.login', ['ng', 'ngResource', 'ui.router']).
 controller('LoginController', [
 '$location',
 '$http',
 '$scope',
+'$window',
 '$state',
 '$stateParams',
 '$rootScope',
 'security',
-function ($location, $http, $scope, $state, $stateParams, $rootScope, security) {
+function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, security) {
     $scope.pageTitle = $state.current.data ? $state.current.data.pageTitle : "Login";
 
     $scope.user = {
@@ -52,7 +53,7 @@ function ($location, $http, $scope, $state, $stateParams, $rootScope, security) 
         // to localStorage to work around this problem.
         $scope.archiveSessionStorageToLocalStorage();
 
-        window.location = loginprovider.url;
+        $window.location = loginprovider.url;
     };
 
     $scope.LoadExternalLogins = function () {
