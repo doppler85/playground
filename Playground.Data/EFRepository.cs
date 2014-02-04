@@ -83,6 +83,11 @@ namespace Playground.Data
                     dbEntityEntry.State = EntityState.Modified;
                 }
             }
+            else 
+            {
+                DbSet.Attach(entity);
+                dbEntityEntry.State = EntityState.Modified;
+            }
         }
 
         public virtual void Delete(T entity)

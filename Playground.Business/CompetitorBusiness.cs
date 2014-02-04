@@ -909,6 +909,8 @@ namespace Playground.Business
                 }
                 Uow.Competitors.Update(player, player.CompetitorID);
                 Uow.Commit();
+
+                retVal = ResultHandler<Player>.Sucess(player);
             }
             catch (Exception ex)
             {
