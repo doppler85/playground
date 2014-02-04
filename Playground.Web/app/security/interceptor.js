@@ -1,9 +1,9 @@
 //angular.module('Playground.security.interceptor', ['security.retryQueue'])
-angular.module('Playground.security.interceptor', [])
+angular.module('Playground.security.interceptor', ['ng', 'Playground.security.retry-queue'])
 
 // This http interceptor listens for authentication failures
 // .factory('securityInterceptor', ['$injector', 'securityRetryQueue', function ($injector, queue) {
-.factory('securityInterceptor', ['$injector', function ($injector) {
+.factory('securityInterceptor', ['$injector', 'securityRetryQueue', '$window', function ($injector, queue, $window) {
     return function (promise) {
         // Intercept failed requests
         //return promise.then(null, function(originalResponse) {
@@ -14,6 +14,9 @@ angular.module('Playground.security.interceptor', [])
         function (originalResponse) {
             if (originalResponse.status === 401) {
                 // The request bounced because it was not authorized - add a new request to the retry queue
+                $window.localStorage.removeItem("accessToken");
+                $window.sessionStorage.removeItem("accessToken");
+
                 promise = queue.pushRetryFn('unauthorized-server', function retryRequest() {
                     // We must use $injector to get the $http service to prevent circular dependency
                     return $injector.get('$http')(originalResponse.config);
@@ -28,8 +31,9 @@ angular.module('Playground.security.interceptor', [])
     return {
         request: function (config) {
             config.headers = config.headers || {};
-            if ($window.sessionStorage.token) {
-                config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+            var token = $window.localStorage["accessToken"] || $window.sessionStorage["accessToken"];
+            if (token) {
+                config.headers.Authorization = 'Bearer ' + token;
             }
             return config;
         },

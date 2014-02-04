@@ -16,6 +16,7 @@ using Playground.Web.Results;
 using Microsoft.Owin.Security.OAuth;
 using Playground.Web.Providers;
 using Playground.Business.Contracts;
+using Playground.Model;
 
 namespace Playground.Web.Controllers
 {
@@ -25,11 +26,13 @@ namespace Playground.Web.Controllers
         public class AccountController : ApiBaseController
         {
             private const string LocalLoginProvider = "Local";
+            private IUserBusiness userBusiness;
 
             public AccountController(IUserBusiness uBusiness)
             {
                 UserManager = Startup.UserManagerFactory();
                 AccessTokenFormat = Startup.OAuthOptions.AccessTokenFormat;
+                this.userBusiness = uBusiness;
             }
 
             public UserManager<IdentityUser> UserManager { get; private set; }
@@ -39,36 +42,16 @@ namespace Playground.Web.Controllers
             [HttpGet]
             [AllowAnonymous]
             [ActionName("currentuser")]
-            public UserProfile GetCurrentUser()
+            public UserInfoViewModel GetCurrentUser()
             {
-                return GetCurrentUser(User.Identity.Name);
-            }
+                ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-            private UserProfile GetCurrentUser(string userName)
-            {
-                UserProfile retVal = GetUserProfile(userName);
-                if (retVal != null)
+                return new UserInfoViewModel
                 {
-                    Playground.Model.User playgroundUser = Uow.Users
-                        .GetAll()
-                        .FirstOrDefault(u => u.ExternalUserID == retVal.UserId);
-                    if (playgroundUser != null)
-                    {
-                        retVal.UserName = String.Format("{0} {1}", playgroundUser.FirstName, playgroundUser.LastName);
-                    }
-                }
-
-                return retVal;
-            }
-
-            private UserProfile GetUserProfile(string userName)
-            {
-                UserProfile retVal = null;
-                using (UsersContext db = new UsersContext())
-                {
-                    retVal = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == userName.ToLower());
-                }
-                return retVal;
+                    UserName = User.Identity.GetUserName(),
+                    HasRegistered = externalLogin == null,
+                    LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
+                };
             }
 
             // GET api/Account/UserInfo
@@ -88,6 +71,7 @@ namespace Playground.Web.Controllers
 
             // POST api/Account/Logout
             [Route("Logout")]
+            [AllowAnonymous]
             public IHttpActionResult Logout()
             {
                 Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
@@ -275,7 +259,7 @@ namespace Playground.Web.Controllers
                     Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
                     return new ChallengeResult(provider, this);
                 }
-
+                
                 IdentityUser user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
                     externalLogin.ProviderKey));
 
@@ -294,6 +278,38 @@ namespace Playground.Web.Controllers
                 else
                 {
                     // TODO: Register new user automatically here by setting username from external login claims
+                    user = new IdentityUser
+                    {
+                        UserName = externalLogin.UserName
+                    };
+                    user.Logins.Add(new IdentityUserLogin
+                    {
+                        LoginProvider = externalLogin.LoginProvider,
+                        ProviderKey = externalLogin.ProviderKey
+                    });
+
+                    IdentityResult result = await UserManager.CreateAsync(user);
+                    IHttpActionResult errorResult = GetErrorResult(result);
+
+                    if (errorResult != null)
+                    {
+                        return errorResult;
+                    }
+
+                    User userModel = new Model.User() 
+                    {
+                        EmailAddress = externalLogin.Email,
+                        ExternalUserID = user.Id,
+                        FirstName = externalLogin.UserName
+                    };
+
+                    Result<User> res = userBusiness.AddUser(userModel);
+                    
+                    if (!res.Sucess)
+                    {
+                        return InternalServerError(new Exception(res.Message));
+                    }
+
                     IEnumerable<Claim> claims = externalLogin.GetClaims();
                     ClaimsIdentity identity = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
                     Authentication.SignIn(identity);
@@ -477,6 +493,8 @@ namespace Playground.Web.Controllers
                 public string LoginProvider { get; set; }
                 public string ProviderKey { get; set; }
                 public string UserName { get; set; }
+                public string Email { get; set; }
+
 
                 public IList<Claim> GetClaims()
                 {
@@ -515,7 +533,8 @@ namespace Playground.Web.Controllers
                     {
                         LoginProvider = providerKeyClaim.Issuer,
                         ProviderKey = providerKeyClaim.Value,
-                        UserName = identity.FindFirstValue(ClaimTypes.Name)
+                        UserName = identity.FindFirstValue(ClaimTypes.Name),
+                        Email = identity.FindFirstValue(ClaimTypes.Email)
                     };
                 }
             }

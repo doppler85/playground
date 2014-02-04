@@ -79,6 +79,28 @@ namespace Playground.Business
 
             return retVal;
         }
+
+        public Result<User> GetUserByExternalId(string externalUserID)
+        {
+            Result<User> retVal = null;
+            try
+            {
+                User user = Uow.Users
+                    .GetAll()
+                    .FirstOrDefault(u => u.ExternalUserID == externalUserID);
+
+                SetUserPictureUrl(user);
+
+                retVal = ResultHandler<User>.Sucess(user);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving user by external ID. ID: {0}", externalUserID), ex);
+                retVal = ResultHandler<User>.Erorr("Error retreiving user by email");
+            }
+
+            return retVal;
+        }
                 
         public int TotalGamesCount(int userID)
         {
@@ -263,6 +285,25 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<User> AddUser(User user)
+        {
+            Result<User> retVal = null;
+            try
+            {
+                Uow.Users.Add(user);
+                Uow.Commit();
+
+                retVal = ResultHandler<User>.Sucess(user);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error adding user: {0}", user.UserID), ex);
+                retVal = ResultHandler<User>.Erorr("Error adding user");
+            }
+
+            return retVal;
+        }
+
         public Result<User> UpdateUser(User user)
         {
             Result<User> retVal = null;
@@ -273,7 +314,7 @@ namespace Playground.Business
                 userToUpdate.LastName = user.LastName;
                 userToUpdate.Gender = user.Gender;
 
-                Uow.Users.Update(userToUpdate);
+                Uow.Users.Update(userToUpdate, userToUpdate.UserID);
                 Uow.Commit();
 
                 retVal = ResultHandler<User>.Sucess(userToUpdate);

@@ -1,6 +1,7 @@
 /// <reference path="lib/angular/angular.js" />
 'use strict';
 var Playground = angular.module('Playground', [
+    'ng',
     'ui.router',
     'Playground.imageupload',
     'Playground.matches',
@@ -240,8 +241,9 @@ Playground.
     run([
         '$rootScope',
         '$state',
+        '$window',
         'settings',
-        function ($rootScope, $state, settings) { //*** Bootstrap the app, init config etc.
+        function ($rootScope, $state, $window, settings) { //*** Bootstrap the app, init config etc.
             $rootScope.ShowTitle = true;
             $rootScope.ShowMenu = true;
             $rootScope.settings = settings;
@@ -289,11 +291,11 @@ Playground.
                 var backup = {};
 
                 for (var i = 0; i < sessionStorage.length; i++) {
-                    backup[sessionStorage.key(i)] = sessionStorage[sessionStorage.key(i)];
+                    backup[$window.sessionStorage.key(i)] = sessionStorage[$window.sessionStorage.key(i)];
                 }
 
-                localStorage["sessionStorageBackup"] = JSON.stringify(backup);
-                sessionStorage.clear();
+                $window.localStorage["sessionStorageBackup"] = JSON.stringify(backup);
+                $window.sessionStorage.clear();
             };
 
             $rootScope.restoreSessionStorageFromLocalStorage = function () {
@@ -304,10 +306,24 @@ Playground.
                     backup = JSON.parse(backupText);
 
                     for (var key in backup) {
-                        sessionStorage[key] = backup[key];
+                        $window.sessionStorage[key] = backup[key];
                     }
 
-                    localStorage.removeItem("sessionStorageBackup");
+                    $window.localStorage.removeItem("sessionStorageBackup");
+                }
+            };
+
+            // Operations
+            $rootScope.clearAccessToken = function () {
+                $window.localStorage.removeItem("accessToken");
+                $window.sessionStorage.removeItem("accessToken");
+            };
+
+            $rootScope.setAccessToken = function (accessToken, persistent) {
+                if (persistent) {
+                    $window.localStorage["accessToken"] = accessToken;
+                } else {
+                    $window.sessionStorage["accessToken"] = accessToken;
                 }
             };
         }]).

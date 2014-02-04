@@ -99,10 +99,6 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
             {
                 method: 'GET',
                 url: '/api/account/currentuser',
-                params: {
-                    returnurl: '/',
-                    generatestate: true
-                },
             }).success(function (data, status, headers, config) {
                 $scope.externallogins = data;
                 if (data) {
@@ -119,7 +115,25 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
             // self.errors.push("External login failed.");
         } else if (typeof (fragment.access_token) !== "undefined") {
             $scope.cleanUpLocation();
-            $state.transitionTo('home');
+            // $state.transitionTo('home');
+            $scope.setAccessToken(fragment.access_token, false);
+            $http(
+            {
+                method: 'GET',
+                url: '/api/account/currentuser',
+            }).success(function (data, status, headers, config) {
+                $scope.externallogins = data;
+                if (data) {
+                    $state.transitionTo('profile.info');
+                }
+                else {
+                    $scope.clearAccessToken();
+                    $state.transitionTo('login');
+                }
+            }).error(function (error) {
+                $scope.clearAccessToken();
+                $state.transitionTo('login');
+            });
             //dataModel.getUserInfo(fragment.access_token)
             //    .done(function (data) {
             //        if (typeof (data.userName) !== "undefined" && typeof (data.hasRegistered) !== "undefined"

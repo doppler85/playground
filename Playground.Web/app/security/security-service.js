@@ -1,12 +1,21 @@
 ﻿// Based loosely around work by Witold Szczerba - https://github.com/witoldsz/angular-http-auth
 angular.module('Playground.security.security-service', [
+  'ng',
   'ngRoute',
   'ui.router',
   'ui.bootstrap.modal',
   'Playground.security.retry-queue',    // Keeps track of failed requests that need to be retried once the user logs in
 ])
 
-.factory('security', ['$http', '$q', '$location', '$state', 'securityRetryQueue', '$modal', function ($http, $q, $location, $state, queue, $modal) {
+.factory('security', [
+    '$http',
+    '$q',
+    '$location',
+    '$state',
+    'securityRetryQueue',
+    '$window',
+    '$modal',
+    function ($http, $q, $location, $state, queue, $window, $modal) {
 
     // Redirect to the given url (defaults to '/')
     // todo: change location to use another provider (ui-router)
@@ -106,6 +115,9 @@ angular.module('Playground.security.security-service', [
 
         // Logout the current user and redirect
         logout: function (redirectTo) {
+            $window.localStorage.removeItem("accessToken");
+            $window.sessionStorage.removeItem("accessToken");
+
             $http.post('api/account/logout').then(function () {
                 service.currentUser = null;
                 redirect(redirectTo);

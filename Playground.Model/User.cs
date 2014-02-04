@@ -21,7 +21,7 @@ namespace Playground.Model
         public string LastName { get; set; }
         public Gender Gender { get; set; }
         public string EmailAddress { get; set; }
-        public int ExternalUserID { get; set; }
+        public string ExternalUserID { get; set; }
         public string PictureUrl { get; set; }
 
         public virtual List<Player> PlayerProfiles { get; set; }

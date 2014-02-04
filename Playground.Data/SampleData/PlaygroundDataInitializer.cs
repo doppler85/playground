@@ -146,7 +146,7 @@ namespace Playground.Data.SampleData
                 EmailAddress = "admin@playground.com",
                 Gender = Gender.Male,
                 LastName = "pankovic",
-                ExternalUserID = 1
+                ExternalUserID = "1"
             });
 
             context.Users.Add(new User()

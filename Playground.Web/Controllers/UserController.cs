@@ -1,4 +1,5 @@
-﻿using Playground.Data.Contracts;
+﻿using Microsoft.AspNet.Identity;
+using Playground.Data.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +80,7 @@ namespace Playground.Web.Controllers
         [ActionName("players")]
         public HttpResponseMessage GetPlayers(int page, int count)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
             Result<PagedResult<Player>> res = competitorBusiness.GetPlayersForUser(page, count, currentUser.UserID);
             if (res.Sucess)
@@ -99,7 +100,8 @@ namespace Playground.Web.Controllers
         [ActionName("addplayer")]
         public HttpResponseMessage AddPlayer(Player player)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             player.UserID = currentUser.UserID;
             Result<Player> res = competitorBusiness.AddPlayer(player);
 
@@ -163,7 +165,7 @@ namespace Playground.Web.Controllers
         [ActionName("teams")]
         public HttpResponseMessage GetTeams(int page, int count)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
             Result<PagedResult<Team>> res = competitorBusiness.GetTeamsForUser(page, count, currentUser.UserID);
             if (res.Sucess)
@@ -182,7 +184,7 @@ namespace Playground.Web.Controllers
         [ActionName("addteam")]
         public HttpResponseMessage AddTeam(Team team)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             team.CreatorID = currentUser.UserID;
 
             Result<Team> res = competitorBusiness.AddTeam(team);
@@ -221,7 +223,7 @@ namespace Playground.Web.Controllers
         [ActionName("getupdateteam")]
         public HttpResponseMessage GetUpdateTeam(long id)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             
             Result<Team> res = competitorBusiness.GetUpdateTeam(id, currentUser.UserID);
             
@@ -243,7 +245,7 @@ namespace Playground.Web.Controllers
         [ActionName("myteamplayer")]
         public HttpResponseMessage MyTeamPlayer(int gameCategoryID)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<Player> res = competitorBusiness.GetPlayerForGameCategory(currentUser.UserID, gameCategoryID);
 
             if (res.Sucess)
@@ -268,7 +270,7 @@ namespace Playground.Web.Controllers
                 args.Search = String.Empty;
             }
 
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<PagedResult<Player>> res = competitorBusiness.SearchPlayersForGameCategory(args.Page, args.Count, currentUser.UserID, args.GameCategoryID, args.Ids, args.Search);
 
             if (res.Sucess)
@@ -292,7 +294,7 @@ namespace Playground.Web.Controllers
             {
                 args.Search = String.Empty;
             }
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             GameCategory gameCategory = gameCategoryBusiness.GetByCompetitorId(args.ID);
             List<long> playerIDs = competitorBusiness.GetPlayerIdsForTeam(args.ID);
 
@@ -343,7 +345,7 @@ namespace Playground.Web.Controllers
         [ActionName("matches")]
         public HttpResponseMessage GetMatches(int page, int count)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
             Result<PagedResult<Match>> res =
                 matchBusiness.FilterByUser(page, count, currentUser.UserID);
@@ -416,7 +418,7 @@ namespace Playground.Web.Controllers
         [ActionName("mycompeatinggames")]
         public HttpResponseMessage MyCompeatingGames()
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<List<GameCategory>> res = gameCategoryBusiness.FilterByUser(currentUser.UserID);
 
             HttpResponseMessage response = res.Sucess ?
@@ -431,7 +433,7 @@ namespace Playground.Web.Controllers
         [ActionName("mycompeatitors")]
         public HttpResponseMessage MyCompetitors(int gameCategoryID)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<List<Competitor>> res = competitorBusiness.FilterByUserAndCategory(currentUser.UserID, gameCategoryID);
 
             HttpResponseMessage response = res.Sucess ?
@@ -471,7 +473,8 @@ namespace Playground.Web.Controllers
         [ActionName("getprofile")]
         public HttpResponseMessage GetProfile()
         {
-            Result<User> res = userBusiness.GetUserByEmail(User.Identity.Name);
+            string userID = User.Identity.GetUserId();
+            Result<User> res = userBusiness.GetUserByExternalId(userID);
 
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
@@ -532,7 +535,7 @@ namespace Playground.Web.Controllers
         [ActionName("automaticmatchconfirmations")]
         public HttpResponseMessage AutomaticMatchConfirmations(int page, int count)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;            
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;        
             Result<PagedResult<AutomaticMatchConfirmation>> res = 
                 automaticConfirmationBusiness.FilterByUser(page, count, currentUser.UserID);
 
@@ -552,7 +555,7 @@ namespace Playground.Web.Controllers
                 args.Search = String.Empty;
             }
 
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<PagedResult<User>> res =
                 userBusiness.SearchAndExcludeByAutomaticConfirmation(args.Page, args.Count, currentUser.UserID, args.Search);
 
@@ -567,7 +570,7 @@ namespace Playground.Web.Controllers
         [ActionName("addautomaticconfirmation")]
         public HttpResponseMessage AddAutomaticConfirmation(User user)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<AutomaticMatchConfirmation> res = automaticConfirmationBusiness.AddConfirmation(currentUser.UserID, user.UserID);
 
             HttpResponseMessage response = res.Sucess ?
@@ -581,7 +584,7 @@ namespace Playground.Web.Controllers
         [ActionName("deleteautomaticconfirmation")]
         public HttpResponseMessage DeleteAutomaticConfirmation(int confirmeeID)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             bool res = automaticConfirmationBusiness.DeleteConfirmation(confirmeeID, currentUser.UserID);
 
             HttpResponseMessage response = res ?
@@ -608,7 +611,7 @@ namespace Playground.Web.Controllers
         [ActionName("addmatch")]
         public HttpResponseMessage AddMath(Match match)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<Match> res = matchBusiness.AddMatch(currentUser.UserID, match);
 
             int totalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed);
@@ -640,7 +643,7 @@ namespace Playground.Web.Controllers
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 // This illustrates how to get the file names for uploaded files.
-                User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+                User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
 
                 if (String.IsNullOrEmpty(provider.FormData["ID"]))
@@ -687,7 +690,7 @@ namespace Playground.Web.Controllers
         [ActionName("cropplayerpicture")]
         public HttpResponseMessage CropPlayerPicture(CropingArgs coords)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             string root = GetPlayerPicturesRootFolder();
             string filePath = String.Format("{0}{1}_{2}_{3}_temp.{4}",
                                                         root,
@@ -754,7 +757,7 @@ namespace Playground.Web.Controllers
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 // This illustrates how to get the file names for uploaded files.
-                User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+                User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
 
                 if (String.IsNullOrEmpty(provider.FormData["ID"]))
@@ -801,7 +804,7 @@ namespace Playground.Web.Controllers
         [ActionName("cropteampicture")]
         public HttpResponseMessage CropTeamPicture(CropingArgs coords)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             string root = GetTeamPicturesRootFolder();
             string filePath = String.Format("{0}{1}_{2}_{3}_temp.{4}",
                                                         root,
@@ -868,7 +871,7 @@ namespace Playground.Web.Controllers
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 // This illustrates how to get the file names for uploaded files.
-                User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+                User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
                 string retUrl = "";
                 if (provider.FileData.Count > 0)
@@ -908,7 +911,7 @@ namespace Playground.Web.Controllers
         [ActionName("cropprofilepicture")]
         public HttpResponseMessage CropProfilePicture(CropingArgs coords)
         {
-            User currentUser = userBusiness.GetUserByEmail(User.Identity.Name).Data;
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             string root = GetProfilePicturesRootFolder();
             string filePath = String.Format("{0}{1}_{2}_temp.{3}",
                                                         root,
