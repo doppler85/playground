@@ -46,12 +46,15 @@ namespace Playground.Web.Controllers
             {
                 ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-                return new UserInfoViewModel
-                {
-                    UserName = User.Identity.GetUserName(),
-                    HasRegistered = externalLogin == null,
-                    LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
-                };
+                UserInfoViewModel retVal = externalLogin == null ? null :
+                    new UserInfoViewModel
+                    {
+                        UserName = User.Identity.GetUserName(),
+                        HasRegistered = externalLogin == null,
+                        LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
+                    };
+
+                return retVal;
             }
 
             // GET api/Account/UserInfo
@@ -524,10 +527,10 @@ namespace Playground.Web.Controllers
                         return null;
                     }
 
-                    if (providerKeyClaim.Issuer == ClaimsIdentity.DefaultIssuer)
-                    {
-                        return null;
-                    }
+                    //if (providerKeyClaim.Issuer == ClaimsIdentity.DefaultIssuer)
+                    //{
+                    //    return null;
+                    //}
 
                     return new ExternalLoginData
                     {

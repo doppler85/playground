@@ -470,15 +470,25 @@ namespace Playground.Web.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         [ActionName("getprofile")]
         public HttpResponseMessage GetProfile()
         {
-            string userID = User.Identity.GetUserId();
-            Result<User> res = userBusiness.GetUserByExternalId(userID);
+            HttpResponseMessage response;
+            if (User.Identity.IsAuthenticated)
+            {
+                string userID = User.Identity.GetUserId();
+                Result<User> res = userBusiness.GetUserByExternalId(userID);
 
-            HttpResponseMessage response = res.Sucess ?
-                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
-                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+                response = res.Sucess ?
+                    Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                    Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.OK);
+            }
 
             return response;
         }
