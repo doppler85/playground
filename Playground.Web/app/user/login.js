@@ -22,12 +22,6 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
     $scope.authReason = null;
     $scope.externallogins = null;
 
-    if (security.getLoginReason()) {
-        $scope.authReason = (security.isAuthenticated()) ?
-          "User not authenticated" :
-          "User not autorized";
-    }
-
     $scope.login = function () {
         // Clear any previous security errors
         $scope.authError = null;

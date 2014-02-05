@@ -372,7 +372,6 @@
     <Content Include="app\menu\main-menu.js" />
     <Content Include="app\menu\main-menu.tpl.html" />
     <Content Include="app\security\interceptor.js" />
-    <Content Include="app\security\retry-queue.js" />
     <Content Include="app\security\security-authorization.js" />
     <Content Include="app\security\security-service.js" />
     <Content Include="app\templates\alert\alert.html" />

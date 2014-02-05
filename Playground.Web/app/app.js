@@ -36,7 +36,6 @@ var Playground = angular.module('Playground', [
     'Playground.user-public-profile',
     'Playground.security.security-service',
     'Playground.security.interceptor',
-    'Playground.security.retry-queue',
     'Playground.security.security-authorization'
 ]);
 

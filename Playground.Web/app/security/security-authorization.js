@@ -5,20 +5,19 @@
 // before allowing a route change to complete
 .provider('securityAuthorization', {
     
-
     requireAdminUser: ['securityAuthorization', function (securityAuthorization) {
         return securityAuthorization.requireAdminUser();
     }],
 
-    requireAuthenticatedUser: ['securityAuthorization', '$state',  function (securityAuthorization, $state) {
+    requireAuthenticatedUser: ['securityAuthorization',  function (securityAuthorization) {
         return securityAuthorization.requireAuthenticatedUser();
     }],
 
-    requireCurrentUser: ['securityAuthorization', '$state', function (securityAuthorization, $state) {
+    requireCurrentUser: ['securityAuthorization', function (securityAuthorization) {
         return securityAuthorization.requireCurrentUser();
     }],
 
-    $get: ['$state', 'security', 'securityRetryQueue', function ($state, security, queue) {
+    $get: ['security', function (security, $location) {
         var service = {
             requireCurrentUser: function () {
                 var promise = security.requestCurrentUser();
@@ -30,7 +29,8 @@
             requireAuthenticatedUser: function () {
                 var promise = security.requestCurrentUser().then(function (userInfo) {
                     if (!security.isAuthenticated()) {
-                        return queue.pushRetryFn('unauthenticated-client', service.requireAuthenticatedUser);
+                        security.redirect('login');
+                        //return queue.pushRetryFn('unauthenticated-client', service.requireAuthenticatedUser);
                     }
                 });
                 return promise;
@@ -41,7 +41,8 @@
             requireAdminUser: function () {
                 var promise = security.requestCurrentUser().then(function (userInfo) {
                     if (!security.isAdmin()) {
-                        return queue.pushRetryFn('unauthorized-client', service.requireAdminUser);
+                        security.redirect('login');
+                        //return queue.pushRetryFn('unauthorized-client', service.requireAdminUser);
                     }
                 });
                 return promise;
