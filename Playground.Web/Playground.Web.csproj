@@ -403,6 +403,7 @@
     <Content Include="app\templates\timepicker\timepicker.html" />
     <Content Include="app\templates\typeahead\typeahead-match.html" />
     <Content Include="app\templates\typeahead\typeahead-popup.html" />
+    <Content Include="app\templates\user\register-external.tpl.html" />
     <Content Include="app\templates\user\user-list.tpl.html" />
     <Content Include="app\templates\user\user-public-profile-matches.tpl.html" />
     <Content Include="app\templates\user\user-public-profile-teams.tpl.html" />
@@ -413,13 +414,14 @@
     <Content Include="app\templates\user\user-profile.teams.tpl.html" />
     <Content Include="app\templates\user\user-profile.info.tpl.html" />
     <Content Include="app\templates\user\user-profile.players.tpl.html" />
-    <Content Include="app\user\external-login.js" />
+    <Content Include="app\user\register-external.js" />
+    <Content Include="app\user\login-external.js" />
     <Content Include="app\user\user-list.js" />
     <Content Include="app\user\register.js" />
-    <Content Include="app\user\register.tpl.html" />
+    <Content Include="app\templates\user\register.tpl.html" />
     <Content Include="app\user\user-profile.js" />
     <Content Include="app\templates\user\user-profile.tpl.html" />
-    <Content Include="app\user\login.tpl.html" />
+    <Content Include="app\templates\user\login.tpl.html" />
     <Content Include="app\user\login.js" />
     <Content Include="app\user\user-public-profile.js" />
     <Content Include="app\templates\user\user-public-profile.tpl.html" />

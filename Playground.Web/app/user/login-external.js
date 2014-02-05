@@ -1,5 +1,5 @@
 ﻿'use strict';
-angular.module('Playground.external-login', ['ng', 'ngResource', 'ui.router']).
+angular.module('Playground.login-external', ['ng', 'ngResource', 'ui.router']).
 controller('ExternalLoginController', [
 '$location',
 '$http',
@@ -100,7 +100,7 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
                 method: 'GET',
                 url: '/api/account/currentuser',
             }).success(function (data, status, headers, config) {
-                $scope.externallogins = data;
+                //$scope.externallogins = data;
                 if (data) {
                     $state.transitionTo('profile.info');
                 }
@@ -120,11 +120,17 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
             $http(
             {
                 method: 'GET',
-                url: '/api/account/currentuser',
+                url: '/api/account/userinfo',
             }).success(function (data, status, headers, config) {
-                $scope.externallogins = data;
+                //$scope.externallogins = data;
                 if (data) {
-                    $state.transitionTo('profile.info');
+                    if (data.hasRegistered) {
+                        $state.transitionTo('profile.info');
+                    }
+                    else {
+                        $scope.setState(fragment.state, false);
+                        $state.transitionTo('register-external');
+                    }
                 }
                 else {
                     $scope.clearAccessToken();

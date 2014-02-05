@@ -1,0 +1,27 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+
+<div class="row">
+    <div class="span5">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">User name</label>
+                <div class="controls">
+                    <input type="text"  data-ng-model="registerModel.userName" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" data-ng-click="register()">register</button>
+                    <button class="btn" data-ng-click="cancelRegister()">cancel</button>
+                </div>
+            </div>
+        </form>
+        <div class="alert alert-error" data-ng-show="authError">
+            {{authError}}
+        </div>
+        <pre>{{user | json}}</pre>
+        <pre>{{registerModel | json}}</pre>
+    </div>
+</div>

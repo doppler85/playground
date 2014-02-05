@@ -41,8 +41,8 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
     };
 
     $scope.loginExternal = function (loginprovider) {
-        sessionStorage["state"] = loginprovider.state;
-        sessionStorage["loginUrl"] = loginprovider.url;
+        $window.sessionStorage["state"] = loginprovider.state;
+        $window.sessionStorage["loginUrl"] = loginprovider.url;
         // IE doesn't reliably persist sessionStorage when navigating to another URL. Move sessionStorage temporarily
         // to localStorage to work around this problem.
         $scope.archiveSessionStorageToLocalStorage();

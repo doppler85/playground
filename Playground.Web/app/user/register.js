@@ -18,12 +18,6 @@ function ($scope, $state, $stateParams, $rootScope, security) {
         confirmPassword: ''
     };
 
-    if (security.getLoginReason()) {
-        $scope.authReason = (security.isAuthenticated()) ?
-          "User not authenticated" :
-          "User not autorized";
-    }
-
     $scope.register = function () {
         // Clear any previous security errors
         $scope.authError = null;

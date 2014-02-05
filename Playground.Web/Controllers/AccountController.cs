@@ -262,7 +262,7 @@ namespace Playground.Web.Controllers
                     Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
                     return new ChallengeResult(provider, this);
                 }
-                
+
                 IdentityUser user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
                     externalLogin.ProviderKey));
 
@@ -280,39 +280,6 @@ namespace Playground.Web.Controllers
                 }
                 else
                 {
-                    // TODO: Register new user automatically here by setting username from external login claims
-                    user = new IdentityUser
-                    {
-                        UserName = externalLogin.UserName
-                    };
-                    user.Logins.Add(new IdentityUserLogin
-                    {
-                        LoginProvider = externalLogin.LoginProvider,
-                        ProviderKey = externalLogin.ProviderKey
-                    });
-
-                    IdentityResult result = await UserManager.CreateAsync(user);
-                    IHttpActionResult errorResult = GetErrorResult(result);
-
-                    if (errorResult != null)
-                    {
-                        return errorResult;
-                    }
-
-                    User userModel = new Model.User() 
-                    {
-                        EmailAddress = externalLogin.Email,
-                        ExternalUserID = user.Id,
-                        FirstName = externalLogin.UserName
-                    };
-
-                    Result<User> res = userBusiness.AddUser(userModel);
-                    
-                    if (!res.Sucess)
-                    {
-                        return InternalServerError(new Exception(res.Message));
-                    }
-
                     IEnumerable<Claim> claims = externalLogin.GetClaims();
                     ClaimsIdentity identity = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
                     Authentication.SignIn(identity);
@@ -424,6 +391,7 @@ namespace Playground.Web.Controllers
                     ProviderKey = externalLogin.ProviderKey
                 });
                 IdentityResult result = await UserManager.CreateAsync(user);
+                
                 IHttpActionResult errorResult = GetErrorResult(result);
 
                 if (errorResult != null)
@@ -437,6 +405,20 @@ namespace Playground.Web.Controllers
                 if (errorResult != null)
                 {
                     return errorResult;
+                }
+
+                User userModel = new Model.User()
+                {
+                    EmailAddress = externalLogin.Email,
+                    ExternalUserID = user.Id,
+                    FirstName = model.UserName
+                };
+
+                Result<User> res = userBusiness.AddUser(userModel);
+
+                if (!res.Sucess)
+                {
+                    return InternalServerError(new Exception(res.Message));
                 }
 
                 return Ok();

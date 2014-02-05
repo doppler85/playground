@@ -19,8 +19,9 @@ var Playground = angular.module('Playground', [
     'Playground.competition-type-add',
     'Playground.competition-type-edit',
     'Playground.register',
+    'Playground.register-external',
     'Playground.login',
-    'Playground.external-login',
+    'Playground.login-external',
     'Playground.user-list',
     'Playground.user-status',
     'Playground.user-profile',
@@ -157,12 +158,17 @@ Playground.
                     }
                 }).state('login', {
                     url: '/login',
-                    templateUrl: 'app/user/login.tpl.html',
+                    templateUrl: 'app/templates/user/login.tpl.html',
                     controller: 'LoginController',
                     data: { pageTitle: 'Login' }
                 }).state('register', {
                     url: '/register',
-                    templateUrl: 'app/user/register.tpl.html',
+                    templateUrl: 'app/templates/user/register.tpl.html',
+                    controller: 'RegisterController',
+                    data: { pageTitle: 'Register' }
+                }).state('register-external', {
+                    url: '/register-external',
+                    templateUrl: 'app/templates/user/register-external.tpl.html',
                     controller: 'RegisterController',
                     data: { pageTitle: 'Register' }
                 }).state('player-add', {
@@ -323,6 +329,14 @@ Playground.
                     $window.localStorage["accessToken"] = accessToken;
                 } else {
                     $window.sessionStorage["accessToken"] = accessToken;
+                }
+            };
+
+            $rootScope.setState = function (state, persistent) {
+                if (persistent) {
+                    $window.localStorage["state"] = state;
+                } else {
+                    $window.sessionStorage["state"] = state;
                 }
             };
         }]).
