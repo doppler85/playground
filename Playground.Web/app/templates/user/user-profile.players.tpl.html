@@ -1,12 +1,11 @@
-<div class="span12">
+<div class="row">
+    <div class="span12">
         <h3>My pleya's</h3>
         <table class="table">
             <tr>
-                <th>
-                    Game
+                <th>Game
                 </th>
-                <th>
-                    Player nick
+                <th>Player nick
                 </th>
                 <th>Creation date</th>
                 <th></th>
@@ -14,43 +13,44 @@
             <tr data-ng-repeat="player in players.items">
                 <td>
                     <div class="img-holder">
-                        <a href="javascript:;" 
+                        <a href="javascript:;"
                             data-ui-sref="game-category-details.info({id: player.games[0].game.category.gameCategoryID})">
                             <img data-ng-src="{{player.games[0].game.category.pictureUrl}}" alt="" />
                         </a>
                     </div>
                     &nbsp;
-                    <a href="javascript:;" 
-                        data-ui-sref="game-category-details.info({id: player.games[0].game.category.gameCategoryID})" 
+                    <a href="javascript:;"
+                        data-ui-sref="game-category-details.info({id: player.games[0].game.category.gameCategoryID})"
                         data-ng-bind="player.games[0].game.category.title"></a>
                 </td>
                 <td>
                     <div class="img-holder">
-                        <a href="javascript:;" 
+                        <a href="javascript:;"
                             data-ui-sref="player-profile.info({id: player.competitorID})">
                             <img data-ng-src="{{player.pictureUrl}}" alt="" />
                         </a>
                     </div>
                     &nbsp;
-                    <a href="javascript:;" 
-                        data-ui-sref="player-profile.info({id: player.competitorID})" 
+                    <a href="javascript:;"
+                        data-ui-sref="player-profile.info({id: player.competitorID})"
                         data-ng-bind="player.name"></a>
                 </td>
                 <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
                 <td>
-                    <a class="btn btn-primary" data-ui-sref="player-edit({id: player.competitorID})" href="javascript:;">edit</a> 
+                    <a class="btn btn-primary" data-ui-sref="player-edit({id: player.competitorID})" href="javascript:;">edit</a>
                     <a class="btn btn-primary" href="javascript:;" data-ng-click="deletePlayer(player);">delete</a>
                 </td>
             </tr>
         </table>
-        <pagination 
+        <pagination
             data-ng-show="players.totalPages > 1"
-            total-items="players.totalItems" 
-            page="players.currentPage" 
-            num-page="players.totalPages" 
-            items-per-page="5" 
+            total-items="players.totalItems"
+            page="players.currentPage"
+            num-page="players.totalPages"
+            items-per-page="5"
             on-select-page="onPlayerPageSelect(page)">
         </pagination>
         <a data-ui-sref="player-add">add player</a>
         <alert ng-repeat="alert in playerAlerts" type="alert.type" close="closeAlert(playerAlerts, $index)">{{alert.msg}}</alert>
+    </div>
 </div>

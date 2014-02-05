@@ -107,21 +107,17 @@ namespace Playground.Web.Controllers
                     });
                 }
 
-                if (user.PasswordHash != null)
-                {
-                    logins.Add(new UserLoginInfoViewModel
-                    {
-                        LoginProvider = LocalLoginProvider,
-                        ProviderKey = user.UserName,
-                    });
-                }
+                IEnumerable<ExternalLoginViewModel> externalLogins = GetExternalLogins(returnUrl, generateState);
+                IEnumerable<String> names = logins.Select(l => l.LoginProvider);
+                IEnumerable<ExternalLoginViewModel> externalLoginsFiltered =
+                    externalLogins.Where(el => !names.Contains(el.Name));
 
                 return new ManageInfoViewModel
                 {
                     LocalLoginProvider = LocalLoginProvider,
                     UserName = user.UserName,
                     Logins = logins,
-                    ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
+                    ExternalLoginProviders = externalLoginsFiltered
                 };
             }
 

@@ -370,7 +370,7 @@
     <Content Include="app\lib\jQuery\jquery.Jcrop.js" />
     <Content Include="app\lib\jQuery\jquery.Jcrop.min.js" />
     <Content Include="app\menu\main-menu.js" />
-    <Content Include="app\menu\main-menu.tpl.html" />
+    <Content Include="app\templates\menu\main-menu.tpl.html" />
     <Content Include="app\security\interceptor.js" />
     <Content Include="app\security\security-authorization.js" />
     <Content Include="app\security\security-service.js" />

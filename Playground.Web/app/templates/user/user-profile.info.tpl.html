@@ -1,40 +1,96 @@
-<div class="span6">
-    <h3>Profile picture</h3>
-    <image-upload
-        data-img-src="profile.pictureUrl"
-        data-upload-url="api/user/uploadprofilepicture"
-        data-crop-url="api/user/cropprofilepicture"
-        data-on-image-cropped="onImageCropped(data);" />
+<div class="row">
+    <div class="span6">
+        <h3>Profile picture</h3>
+        <image-upload
+            data-img-src="profile.pictureUrl"
+            data-upload-url="api/user/uploadprofilepicture"
+            data-crop-url="api/user/cropprofilepicture"
+            data-on-image-cropped="onImageCropped(data);" />
+    </div>
+
+    <div class="span6">
+        <h3>My info</h3>
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">First name</label>
+                <div class="controls">
+                    <input type="text" data-ng-model="profile.firstName" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Last name</label>
+                <div class="controls">
+                    <input type="text" data-ng-model="profile.lastName" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Gender</label>
+                <div class="controls">
+                    <select
+                        data-ng-model="profile.gender"
+                        data-ng-options="getKey(k) as v for (k, v) in genders" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" data-ng-click="updateProfile()">update</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
+<div class="row">
+    <div class="span6">
+        <h3>Local login</h3>
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">User name</label>
+                <div class="controls">
+                    <input data-ng-disabled="true" type="text" data-ng-model="currentUser.userName" />
+                </div>
+            </div>
+            <div data-ng-show="currentUser.hasPassword" class="control-group">
+                <label class="control-label">Old password</label>
+                <div class="controls">
+                    <input type="password" data-ng-model="changePass.oldPassword" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">New password</label>
+                <div class="controls">
+                    <input type="password" data-ng-model="changePass.newPassword" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Confirm password</label>
+                <div class="controls">
+                    <input type="password" data-ng-model="changePass.confirmpassword" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" data-ng-click="updateProfile()">update</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-<div class="span6">
-    <h3>My info</h3>
-    <form class="form-horizontal">
-        <div class="control-group">
-            <label class="control-label">First name</label>
-            <div class="controls">
-                <input type="text" data-ng-model="profile.firstName" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">Last name</label>
-            <div class="controls">
-                <input type="text" data-ng-model="profile.lastName" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">Gender</label>
-            <div class="controls">
-                <select 
-                    data-ng-model="profile.gender" 
-                    data-ng-options="getKey(k) as v for (k, v) in genders" />
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <button class="btn" data-ng-click="updateProfile()">update</button>
-            </div>
-        </div>
-    </form>
+    <div class="span6">
+        <h3>External logins</h3>
+        <table class="table">
+            <tr data-ng-repeat="login in loginInfo.logins">
+                <td data-ng-bind="login.loginProvider"></td>
+                <td>
+                    <button class="btn" data-ng-click="removeLogin(login)">remove</button>
+                </td>
+            </tr>
+            <tr data-ng-repeat="login in loginInfo.externalLoginProviders">
+                <td data-ng-bind="login.name"></td>
+                <td>
+                    <button class="btn" data-ng-click="addExternalLogin(login)">add</button>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>

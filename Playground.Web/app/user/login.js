@@ -58,7 +58,7 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
             params: {
                 returnurl: '/',
                 generatestate: true
-            },
+            }
         }).success(function (data, status, headers, config) {
             $scope.externallogins = data;
         }).error(function (error) {

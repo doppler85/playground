@@ -51,16 +51,25 @@ angular.module('Playground.user-profile', [
     ])
     .controller('ProfileInfoController', [
     '$scope',
+    '$http',
     'security',
     'UserResource',
     'enums',
-    function ($scope, security, UserResource, enums) {
+    function ($scope, $http, security, UserResource, enums) {
         $scope.$parent.tab = 'info';
         $scope.genders = enums.gender;
+        $scope.currentUser = security.currentUser;
         $scope.profile =
         {
             gender: 1
         };
+        $scope.changePass =
+        {
+            oldPassword: '',
+            newPassword: '',
+            confirmpassword: ''
+        };
+        $scope.loginInfo = {};
 
         $scope.getProfile = function () {
             UserResource.getprofile(function (data, status, headers, config) {
@@ -75,12 +84,59 @@ angular.module('Playground.user-profile', [
             });
         };
 
+        $scope.getExternalLogins = function () {
+            $http(
+            {
+                method: 'GET',
+                url: '/api/account/manageinfo',
+                params: {
+                    returnurl: '/',
+                    generatestate: true
+                }
+            }).success(function (data, status, headers, config) {
+                $scope.loginInfo = data;
+                console.log(data);
+            }).error(function (error) {
+                console.log(error);
+            });
+        };
+
+        $scope.removeLogin = function (login) {
+            $http(
+            {
+                method: 'POST',
+                url: '/api/account/removelogin',
+                data: login
+            }).success(function (data, status, headers, config) {
+                $scope.getExternalLogins();
+            }).error(function (error) {
+                console.log(error);
+            });
+        };
+
+        $scope.addLogin = function (login) {
+            // TODO: add (sessionStorage["associatingExternalLogin"] and redirect to fb login 
+
+            //$http(
+            //{
+            //    method: 'POST',
+            //    url: '/api/account/removelogin',
+            //    data: login
+            //}).success(function (data, status, headers, config) {
+            //    $scope.getExternalLogins();
+            //}).error(function (error) {
+            //    console.log(error);
+            //});
+        };
+
         $scope.onImageCropped = function (data) {
             console.log('image cropped', data);
             security.refreshCurrentUser();
         };
 
         $scope.getProfile();
+        $scope.getExternalLogins();
+
     }])
     .controller('ProfilePlayersController', [
     '$scope',
