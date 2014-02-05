@@ -17,6 +17,7 @@ using Microsoft.Owin.Security.OAuth;
 using Playground.Web.Providers;
 using Playground.Business.Contracts;
 using Playground.Model;
+using Playground.Common;
 
 namespace Playground.Web.Controllers
 {
@@ -45,12 +46,15 @@ namespace Playground.Web.Controllers
             public UserInfoViewModel GetCurrentUser()
             {
                 ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+                Model.User user = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
-                UserInfoViewModel retVal = externalLogin == null ? null :
+                UserInfoViewModel retVal = !User.Identity.IsAuthenticated  ? null :
                     new UserInfoViewModel
                     {
                         UserName = User.Identity.GetUserName(),
-                        HasRegistered = externalLogin == null,
+                        HasRegistered = user != null,
+                        IsAdmin = UserManager.IsInRole(User.Identity.GetUserId(), Constants.RoleNames.Admin),
+                        HasPassword = UserManager.HasPassword(User.Identity.GetUserId()),
                         LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
                     };
 
@@ -385,7 +389,7 @@ namespace Playground.Web.Controllers
                     return errorResult;
                 }
 
-                result = await UserManager.AddToRoleAsync(user.Id, "user");
+                result = await UserManager.AddToRoleAsync(user.Id, Constants.RoleNames.User);
                 errorResult = GetErrorResult(result);
 
                 if (errorResult != null)
@@ -431,7 +435,7 @@ namespace Playground.Web.Controllers
                     return errorResult;
                 }
 
-                result = await UserManager.AddToRoleAsync(user.Id, "user");
+                result = await UserManager.AddToRoleAsync(user.Id, Constants.RoleNames.User);
                 errorResult = GetErrorResult(result);
 
                 if (errorResult != null)
@@ -527,17 +531,16 @@ namespace Playground.Web.Controllers
                         return null;
                     }
 
-                    //if (providerKeyClaim.Issuer == ClaimsIdentity.DefaultIssuer)
-                    //{
-                    //    return null;
-                    //}
+                    if (providerKeyClaim.Issuer == ClaimsIdentity.DefaultIssuer)
+                    {
+                        return null;
+                    }
 
                     return new ExternalLoginData
                     {
                         LoginProvider = providerKeyClaim.Issuer,
                         ProviderKey = providerKeyClaim.Value,
                         UserName = identity.FindFirstValue(ClaimTypes.Name),
-                        Email = identity.FindFirstValue(ClaimTypes.Email)
                     };
                 }
             }

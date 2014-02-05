@@ -6,13 +6,13 @@ controller('MainMenuController', [
 '$rootScope',
 'security',
 function ($scope, $stateParams, $rootScope, security) {
-    console.log('i ll render meny some day maiiiiiiiiiiin meeeeeeeenuuuuuu');
-}]).
-controller('UserStatusController', [
-'$scope',
-'$stateParams',
-'$rootScope',
-'security',
-function ($scope, $stateParams, $rootScope, security) {
-    console.log('i ll render meny some day');
-}]);;
+    $scope.isAuthenticated = false;
+    $scope.currentUser = {};
+
+    $scope.$watch(function () {
+        $scope.isAuthenticated = security.isAuthenticated();
+        return security.currentUser;
+    }, function (currentUser) {
+        $scope.currentUser = currentUser;
+    });
+}]);

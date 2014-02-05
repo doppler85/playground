@@ -1,5 +1,5 @@
 //angular.module('Playground.security.interceptor', ['security.retryQueue'])
-angular.module('Playground.security.interceptor', ['ng', 'Playground.security.security-service'])
+angular.module('Playground.security.interceptor', ['ng'])
 .config(function ($provide, $httpProvider) {
 
     // Intercept http calls.

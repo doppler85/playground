@@ -50,8 +50,8 @@ namespace Playground.Web
             app.UseOAuthBearerTokens(OAuthOptions);
 
             app.UseFacebookAuthentication(
-                appId: "409949269107872",
-                appSecret: "0c093299348ccd1208f834435327ec8d");
+                appId: "218341994993669",
+                appSecret: "c31faa6c516a06f5c616ee0827828e67");
         }
     }
 }

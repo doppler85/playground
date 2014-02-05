@@ -424,7 +424,7 @@
     <Content Include="app\user\user-public-profile.js" />
     <Content Include="app\templates\user\user-public-profile.tpl.html" />
     <Content Include="app\user\user-status.js" />
-    <Content Include="app\user\user-status.tpl.html" />
+    <Content Include="app\templates\user\user-status.tpl.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\assets\css\bootstrap.css" />
     <Content Include="Content\assets\css\style.css" />

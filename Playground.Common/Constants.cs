@@ -9,8 +9,8 @@ namespace Playground.Common
     {
         public static class RoleNames
         {
-            public static string Admin = "Admin";
-            public static string User = "User";
+            public static string Admin = "admin";
+            public static string User = "user";
         }
 
         public static class AdminUser
