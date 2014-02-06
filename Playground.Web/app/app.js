@@ -169,7 +169,7 @@ Playground.
                 }).state('register-external', {
                     url: '/register-external',
                     templateUrl: 'app/templates/user/register-external.tpl.html',
-                    controller: 'RegisterController',
+                    controller: 'RegisterExternalController',
                     data: { pageTitle: 'Register' }
                 }).state('player-add', {
                     url: '/user/competition/player/add',

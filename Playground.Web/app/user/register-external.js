@@ -1,6 +1,6 @@
 ﻿'use strict';
 angular.module('Playground.register-external', ['ng', 'ngResource', 'ui.router']).
-controller('RegisterController', [
+controller('RegisterExternalController', [
 '$http',
 '$scope',
 '$state',

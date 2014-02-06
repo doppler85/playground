@@ -370,6 +370,19 @@ namespace Playground.Web.Controllers
                     return errorResult;
                 }
 
+                User userModel = new Model.User()
+                {
+                    ExternalUserID = user.Id,
+                    FirstName = model.UserName
+                };
+
+                Result<User> res = userBusiness.AddUser(userModel);
+
+                if (!res.Sucess)
+                {
+                    return InternalServerError(new Exception(res.Message));
+                }
+
                 return Ok();
             }
 
