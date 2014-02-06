@@ -16,24 +16,30 @@ function ($http, $scope, $state, $stateParams, $rootScope, $window, security) {
         userName: '',
     };
 
+    $scope.alerts = [];
+
     $scope.register = function () {
-        // Clear any previous security errors
-        $scope.authError = null;
 
-        // register local account
-        $http(
-            {
-                method: 'POST',
-                url: '/api/account/registerexternal',
-                data: $scope.registerModel
-            }).success(function (data, status, headers, config) {
-                //$scope.externallogins = data;
+        security.registerExternal($scope.registerModel).then(
+            function (data) {
                 $window.location = $window.sessionStorage["loginUrl"]
-            }).error(function (error) {
-                $scope.clearAccessToken();
-                $state.transitionTo('login');
-            });
-
+            },
+            function (error) {
+                if (error.data) {
+                    if (error.data.modelState) {
+                        for (var m in error.data.modelState) {
+                            $scope.addAlert($scope.alerts, { type: 'error', msg: m });
+                        }
+                    }
+                    else {
+                        $scope.addAlert($scope.alerts, { type: 'error', msg: error.data });
+                    }
+                }
+                else {
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: "Unknown error happened" });
+                }
+            }
+        );
     };
 
     $scope.clearForm = function () {

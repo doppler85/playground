@@ -95,32 +95,26 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
                 $scope.cleanUpLocation();
             }
 
-            $http(
-            {
-                method: 'GET',
-                url: '/api/account/currentuser',
-            }).success(function (data, status, headers, config) {
-                //$scope.externallogins = data;
-                if (data) {
-                    $http(
-                    {
-                        method: 'POST',
-                        url: '/api/account/AddExternalLogin',
-                        data: {
-                            externalAccessToken: externalAccessToken
-                        }
-                    }).success(function (data, status, headers, config) {
-                        $state.transitionTo('profile.info');
-                    }).error(function (error) {
+            security.refreshCurrentUser().then(
+                function (data) {
+                    if (data) {
+                        security.addExternalLogin(externalAccessToken).then(
+                            function (data) {
+                                $state.transitionTo('profile.info');
+                            },
+                            function (error) {
+                                $state.transitionTo('login');
+                            }
+                        )
+                    }
+                    else {
                         $state.transitionTo('login');
-                    })
-                }
-                else {
+                    }
+                },
+                function (error) {
                     $state.transitionTo('login');
                 }
-            }).error(function (error) {
-                $state.transitionTo('login');
-            });
+            );
         } else if (typeof (fragment.error) !== "undefined") {
             $scope.cleanUpLocation();
             $state.transitionTo('login');
@@ -129,29 +123,27 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
             $scope.cleanUpLocation();
             // $state.transitionTo('home');
             $scope.setAccessToken(fragment.access_token, false);
-            $http(
-            {
-                method: 'GET',
-                url: '/api/account/userinfo',
-            }).success(function (data, status, headers, config) {
-                //$scope.externallogins = data;
-                if (data) {
-                    if (data.hasRegistered) {
-                        $state.transitionTo('profile.info');
+            security.getUserInfo().then(
+                function (data) {
+                    if (data) {
+                        if (data.hasRegistered) {
+                            $state.transitionTo('profile.info');
+                        }
+                        else {
+                            $scope.setState(fragment.state, false);
+                            $state.transitionTo('register-external');
+                        }
                     }
                     else {
-                        $scope.setState(fragment.state, false);
-                        $state.transitionTo('register-external');
+                        $scope.clearAccessToken();
+                        $state.transitionTo('login');
                     }
-                }
-                else {
+                },
+                function (error) {
                     $scope.clearAccessToken();
                     $state.transitionTo('login');
                 }
-            }).error(function (error) {
-                $scope.clearAccessToken();
-                $state.transitionTo('login');
-            });
+            );
         }
     }
 

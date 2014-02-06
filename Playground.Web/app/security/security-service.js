@@ -30,7 +30,11 @@ angular.module('Playground.security.security-service', [
         resetPasswordUrl: '/api/account/removelogin',
         changePasswordUrl: '/api/account/changepassword',
         registerUrl: '/api/account/register',
-        logoutUrl: 'api/account/logout'
+        registerExternalUrl: '/api/account/registerexternal',
+        logoutUrl: 'api/account/logout',
+        currentUserUrl: '/api/account/currentuser',
+        addExternalLoginUrl: '/api/account/addexternallogin',
+        userInfoUrl: '/api/account/userinfo'
     };
     // The public API of the service
     var service = {
@@ -141,6 +145,18 @@ angular.module('Playground.security.security-service', [
             });
         },
 
+        registerExternal: function (registerModel) {
+            var request = $http({
+                method: 'POST',
+                url: config.registerExternalUrl,
+                data: registerModel
+            });
+
+            return request.then(function (response) {
+                return response.data;
+            });
+        },
+
         // Give up trying to login and clear the retry queue
         cancelLogin: function () {
             redirect();
@@ -164,7 +180,7 @@ angular.module('Playground.security.security-service', [
             if (service.isAuthenticated()) {
                 return $q.when(service.currentUser);
             } else {
-                return $http.get('/api/account/currentuser').then(
+                return $http.get(config.currentUserUrl).then(
                     function (response) {
                         service.currentUser = response.data == "null" ? null : response.data;
                         return service.currentUser;
@@ -174,12 +190,38 @@ angular.module('Playground.security.security-service', [
         },
 
         refreshCurrentUser: function () {
-            return $http.get('/api/account/currentuser').then(
+            return $http.get(config.currentUserUrl).then(
                 function (response) {
                     service.currentUser = response.data == "null" ? null : response.data;
                     return service.currentUser;
                 }
             );
+        },
+
+        addExternalLogin: function (externalAccessToken) {
+            var request = $http({
+                method: 'POST',
+                url: config.addExternalLoginUrl,
+                data: {
+                    externalAccessToken: externalAccessToken
+                }
+            });
+
+            return request.then(function (response) {
+                return response.data;
+            });
+        },
+
+        getUserInfo: function () {
+            var request = $http({
+                method: 'GET',
+                url: config.userInfoUrl
+            });
+
+            return request.then(function (response) {
+                return response.data;
+            });
+
         },
 
         redirect: function(state) {

@@ -18,6 +18,6 @@
                 </div>
             </div>
         </form>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     </div>
-    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
 </div>
