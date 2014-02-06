@@ -13,9 +13,10 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
     $scope.pageTitle = $state.current.data ? $state.current.data.pageTitle : "Login";
 
     $scope.user = {
-        email: 'voja@playground.com',
-        password: 'pass*123',
-        rememberMe: true
+        grant_type: "password",
+        username: '',
+        password: '',
+        rememberMe: false
     };
 
     $scope.authError = null;
@@ -26,6 +27,26 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
         // Clear any previous security errors
         $scope.authError = null;
 
+        var xsrf = $.param($scope.user);
+        $http(
+        {
+            method: 'POST',
+            url: '/Token',
+            data: xsrf,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; ' }
+            //headers: { 'Content-Type': 'application/json' }
+        }).success(function (data, status, headers, config) {
+            if (data.userName && data.access_token) {
+                $scope.setAccessToken(data.access_token, $scope.user.rememberMe);
+                $state.transitionTo('profile.info');
+            } else {
+                self.errors.push("An unknown error occurred.");
+            }
+        }).error(function (error) {
+            console.log('something went wrong ');
+        });
+
+        /*
         // Try to login
         security.login($scope.user).then(function (data) {
             if (data.user) {
@@ -38,6 +59,7 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
             // If we get here then there was a problem with the login request to the server
             $scope.authError = "Server error, please try again later";
         });
+        */
     };
 
     $scope.loginExternal = function (loginprovider) {

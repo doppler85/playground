@@ -35,14 +35,6 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
         $scope.selectedPlayers = [];
         $scope.alerts = [];
 
-        $scope.addAlert = function (msg) {
-            $scope.alerts.push(msg);
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-
         $scope.loadCategories = function () {
             GameResource.teamcategories(function (data, status, headers, config) {
                 $scope.categories = data;

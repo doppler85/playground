@@ -211,14 +211,24 @@ namespace Playground.Web.Controllers
                     return BadRequest(ModelState);
                 }
 
+                IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+
                 IdentityResult result;
 
                 if (model.LoginProvider == LocalLoginProvider)
                 {
+                    if (user.Logins.Count == 0)
+                    {
+                        return InternalServerError(new Exception("This is users only account, if removal is needed, add external account first"));
+                    }
                     result = await UserManager.RemovePasswordAsync(User.Identity.GetUserId());
                 }
                 else
                 {
+                    if (String.IsNullOrEmpty(user.PasswordHash) && user.Logins.Count < 2)
+                    {
+                        return InternalServerError(new Exception("This is users only account and therefore cant be deleted"));
+                    }
                     result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(),
                         new UserLoginInfo(model.LoginProvider, model.ProviderKey));
                 }

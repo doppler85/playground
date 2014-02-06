@@ -28,14 +28,6 @@ angular.module('Playground.team-edit', ['ngResource', 'ui.router', 'ui.bootstrap
         $scope.availablePlayers = [];
         $scope.searchQuery = '';
 
-        $scope.addAlert = function (msg) {
-            $scope.alerts.push(msg);
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-
         $scope.getTeam = function () {
             UserResource.getUpdateTeam({ id: $stateParams.id }, function (data, status, headers, config) {
                 $scope.team = data;

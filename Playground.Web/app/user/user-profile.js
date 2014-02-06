@@ -2,6 +2,7 @@
 angular.module('Playground.user-profile', [
     'ngResource',
     'ui.router',
+    'ui.bootstrap.alert',
     'ui.bootstrap.pagination',
     'Playground.imageupload',
     'Playground.matches'])
@@ -63,13 +64,18 @@ angular.module('Playground.user-profile', [
         {
             gender: 1
         };
-        $scope.changePass =
-        {
-            oldPassword: '',
-            newPassword: '',
-            confirmpassword: ''
-        };
+        $scope.changePassModel = {};
+
         $scope.loginInfo = {};
+        $scope.localAccountAlerts = [];
+        $scope.externalAccountAlerts = [];
+
+        $scope.$watch(function () {
+            $scope.isAuthenticated = security.isAuthenticated();
+            return security.currentUser;
+        }, function (currentUser) {
+            $scope.currentUser = currentUser;
+        });
 
         $scope.getProfile = function () {
             UserResource.getprofile(function (data, status, headers, config) {
@@ -97,7 +103,7 @@ angular.module('Playground.user-profile', [
                 $scope.loginInfo = data;
                 console.log(data);
             }).error(function (error) {
-                console.log(error);
+                $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
             });
         };
 
@@ -109,8 +115,57 @@ angular.module('Playground.user-profile', [
                 data: login
             }).success(function (data, status, headers, config) {
                 $scope.getExternalLogins();
+                $scope.addAlert($scope.externalAccountAlerts, { type: 'success', msg: "Account successfully removed" });
             }).error(function (error) {
-                console.log(error);
+                $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
+            });
+        };
+
+        $scope.setPassword = function () {
+            $http(
+            {
+                method: 'POST',
+                url: '/api/account/setpassword',
+                data: $scope.changePassModel
+            }).success(function (data, status, headers, config) {
+                $scope.changePassModel = {};
+                $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully changed" });
+                security.refreshCurrentUser();
+            }).error(function (error) {
+                $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
+            });
+        };
+
+        $scope.resetPassword = function () {
+            $http(
+            {
+                method: 'POST',
+                url: '/api/account/removelogin',
+                data: {
+                    loginProvider: $scope.loginInfo.localLoginProvider,
+                    providerKey: $scope.currentUser.userName
+                }
+            }).success(function (data, status, headers, config) {
+                $scope.changePassModel = {};
+                $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully removed" });
+                security.refreshCurrentUser();
+            }).error(function (error) {
+                $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
+            });
+        };
+
+        $scope.changePass = function () {
+            $http(
+            {
+                method: 'POST',
+                url: '/api/account/changepassword',
+                data: $scope.changePassModel
+            }).success(function (data, status, headers, config) {
+                $scope.changePassModel = {};
+                $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully changed" });
+                security.refreshCurrentUser();
+            }).error(function (error) {
+                $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
             });
         };
 
@@ -309,12 +364,4 @@ angular.module('Playground.user-profile', [
             $scope.currentUser = currentUser;
             $scope.isAuthenticated = security.isAuthenticated();
         });
-
-        $scope.addAlert = function (collection, msg) {
-            collection.push(msg);
-        };
-
-        $scope.closeAlert = function (collection, index) {
-            collection.splice(index, 1);
-        };
     }]);

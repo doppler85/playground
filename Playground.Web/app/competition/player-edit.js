@@ -20,14 +20,6 @@ angular.module('Playground.player-edit', ['ngResource', 'ui.router', 'ui.bootstr
             games: []
         };
 
-        $scope.addAlert = function (msg) {
-            $scope.alerts.push(msg);
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-
         $scope.getPlayer = function () {
             UserResource.getUpdatePlayer({ id: $stateParams.id }, function (data, status, headers, config) {
                 $scope.player = data;

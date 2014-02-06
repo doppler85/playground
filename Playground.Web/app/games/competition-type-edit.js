@@ -27,7 +27,7 @@ angular.module('Playground.competition-type-edit', [
                 $scope.competitionType = data;
             },
             function (data) {
-                $scope.addAlert({ type: 'error', msg: data.data });
+                $scope.addAlert($scope.alerts, { type: 'error', msg: data.data });
             })
         }
 
@@ -45,14 +45,6 @@ angular.module('Playground.competition-type-edit', [
         $scope.cancel = function () {
             $state.go('competition-types');
         }
-
-        $scope.addAlert = function (msg) {
-            $scope.alerts.push(msg);
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
 
         $scope.loadCompetitionType();
     }]);

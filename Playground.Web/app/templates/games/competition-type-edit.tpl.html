@@ -58,7 +58,7 @@
                 </div>
             </div>
         </form>
-        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
         <div data-ng-show="settings.debug">
             <pre>{{competitionType | json}}</pre>
         </div>

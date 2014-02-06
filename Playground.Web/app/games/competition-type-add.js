@@ -29,7 +29,7 @@ angular.module('Playground.competition-type-add', [
                     $state.go('competition-types');
                 },
                 function () {
-                    $scope.addAlert({ type: 'error', msg: 'Error adding competition type' });
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error adding competition type' });
                 }
             );
         };
@@ -37,12 +37,4 @@ angular.module('Playground.competition-type-add', [
         $scope.cancel = function () {
             $state.go('competition-types');
         }
-
-        $scope.addAlert = function (msg) {
-            $scope.alerts.push(msg);
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
     }]);

@@ -24,14 +24,6 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
         $scope.games = [];
         $scope.alerts = [];
 
-        $scope.addAlert = function (msg) {
-            $scope.alerts.push(msg);
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-
         $scope.loadCategories = function () {
             GameResource.individualcategories(function (data, status, headers, config) {
                 $scope.categories = data;
