@@ -152,29 +152,6 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
                 $scope.clearAccessToken();
                 $state.transitionTo('login');
             });
-            //dataModel.getUserInfo(fragment.access_token)
-            //    .done(function (data) {
-            //        if (typeof (data.userName) !== "undefined" && typeof (data.hasRegistered) !== "undefined"
-            //            && typeof (data.loginProvider) !== "undefined") {
-            //            if (data.hasRegistered) {
-            //                self.navigateToLoggedIn(data.userName, fragment.access_token, false);
-            //            }
-            //            else if (typeof (sessionStorage["loginUrl"]) !== "undefined") {
-            //                loginUrl = sessionStorage["loginUrl"];
-            //                sessionStorage.removeItem("loginUrl");
-            //                self.navigateToRegisterExternal(data.userName, data.loginProvider, fragment.access_token,
-            //                    loginUrl, fragment.state);
-            //            }
-            //            else {
-            //                self.navigateToLogin();
-            //            }
-            //        } else {
-            //            self.navigateToLogin();
-            //        }
-            //    })
-            //    .fail(function () {
-            //        self.navigateToLogin();
-            //    });
         }
     }
 

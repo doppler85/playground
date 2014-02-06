@@ -30,8 +30,6 @@
                 </div>
             </div>
         </form>
-        <div class="alert alert-error" data-ng-show="authError">
-            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
-        </div>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     </div>
 </div>

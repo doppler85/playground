@@ -2,14 +2,13 @@
 angular.module('Playground.login', ['ng', 'ngResource', 'ui.router']).
 controller('LoginController', [
 '$location',
-'$http',
 '$scope',
 '$window',
 '$state',
 '$stateParams',
 '$rootScope',
 'security',
-function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, security) {
+function ($location, $scope, $window, $state, $stateParams, $rootScope, security) {
     $scope.pageTitle = $state.current.data ? $state.current.data.pageTitle : "Login";
 
     $scope.user = {
@@ -22,27 +21,23 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
     $scope.externallogins = null;
 
     $scope.login = function () {
-        $scope.authError = null;
-
-        var xsrf = $.param($scope.user);
-        $http(
-        {
-            method: 'POST',
-            url: '/Token',
-            data: xsrf,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded; ' }
-        }).success(function (data, status, headers, config) {
-            if (data.userName && data.access_token) {
-                $scope.setAccessToken(data.access_token, $scope.user.rememberMe);
-                $state.transitionTo('profile.info');
-            } else {
-                $scope.addAlert($scope.alerts, { type: 'error', msg: "An unknown error occurred" });
+        $scope.alerts = [];
+        
+        security.login($scope.user).then(
+            function (data) {
+                if (data.userName && data.access_token) {
+                    $scope.setAccessToken(data.access_token, $scope.user.rememberMe);
+                    $state.transitionTo('profile.info');
+                } else {
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: "An unknown error occurred" });
+                }
+            },
+            function (error) {
+                for (var g in error) {
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: error[g] });
+                }
             }
-        }).error(function (error) {
-            for (var g in error) {
-                $scope.addAlert($scope.alerts, { type: 'error', msg: error[g] });
-            }
-        });
+        );
     };
 
     $scope.loginExternal = function (loginprovider) {
@@ -56,19 +51,14 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
     };
 
     $scope.LoadExternalLogins = function () {
-        $http(
-        {
-            method: 'GET',
-            url: '/api/account/externallogins',
-            params: {
-                returnurl: '/',
-                generatestate: true
+        security.getExternalLogins().then(
+            function (data) {
+                $scope.externallogins = data;
+            },
+            function (error) {
+                $scope.addAlert($scope.alerts, {type: 'error', msg: error});
             }
-        }).success(function (data, status, headers, config) {
-            $scope.externallogins = data;
-        }).error(function (error) {
-            $scope.addAlert($scope.alerts, { type: 'error', msg: error });
-        });
+        );
     };
 
     $scope.clearForm = function () {

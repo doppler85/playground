@@ -20,24 +20,123 @@ angular.module('Playground.security.security-service', [
         // changeLocation(url);
         $state.transitionTo(state);
     }
-
+    var config = {
+        loginUrl: '/Token',
+        getExternalLoginsUrl: '/api/account/externallogins',
+        externalLoginReturnUrl: '/',
+        loginInfoUrl: '/api/account/manageinfo',
+        removeLoginUrl: '/api/account/removelogin',
+        setPasswordUrl: '/api/account/setpassword',
+        resetPasswordUrl: '/api/account/removelogin',
+        changePasswordUrl: '/api/account/changepassword',
+        registerUrl: '/api/account/register',
+        logoutUrl: 'api/account/logout'
+    };
     // The public API of the service
     var service = {
 
-        // Attempt to authenticate a user by the given email and password
-        login: function (loginModel) {
-            var request = $http.post('/api/account/login', loginModel);
+        getExternalLogins: function () {
+            var request = $http({
+                method: 'GET',
+                url: config.getExternalLoginsUrl,
+                params: {
+                    returnurl: config.externalLoginReturnUrl,
+                    generatestate: true
+                }
+            });
+
             return request.then(function (response) {
-                service.currentUser = response.data.user;
+                return response.data;
+            });
+        },
+
+        getLoginInfo: function () {
+            var request = $http({
+                method: 'GET',
+                url: config.loginInfoUrl,
+                params: {
+                    returnurl: config.externalLoginReturnUrl,
+                    generatestate: true
+                }
+            });
+
+            return request.then(function (response) {
+                return response.data;
+            });
+        },
+
+        // Attempt to authenticate a user by the given username and password
+        login: function (loginModel) {
+            var xsrf = $.param(loginModel);
+            var request = $http({
+                method: 'POST',
+                url: config.loginUrl,
+                data: xsrf,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded; ' }
+            });
+
+            return request.then(function(response) {
+                return response.data;
+            });
+        },
+
+        removeLogin: function (login) {
+            var request = $http({
+                method: 'POST',
+                url: config.removeLoginUrl,
+                data: login
+            });
+
+            return request.then(function (response) {
+                return response.data;
+            });
+        },
+
+        setPassword: function (changePassModel) {
+            var request = $http({
+                method: 'POST',
+                url: config.setPasswordUrl,
+                data: changePassModel
+            });
+
+            return request.then(function (response) {
+                return response.data;
+            });
+        },
+
+        resetPassword: function (resetPassModel) {
+            var request = $http({
+                method: 'POST',
+                url: config.resetPasswordUrl,
+                data: resetPassModel
+            });
+
+            return request.then(function (response) {
+                return response.data;
+            });
+        },
+
+        changePassword: function (changePassModel) {
+            var request = $http({
+                method: 'POST',
+                url: config.changePasswordUrl,
+                data: changePassModel
+            });
+
+            return request.then(function (response) {
                 return response.data;
             });
         },
 
         // Attempt to authenticate a user by the given email and password
-        register: function (registerModel, userModel) {
-            var request = $http.post('/api/account/register', registerModel, userModel);
+        register: function (registerModel) {
+            var request = $http({
+                method: 'POST',
+                url: config.registerUrl,
+                data: registerModel
+            });
+
             return request.then(function (response) {
-                service.currentUser = response.data.user;
                 return response.data;
             });
         },
@@ -52,10 +151,12 @@ angular.module('Playground.security.security-service', [
             $window.localStorage.removeItem("accessToken");
             $window.sessionStorage.removeItem("accessToken");
 
-            $http.post('api/account/logout').then(function () {
-                service.currentUser = null;
-                redirect(redirectTo);
-            });
+            $http.post(config.logoutUrl).then(
+                function () {
+                    service.currentUser = null;
+                    redirect(redirectTo);
+                }
+            );
         },
 
         // Ask the backend to see if a user is already authenticated - this may be from a previous session.
@@ -63,18 +164,22 @@ angular.module('Playground.security.security-service', [
             if (service.isAuthenticated()) {
                 return $q.when(service.currentUser);
             } else {
-                return $http.get('/api/account/currentuser').then(function (response) {
-                    service.currentUser = response.data == "null" ? null : response.data;
-                    return service.currentUser;
-                });
+                return $http.get('/api/account/currentuser').then(
+                    function (response) {
+                        service.currentUser = response.data == "null" ? null : response.data;
+                        return service.currentUser;
+                    }
+                );
             }
         },
 
         refreshCurrentUser: function () {
-            return $http.get('/api/account/currentuser').then(function (response) {
-                service.currentUser = response.data == "null" ? null : response.data;
-                return service.currentUser;
-            });
+            return $http.get('/api/account/currentuser').then(
+                function (response) {
+                    service.currentUser = response.data == "null" ? null : response.data;
+                    return service.currentUser;
+                }
+            );
         },
 
         redirect: function(state) {

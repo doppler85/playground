@@ -53,12 +53,11 @@ angular.module('Playground.user-profile', [
     ])
     .controller('ProfileInfoController', [
     '$scope',
-    '$http',
     '$window',
     'security',
     'UserResource',
     'enums',
-    function ($scope, $http, $window, security, UserResource, enums) {
+    function ($scope, $window, security, UserResource, enums) {
         $scope.$parent.tab = 'info';
         $scope.genders = enums.gender;
         $scope.currentUser = security.currentUser;
@@ -92,82 +91,70 @@ angular.module('Playground.user-profile', [
             });
         };
 
-        $scope.getExternalLogins = function () {
-            $http(
-            {
-                method: 'GET',
-                url: '/api/account/manageinfo',
-                params: {
-                    returnurl: '/',
-                    generatestate: true
+        $scope.getLoginInfo = function () {
+            security.getLoginInfo().then(
+                function (data) {
+                    $scope.loginInfo = data;
+                },
+                function (error) {
+                    $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
                 }
-            }).success(function (data, status, headers, config) {
-                $scope.loginInfo = data;
-            }).error(function (error) {
-                $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
-            });
+            );
         };
 
         $scope.removeLogin = function (login) {
-            $http(
-            {
-                method: 'POST',
-                url: '/api/account/removelogin',
-                data: login
-            }).success(function (data, status, headers, config) {
-                $scope.getExternalLogins();
-                $scope.addAlert($scope.externalAccountAlerts, { type: 'success', msg: "Account successfully removed" });
-            }).error(function (error) {
-                $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
-            });
+            security.removeLogin(login).then(
+                function (data) {
+                    $scope.getLoginInfo();
+                    $scope.addAlert($scope.externalAccountAlerts, { type: 'success', msg: "Account successfully removed" });
+                },
+                function (error) {
+                    $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
+                }
+            );
         };
 
         $scope.setPassword = function () {
-            $http(
-            {
-                method: 'POST',
-                url: '/api/account/setpassword',
-                data: $scope.changePassModel
-            }).success(function (data, status, headers, config) {
-                $scope.changePassModel = {};
-                $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully changed" });
-                security.refreshCurrentUser();
-            }).error(function (error) {
-                $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
-            });
+            security.setPassword($scope.changePassModel).then(
+                function (data) {
+                    $scope.changePassModel = {};
+                    $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully changed" });
+                    security.refreshCurrentUser();
+                },
+                function (error) {
+                    $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
+                }
+            );
         };
 
         $scope.resetPassword = function () {
-            $http(
-            {
-                method: 'POST',
-                url: '/api/account/removelogin',
-                data: {
-                    loginProvider: $scope.loginInfo.localLoginProvider,
-                    providerKey: $scope.currentUser.userName
+            var resetPassModel = {
+                loginProvider: $scope.loginInfo.localLoginProvider,
+                providerKey: $scope.currentUser.userName
+            };
+            security.resetPassword(resetPassModel).then(
+                function (data) {
+                    $scope.changePassModel = {};
+                    $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully removed" });
+                    security.refreshCurrentUser();
+                },
+                function (error) {
+                    $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
                 }
-            }).success(function (data, status, headers, config) {
-                $scope.changePassModel = {};
-                $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully removed" });
-                security.refreshCurrentUser();
-            }).error(function (error) {
-                $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
-            });
+            );
         };
 
         $scope.changePass = function () {
-            $http(
-            {
-                method: 'POST',
-                url: '/api/account/changepassword',
-                data: $scope.changePassModel
-            }).success(function (data, status, headers, config) {
-                $scope.changePassModel = {};
-                $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully changed" });
-                security.refreshCurrentUser();
-            }).error(function (error) {
-                $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
-            });
+            security.changePassword($scope.changePassModel).then(
+                function (data) {
+                    $scope.changePassModel = {};
+                    $scope.addAlert($scope.localAccountAlerts, { type: 'success', msg: "Password successfully changed" });
+                    security.refreshCurrentUser();
+                },
+                function (error) {
+                    $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
+                }
+            );
         };
 
         $scope.addLogin = function (loginprovider) {
@@ -185,7 +172,7 @@ angular.module('Playground.user-profile', [
         };
 
         $scope.getProfile();
-        $scope.getExternalLogins();
+        $scope.getLoginInfo();
 
     }])
     .controller('ProfilePlayersController', [
