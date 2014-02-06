@@ -40,10 +40,7 @@
                 </div>
             </div>
         </form>
-        <div class="alert alert-error" data-ng-show="authError">
-            {{authError}}
-        </div>
-        <pre>{{user | json}}</pre>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     </div>
     <div class="span6">
         <div data-ng-repeat="loginprovider in externallogins">

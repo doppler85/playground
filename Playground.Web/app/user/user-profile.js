@@ -1,5 +1,6 @@
 ﻿'use strict';
 angular.module('Playground.user-profile', [
+    'ng',
     'ngResource',
     'ui.router',
     'ui.bootstrap.alert',
@@ -53,10 +54,11 @@ angular.module('Playground.user-profile', [
     .controller('ProfileInfoController', [
     '$scope',
     '$http',
+    '$window',
     'security',
     'UserResource',
     'enums',
-    function ($scope, $http, security, UserResource, enums) {
+    function ($scope, $http, $window, security, UserResource, enums) {
         $scope.$parent.tab = 'info';
         $scope.genders = enums.gender;
         $scope.currentUser = security.currentUser;
@@ -101,7 +103,6 @@ angular.module('Playground.user-profile', [
                 }
             }).success(function (data, status, headers, config) {
                 $scope.loginInfo = data;
-                console.log(data);
             }).error(function (error) {
                 $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
             });
@@ -169,19 +170,13 @@ angular.module('Playground.user-profile', [
             });
         };
 
-        $scope.addLogin = function (login) {
+        $scope.addLogin = function (loginprovider) {
             // TODO: add (sessionStorage["associatingExternalLogin"] and redirect to fb login 
+            $window.sessionStorage["state"] = loginprovider.state;
+            $window.sessionStorage["associatingExternalLogin"] = true;
 
-            //$http(
-            //{
-            //    method: 'POST',
-            //    url: '/api/account/removelogin',
-            //    data: login
-            //}).success(function (data, status, headers, config) {
-            //    $scope.getExternalLogins();
-            //}).error(function (error) {
-            //    console.log(error);
-            //});
+            $scope.archiveSessionStorageToLocalStorage();
+            $window.location = loginprovider.url;
         };
 
         $scope.onImageCropped = function (data) {

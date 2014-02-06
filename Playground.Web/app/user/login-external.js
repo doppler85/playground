@@ -102,9 +102,21 @@ function ($location, $http, $scope, $window, $state, $stateParams, $rootScope, s
             }).success(function (data, status, headers, config) {
                 //$scope.externallogins = data;
                 if (data) {
-                    $state.transitionTo('profile.info');
+                    $http(
+                    {
+                        method: 'POST',
+                        url: '/api/account/AddExternalLogin',
+                        data: {
+                            externalAccessToken: externalAccessToken
+                        }
+                    }).success(function (data, status, headers, config) {
+                        $state.transitionTo('profile.info');
+                    }).error(function (error) {
+                        $state.transitionTo('login');
+                    })
                 }
                 else {
+                    $state.transitionTo('login');
                 }
             }).error(function (error) {
                 $state.transitionTo('login');
