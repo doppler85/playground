@@ -51,7 +51,7 @@
                 </div>
             </div>
         </form>
-        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alert, $index)">{{alert.msg}}</alert>
     </div>
     <div class="span12">
         <pre>{{player | json}}</pre>

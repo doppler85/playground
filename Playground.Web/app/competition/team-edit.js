@@ -83,10 +83,10 @@ angular.module('Playground.team-edit', ['ngResource', 'ui.router', 'ui.bootstrap
         $scope.updateTeam = function () {
             UserResource.updateTeam($scope.team,
                 function (data, status, headers, config) {
-                    $scope.addAlert({ type: 'success', msg: 'Team sucessfully updated' });
+                    $scope.addAlert($scope.alerts, { type: 'success', msg: 'Team sucessfully updated' });
                 },
                 function (err) {
-                    $scope.addAlert({ type: 'error', msg: 'Error updating team' });
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error updating team' });
                 }
             );
         };

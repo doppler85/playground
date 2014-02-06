@@ -59,13 +59,14 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
             UserResource.addPlayer($scope.player,
                 function (data, status, headers, config) {
                     $scope.player = data.player;
-                    $scope.addAlert({ type: 'success', msg: 'Player sucessfully added' });
+                    $scope.addAlert($scope.alerts, { type: 'success', msg: 'Player sucessfully added' });
                     $state.go('profile.players');
                 },
                 function () {
-                    $scope.addAlert({ type: 'error', msg: 'Error adding player' });
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error adding player' });
                     $scope.player.games = [];
-                });
+                }
+            );
         };
 
         $scope.cancel = function () {

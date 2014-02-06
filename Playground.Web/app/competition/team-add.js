@@ -82,11 +82,11 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
             UserResource.addTeam($scope.team,
                 function (data, status, headers, config) {
                     $scope.team = data.team;
-                    $scope.addAlert({ type: 'success', msg: 'Team sucessfully added' });
+                    $scope.addAlert($scope.alerts, { type: 'success', msg: 'Team sucessfully added' });
                     $state.go('profile.teams');
                 },
                 function () {
-                    $scope.addAlert({ type: 'error', msg: 'Error adding team' });
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error adding team' });
                 }
             );
         };
