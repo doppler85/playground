@@ -1213,7 +1213,11 @@ namespace Playground.Business
             Result<bool> retVal = null;
             try 
             {
-                Uow.CompetitorScores.Update(competitorScore, competitorScore.CompetitorID, competitorScore.MatchID);
+                CompetitorScore scoreToConfirm = Uow.CompetitorScores.GetById(s => s.MatchID == competitorScore.MatchID &&
+                    s.CompetitorID == competitorScore.CompetitorID);
+                scoreToConfirm.Confirmed = true;
+
+                Uow.CompetitorScores.Update(scoreToConfirm, scoreToConfirm.CompetitorID, scoreToConfirm.MatchID);
 
                 bool matchConfirmed = !Uow.CompetitorScores
                     .GetAll()
@@ -1221,8 +1225,8 @@ namespace Playground.Business
                                 cs.MatchID != competitorScore.MatchID && 
                                 cs.CompetitorID != competitorScore.CompetitorID &&
                                !cs.Confirmed);
+                
                 Match match = Uow.Matches.GetById(competitorScore.MatchID);
-
                 if (matchConfirmed)
                 {
                     match.Status = MatchStatus.Confirmed;

@@ -381,18 +381,13 @@ namespace Playground.Business
                     .Where(s => s.MatchID == match.MatchID)
                     .ToList();
 
-                // serialization reference error
-                foreach (CompetitorScore score in scores)
-                {
-                    score.Match = null;
-                    score.Competitor.Scores = null;
-                }
                 match.Scores = scores;
             }
             catch (Exception ex)
             {
-                log.Error("Error loading scores for mathc ", ex);
+                log.Error("Error loading scores for match ", ex);
             }
         }
+
     }
 }

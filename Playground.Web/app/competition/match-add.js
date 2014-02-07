@@ -138,7 +138,7 @@ angular.module('Playground.match-add', [
                         ids: ids,
                         gameCategoryID: $scope.selectedGame.game.gameCategoryID,
                         competitorType: $scope.selectedCompetitor.competitorType,
-                        earch: $scope.searchQuery
+                        search: $scope.searchQuery
                     },
                     function (data, status, headers, config) {
                         $scope.availableCompetitors = data;

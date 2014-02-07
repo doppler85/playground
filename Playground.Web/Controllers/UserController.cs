@@ -27,12 +27,14 @@ namespace Playground.Web.Controllers
         private IMatchBusiness matchBusiness;
         private ICompetitorBusiness competitorBusiness;
         private IGameCategoryBusiness gameCategoryBusiness;
+        private IGameBusiness gameBusiness;
         private IUserBusiness userBusiness;
         private IAutomaticConfirmationBusiness automaticConfirmationBusiness;
 
         public UserController(IPlaygroundUow uow, 
             IMatchBusiness mBusiness,
             ICompetitorBusiness cBusiness,
+            IGameBusiness gBusiness,
             IGameCategoryBusiness gcBusiness,
             IUserBusiness uBusiness,
             IAutomaticConfirmationBusiness iacBusiness)
@@ -41,6 +43,7 @@ namespace Playground.Web.Controllers
             this.matchBusiness = mBusiness;
             this.competitorBusiness = cBusiness;
             this.gameCategoryBusiness = gcBusiness;
+            this.gameBusiness = gBusiness;
             this.userBusiness = uBusiness;
             this.automaticConfirmationBusiness = iacBusiness;
         }
@@ -617,6 +620,7 @@ namespace Playground.Web.Controllers
                 if (match != null)
                 {
                     matchBusiness.LoadScores(match);
+                    match.Game = gameBusiness.GetById(match.GameID).Data;
                 }
                 LiveScores.Instance.BroadcastTotalMatches(match, totalMatches);
             }
