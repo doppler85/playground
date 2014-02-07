@@ -97,7 +97,10 @@ angular.module('Playground.user-profile', [
                     $scope.loginInfo = data;
                 },
                 function (error) {
-                    $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
+                    var msgs = $scope.getErrorsFromResponse(error.data);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: msgs[key] });
+                    }
                 }
             );
         };
@@ -109,7 +112,10 @@ angular.module('Playground.user-profile', [
                     $scope.addAlert($scope.externalAccountAlerts, { type: 'success', msg: "Account successfully removed" });
                 },
                 function (error) {
-                    $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: error });
+                    var msgs = $scope.getErrorsFromResponse(error.data);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: msgs[key] });
+                    }
                 }
             );
         };
@@ -122,7 +128,10 @@ angular.module('Playground.user-profile', [
                     security.refreshCurrentUser();
                 },
                 function (error) {
-                    $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
+                    var msgs = $scope.getErrorsFromResponse(error.data);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: msgs[key] });
+                    }
                 }
             );
         };
@@ -139,12 +148,16 @@ angular.module('Playground.user-profile', [
                     security.refreshCurrentUser();
                 },
                 function (error) {
-                    $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
+                    var msgs = $scope.getErrorsFromResponse(error.data);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: msgs[key] });
+                    }
                 }
             );
         };
 
         $scope.changePass = function () {
+            $scope.localAccountAlerts = [];
             security.changePassword($scope.changePassModel).then(
                 function (data) {
                     $scope.changePassModel = {};
@@ -152,7 +165,10 @@ angular.module('Playground.user-profile', [
                     security.refreshCurrentUser();
                 },
                 function (error) {
-                    $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: error });
+                    var msgs = $scope.getErrorsFromResponse(error.data);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: msgs[key] });
+                    }
                 }
             );
         };

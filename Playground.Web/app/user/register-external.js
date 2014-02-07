@@ -25,18 +25,9 @@ function ($http, $scope, $state, $stateParams, $rootScope, $window, security) {
                 $window.location = $window.sessionStorage["loginUrl"]
             },
             function (error) {
-                if (error.data) {
-                    if (error.data.modelState) {
-                        for (var m in error.data.modelState) {
-                            $scope.addAlert($scope.alerts, { type: 'error', msg: m });
-                        }
-                    }
-                    else {
-                        $scope.addAlert($scope.alerts, { type: 'error', msg: error.data });
-                    }
-                }
-                else {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: "Unknown error happened" });
+                var msgs = $scope.getErrorsFromResponse(error.data);
+                for (var key in msgs) {
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: msgs[key] });
                 }
             }
         );

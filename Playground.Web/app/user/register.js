@@ -33,15 +33,17 @@ function ($scope, $state, $stateParams, $rootScope, security) {
                         }
                     },
                     function (error) {
-                        for (var g in error) {
-                            $scope.addAlert($scope.alerts, { type: 'error', msg: error[g] });
+                        var msgs = $scope.getErrorsFromResponse(error.data);
+                        for (var key in msgs) {
+                            $scope.addAlert($scope.alerts, { type: 'error', msg: msgs[key] });
                         }
                     }
                 );
             },
             function (error) {
-                for (var g in error) {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: error[g] });
+                var msgs = $scope.getErrorsFromResponse(error.data);
+                for (var key in msgs) {
+                    $scope.addAlert($scope.alerts, { type: 'error', msg: msgs[key] });
                 }
             }
         );

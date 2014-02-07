@@ -272,11 +272,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\AccountControlleMVC.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiBaseController.cs" />
     <Compile Include="Controllers\CompetitionTypeController.cs" />
-    <Compile Include="Controllers\AccountControllerOLD.cs" />
     <Compile Include="Controllers\CompetitorController.cs" />
     <Compile Include="Controllers\GameCategoryController.cs" />
     <Compile Include="Controllers\GameController.cs" />

@@ -339,6 +339,40 @@ Playground.
                     $window.sessionStorage["state"] = state;
                 }
             };
+
+            $rootScope.getErrorsFromResponse = function (data) {
+                var retVal = [];
+
+                if (data) {
+                    if (data.modelState) {
+                        for (var key in data.modelState) {
+                            if (data.modelState[key]) {
+                                retVal.push(data.modelState[key]);
+                            }
+                        }
+                    }
+                    else {
+                        if (typeof (data) === "object") {
+                            for (var key in data) {
+                                if (data[key]) {
+                                    retVal.push(data[key]);
+                                }
+                            }
+                        }
+                        else if (typeof (data) === "strnig") {
+                            retVal.push(data);
+                        }
+                        else {
+                            retVal.push("Unknown error happened");
+                        }
+                    }
+                }
+                else {
+                    retVal.push("Unknown error happened");
+                }
+
+                return retVal;
+            }
         }]).
     controller('AppCtrl', [
         '$scope',
