@@ -1208,17 +1208,18 @@ namespace Playground.Business
             return retVal;
         }
 
-        public bool ConfirmScore(CompetitorScore competitorScore)
+        public Result<bool> ConfirmScore(CompetitorScore competitorScore)
         {
-            bool retVal = false;
+            Result<bool> retVal = null;
             try 
             {
                 Uow.CompetitorScores.Update(competitorScore, competitorScore.CompetitorID, competitorScore.MatchID);
-                Uow.Commit();
 
                 bool matchConfirmed = !Uow.CompetitorScores
                     .GetAll()
                     .Any(cs => cs.MatchID == competitorScore.MatchID &&
+                                cs.MatchID != competitorScore.MatchID && 
+                                cs.CompetitorID != competitorScore.CompetitorID &&
                                !cs.Confirmed);
                 Match match = Uow.Matches.GetById(competitorScore.MatchID);
 
@@ -1226,14 +1227,16 @@ namespace Playground.Business
                 {
                     match.Status = MatchStatus.Confirmed;
                     Uow.Matches.Update(match, match.MatchID);
-                    Uow.Commit();
                 }
 
-                retVal = true;
+                Uow.Commit();
+
+                retVal = ResultHandler<bool>.Sucess(matchConfirmed);
             }
             catch (Exception ex) 
             {
                 log.Error("Error confirming score", ex);
+                retVal = ResultHandler<bool>.Erorr("Erorr confirming score");
             }
 
             return retVal;

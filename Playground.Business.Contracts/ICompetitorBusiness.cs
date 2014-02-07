@@ -78,7 +78,7 @@ namespace Playground.Business.Contracts
 
         bool CheckUserCompetitor(int userID, long competitorID);
 
-        bool ConfirmScore(CompetitorScore competitorScore);
+        Result<bool> ConfirmScore(CompetitorScore competitorScore);
 
         int TotalMatchesCount(long competitorID);
     }

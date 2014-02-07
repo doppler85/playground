@@ -9,6 +9,8 @@ namespace Playground.Business.Contracts
 {
     public interface IMatchBusiness
     {
+        Result<Match> GetMatchById(long matchID);
+
         Result<Match> AddMatch(int userID, Match match);
 
         Result<PagedResult<Match>> FilterByUser(int page, int count, int userID);
@@ -24,5 +26,7 @@ namespace Playground.Business.Contracts
         Result<PagedResult<Match>> FilterByStatusAndGameCategory(int page, int count, MatchStatus status, int gameCategoryID);
 
         int TotalMatchesByStatus(MatchStatus status);
+
+        void LoadScores(Match match);
     }
 }

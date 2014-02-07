@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using Playground.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,9 +53,9 @@ namespace Playground.Web.Hubs
             }
         }
 
-        public void BroadcastTotalMatches(int totalMatches)
+        public void BroadcastTotalMatches(Match match, int totalMatches)
         {
-            Hub.Clients.All.RefreshMatches(totalMatches);
+            Hub.Clients.All.RefreshMatches(match, totalMatches);
         }
     }
 }

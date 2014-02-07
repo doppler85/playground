@@ -32,8 +32,15 @@ angular.module('Playground.home', ['ngResource', 'ui.router']).
 
         var hub = $.connection.livescores;
 
-        hub.client.refreshMatches = function (totalMathces) {
-            $scope.loadMatches();
+        hub.client.refreshMatches = function (match, totalMathces) {
+            $scope.totalMatches = totalMathces;
+            $scope.matches.unshift(match);
+
+            if ($scope.matches.length > 5) {
+                $scope.matches.pop();
+            }
+
+            $scope.$digest();
         };
 
         $.connection.hub.start()

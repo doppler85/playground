@@ -608,9 +608,20 @@ namespace Playground.Web.Controllers
         [ActionName("confirmscore")]
         public HttpResponseMessage ConfirmScore(CompetitorScore competitorScore)
         {
-            bool res = competitorBusiness.ConfirmScore(competitorScore);
+            Result<bool> res = competitorBusiness.ConfirmScore(competitorScore);
 
-            HttpResponseMessage response = res ?
+            if (res.Sucess && res.Data)
+            {
+                int totalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed);
+                Match match = matchBusiness.GetMatchById(competitorScore.MatchID).Data;
+                if (match != null)
+                {
+                    matchBusiness.LoadScores(match);
+                }
+                LiveScores.Instance.BroadcastTotalMatches(match, totalMatches);
+            }
+
+            HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.OK) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, "Error confirming score");
 
@@ -624,8 +635,16 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<Match> res = matchBusiness.AddMatch(currentUser.UserID, match);
 
-            int totalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed);
-            LiveScores.Instance.BroadcastTotalMatches(totalMatches);
+            if (res.Sucess && res.Data.Status == MatchStatus.Confirmed)
+            {
+                int totalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed);
+                Match m = matchBusiness.GetMatchById(match.MatchID).Data;
+                if (m != null)
+                {
+                    matchBusiness.LoadScores(m);
+                }
+                LiveScores.Instance.BroadcastTotalMatches(m, totalMatches);
+            }
 
             HttpResponseMessage response = res.Sucess ?
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :

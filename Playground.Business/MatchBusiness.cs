@@ -26,6 +26,23 @@ namespace Playground.Business
             this.automaticConfirmationsBusiness = acBusiness;
         }
 
+        public Result<Match> GetMatchById(long matchID)
+        {
+            Result<Match> retVal = null;
+            try
+            {
+                Match result = Uow.Matches.GetById(matchID);
+                retVal = ResultHandler<Match>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error loading match", ex);
+                retVal = ResultHandler<Match>.Erorr("Error loading match");
+            }
+
+            return retVal;
+        }
+
         public Result<Match> AddMatch(int userID, Match match)
         {
             Result<Match> retVal = null;
@@ -353,6 +370,29 @@ namespace Playground.Business
             }
 
             return retVal;
+        }
+
+        public void LoadScores(Match match)
+        {
+            try
+            {
+                List<CompetitorScore> scores = Uow.CompetitorScores
+                    .GetAll(s => s.Competitor)
+                    .Where(s => s.MatchID == match.MatchID)
+                    .ToList();
+
+                // serialization reference error
+                foreach (CompetitorScore score in scores)
+                {
+                    score.Match = null;
+                    score.Competitor.Scores = null;
+                }
+                match.Scores = scores;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error loading scores for mathc ", ex);
+            }
         }
     }
 }

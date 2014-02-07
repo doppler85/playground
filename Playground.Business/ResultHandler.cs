@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Playground.Business
 {
-    public static class ResultHandler<T> where T : class
+    public static class ResultHandler<T> 
     {
         public static Result<T> Sucess(T data)
         {
@@ -24,7 +24,7 @@ namespace Playground.Business
             return new Result<T>()
             {
                 Sucess = false,
-                Data = null,
+                Data = default(T),
                 Message = message
             };
         }
