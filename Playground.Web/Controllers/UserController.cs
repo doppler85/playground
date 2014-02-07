@@ -646,6 +646,7 @@ namespace Playground.Web.Controllers
                 if (m != null)
                 {
                     matchBusiness.LoadScores(m);
+                    match.Game = gameBusiness.GetById(match.GameID).Data;
                 }
                 LiveScores.Instance.BroadcastTotalMatches(m, totalMatches);
             }

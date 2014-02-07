@@ -37,6 +37,8 @@ namespace Playground.Business
 
                 Uow.AutomaticMatchConfirmations.Add(amc);
                 Uow.Commit();
+
+                retVal = ResultHandler<AutomaticMatchConfirmation>.Sucess(amc);
             }
             catch (Exception ex)
             {
