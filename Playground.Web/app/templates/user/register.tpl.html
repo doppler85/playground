@@ -3,30 +3,31 @@
 </div>
 
 <div class="row">
-    <div class="span5">
+    <div class="col-sm-6">
         <form class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label">User name</label>
-                <div class="controls">
-                    <input type="text" placeholder="johndoe" data-ng-model="registerModel.userName" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">User name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" placeholder="johndoe" data-ng-model="registerModel.userName" />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Password</label>
-                <div class="controls">
-                    <input type="password" placeholder="password" data-ng-model="registerModel.password" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Password</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" placeholder="password" data-ng-model="registerModel.password" />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Confirm password</label>
-                <div class="controls">
-                    <input type="password" placeholder="password" data-ng-model="registerModel.confirmPassword" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Confirm password</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" placeholder="password" data-ng-model="registerModel.confirmPassword" />
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn" data-ng-click="register()">register</button>
-                    <button class="btn" data-ng-click="cancelRegister()">cancel</button>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" data-ng-click="register()">register</button>
+                    <button class="btn btn-primary" data-ng-click="cancelRegister()">cancel</button>
                 </div>
             </div>
         </form>

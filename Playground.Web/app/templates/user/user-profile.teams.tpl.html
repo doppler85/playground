@@ -51,7 +51,7 @@
             on-select-page="onTeamPageSelect(page)">
     </pagination>
 
-        <a data-ui-sref="team-add">add team</a>
+        <a data-ui-sref="team-add" class="btn btn-primary btn-xs">add team</a>
         <alert ng-repeat="alert in teamAlerts" type="alert.type" close="closeAlert(teamAlerts, $index)">{{alert.msg}}</alert>
     </div>
 </div>

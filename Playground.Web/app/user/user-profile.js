@@ -157,7 +157,6 @@ angular.module('Playground.user-profile', [
         };
 
         $scope.changePass = function () {
-            $scope.localAccountAlerts = [];
             security.changePassword($scope.changePassModel).then(
                 function (data) {
                     $scope.changePassModel = {};

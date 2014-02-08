@@ -50,7 +50,7 @@
             items-per-page="5"
             on-select-page="onPlayerPageSelect(page)">
         </pagination>
-        <a data-ui-sref="player-add">add player</a>
+        <a data-ui-sref="player-add" class="btn btn-primary btn-xs">add player</a>
         <alert ng-repeat="alert in playerAlerts" type="alert.type" close="closeAlert(playerAlerts, $index)">{{alert.msg}}</alert>
     </div>
 </div>

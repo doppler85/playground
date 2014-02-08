@@ -2,11 +2,11 @@
     <h1>{{pageTitle}}</h1>
 </div>
 <div class="row">
-    <div class="span6">
+    <div class="col-sm-6">
         <form class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label" for="logo">logo</label>
-                <div class="controls">
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="logo">Logo</label>
+                <div class="col-sm-6">
                     <image-upload 
                         data-object-id="team.competitorID"
                         data-img-src="team.pictureUrl"
@@ -16,32 +16,33 @@
                         />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Team nick</label>
-                <div class="controls">
-                    <input type="text" data-ng-model="team.name">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Team nick</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" data-ng-model="team.name">
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Game</label>
-                <div class="controls">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Game</label>
+                <div class="col-sm-6">
                     <select 
+                        class="form-control" 
                         data-ng-model="selectedCategory" 
                         data-ng-change="categoryChanged()"
                         data-ng-options="category as category.title for category in categories" />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">My pleya</label>
-                <div class="controls">
-                    <input type="text" data-ng-model="myplayer.name" data-ng-disabled="true">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">My pleya</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" data-ng-model="myplayer.name" data-ng-disabled="true">
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Games</label>
-                <div class="controls" data-ng-repeat="game in games">
-                    <label>
-                        <input 
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Games</label>
+                <div class="col-sm-6">
+                    <label class="checkbox" data-ng-repeat="game in games">
+                        <input class="checkbox"
                             type="checkbox" 
                             value="game.gameid" 
                             data-ng-checked="game.checked"
@@ -50,16 +51,17 @@
                     </label>
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn" data-ng-click="addTeam()">Save</button>
-                    <button class="btn" data-ng-click="cancel()">Cancel</button>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" data-ng-click="addTeam()">Save</button>
+                    <button class="btn btn-primary" data-ng-click="cancel()">Cancel</button>
                 </div>
             </div>
         </form>
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     </div>
-    <div class="span6">
+    <div class="col-sm-6">
         <span data-ng-show="players.length > 0">
             Team members
         </span>
@@ -75,14 +77,15 @@
             </tr>
         </table>
         <form class="form-inline"
+              style="margin-bottom:5px;"
               data-ng-show="players.length > 0">
-            <input type="text" data-ng-model="searchQuery" placeholder="Search players">
-            <button class="btn" data-ng-disabled="!selectedCategory.gameCategoryID" data-ng-click="searchPlayers(1, 5)">Search</button>
+            <input type="text" class="form-control" data-ng-model="searchQuery" placeholder="Search players">
+            <button class="btn btn-primary" data-ng-disabled="!selectedCategory.gameCategoryID" data-ng-click="searchPlayers(1, 5)">Search</button>
         </form>
-        <span data-ng-show="availablePlayers.length > 0">
+        <span data-ng-show="availablePlayers.items.length > 0">
             Results
         </span>
-        <table class="table">
+        <table class="table" style="margin-top:5px;">
             <tr data-ng-repeat="player in availablePlayers.items">
                 <td data-ng-bind="player | playeruserfull"></td>
                 <td data-ng-bind="player.name"></td>

@@ -34,16 +34,17 @@
             on-select-page="onAutomaticMatchConfirmationsPageSelect(page)">
     </pagination>
         <div class="add-confirmation-wrapp">
-            <a href="javascript:;" data-ng-click="toggleAddConfirmation(true)" data-ng-hide="addingconfirmation">add confirmation</a>
+            <a href="javascript:;" class="btn btn-primary btn-xs" data-ng-click="toggleAddConfirmation(true)" data-ng-hide="addingconfirmation">add confirmation</a>
             <div class="add-confirmation-inner" data-ng-show="addingconfirmation">
-                <form class="form-inline">
-                    <input type="text" data-ng-model="searchQuery" placeholder="Search users">
-                    <button class="btn" data-ng-click="searchAutomaticConfirmationUsers(1)">Search</button>
-                    <button class="btn" data-ng-click="toggleAddConfirmation(false)">cancel</button>
+                <form class="form-inline"
+                    style="margin-bottom:5px;">
+                    <label class="sr-only">Search</label>
+                    <input type="text" class="form-control" data-ng-model="searchQuery" placeholder="Search users">
+                    <button class="btn btn-primary" data-ng-click="searchAutomaticConfirmationUsers(1)">Search</button>
+                    <button class="btn btn-primary" data-ng-click="toggleAddConfirmation(false)">cancel</button>
                 </form>
-                <span data-ng-show="automaticMatchConfirmationsUsers.length > 0">Results
-                </span>
-                <table class="table">
+                <span data-ng-show="automaticMatchConfirmationsUsers.items.length > 0">Results</span>
+                <table class="table" style="margin-top:5px;">
                     <tr data-ng-repeat="user in automaticMatchConfirmationsUsers.items">
                         <td>
                             <div class="img-holder">

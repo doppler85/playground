@@ -195,7 +195,8 @@ namespace Playground.Business
                 {
                     List<GameCompetitionType> currentCompetitionTypes = competitionTypeBusiness.FilterByGame(game.GameID).Data;
 
-                    foreach (GameCompetitionType ct in currentCompetitionTypes)
+                    // delete existing competition types for game before adding new ones
+                    foreach (GameCompetitionType ct in currentCompetitionTypes.Where(ct => ct.Selected))
                     {
                         Uow.GameCompetitionTypes.Delete(ct);
                     }
@@ -205,6 +206,7 @@ namespace Playground.Business
                         ct.CompetitionType = null;
                         Uow.GameCompetitionTypes.Add(ct);
                     }
+                    game.CompetitionTypes = null;
                     Uow.Games.Update(game, game.GameID);
                     Uow.Commit();
 

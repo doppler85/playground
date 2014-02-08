@@ -183,7 +183,7 @@ Playground.
                     }
                 }).state('player-edit', {
                     url: '/user/competition/player/edit/:id',
-                    templateUrl: 'app/competition/player-edit.tpl.html',
+                    templateUrl: 'app/templates/competition/player-edit.tpl.html',
                     controller: 'PlayerEditController',
                     data: { pageTitle: 'Edit player' },
                     resolve: {
@@ -267,7 +267,7 @@ Playground.
 
             // alserts
             $rootScope.addAlert = function (arr, msg) {
-                arr.push(msg);
+                arr.unshift(msg);
             };
 
             $rootScope.closeAlert = function (arr, index) {
@@ -277,8 +277,8 @@ Playground.
             // validation
             $rootScope.getCssClasses = function (ngModelContoller) {
                 return {
-                    error: ngModelContoller.$invalid && ngModelContoller.$dirty,
-                    success: ngModelContoller.$valid && ngModelContoller.$dirty
+                    'has-error': ngModelContoller.$invalid && ngModelContoller.$dirty,
+                    'has-success': ngModelContoller.$valid && ngModelContoller.$dirty
                 };
             };
 

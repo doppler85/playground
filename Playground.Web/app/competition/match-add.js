@@ -3,8 +3,7 @@ angular.module('Playground.match-add', [
     'ngResource',
     'ui.router',
     'ui.bootstrap.alert',
-    'ui.bootstrap.datepicker',
-    'ui.bootstrap.timepicker',
+    'ui.bootstrap.datetimepicker',
     'ui.bootstrap.pagination'])
     .filter('gamefull', function () {
         return function (game) {

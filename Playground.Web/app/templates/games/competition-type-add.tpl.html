@@ -2,27 +2,29 @@
     <h1>{{pageTitle}}</h1>
 </div>
 <div class="row">
-    <div class="span6">
+    <div class="col-sm-6">
         <form name="competitionTypeForm" class="form-horizontal">
-            <div class="control-group" data-ng-class="getCssClasses(competitionTypeForm.name)">
-                <label class="control-label">Title</label>
-                <div class="controls">
-                    <input type="text" data-ng-model="competitionType.name" name="name" data-required="true">
+            <div class="form-group" data-ng-class="getCssClasses(competitionTypeForm.name)">
+                <label class="col-sm-3 control-label">Title</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" data-ng-model="competitionType.name" name="name" data-required="true">
                     <span data-ng-show="showError(competitionTypeForm.name, 'required')" class="help-inline">This field is required</span>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Comepetitor type</label>
-                <div class="controls">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Comepetitor type</label>
+                <div class="col-sm-6">
                     <select 
+                        class="form-control"
                         data-ng-model="competitionType.competitorType" 
                         data-ng-options="getKey(k) as v for (k, v) in competitorTypes" />
                 </div>
             </div>
-            <div data-ng-show="competitionType.competitorType == 1" class="control-group" data-ng-class="getCssClasses(competitionTypeForm.playersPerTeam)">
-                <label class="control-label">Players per team</label>
-                <div class="controls">
+            <div data-ng-show="competitionType.competitorType == 1" class="form-group" data-ng-class="getCssClasses(competitionTypeForm.playersPerTeam)">
+                <label class="col-sm-3 control-label">Players per team</label>
+                <div class="col-sm-6">
                     <input type="number" 
+                        class="form-control"
                         name="playersPerTeam"
                         data-ng-model="competitionType.playersPerTeam" 
                         data-condition="competitionType.competitorType == 1"
@@ -34,10 +36,11 @@
                     </span>
                 </div>
             </div>
-            <div class="control-group" data-ng-class="getCssClasses(competitionTypeForm.competitorsCount)">
-                <label class="control-label">Competitors count</label>
-                <div class="controls">
+            <div class="form-group" data-ng-class="getCssClasses(competitionTypeForm.competitorsCount)">
+                <label class="col-sm-3 control-label">Competitors count</label>
+                <div class="col-sm-6">
                     <input type="number" 
+                        class="form-control"
                         name="competitorsCount"
                         data-ng-model="competitionType.competitorsCount" 
                         data-required="true" 
@@ -51,17 +54,18 @@
                     </span>
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn" data-ng-click="addCompetitionType()" data-ng-disabled="!canSave(competitionTypeForm)">Save</button>
-                    <button class="btn" data-ng-click="cancel()">Cancel</button>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" data-ng-click="addCompetitionType()" data-ng-disabled="!canSave(competitionTypeForm)">Save</button>
+                    <button class="btn btn-primary" data-ng-click="cancel()">Cancel</button>
                 </div>
             </div>
         </form>
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
-        <div data-ng-show="settings.debug">
+<!--        <div data-ng-show="settings.debug">
             <pre>{{competitionType | json}}</pre>
             <pre>{{competitionTypeForm.$valid}} | {{competitionTypeForm.$dirty}} | {{canSave(competitionTypeForm)}}</pre>
-        </div>
+        </div>-->
     </div>
 </div>

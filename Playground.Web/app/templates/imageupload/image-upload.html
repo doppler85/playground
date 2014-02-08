@@ -1,17 +1,22 @@
 <div>
     <div data-ng-hide="changePicturePhase == 'crop'">
-        <img data-ng-src="{{imgSrc}}" alt="" style="width:200px; height: 200px;"/>
-        <a href="javascript:;" data-ng-click="changePicturePhase = 'select'">change</a>
+        <img data-ng-src="{{imgSrc}}" alt="" style="width:200px; height: 200px; float:left;"/>
+        <a style="float:left; clear:left; margin-top:5px;"
+            data-ng-show="changePicturePhase == 'initial'"
+            href="javascript:;" 
+           class="btn btn-primary btn-xs" data-ng-click="changePicturePhase = 'select'">change</a>
     </div>
     <div data-ng-show="changePicturePhase == 'select'">
-        <input id="fileupload" type="file" accept="image/*">
-        <button class="btn" data-ng-click="changePicturePhase = 'initial'">cancel</button>
+        <input id="fileupload" type="file" accept="image/*" 
+            style="float:left; clear:left; margin-bottom:5px; margin-top:5px;">
+        <button style="float:left; clear:left"
+            class="btn btn-primary btn-xs" data-ng-click="changePicturePhase = 'initial'">cancel</button>
     </div>
     <div data-ng-show="changePicturePhase == 'crop'">
         <div>
             <img id="croppingImg" alt="">
         </div>
-        <button class="btn" data-ng-click="cropPicture()">save</button>
-        <button class="btn" data-ng-click="changePicturePhase = 'initial';">cancel</button>
+        <button class="btn btn-primary btn-xs" data-ng-click="cropPicture()" style="margin-top:5px;">save</button>
+        <button class="btn btn-primary btn-xs" data-ng-click="changePicturePhase = 'initial';" style="margin-top:5px;">cancel</button>
     </div>
 </div>

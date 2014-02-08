@@ -320,9 +320,11 @@
     <Content Include="app\competition\team-edit.js" />
     <Content Include="app\lib\bootstrap\bootstrap.js" />
     <Content Include="app\lib\bootstrap\bootstrap.min.js" />
+    <Content Include="app\lib\bootstrap\datetimepicker.js" />
+    <Content Include="app\lib\moment.js" />
     <Content Include="app\templates\competition\team-edit.tpl.html" />
     <Content Include="app\competition\player-edit.js" />
-    <Content Include="app\competition\player-edit.tpl.html" />
+    <Content Include="app\templates\competition\player-edit.tpl.html" />
     <Content Include="app\competition\match-list.js" />
     <Content Include="app\competition\match-list.tpl.html" />
     <Content Include="app\competition\match-add.js" />
@@ -495,6 +497,7 @@
     <Content Include="Content\css\bootstrap-theme.min.css" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\datetimepicker.css" />
     <Content Include="Content\css\jquery.Jcrop.css" />
     <Content Include="Content\css\style.css" />
     <Content Include="Content\css\theme.css" />
@@ -611,6 +614,10 @@
     <Content Include="app\lib\angular\_references.js" />
     <Content Include="Scripts\jquery.signalR-2.0.1.js" />
     <Content Include="Scripts\jquery.signalR-2.0.1.min.js" />
+    <Content Include="Scripts\moment-with-langs.js" />
+    <Content Include="Scripts\moment-with-langs.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

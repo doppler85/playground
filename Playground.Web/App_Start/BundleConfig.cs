@@ -31,10 +31,10 @@ namespace Playground.Web
             bundles.Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/css/style.css")
                 .Include("~/Content/css/bootstrap.css")
+                .Include("~/Content/css/datetimepicker.css")
                 .Include("~/Content/css/bootstrap-theme.css")
                 .Include("~/Content/css/theme.css")
                 .Include("~/Content/css/jquery.Jcrop.css")
-                .Include("~/Content/css/bootstrap-responsive.css")
                 );
 
             //bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(

@@ -312,6 +312,7 @@ namespace Playground.Business
                 User userToUpdate = Uow.Users.GetById(user.UserID);
                 userToUpdate.FirstName = user.FirstName;
                 userToUpdate.LastName = user.LastName;
+                userToUpdate.EmailAddress = user.EmailAddress;
                 userToUpdate.Gender = user.Gender;
 
                 Uow.Users.Update(userToUpdate, userToUpdate.UserID);

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="span6">
+    <div class="col-sm-6">
         <h3>Profile picture</h3>
         <image-upload
             data-img-src="profile.pictureUrl"
@@ -8,32 +8,39 @@
             data-on-image-cropped="onImageCropped(data);" />
     </div>
 
-    <div class="span6">
+    <div class="col-sm-6">
         <h3>My info</h3>
         <form class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label">First name</label>
-                <div class="controls">
-                    <input type="text" data-ng-model="profile.firstName" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">First name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" data-ng-model="profile.firstName" />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Last name</label>
-                <div class="controls">
-                    <input type="text" data-ng-model="profile.lastName" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Last name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" data-ng-model="profile.lastName" />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Gender</label>
-                <div class="controls">
-                    <select
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Email</label>
+                <div class="col-sm-6">
+                    <input type="email" class="form-control" data-ng-model="profile.emailAddress" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Gender</label>
+                <div class="col-sm-6">
+                    <select class="form-control"
                         data-ng-model="profile.gender"
                         data-ng-options="getKey(k) as v for (k, v) in genders" />
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn" data-ng-click="updateProfile()">update</button>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" data-ng-click="updateProfile()">update</button>
                 </div>
             </div>
         </form>
@@ -41,57 +48,58 @@
 </div>
 
 <div class="row">
-    <div class="span6">
+     <div class="col-sm-6">
         <h3>Local login</h3>
         <form class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label">User name</label>
-                <div class="controls">
-                    <input data-ng-disabled="true" type="text" data-ng-model="currentUser.userName" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">User name</label>
+                <div class="col-sm-6">
+                    <input data-ng-disabled="true" class="form-control" type="text" data-ng-model="currentUser.userName" />
                 </div>
             </div>
-            <div data-ng-show="currentUser.hasPassword" class="control-group">
-                <label class="control-label">Old password</label>
-                <div class="controls">
-                    <input type="password" data-ng-model="changePassModel.oldPassword" />
+            <div data-ng-show="currentUser.hasPassword" class="form-group">
+                <label class="col-sm-3 control-label">Old password</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" data-ng-model="changePassModel.oldPassword" />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">New password</label>
-                <div class="controls">
-                    <input type="password" data-ng-model="changePassModel.newPassword" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">New password</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" data-ng-model="changePassModel.newPassword" />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Confirm password</label>
-                <div class="controls">
-                    <input type="password" data-ng-model="changePassModel.confirmPassword" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Confirm password</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" data-ng-model="changePassModel.confirmPassword" />
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button data-ng-show="!currentUser.hasPassword" class="btn" data-ng-click="setPassword()">set password</button>
-                    <button data-ng-show="currentUser.hasPassword" class="btn" data-ng-click="changePass()">change password</button>
-                    <button data-ng-show="currentUser.hasPassword" class="btn" data-ng-click="resetPassword()">reset password</button>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button data-ng-show="!currentUser.hasPassword" class="btn btn-primary" data-ng-click="setPassword()">set password</button>
+                    <button data-ng-show="currentUser.hasPassword" class="btn btn-primary" data-ng-click="changePass()">change password</button>
+                    <button data-ng-show="currentUser.hasPassword" class="btn btn-primary" data-ng-click="resetPassword()">reset password</button>
                 </div>
             </div>
         </form>
         <alert ng-repeat="alert in localAccountAlerts" type="alert.type" close="closeAlert(localAccountAlerts, $index)">{{alert.msg}}</alert>
     </div>
 
-    <div class="span6">
+    <div class="col-sm-6">
         <h3>External logins</h3>
         <table class="table">
             <tr data-ng-repeat="login in loginInfo.logins">
                 <td data-ng-bind="login.loginProvider"></td>
                 <td>
-                    <button class="btn" data-ng-click="removeLogin(login)">remove</button>
+                    <button class="btn btn-primary" data-ng-click="removeLogin(login)">remove</button>
                 </td>
             </tr>
             <tr data-ng-repeat="login in loginInfo.externalLoginProviders">
                 <td data-ng-bind="login.name"></td>
                 <td>
-                    <button class="btn" data-ng-click="addLogin(login)">add</button>
+                    <button class="btn btn-primary" data-ng-click="addLogin(login)">add</button>
                 </td>
             </tr>
         </table>
