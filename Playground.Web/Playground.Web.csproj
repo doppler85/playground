@@ -318,6 +318,8 @@
     <Content Include="app\competition\competitors-list.js" />
     <Content Include="app\competition\competitors-list.tpl.html" />
     <Content Include="app\competition\team-edit.js" />
+    <Content Include="app\lib\bootstrap\bootstrap.js" />
+    <Content Include="app\lib\bootstrap\bootstrap.min.js" />
     <Content Include="app\templates\competition\team-edit.tpl.html" />
     <Content Include="app\competition\player-edit.js" />
     <Content Include="app\competition\player-edit.tpl.html" />
@@ -489,10 +491,14 @@
     <Content Include="Content\assets\scripts\main\default.js" />
     <Content Include="Content\assets\scripts\main\jquery-1.8.3.min.js" />
     <Content Include="Content\assets\scripts\main\modernizr-2.6.2.min.js" />
-    <Content Include="Content\css\bootstrap-responsive.css" />
+    <Content Include="Content\css\bootstrap-theme.css" />
+    <Content Include="Content\css\bootstrap-theme.min.css" />
     <Content Include="Content\css\bootstrap.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\jquery.Jcrop.css" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\theme.css" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\img\glyphicons-halflings-white.png" />
     <Content Include="Content\img\glyphicons-halflings.png" />
     <Content Include="Content\img\Jcrop.gif" />
@@ -562,6 +568,12 @@
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
+    <Content Include="Copy of index.cshtml" />
+    <Content Include="Content\css\bootstrap-theme.css.map" />
+    <Content Include="Content\css\bootstrap.css.map" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Properties\PublishProfiles\filesystem.pubxml" />
     <None Include="Web.config_ggg">
       <SubType>Designer</SubType>

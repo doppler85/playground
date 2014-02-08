@@ -52,7 +52,7 @@ angular.module('Playground.matches', ['ui.bootstrap.pagination'])
                     score.confirmed = true;
                     match.status = data.status;
                 }, function () {
-                    msgCollection.push({ type: 'error', msg: 'Error confirming score: ' + competitor.name });
+                    msgCollection.push({ type: 'danger', msg: 'Error confirming score: ' + competitor.name });
                 });
         };
 

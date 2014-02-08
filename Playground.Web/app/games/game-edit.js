@@ -26,7 +26,7 @@ angular.module('Playground.game-edit', ['ngResource', 'ui.router', 'Playground.i
                     $scope.addAlert($scope.alerts, { type: 'success', msg: 'Game sucessfully updated' });
                 },
                 function () {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error updating game' });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error updating game' });
                 }
             );
         };

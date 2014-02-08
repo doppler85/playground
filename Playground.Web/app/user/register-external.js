@@ -27,7 +27,7 @@ function ($http, $scope, $state, $stateParams, $rootScope, $window, security) {
             function (error) {
                 var msgs = $scope.getErrorsFromResponse(error.data);
                 for (var key in msgs) {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: msgs[key] });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
                 }
             }
         );

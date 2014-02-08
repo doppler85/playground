@@ -63,7 +63,7 @@ angular.module('Playground.player-add', ['ngResource', 'ui.router', 'ui.bootstra
                     $state.go('profile.players');
                 },
                 function () {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error adding player' });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error adding player' });
                     $scope.player.games = [];
                 }
             );

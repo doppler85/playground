@@ -178,7 +178,7 @@ angular.module('Playground.match-add', [
                     $scope.addAlert({ type: 'success', msg: 'Match sucessfully added' });
                 },
                 function () {
-                    $scope.addAlert({ type: 'error', msg: 'Error adding team' });
+                    $scope.addAlert({ type: 'danger', msg: 'Error adding team' });
                 }
             );
         };

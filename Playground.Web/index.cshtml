@@ -1,60 +1,58 @@
 ﻿@using System.Web.Optimization
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-		<meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0" />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
-		<title>Playground</title>
-		<meta name="description" content="">
+    <title>Playground</title>
+    @Styles.Render("~/Content/css")
 
-		<link href='http://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
-        @Styles.Render("~/Content/css")
-        <style type="text/css">
-          body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-          }
-        </style>
-        @Scripts.Render("~/bundles/modernizr")
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-          <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
-	</head>
-    <body data-ng-app="Playground" id="ng-app">     
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                  </button>
-                  <a class="brand" href="https://github.com/doppler85/playground">Playground</a>
-                  <div class="nav-collapse in collapse" 
-                       style="height: auto;"
-                       data-ng-include="'app/templates/menu/main-menu.tpl.html'" 
-                       data-ng-controller="MainMenuController">
-                  </div><!--/.nav-collapse -->
-                </div>
-              </div>
-            </div>
-        <div class="container">
-            <!-- #main -->
-    	    <section  data-ui-view="">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
 
-		    </section>
-            <hr />
-		    <footer >
-			    <p>Playground &#169; 2013-2014</p>
-		    </footer>
+  <body data-ng-app="Playground" role="document">
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Bootstrap theme</a>
         </div>
+        <div class="navbar-collapse collapse" 
+            data-ng-include="'app/templates/menu/main-menu.tpl.html'" 
+            data-ng-controller="MainMenuController">
+
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container theme-showcase" role="main">
+    <!-- #main -->
+    <section  data-ui-view="">
+
+	</section>
+	<footer >
+		<p>Playground &#169; 2013-2014</p>
+	</footer>
+    </div> <!-- /container -->
 
     <!-- SCRIPTS -->    
     <script type="text/javascript" src="app/lib/jQuery/jquery-2.0.3.js"></script>
@@ -70,6 +68,7 @@
     <script type="text/javascript" src="app/lib/angular/angular-resource.js"></script>
     
     <script type="text/javascript" src="app/lib/bootstrap/ui-bootstrap-custom-0.7.0.js"></script>
+    <script type="text/javascript" src="app/lib/bootstrap/bootstrap.js"></script>
 
     <script type="text/javascript" src="app/app.js"></script>
     <script type="text/javascript" src="app/common/services.js"></script>
@@ -117,13 +116,9 @@
 
 
 <!-- javascript -->
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
 
-@*<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript">window.jQuery || document.write("<script src='content/assets/scripts/main/jquery-1.8.3.min.js'>\x3C/script>")</script>
-<script type="text/javascript" src="content/assets/scripts/main/default.js"></script>*@
-
-<!--[if lt IE 7]><p class="chromeframe">Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-
-</body>
+  </body>
 </html>
-

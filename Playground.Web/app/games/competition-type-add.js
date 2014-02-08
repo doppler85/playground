@@ -29,7 +29,7 @@ angular.module('Playground.competition-type-add', [
                     $state.go('competition-types');
                 },
                 function () {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error adding competition type' });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error adding competition type' });
                 }
             );
         };

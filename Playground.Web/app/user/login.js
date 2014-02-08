@@ -29,13 +29,13 @@ function ($location, $scope, $window, $state, $stateParams, $rootScope, security
                     $scope.setAccessToken(data.access_token, $scope.user.rememberMe);
                     $state.transitionTo('profile.info');
                 } else {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: "An unknown error occurred" });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: "An unknown error occurred" });
                 }
             },
             function (error) {
                 var msgs = $scope.getErrorsFromResponse(error.data);
                 for (var key in msgs) {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: msgs[key] });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
                 }
             }
         );
@@ -59,7 +59,7 @@ function ($location, $scope, $window, $state, $stateParams, $rootScope, security
             function (error) {
                 var msgs = $scope.getErrorsFromResponse(error.data);
                 for (var key in msgs) {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: msgs[key] });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
                 }
             }
         );

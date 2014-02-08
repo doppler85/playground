@@ -47,7 +47,7 @@ angular.module('Playground.game-category-edit', [
                     $scope.gameCategory = data;
                 },
                 function () {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error saving game' });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error saving game' });
                 }
             );
         }
@@ -58,7 +58,7 @@ angular.module('Playground.game-category-edit', [
                     $scope.addAlert($scope.alerts, { type: 'success', msg: 'Game category sucessfully updated' });
                 }, function (err) {
                     var msg = err.data ? err.data.replace(/"/g, "") : "Error updating game category";
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: msg });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: msg });
                 }
             );
         };
@@ -114,8 +114,10 @@ angular.module('Playground.game-category-edit', [
                 function (data, status, headers, config) {
                     $state.go('game-edit', { id: data.gameID });
                 }, function (err) {
-                    var msg = err.data ? err.data.replace(/"/g, "") : "Error adding game";
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: msg });
+                    var msgs = $scope.getErrorsFromResponse(err);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                    }
                 });
         };
 
@@ -125,7 +127,7 @@ angular.module('Playground.game-category-edit', [
             }, function (data, status, headers, config) {
                 collection.splice(index, 1);
             }, function (err) {
-                $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error deleting game' });
+                $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error deleting game' });
             });
         };
 

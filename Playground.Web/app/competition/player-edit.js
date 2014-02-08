@@ -32,7 +32,7 @@ angular.module('Playground.player-edit', ['ngResource', 'ui.router', 'ui.bootstr
                     $scope.addAlert($scope.alerts, { type: 'success', msg: 'Player sucessfully updated' });
                 },
                 function(err) {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error updating player' });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error updating player' });
                 }
             );
         };

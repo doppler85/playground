@@ -99,7 +99,7 @@ angular.module('Playground.user-profile', [
                 function (error) {
                     var msgs = $scope.getErrorsFromResponse(error.data);
                     for (var key in msgs) {
-                        $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: msgs[key] });
+                        $scope.addAlert($scope.externalAccountAlerts, { type: 'danger', msg: msgs[key] });
                     }
                 }
             );
@@ -114,7 +114,7 @@ angular.module('Playground.user-profile', [
                 function (error) {
                     var msgs = $scope.getErrorsFromResponse(error.data);
                     for (var key in msgs) {
-                        $scope.addAlert($scope.externalAccountAlerts, { type: 'error', msg: msgs[key] });
+                        $scope.addAlert($scope.externalAccountAlerts, { type: 'danger', msg: msgs[key] });
                     }
                 }
             );
@@ -130,7 +130,7 @@ angular.module('Playground.user-profile', [
                 function (error) {
                     var msgs = $scope.getErrorsFromResponse(error.data);
                     for (var key in msgs) {
-                        $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: msgs[key] });
+                        $scope.addAlert($scope.localAccountAlerts, { type: 'danger', msg: msgs[key] });
                     }
                 }
             );
@@ -150,7 +150,7 @@ angular.module('Playground.user-profile', [
                 function (error) {
                     var msgs = $scope.getErrorsFromResponse(error.data);
                     for (var key in msgs) {
-                        $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: msgs[key] });
+                        $scope.addAlert($scope.localAccountAlerts, { type: 'danger', msg: msgs[key] });
                     }
                 }
             );
@@ -167,7 +167,7 @@ angular.module('Playground.user-profile', [
                 function (error) {
                     var msgs = $scope.getErrorsFromResponse(error.data);
                     for (var key in msgs) {
-                        $scope.addAlert($scope.localAccountAlerts, { type: 'error', msg: msgs[key] });
+                        $scope.addAlert($scope.localAccountAlerts, { type: 'danger', msg: msgs[key] });
                     }
                 }
             );
@@ -219,7 +219,7 @@ angular.module('Playground.user-profile', [
                 function (data, status, headers, config) {
                     $scope.loadPlayers($scope.players.currentPage);
                 }, function () {
-                    $scope.playerAlerts.push({ type: 'error', msg: 'Error deleting competitor: ' + player.name });
+                    $scope.playerAlerts.push({ type: 'danger', msg: 'Error deleting competitor: ' + player.name });
                 }
             );
         };
@@ -254,7 +254,7 @@ angular.module('Playground.user-profile', [
                 function (data, status, headers, config) {
                     $scope.loadTeams($scope.teams.currentPage);
                 }, function () {
-                    $scope.teamAlerts.push({ type: 'error', msg: 'Error deleting competitor: ' + team.name });
+                    $scope.teamAlerts.push({ type: 'danger', msg: 'Error deleting competitor: ' + team.name });
                 }
             );
         };
@@ -278,7 +278,7 @@ angular.module('Playground.user-profile', [
                     score.confirmed = true;
                     match.status = data.status;
                 }, function () {
-                    msgCollection.push({ type: 'error', msg: 'Error deleting competitor: ' + competitor.name });
+                    msgCollection.push({ type: 'danger', msg: 'Error deleting competitor: ' + competitor.name });
                 });
         };
     }])

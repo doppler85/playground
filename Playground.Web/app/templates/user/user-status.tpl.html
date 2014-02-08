@@ -1,4 +1,4 @@
-<ul class="nav" data-ng-show="isAuthenticated">
+<ul class="nav navbar-nav navbar-right" data-ng-show="isAuthenticated">
     <li data-ng-class="{active: IsActive('profile')}">
         <span class="img-holder">
             <img data-ng-src="{{profile.pictureUrl || ''}}" alt="{{profile.lastName}}" />
@@ -13,20 +13,6 @@
         <a href="javascript:;" class="show-notifications" alt="Notifications" title="Notifications">
             <i class="ico notifications-grey"></i>
         </a>
-<!--        <ul class="notifications-list">
-            <li>
-                <a href="javascript:;">Cupcake ipsum dolor sit amet cupcake gummi bears apple pie.
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;">Candy canes dessert apple pie cotton candy dessert gummies sweet oat cake cake.
-                </a>
-            </li>
-            <li class="last">
-                <a href="javascript:;">OBear claw gummies macaroon pudding.
-                </a>
-            </li>
-        </ul>-->
     </li>
     <li>
         <a href="javascript:;" alt="Log Out" title="Log Out" data-ng-click="logout()">Log out
@@ -34,7 +20,7 @@
         </a>
     </li>
 </ul>
-<ul class="nav" data-ng-show="!isAuthenticated">
+<ul class="nav navbar-nav navbar-right" data-ng-show="!isAuthenticated">
     <li>
         <a data-ui-sref="login">Login</a>
     </li>

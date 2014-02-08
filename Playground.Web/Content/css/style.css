@@ -1,10 +1,11 @@
-﻿.img-holder {
+﻿.img-holder img {
           width: 30px;
           height: 30px;
           display: block;
 }
-.nav .img-holder {
-    padding-top: 5px;
+.nav .img-holder img {
+    margin-top: 10px;
+    
 }
 td .img-holder {
     float:left;

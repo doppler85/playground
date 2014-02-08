@@ -3,48 +3,44 @@
 </div>
 
 <div class="row">
-    <div class="span6">
-        <div class="alert alert-warning" data-ng-show="authReason">
-            {{authReason}}
-        </div>
+    <div class="col-sm-6">
         <form class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label">User name</label>
-                <div class="controls">
-                    <input type="text" placeholder="jondoe" data-ng-model="user.username" />
+            <div class="form-group">
+                <label for="username" class="col-sm-3 control-label">User name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" placeholder="jondoe" data-ng-model="user.username" id="username"/>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">Password</label>
-                <div class="controls">
-                    <input type="password" placeholder="password" data-ng-model="user.password" />
+            <div class="form-group">
+                <label for="password" class="col-sm-3 control-label">Password</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" placeholder="password" data-ng-model="user.password" id="password" />
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <label>
-                        <input
-                            type="checkbox"
-                            value="user.rememberme"
-                            data-ng-checked="user.rememberMe"
-                            data-ng-click="toggleRememberMe()" />
-                        Remember me
-                    </label>
-                </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label">
+                    <input
+                        type="checkbox"
+                        value="user.rememberme"
+                        data-ng-checked="user.rememberMe"
+                        data-ng-click="toggleRememberMe()" />
+                    Remember me
+                </label>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn" data-ng-click="login()">login</button>
-                    <button class="btn" data-ng-click="clearForm()">clear</button>
-                    <button class="btn" data-ng-click="cancelLogin()">cancel</button>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" data-ng-click="login()">login</button>
+                    <button class="btn btn-primary" data-ng-click="clearForm()">clear</button>
+                    <button class="btn btn-primary" data-ng-click="cancelLogin()">cancel</button>
                 </div>
             </div>
         </form>
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     </div>
-    <div class="span6">
+    <div class="col-lg-6">
         <div data-ng-repeat="loginprovider in externallogins">
-            <button class="btn" data-ng-click="loginExternal(loginprovider)">{{loginprovider.name}}</button>
+            <button class="btn btn-primary" data-ng-click="loginExternal(loginprovider)">{{loginprovider.name}}</button>
         </div>
     </div>
 </div>

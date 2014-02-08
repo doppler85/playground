@@ -51,8 +51,10 @@ angular.module('Playground.game-category', [
                     $scope.addingcategory = false;
                     $scope.newCategory = $scope.createCategory();
                 }, function (err) {
-                    var msg = err.data ? err.data.replace(/"/g, "") : "Error adding game category";
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: msg });
+                    var msgs = $scope.getErrorsFromResponse(err);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                    }
                 });
         };
 

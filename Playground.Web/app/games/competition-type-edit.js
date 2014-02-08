@@ -27,7 +27,7 @@ angular.module('Playground.competition-type-edit', [
                 $scope.competitionType = data;
             },
             function (data) {
-                $scope.addAlert($scope.alerts, { type: 'error', msg: data.data });
+                $scope.addAlert($scope.alerts, { type: 'danger', msg: data.data });
             })
         }
 
@@ -37,7 +37,7 @@ angular.module('Playground.competition-type-edit', [
                     $state.go('competition-types');
                 },
                 function () {
-                    $scope.addAlert({ type: 'error', msg: 'Error updating competition type' });
+                    $scope.addAlert({ type: 'danger', msg: 'Error updating competition type' });
                 }
             );
         };

@@ -86,7 +86,7 @@ angular.module('Playground.team-add', ['ngResource', 'ui.router', 'ui.bootstrap.
                     $state.go('profile.teams');
                 },
                 function () {
-                    $scope.addAlert($scope.alerts, { type: 'error', msg: 'Error adding team' });
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error adding team' });
                 }
             );
         };
