@@ -43,6 +43,6 @@
             </div>
         </form>
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
-        <a href="javascript:;" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</a>
+        <a href="javascript:;" class="btn btn-primary btn-xs" data-ng-click="toggleAddGame(true)" data-ng-hide="addinggame">add game</a>
     </div>
 </div>

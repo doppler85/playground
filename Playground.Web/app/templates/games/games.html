@@ -20,5 +20,11 @@
             </td>
         </tr>
     </table>
-    <pagination total-items="games.totalItems" page="games.currentPage" num-page="games.totalPages" items-per-page="5" on-select-page="onGamePageSelect(page)"></pagination>
+    <pagination 
+        data-ng-show="games.totalPages > 1"
+        total-items="games.totalItems" 
+        page="games.currentPage" 
+        num-page="games.totalPages" 
+        items-per-page="5" 
+        on-select-page="onGamePageSelect(page)"></pagination>
 </div>
