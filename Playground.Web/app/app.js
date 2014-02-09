@@ -213,7 +213,7 @@ Playground.
                     }
                 }).state('match-add', {
                     url: '/competition/match/add',
-                    templateUrl: 'app/competition/match-add.tpl.html',
+                    templateUrl: 'app/templates/competition/match-add.tpl.html',
                     controller: 'MatchAddController',
                     data: { pageTitle: 'Add match' },
                     resolve: {
@@ -223,7 +223,7 @@ Playground.
                     }
                 }).state('match-list', {
                     url: '/competition/match/list',
-                    templateUrl: 'app/competition/match-list.tpl.html',
+                    templateUrl: 'app/templates/competition/match-list.tpl.html',
                     controller: 'MatchListController',
                     data: { pageTitle: 'All matches' },
                     resolve: {
@@ -233,7 +233,7 @@ Playground.
                     }
                 }).state('competitors-list', {
                     url: '/competition/list',
-                    templateUrl: 'app/competition/competitors-list.tpl.html',
+                    templateUrl: 'app/templates/competition/competitors-list.tpl.html',
                     controller: 'CompetitorsListController',
                     data: { pageTitle: 'All competitors' },
                     resolve: {
