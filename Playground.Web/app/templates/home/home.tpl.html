@@ -2,9 +2,9 @@
     <h1>{{pageTitle}}</h1>
 </div>
 <div class="row">
-    <div class="span9">
+    <div class="col-sm-6">
         <h3>Last Matches ({{matches.length}} of: {{totalMatches}})</h3>
-            <table class="table">
+           <!-- <table class="table">
                 <tr>
                     <th>
                         Game
@@ -70,15 +70,44 @@
                         </td>
                     </tr>
                 </tbody>
-             </table>
+             </table>-->
+
+        <div class="list-group">
+            <div class="list-group-item" data-ng-repeat="match in matches">
+                <div class="img-holder"
+                    <a href="javascript:;" 
+                        data-ui-sref="game-details.info({id: match.gameID})">
+                        <img data-ng-src="{{match.game.pictureUrl}}" alt="" />
+                    </a>
+                    <h4 class="list-group-item-heading" data-ng-bind="match.game.title"></h4>
+                    {{ match.date | date:'yyyy-MM-dd HH:mm:ss'}}
+                </div>
+                <div data-ng-repeat="score in match.scores">
+                    <div class="img-holder" data-ng-class="{winner : score.competitorID == match.winnerID}">
+                        <a href="javascript:;"
+                            data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
+                            <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                        </a>
+
+                        <a href="javascript:;"
+                            data-ui-sref="player-profile.info({id: score.competitor.competitorID})"
+                            data-ng-show="score.competitor.competitorType == 0"
+                            data-ng-bind="score.competitor.name"></a>
+
+                        {{score.score}}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
         <p>
             <a href="javascript:;" data-ui-sref="match-list">More matches</a>
         </p>
     </div>
-</div>
+<!--</div>
 
-<div class="row">
-    <div class="span9">
+<div class="row">-->
+    <div class="col-sm-6">
         <h3>Last Competitors ({{competitors.length}} of: {{totalCompetitors}})</h3>
         <table class="table">
             <tr>
