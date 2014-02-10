@@ -74,36 +74,52 @@
 
         <div class="list-group">
             <div class="list-group-item" data-ng-repeat="match in matches">
-                <div class="img-holder"
-                    <a href="javascript:;" 
-                        data-ui-sref="game-details.info({id: match.gameID})">
-                        <img data-ng-src="{{match.game.pictureUrl}}" alt="" />
-                    </a>
-                    <h4 class="list-group-item-heading" data-ng-bind="match.game.title"></h4>
-                    {{ match.date | date:'yyyy-MM-dd HH:mm:ss'}}
+               <div class="matchlist-header">
+                    <div style="height:60px; width:60px; float:left;">
+                        <a href="javascript:;" 
+                            data-ui-sref="game-details.info({id: match.gameID})">
+                            <img data-ng-src="{{match.game.pictureUrl}}" alt="" 
+                                style="width:50px; height:50px;" />
+                        </a>
+                    </div>
+                    <div class="title" style="height:60px;">
+                        <h4 class="list-group-item-heading" data-ng-bind="match.game.title"></h4>
+                        <h5><small>{{ match.date | date:'yyyy-MM-dd HH:mm:ss'}}</small></h5>
+                    </div>
                 </div>
-                <div data-ng-repeat="score in match.scores">
-                    <div class="img-holder" data-ng-class="{winner : score.competitorID == match.winnerID}">
-                        <a href="javascript:;"
+                <div class="scores-wrapper" style="height:65px;">
+                <div data-ng-repeat="score in match.scores" class="score" >
+                    <div class="img-holder" style="float:left; margin-right:10px;" data-ng-class="{winner : score.competitorID == match.winnerID}">
+                        <a href="javascript:;" 
+                            data-ng-show="score.competitor.competitorType == 0"
+                            data-ui-sref="player-profile.info({id: score.competitor.competitorID})">
+                            <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                        </a> 
+                        <a href="javascript:;" 
+                            data-ng-show="score.competitor.competitorType == 1"
                             data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
                             <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
-                        </a>
-
+                        </a> 
                         <a href="javascript:;"
                             data-ui-sref="player-profile.info({id: score.competitor.competitorID})"
                             data-ng-show="score.competitor.competitorType == 0"
                             data-ng-bind="score.competitor.name"></a>
 
+                        <a href="javascript:;" 
+                                data-ui-sref="team-profile.info({id: score.competitor.competitorID})" 
+                                data-ng-show="score.competitor.competitorType == 1" 
+                                data-ng-bind="score.competitor.name"></a>
                         {{score.score}}
                     </div>
                 </div>
-                
+                </div>
             </div>
         </div>
         <p>
             <a href="javascript:;" data-ui-sref="match-list">More matches</a>
         </p>
     </div>
+
 <!--</div>
 
 <div class="row">-->
