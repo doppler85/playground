@@ -149,5 +149,20 @@ namespace Playground.Web.Controllers
 
             return response;
         }
+
+        [HttpGet]
+        [ActionName("halloffame")]
+        public HttpResponseMessage GetHallOFFame(int page, int count)
+        {
+            DateTime startDate = DateTime.Today.AddDays(-Common.Constants.TopListDays);
+
+            Result<PagedResult<Competitor>> res = competitorBusiness.GetTopCompetitorsByDate(page, count, startDate);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
     }
 }

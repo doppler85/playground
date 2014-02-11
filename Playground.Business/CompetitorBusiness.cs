@@ -264,6 +264,11 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<Competitor>> GetTopCompetitorsByDate(int page, int count, DateTime startDate)
+        {
+            throw new NotImplementedException("Not implemented yet");
+        }
+
         public Result<PagedResult<Competitor>> SearchAndExcludeByCategoryAndCompetitorType(
             int page,
             int count,

@@ -21,6 +21,8 @@ namespace Playground.Business.Contracts
 
         Result<List<Competitor>> FilterByUserAndCategory(int userID, int gameCategoryID);
 
+        Result<PagedResult<Competitor>> GetTopCompetitorsByDate(int page, int count, DateTime startDate);
+
         Result<PagedResult<Competitor>> SearchAndExcludeByCategoryAndCompetitorType(int page, 
             int count, 
             List<long> excludeIds, 

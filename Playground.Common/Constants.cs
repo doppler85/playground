@@ -62,5 +62,7 @@ namespace Playground.Common
             public const int MinPlyersCountPerTeam = 2;
             public const int MaxPlayersCountPerTeam = 20;
         }
+
+        public static int TopListDays = 60;
     }
 }

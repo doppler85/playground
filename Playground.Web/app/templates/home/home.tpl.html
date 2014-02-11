@@ -4,125 +4,77 @@
 <div class="row">
     <div class="col-sm-6">
         <h3>Last Matches ({{matches.length}} of: {{totalMatches}})</h3>
-           <!-- <table class="table">
-                <tr>
-                    <th>
-                        Game
-                    </th>
-                    <th>
-                        Date
-                    </th>
-                    <th>
-                        Competitor
-                    </th>
-                    <th>
-                        Score
-                    </th>
-                </tr>
-                <tbody data-ng-repeat="match in matches">
-                    <tr data-ng-repeat="score in match.scores">
-                        <td>
-                            <div class="img-holder"
-                                data-ng-show="$index == 0" >
-                                <a href="javascript:;" 
-                                    data-ui-sref="game-details.info({id: match.gameID})">
-                                    <img data-ng-src="{{match.game.pictureUrl}}" alt="" />
-                                </a>
-                            </div>
-                            &nbsp;
+        <table class="table">
+            <tr>
+                <th>
+                    Game
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Competitor
+                </th>
+                <th>
+                    Score
+                </th>
+            </tr>
+            <tbody data-ng-repeat="match in matches">
+                <tr data-ng-repeat="score in match.scores">
+                    <td>
+                        <div class="img-holder"
+                            data-ng-show="$index == 0" >
                             <a href="javascript:;" 
-                                data-ui-sref="game-details.info({id: match.gameID})" 
-                                data-ng-show="$index == 0" 
-                                data-ng-bind="match.game.title"></a>
-                        </td>
-                        <td>
-                            {{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
-                        </td>
-                        <td data-ng-class="{winner : score.competitorID == match.winnerID}">
-                            <div class="img-holder"
-                                data-ng-show="score.competitor.competitorType == 0" >
-                                <a href="javascript:;" 
-                                    data-ui-sref="player-profile.info({id: score.competitor.competitorID})">
-                                    <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
-                                </a>
-                            </div>
-                            &nbsp;
-                            <a href="javascript:;" 
-                                data-ui-sref="player-profile.info({id: score.competitor.competitorID})" 
-                                data-ng-show="score.competitor.competitorType == 0" 
-                                data-ng-bind="score.competitor.name">
+                                data-ui-sref="game-details.info({id: match.gameID})">
+                                <img data-ng-src="{{match.game.pictureUrl}}" alt="" />
                             </a>
-                            <div class="img-holder"
-                                data-ng-show="score.competitor.competitorType == 1" >
-                                <a href="javascript:;" 
-                                    data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
-                                    <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
-                                </a>
-                            </div>
-                            &nbsp;
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;" 
+                            data-ui-sref="game-details.info({id: match.gameID})" 
+                            data-ng-show="$index == 0" 
+                            data-ng-bind="match.game.title"></a>
+                    </td>
+                    <td>
+                        {{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
+                    <td data-ng-class="{winner : score.competitorID == match.winnerID}">
+                        <div class="img-holder"
+                            data-ng-show="score.competitor.competitorType == 0" >
                             <a href="javascript:;" 
-                                data-ui-sref="team-profile.info({id: score.competitor.competitorID})" 
-                                data-ng-show="score.competitor.competitorType == 1" 
-                                data-ng-bind="score.competitor.name"></a>
-                        </td>
-                        <td>
-                            {{score.score}}
-                        </td>
-                    </tr>
-                </tbody>
-             </table>-->
-
-        <div class="list-group">
-            <div class="list-group-item" data-ng-repeat="match in matches">
-               <div class="matchlist-header">
-                    <div style="height:60px; width:60px; float:left;">
+                                data-ui-sref="player-profile.info({id: score.competitor.competitorID})">
+                                <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
                         <a href="javascript:;" 
-                            data-ui-sref="game-details.info({id: match.gameID})">
-                            <img data-ng-src="{{match.game.pictureUrl}}" alt="" 
-                                style="width:50px; height:50px;" />
+                            data-ui-sref="player-profile.info({id: score.competitor.competitorID})" 
+                            data-ng-show="score.competitor.competitorType == 0" 
+                            data-ng-bind="score.competitor.name">
                         </a>
-                    </div>
-                    <div class="title" style="height:60px;">
-                        <h4 class="list-group-item-heading" data-ng-bind="match.game.title"></h4>
-                        <h5><small>{{ match.date | date:'yyyy-MM-dd HH:mm:ss'}}</small></h5>
-                    </div>
-                </div>
-                <div class="scores-wrapper" style="height:65px;">
-                <div data-ng-repeat="score in match.scores" class="score" >
-                    <div class="img-holder" style="float:left; margin-right:10px;" data-ng-class="{winner : score.competitorID == match.winnerID}">
+                        <div class="img-holder"
+                            data-ng-show="score.competitor.competitorType == 1" >
+                            <a href="javascript:;" 
+                                data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
+                                <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
                         <a href="javascript:;" 
-                            data-ng-show="score.competitor.competitorType == 0"
-                            data-ui-sref="player-profile.info({id: score.competitor.competitorID})">
-                            <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
-                        </a> 
-                        <a href="javascript:;" 
-                            data-ng-show="score.competitor.competitorType == 1"
-                            data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
-                            <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
-                        </a> 
-                        <a href="javascript:;"
-                            data-ui-sref="player-profile.info({id: score.competitor.competitorID})"
-                            data-ng-show="score.competitor.competitorType == 0"
+                            data-ui-sref="team-profile.info({id: score.competitor.competitorID})" 
+                            data-ng-show="score.competitor.competitorType == 1" 
                             data-ng-bind="score.competitor.name"></a>
-
-                        <a href="javascript:;" 
-                                data-ui-sref="team-profile.info({id: score.competitor.competitorID})" 
-                                data-ng-show="score.competitor.competitorType == 1" 
-                                data-ng-bind="score.competitor.name"></a>
+                    </td>
+                    <td>
                         {{score.score}}
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <p>
             <a href="javascript:;" data-ui-sref="match-list">More matches</a>
         </p>
     </div>
-
-<!--</div>
-
-<div class="row">-->
     <div class="col-sm-6">
         <h3>Last Competitors ({{competitors.length}} of: {{totalCompetitors}})</h3>
         <table class="table">
@@ -184,134 +136,10 @@
     </div>
 </div>
 <div class="row">
-<!--    <div class="span6">
-        <div class="list fame">
-            <h2>
-                <img src="content/assets/img/hall-of-fame.png" alt="" /><br />
-                Hall of Fame
-            </h2>
-            <table class="table">
-                <tr>
-                    <td>1</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/dara-bubamara.png" alt="" />
-                            </span>
-                            Dara Bubamara
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/vesna-zmijanac.png" alt="" />
-                            </span>
-                            Vesna Zmijanac
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/dobrivoje-topalovic.png" alt="" />
-                            </span>
-                            Dobrivoje Topalovic
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/sinan-sakic.png" alt="" />
-                            </span>
-                            Sinan Sakic
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/mitar-miric.png" alt="" />
-                            </span>
-                            Mitar Miric
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <div class="col-sm-6">
+        <h3>Hall of fame</h3>
     </div>
-    <div class="span6">
-        <div class="list shame">
-            <h2>
-                <img src="content/assets/img/hall-of-shame.png" alt="" /><br />
-                Hall of Shame
-            </h2>
-            <table class="table">
-                <tr>
-                    <td>1</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/dara-bubamara.png" alt="" />
-                            </span>
-                            Dara Bubamara
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/vesna-zmijanac.png" alt="" />
-                            </span>
-                            Vesna Zmijanac
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/dobrivoje-topalovic.png" alt="" />
-                            </span>
-                            Dobrivoje Topalovic
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/sinan-sakic.png" alt="" />
-                            </span>
-                            Sinan Sakic
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>
-                        <a href="javascript:;">
-                            <span class="img-holder">
-                                <img src="content/assets/img/content/mitar-miric.png" alt="" />
-                            </span>
-                            Mitar Miric
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>-->
+    <div class="col-sm-6">
+        <h3>Hall of shame</h3>
+    </div>
 </div>
