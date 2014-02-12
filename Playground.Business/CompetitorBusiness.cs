@@ -264,9 +264,75 @@ namespace Playground.Business
             return retVal;
         }
 
+        private Result<PagedResult<Competitor>> GetTopCompetitorsByDate(int page, int count, DateTime startDate, bool top)
+        {
+            Result<PagedResult<Competitor>> retVal = null;
+            try
+            {
+                int totalItems = Uow.Matches
+                    .GetAll()
+                    .Where(m => m.Date >= startDate)
+                    .GroupBy(m => m.Winner.CompetitorID)
+                    .Select(gpr => new { CompetitorID = gpr.Key, Winning = gpr.Count() })
+                    .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                var competitors = Uow.Matches
+                    .GetAll()
+                    .Where(m => m.Date >= startDate)
+                    .GroupBy(m => m.Winner.CompetitorID)
+                    .Select(gpr => new { CompetitorID = gpr.Key, Winning = gpr.Count() });
+
+                if (top)
+                {
+                    competitors = competitors
+                    .OrderByDescending(g => g.Winning)
+                    .Skip((page - 1) * count)
+                    .Take(count);
+                }
+                else
+                {
+                    competitors = competitors
+                    .OrderBy(g => g.Winning)
+                    .Skip((page - 1) * count)
+                    .Take(count);
+                }
+
+                List<Competitor> resultCompetitors = new List<Competitor>();
+
+                foreach (var competitor in competitors)
+                {
+                    resultCompetitors.Add(Uow.Competitors.GetById(competitor.CompetitorID));
+                }
+
+                PagedResult<Competitor> result = new PagedResult<Competitor>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = resultCompetitors
+                };
+
+                retVal = ResultHandler<PagedResult<Competitor>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting top competiotrs", ex);
+                retVal = ResultHandler<PagedResult<Competitor>>.Erorr("Error searching competitors");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<Competitor>> GetTopCompetitorsByDate(int page, int count, DateTime startDate)
         {
-            throw new NotImplementedException("Not implemented yet");
+            return GetTopCompetitorsByDate(page, count, startDate, true);
+        }
+
+        public Result<PagedResult<Competitor>> GetBottomCompetitorsByDate(int page, int count, DateTime startDate)
+        {
+            return GetTopCompetitorsByDate(page, count, startDate, false);
         }
 
         public Result<PagedResult<Competitor>> SearchAndExcludeByCategoryAndCompetitorType(

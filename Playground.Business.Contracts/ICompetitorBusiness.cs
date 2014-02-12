@@ -23,6 +23,8 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<Competitor>> GetTopCompetitorsByDate(int page, int count, DateTime startDate);
 
+        Result<PagedResult<Competitor>> GetBottomCompetitorsByDate(int page, int count, DateTime startDate);
+
         Result<PagedResult<Competitor>> SearchAndExcludeByCategoryAndCompetitorType(int page, 
             int count, 
             List<long> excludeIds, 

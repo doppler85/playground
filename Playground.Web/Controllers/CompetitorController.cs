@@ -164,5 +164,20 @@ namespace Playground.Web.Controllers
 
             return response;
         }
+
+        [HttpGet]
+        [ActionName("hallofshame")]
+        public HttpResponseMessage GetHallOFShame(int page, int count)
+        {
+            DateTime startDate = DateTime.Today.AddDays(-Common.Constants.TopListDays);
+
+            Result<PagedResult<Competitor>> res = competitorBusiness.GetBottomCompetitorsByDate(page, count, startDate);
+
+            HttpResponseMessage response = res.Sucess ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
     }
 }
