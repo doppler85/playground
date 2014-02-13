@@ -59,7 +59,20 @@ factory('CompetitorResource', ['$resource', function (resource) {
             params: {
                 actionname: 'getteamstats'
             }
+        },
+        halloffame: {
+            method: 'GET',
+            params: {
+                actionname: 'halloffame'
+            }
+        },
+        hallofshame: {
+            method: 'GET',
+            params: {
+                actionname: 'hallofshame'
+            }
         }
+
     });
 }]).
 factory('GameResource', ['$resource', function (resource) {

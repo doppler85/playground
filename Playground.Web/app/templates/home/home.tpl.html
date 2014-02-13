@@ -138,8 +138,110 @@
 <div class="row">
     <div class="col-sm-6">
         <h3>Hall of fame</h3>
+        <table class="table">
+            <tr>
+                <th>
+                    Game category
+                </th>
+                <th>
+                    Competitor
+                </th>
+            </tr>
+            <tr data-ng-repeat="competitor in hallOfFame">
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;" data-ui-sref="game-category-details.info({id: competitor.games[0].game.gameCategoryID})">
+                            <img data-ng-src="{{competitor.games[0].game.category.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="game-category-details.info({id: competitor.games[0].game.gameCategoryID})" 
+                        data-ng-bind="competitor.games[0].game.category.title"></a>
+                </td>
+                <td>
+                    <div class="img-holder"
+                        data-ng-show="competitor.competitorType == 0" >
+                        <a href="javascript:;" 
+                            data-ui-sref="player-profile.info({id: competitor.competitorID})">
+                            <img data-ng-src="{{competitor.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="player-profile.info({id: competitor.competitorID})" 
+                        data-ng-show="competitor.competitorType == 0" 
+                        data-ng-bind="competitor.name">
+                    </a>
+                    <div class="img-holder"
+                        data-ng-show="competitor.competitorType == 1" >
+                        <a href="javascript:;" 
+                            data-ui-sref="team-profile.info({id: competitor.competitorID})">
+                            <img data-ng-src="{{competitor.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="team-profile.info({id: competitor.competitorID})" 
+                        data-ng-show="competitor.competitorType == 1" 
+                        data-ng-bind="competitor.name">
+                    </a>
+                </td>
+            </tr>
+        </table>
     </div>
     <div class="col-sm-6">
         <h3>Hall of shame</h3>
+        <table class="table">
+            <tr>
+                <th>
+                    Game category
+                </th>
+                <th>
+                    Competitor
+                </th>
+            </tr>
+            <tr data-ng-repeat="competitor in hallOfShame">
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;" data-ui-sref="game-category-details.info({id: competitor.games[0].game.gameCategoryID})">
+                            <img data-ng-src="{{competitor.games[0].game.category.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="game-category-details.info({id: competitor.games[0].game.gameCategoryID})" 
+                        data-ng-bind="competitor.games[0].game.category.title"></a>
+                </td>
+                <td>
+                    <div class="img-holder"
+                        data-ng-show="competitor.competitorType == 0" >
+                        <a href="javascript:;" 
+                            data-ui-sref="player-profile.info({id: competitor.competitorID})">
+                            <img data-ng-src="{{competitor.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="player-profile.info({id: competitor.competitorID})" 
+                        data-ng-show="competitor.competitorType == 0" 
+                        data-ng-bind="competitor.name">
+                    </a>
+                    <div class="img-holder"
+                        data-ng-show="competitor.competitorType == 1" >
+                        <a href="javascript:;" 
+                            data-ui-sref="team-profile.info({id: competitor.competitorID})">
+                            <img data-ng-src="{{competitor.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="team-profile.info({id: competitor.competitorID})" 
+                        data-ng-show="competitor.competitorType == 1" 
+                        data-ng-bind="competitor.name">
+                    </a>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>

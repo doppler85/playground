@@ -6,32 +6,48 @@ angular.module('Playground.home', ['ngResource', 'ui.router']).
     '$rootScope',
     '$state',
     'HomeResource',
-    function ($scope, $stateParams, $rootScope, $state, HomeResource) {
+    'CompetitorResource',
+    function ($scope, $stateParams, $rootScope, $state, homeResource, competitorResource) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.matches = [];
         $scope.totalMatches = 0;
         $scope.competitors = [];
+        $scope.hallOfFame = [];
+        $scope.hallOfShame = [];
         $scope.totalCompetitors = 0;
 
         $scope.loadMatches = function () {
-            HomeResource.lastmatches({ page: 1, count: 5 }, function (data, status, headers, config) {
+            homeResource.lastmatches({ page: 1, count: 5 }, function (data, status, headers, config) {
                 $scope.matches = data.items;
                 $scope.totalMatches = data.totalItems;
             });
         }
 
         $scope.loadCompetitors = function () {
-            HomeResource.lastcompetitors({ page: 1, count: 5 }, function (data, status, headers, config) {
+            homeResource.lastcompetitors({ page: 1, count: 5 }, function (data, status, headers, config) {
                 $scope.competitors = data.items;
                 $scope.totalCompetitors = data.totalItems;
             });
         }
 
+        $scope.loadHallOfFame = function () {
+            competitorResource.halloffame({ page: 1, count: 5 }, function (data, status, headers, config) {
+                $scope.hallOfFame = data.items;
+            });
+        }
+
+        $scope.loadHallOFShame = function () {
+            competitorResource.hallofshame({ page: 1, count: 5 }, function (data, status, headers, config) {
+                $scope.hallOfShame = data.items;
+            });
+        }
+
         $scope.loadMatches();
         $scope.loadCompetitors();
+        $scope.loadHallOfFame();
+        $scope.loadHallOFShame();
 
         var hub = $.connection.livescores;
-
         hub.client.refreshMatches = function (match, totalMathces) {
             $scope.totalMatches = totalMathces;
             $scope.matches.unshift(match);

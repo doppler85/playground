@@ -303,7 +303,29 @@ namespace Playground.Business
 
                 foreach (var competitor in competitors)
                 {
-                    resultCompetitors.Add(Uow.Competitors.GetById(competitor.CompetitorID));
+                    Competitor comp = Uow.Competitors.GetById(competitor.CompetitorID);
+                    GameCategory gameCategory = Uow.Competitors
+                        .GetAll()
+                        .OfType<Player>()
+                        .Where(p => p.CompetitorID == competitor.CompetitorID)
+                        .SelectMany(p => p.Games)
+                        .Select(g => g.Game)
+                        .Select(c => c.Category)
+                        .First();
+
+                    comp.Games = new List<GameCompetitor>()
+                    {
+                        new GameCompetitor() 
+                        {
+                            CompetitorID = comp.CompetitorID,
+                            Game = new Game() {
+                                GameCategoryID = gameCategory.GameCategoryID,
+                                Category = gameCategory
+                            }
+                        }
+                    };
+                    
+                    resultCompetitors.Add(comp);
                 }
 
                 PagedResult<Competitor> result = new PagedResult<Competitor>()
