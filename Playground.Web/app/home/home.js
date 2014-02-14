@@ -1,5 +1,5 @@
 'use strict';
-angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps']).
+angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ngAnimate']).
     controller('HomeController', [
     '$scope',
     '$stateParams',
@@ -22,6 +22,10 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps']).
             },
             zoom: 15
         };
+        $scope.dates = [];
+        $scope.addDate = function () {
+            $scope.dates.push(new Date());
+        }
 
         $scope.loadMatches = function () {
             homeResource.lastmatches({ page: 1, count: 5 }, function (data, status, headers, config) {
@@ -64,6 +68,10 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps']).
             }
 
             $scope.$digest();
+
+            // reload top lists
+            $scope.loadHallOfFame();
+            $scope.loadHallOFShame();
         };
 
         $.connection.hub.start()
