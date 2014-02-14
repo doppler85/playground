@@ -1,5 +1,5 @@
 'use strict';
-angular.module('Playground.home', ['ngResource', 'ui.router']).
+angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps']).
     controller('HomeController', [
     '$scope',
     '$stateParams',
@@ -15,6 +15,13 @@ angular.module('Playground.home', ['ngResource', 'ui.router']).
         $scope.hallOfFame = [];
         $scope.hallOfShame = [];
         $scope.totalCompetitors = 0;
+        $scope.map = {
+            center: {
+                latitude: 45.254302,
+                longitude: 19.842915
+            },
+            zoom: 15
+        };
 
         $scope.loadMatches = function () {
             homeResource.lastmatches({ page: 1, count: 5 }, function (data, status, headers, config) {

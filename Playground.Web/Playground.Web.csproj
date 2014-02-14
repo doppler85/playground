@@ -316,6 +316,8 @@
     <Content Include="app\common\teams.js" />
     <Content Include="app\common\validation.js" />
     <Content Include="app\competition\competitors-list.js" />
+    <Content Include="app\lib\angular\angular-google-maps.js" />
+    <Content Include="app\lib\underscore.js" />
     <Content Include="app\templates\competition\competitors-list.tpl.html" />
     <Content Include="app\competition\team-edit.js" />
     <Content Include="app\lib\bootstrap\bootstrap.js" />
@@ -555,6 +557,7 @@
     <Content Include="app\lib\angular\angular-cookies.min.js.map" />
     <Content Include="app\lib\angular\angular-animate.min.js.map" />
     <Content Include="app\lib\angular\angular.min.js.map" />
+    <Content Include="app\lib\angular\angular-google-maps.min.js" />
     <None Include="app\lib\jQuery\jquery-2.0.3.intellisense.js" />
     <Content Include="app\lib\jQuery\jquery-2.0.3.js" />
     <Content Include="app\lib\jQuery\jquery-2.0.3.min.js" />
@@ -578,6 +581,9 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Properties\PublishProfiles\filesystem.pubxml" />
+    <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\underscore.min.js" />
+    <Content Include="Scripts\underscore.min.map" />
     <None Include="Web.config_ggg">
       <SubType>Designer</SubType>
     </None>
