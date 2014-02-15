@@ -19,6 +19,16 @@ td .img-holder {
     background-color: #D9EDF7;
 }
 
+.profile-list {
+    list-style: none; 
+    margin-top:20px;
+}
+
+.profile-list img {
+    height:130px; 
+    width:130px;
+}
+
 .angular-google-map-container { height: 200px; }
 
 
