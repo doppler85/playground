@@ -25,5 +25,7 @@ namespace Playground.Model
         public string PictureUrl { get; set; }
 
         public virtual List<Player> PlayerProfiles { get; set; }
+        public virtual List<Notification> Notification { get; set; }
+        public virtual List<PlaygroundUser> Playgrounds { get; set; }
     }
 }

@@ -60,27 +60,6 @@
     <Compile Include="Helpers\IRepositoryProvider.cs" />
     <Compile Include="Helpers\RepositoryFactories.cs" />
     <Compile Include="Helpers\RepositoryProvider.cs" />
-    <Compile Include="Migrations\201401141218479_InitialCreate.cs" />
-    <Compile Include="Migrations\201401141218479_InitialCreate.Designer.cs">
-      <DependentUpon>201401141218479_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401142052488_PlayersPerTeam.cs" />
-    <Compile Include="Migrations\201401142052488_PlayersPerTeam.Designer.cs">
-      <DependentUpon>201401142052488_PlayersPerTeam.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401151307174_GameCategoryValidation.cs" />
-    <Compile Include="Migrations\201401151307174_GameCategoryValidation.Designer.cs">
-      <DependentUpon>201401151307174_GameCategoryValidation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401151816438_GameValidation.cs" />
-    <Compile Include="Migrations\201401151816438_GameValidation.Designer.cs">
-      <DependentUpon>201401151816438_GameValidation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402041019325_external user id change.cs" />
-    <Compile Include="Migrations\201402041019325_external user id change.Designer.cs">
-      <DependentUpon>201402041019325_external user id change.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PlaygroundDbContext.cs" />
     <Compile Include="PlaygroundUow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,21 +80,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201401141218479_InitialCreate.resx">
-      <DependentUpon>201401141218479_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401142052488_PlayersPerTeam.resx">
-      <DependentUpon>201401142052488_PlayersPerTeam.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401151307174_GameCategoryValidation.resx">
-      <DependentUpon>201401151307174_GameCategoryValidation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401151816438_GameValidation.resx">
-      <DependentUpon>201401151816438_GameValidation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402041019325_external user id change.resx">
-      <DependentUpon>201402041019325_external user id change.cs</DependentUpon>
-    </EmbeddedResource>
+    <Folder Include="Migrations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

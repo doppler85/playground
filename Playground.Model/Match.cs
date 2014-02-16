@@ -19,6 +19,7 @@ namespace Playground.Model
         public long MatchID { get; set; }
         public int CreatorID { get; set; }
         public int GameID { get; set; }
+        public int PlaygroundID { get; set; }
         public int CompetitionTypeID { get; set; }
         public long WinnerID { get; set; }
         public DateTime Date { get; set; }
@@ -26,6 +27,7 @@ namespace Playground.Model
 
         public virtual User Creator { get; set; }
         public virtual Game Game { get; set; }
+        public virtual Playground Playground { get; set; }
         public virtual CompetitionType CompetitionType { get; set; }
         public virtual List<CompetitorScore> Scores { get; set; }
         public virtual Competitor Winner { get; set; }

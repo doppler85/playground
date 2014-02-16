@@ -151,6 +151,9 @@
                 <th>
                     Competitor
                 </th>
+                <th>
+                    Victories
+                </th>
             </tr>
             <tr data-ng-repeat="competitor in hallOfFame">
                 <td>
@@ -192,6 +195,9 @@
                         data-ng-bind="competitor.name">
                     </a>
                 </td>
+                <td>
+                    {{competitor.victoriesCount}}
+                </td>
             </tr>
         </table>
     </div>
@@ -204,6 +210,9 @@
                 </th>
                 <th>
                     Competitor
+                </th>
+                <th>
+                    Victories
                 </th>
             </tr>
             <tr data-ng-repeat="competitor in hallOfShame">
@@ -245,6 +254,9 @@
                         data-ng-show="competitor.competitorType == 1" 
                         data-ng-bind="competitor.name">
                     </a>
+                </td>
+                <td>
+                    {{competitor.victoriesCount}}
                 </td>
             </tr>
         </table>

@@ -16,10 +16,12 @@ namespace Playground.Model
         [MaxLength(100)]
         public string Title { get; set; }
         public string PictureUrl { get; set; }
+        public bool Global { get; set; }
 
         public virtual GameCategory Category { get; set; }
         public virtual List<GameCompetitor> Competitors { get; set; }
         public virtual List<GameCompetitionType> CompetitionTypes { get; set; }
         public virtual List<Match> Matches { get; set; }
+        public virtual List<PlaygroundGame> Playgrounds { get; set; }
     }
 }

@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Playground.Model
 {
-    public class TeamPlayer
+    public class TeamNotification : Notification
     {
         public long TeamID { get; set; }
-        public long PlayerID { get; set; }
 
-        public virtual Team Team { get; set; }
-        public virtual Player Player { get; set; }
+        public virtual Team Team { get; set; } 
     }
 }

@@ -40,12 +40,11 @@ namespace Playground.Data
         public DbSet<CompetitionType> CompetitionTypes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Competitor> Competitors { get; set; }
-        //public DbSet<Player> Players { get; set; }
-        //public DbSet<Team> Teams { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<AutomaticMatchConfirmation> AutomaticMatchConfirmations { get; set; }
         public DbSet<CompetitorScore> CompetitorScores { get; set; }
         public DbSet<TeamPlayer> TeamPlayers { get; set; }
         public DbSet<GameCompetitor> GameCompetitors { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
     }
 }

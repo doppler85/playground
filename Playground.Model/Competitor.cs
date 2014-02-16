@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -23,6 +23,8 @@ namespace Playground.Model
         public string PictureUrl { get; set; }
         [NotMapped]
         public bool IsCurrentUserCompetitor { get; set; }
+        [NotMapped]
+        public int VictoriesCount { get; set; }
 
         public virtual List<GameCompetitor> Games { get; set; }
         public virtual List<CompetitorScore> Scores { get; set; }

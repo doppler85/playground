@@ -273,7 +273,7 @@ namespace Playground.Business
                     .GetAll()
                     .Where(m => m.Date >= startDate)
                     .GroupBy(m => m.Winner.CompetitorID)
-                    .Select(gpr => new { CompetitorID = gpr.Key, Winning = gpr.Count() })
+                    .Select(gpr => new { CompetitorID = gpr.Key, Victories = gpr.Count() })
                     .Count();
 
                 page = GetPage(totalItems, page, count);
@@ -282,19 +282,19 @@ namespace Playground.Business
                     .GetAll()
                     .Where(m => m.Date >= startDate)
                     .GroupBy(m => m.Winner.CompetitorID)
-                    .Select(gpr => new { CompetitorID = gpr.Key, Winning = gpr.Count() });
+                    .Select(gpr => new { CompetitorID = gpr.Key, Victories = gpr.Count() });
 
                 if (top)
                 {
                     competitors = competitors
-                    .OrderByDescending(g => g.Winning)
+                    .OrderByDescending(g => g.Victories)
                     .Skip((page - 1) * count)
                     .Take(count);
                 }
                 else
                 {
                     competitors = competitors
-                    .OrderBy(g => g.Winning)
+                    .OrderBy(g => g.Victories)
                     .Skip((page - 1) * count)
                     .Take(count);
                 }
@@ -312,6 +312,8 @@ namespace Playground.Business
                         .Select(g => g.Game)
                         .Select(c => c.Category)
                         .First();
+
+                    comp.VictoriesCount = competitor.Victories;
 
                     comp.Games = new List<GameCompetitor>()
                     {
