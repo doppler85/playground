@@ -29,7 +29,12 @@ td .img-holder {
     width:130px;
 }
 
+.dropdown-menu.notifictions {
+    padding: 0 0 0 0;
+    min-width: 220px;
+}
 .angular-google-map-container { height: 200px; }
+
 
 
 .animate.ng-enter, 

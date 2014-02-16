@@ -9,10 +9,15 @@
             {{profile.firstName}} {{profile.lastName}} 
         </a>
     </li>
-    <li>
-        <a href="javascript:;" class="show-notifications" alt="Notifications" title="Notifications">
-            <i class="ico notifications-grey"></i>
+    <li class="dropdown">
+        <a href="javascript:;" class="show-notifications" alt="Notifications" title="Notifications" data-toggle="dropdown">
+            <span class="badge">14</span>
         </a>
+        <div class="dropdown-menu notifictions">
+            <a href="#" class="list-group-item">Dummy notification #1 </a>
+            <a href="#" class="list-group-item">Dummy notification #1 </a>
+            <a href="#" class="list-group-item">Dummy notification #1 </a>
+        </div>
     </li>
     <li>
         <a href="javascript:;" alt="Log Out" title="Log Out" data-ng-click="logout()">Log out
