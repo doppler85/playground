@@ -15,8 +15,9 @@ namespace Playground.Model
         public string Address { get; set; }
         public decimal Longitude { get; set; }
         public decimal Latitude { get; set; }
+        public DateTime CreationDate { get; set; }
 
-        public virtual List<PlaygroundGame> Playgrounds { get; set; }
+        public virtual List<PlaygroundGame> Games { get; set; }
         public virtual User Owner { get; set; }
         public virtual List<PlaygroundUser> Users { get; set; }
     }

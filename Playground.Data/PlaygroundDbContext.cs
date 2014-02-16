@@ -32,6 +32,10 @@ namespace Playground.Data
             modelBuilder.Configurations.Add(new MatchConfiguration());
             modelBuilder.Configurations.Add(new GameCompetitionTypeConfiguration());
             modelBuilder.Configurations.Add(new GameCompetitorConfiguration());
+            modelBuilder.Configurations.Add(new PlaygroundGameConfiguration());
+            modelBuilder.Configurations.Add(new PlaygroundUserConfiguration());
+            modelBuilder.Configurations.Add(new PlaygroundConfiguration());
+            modelBuilder.Configurations.Add(new TeamNotificationConfiguration());
         }
 
 
@@ -46,5 +50,8 @@ namespace Playground.Data
         public DbSet<TeamPlayer> TeamPlayers { get; set; }
         public DbSet<GameCompetitor> GameCompetitors { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Playground.Model.Playground> Playgrounds { get; set; }
+        public DbSet<PlaygroundGame> PlaygroundGames { get; set; }
+        public DbSet<PlaygroundUser> PlaygroundUsers { get; set; }
     }
 }

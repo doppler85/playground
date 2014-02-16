@@ -31,15 +31,13 @@ namespace Playground.Web.Controllers
         private IUserBusiness userBusiness;
         private IAutomaticConfirmationBusiness automaticConfirmationBusiness;
 
-        public UserController(IPlaygroundUow uow, 
-            IMatchBusiness mBusiness,
+        public UserController(IMatchBusiness mBusiness,
             ICompetitorBusiness cBusiness,
             IGameBusiness gBusiness,
             IGameCategoryBusiness gcBusiness,
             IUserBusiness uBusiness,
             IAutomaticConfirmationBusiness iacBusiness)
         {
-            this.Uow = uow;
             this.matchBusiness = mBusiness;
             this.competitorBusiness = cBusiness;
             this.gameCategoryBusiness = gcBusiness;
@@ -324,22 +322,24 @@ namespace Playground.Web.Controllers
         [ActionName("addteamplayer")]
         public HttpResponseMessage AddTeamPlayer(TeamPlayer teamPlayer)
         {
-            Uow.TeamPlayers.Add(teamPlayer);
-            Uow.Commit();
+            throw new NotFiniteNumberException();
+            //Uow.TeamPlayers.Add(teamPlayer);
+            //Uow.Commit();
 
-            var response = Request.CreateResponse(HttpStatusCode.Created, teamPlayer);
-            return response;
+            //var response = Request.CreateResponse(HttpStatusCode.Created, teamPlayer);
+            //return response;
         }
 
         [HttpDelete]
         [ActionName("deleteteamplayer")]
         public HttpResponseMessage DeleteTeamPlayer(long teamID, long playerID)
         {
-            Uow.TeamPlayers.Delete(tp => tp.TeamID == teamID && tp.PlayerID == playerID);
-            Uow.Commit();
+            throw new NotImplementedException();
+            //Uow.TeamPlayers.Delete(tp => tp.TeamID == teamID && tp.PlayerID == playerID);
+            //Uow.Commit();
 
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            return response;
+            //var response = Request.CreateResponse(HttpStatusCode.OK);
+            //return response;
         }
 
 
@@ -753,12 +753,11 @@ namespace Playground.Web.Controllers
                 fileInfo = new FileInfo(destFilePath);
                 string retUrl = String.Format("{0}{1}", Constants.Images.PlayerPictureRoot, fileInfo.Name);
                 // if all ok update user
-                Competitor player = Uow.Competitors.GetById(coords.ID);
+                Player player = competitorBusiness.GetPlayerById((long)coords.ID).Data;
                 if (player != null)
                 {
                     player.PictureUrl = retUrl;
-                    Uow.Competitors.Update(player, player.CompetitorID);
-                    Uow.Commit();
+                    competitorBusiness.UpdatePlayer(player);
                 }
 
                 return new HttpResponseMessage()
@@ -867,12 +866,11 @@ namespace Playground.Web.Controllers
                 fileInfo = new FileInfo(destFilePath);
                 string retUrl = String.Format("{0}{1}", Constants.Images.TeamPictureRoot, fileInfo.Name);
                 // if all ok update user
-                Competitor team = Uow.Competitors.GetById(coords.ID);
+                Team team = competitorBusiness.GetTeamById((long)coords.ID).Data;
                 if (team != null)
                 {
                     team.PictureUrl = retUrl;
-                    Uow.Competitors.Update(team, team.CompetitorID);
-                    Uow.Commit();
+                    competitorBusiness.UpdateTeam(team);
                 }
 
                 return new HttpResponseMessage()
@@ -973,8 +971,7 @@ namespace Playground.Web.Controllers
                 string retUrl = String.Format("{0}{1}", Constants.Images.ProfilePictureRoot, fileInfo.Name);
                 // if all ok update user picture
                 currentUser.PictureUrl = retUrl;
-                Uow.Users.Update(currentUser, currentUser.UserID);
-                Uow.Commit();
+                userBusiness.UpdateUser(currentUser);
 
                 return new HttpResponseMessage()
                 {

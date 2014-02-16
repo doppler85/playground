@@ -16,11 +16,9 @@ namespace Playground.Web.Controllers
         private IMatchBusiness matchBusiness;
         private ICompetitorBusiness competitorBusiness;
 
-        public HomeController(IPlaygroundUow uow, 
-            IMatchBusiness mBusiness, 
+        public HomeController(IMatchBusiness mBusiness, 
             ICompetitorBusiness cBusiness)
         {
-            this.Uow = uow;
             this.matchBusiness = mBusiness;
             this.competitorBusiness = cBusiness;
         }

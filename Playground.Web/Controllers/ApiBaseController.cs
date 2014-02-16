@@ -11,6 +11,6 @@ namespace Playground.Web.Controllers
 {
     public abstract class ApiBaseController : ApiController
     {
-        protected IPlaygroundUow Uow { get; set; }
+        // protected IPlaygroundUow Uow { get; set; }
     }
 }

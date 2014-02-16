@@ -23,13 +23,11 @@ namespace Playground.Web.Controllers
         private ICompetitorBusiness competitorBusiness;
         private IMatchBusiness matchBusiness;
 
-        public GameCategoryController(IPlaygroundUow uow, 
-            IGameCategoryBusiness gcBusiness,
+        public GameCategoryController(IGameCategoryBusiness gcBusiness,
             IGameBusiness gBusiness,
             ICompetitorBusiness cBusiness,
             IMatchBusiness mBusiness)
         {
-            this.Uow = uow;
             this.gameCategoryBusiness = gcBusiness;
             this.gameBusiness = gBusiness;
             this.competitorBusiness = cBusiness;
@@ -300,10 +298,9 @@ namespace Playground.Web.Controllers
                 string retUrl = String.Format("{0}{1}", Constants.Images.GameCategoryPictureRoot, fileInfo.Name);
 
                 // if all ok update category image 
-                GameCategory category = Uow.GameCategories.GetById(coords.ID);
+                GameCategory category = gameCategoryBusiness.GetById((int)(long)coords.ID).Data;
                 category.PictureUrl = retUrl;
-                Uow.GameCategories.Update(category, category.GameCategoryID);
-                Uow.Commit();
+                gameCategoryBusiness.UpdateGameCategory(category);
 
                 return new HttpResponseMessage()
                 {

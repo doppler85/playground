@@ -18,11 +18,10 @@ namespace Playground.Web.Controllers
         private IMatchBusiness matchBusiness;
         private IUserBusiness userBusiness;
 
-        public MatchController(IPlaygroundUow uow, 
+        public MatchController(
             IMatchBusiness mBusiness,
             IUserBusiness uBusiness)
         {
-            this.Uow = uow;
             this.matchBusiness = mBusiness;
             this.userBusiness = uBusiness;
         }

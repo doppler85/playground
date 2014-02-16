@@ -1,0 +1,32 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Creation date</th>
+            </tr>
+            <tr data-ng-repeat="playground in playgrounds.items">
+                <td data-ng-bind="competitionType.name"></td>
+                <td data-ng-bind="competitorTypes[competitionType.competitorType]"></td>
+                <td data-ng-bind="competitionType.competitorsCount"></td>
+            </tr>
+        </table>
+
+        <pagination 
+            data-ng-show="playgrounds.totalPages > 1"
+            total-items="playgrounds.totalItems" 
+            page="playgrounds.currentPage" 
+            num-page="playgrounds.totalPages" 
+            items-per-page="5" 
+            on-select-page="onPlaygroundPageSelect(page)">
+        </pagination>
+
+    </div>
+</div>
+<a data-ui-sref="competition-type-add" class="btn btn-primary btn-xs">add playground</a>
+

@@ -15,6 +15,11 @@ namespace Playground.Data
 
         protected IRepositoryProvider RepositoryProvider { get; set; }
 
+        public IRepository<Playground.Model.Playground> Playgrounds
+        {
+            get { return GetStandardRepo<Playground.Model.Playground>(); }
+        }
+
         public IRepository<GameCategory> GameCategories
         {
             get { return GetStandardRepo<GameCategory>(); }

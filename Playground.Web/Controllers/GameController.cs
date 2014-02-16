@@ -25,15 +25,13 @@ namespace Playground.Web.Controllers
         private IGameCategoryBusiness gameCategoryBusiness;
         private IGameBusiness gameBusiness;
 
-        public GameController(IPlaygroundUow uow,
-            IUserBusiness uBusiness,
+        public GameController(IUserBusiness uBusiness,
             IMatchBusiness mBusiness,
             ICompetitionTypeBusiness ctBusiness,
             IGameCategoryBusiness gcBusiness,
             IGameBusiness gBusiness,
             ICompetitorBusiness cBusiness)
         {
-            this.Uow = uow;
             this.userBusiness = uBusiness;
             this.matchBusiness = mBusiness;
             this.competitionTypeBusiness = ctBusiness;
@@ -351,10 +349,10 @@ namespace Playground.Web.Controllers
                 string retUrl = String.Format("{0}{1}", Constants.Images.GamePictureRoot, fileInfo.Name);
 
                 // if all ok update game with image
-                Game game = Uow.Games.GetById(coords.ID);
+
+                Game game = gameBusiness.GetById((int)(long)coords.ID).Data;
                 game.PictureUrl = retUrl;
-                Uow.Games.Update(game, game.GameID);
-                Uow.Commit();
+                gameBusiness.UpdateGame(game);
 
                 return new HttpResponseMessage()
                 {

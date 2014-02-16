@@ -280,6 +280,7 @@
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MatchController.cs" />
+    <Compile Include="Controllers\PlaygroundController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Filters\ValidateHttpAntiForgeryTokenAttribute.cs" />
@@ -318,6 +319,7 @@
     <Content Include="app\competition\competitors-list.js" />
     <Content Include="app\lib\angular\angular-google-maps.js" />
     <Content Include="app\lib\underscore.js" />
+    <Content Include="app\playground\playground-list.js" />
     <Content Include="app\templates\competition\competitors-list.tpl.html" />
     <Content Include="app\competition\team-edit.js" />
     <Content Include="app\lib\bootstrap\bootstrap.js" />
@@ -400,6 +402,7 @@
     <Content Include="app\templates\pagination\pager.html" />
     <Content Include="app\templates\pagination\pagination.html" />
     <Content Include="app\templates\competition\players.html" />
+    <Content Include="app\templates\playground\playground-list.tpl.html" />
     <Content Include="app\templates\tabs\tab.html" />
     <Content Include="app\templates\tabs\tabset-titles.html" />
     <Content Include="app\templates\tabs\tabset.html" />

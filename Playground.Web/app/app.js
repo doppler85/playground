@@ -10,6 +10,7 @@ var Playground = angular.module('Playground', [
     'Playground.games',
     'Playground.main-menu',
     'Playground.home',
+    'Playground.playground-list',
     'Playground.game-category',
     'Playground.game-edit',
     'Playground.game-details',
@@ -91,6 +92,17 @@ Playground.
                     templateUrl: 'app/templates/home/home.tpl.html',
                     controller: 'HomeController',
                     data: { pageTitle: 'Playground' },
+                    resolve: {
+                        currentUser: function (securityAuthorization) {
+                            return securityAuthorization.requireCurrentUser();
+                        }
+                    }
+                }).
+                state('playground-list', {
+                    url: '/playgrounds',
+                    templateUrl: 'app/templates/playground/playground-list.tpl.html',
+                    controller: 'PlaygroundListController',
+                    data: { pageTitle: 'Playgrounds' },
                     resolve: {
                         currentUser: function (securityAuthorization) {
                             return securityAuthorization.requireCurrentUser();

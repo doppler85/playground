@@ -380,6 +380,16 @@ factory('HomeResource', ['$resource', function (resource) {
             }
         }
     });
+}]).
+factory('PlaygroundResource', ['$resource', function (resource) {
+    return resource('api/playground/:actionname/:id', {}, {
+        getplaygrounds: {
+            method: 'GET',
+            params: {
+                actionname: 'getplaygrounds'
+            }
+        }
+    });
 }]);
 // examples
 /*

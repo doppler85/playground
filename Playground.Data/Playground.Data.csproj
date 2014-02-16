@@ -53,6 +53,10 @@
     <Compile Include="Configurations\GameCompetitionTypeConfiguration.cs" />
     <Compile Include="Configurations\GameCompetitorConfiguration.cs" />
     <Compile Include="Configurations\MatchCfiguration.cs" />
+    <Compile Include="Configurations\PlaygroundConfiguration.cs" />
+    <Compile Include="Configurations\TeamNotificationConfiguration.cs" />
+    <Compile Include="Configurations\PlaygroundGameConfiguration.cs" />
+    <Compile Include="Configurations\PlaygroundUserConfiguration.cs" />
     <Compile Include="Configurations\TeamConfiguration.cs" />
     <Compile Include="Configurations\PlayerConfiguration.cs" />
     <Compile Include="Configurations\TeamPlayerConfiguration.cs" />

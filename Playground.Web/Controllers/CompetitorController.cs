@@ -20,13 +20,11 @@ namespace Playground.Web.Controllers
         private IMatchBusiness matchBusiness;
         private IUserBusiness userBusiness;
 
-        public CompetitorController(IPlaygroundUow uow, 
-            ICompetitorBusiness cBusiness, 
+        public CompetitorController(ICompetitorBusiness cBusiness, 
             IGameCategoryBusiness gcBusiness,
             IMatchBusiness mBusiness,
             IUserBusiness uBusiness)
         {
-            this.Uow = uow;
             this.competitorBusiness = cBusiness;
             this.gameCategoryBusiness = gcBusiness;
             this.matchBusiness = mBusiness;
@@ -53,17 +51,17 @@ namespace Playground.Web.Controllers
             return response;
         }
 
-        [HttpGet]
-        [ActionName("teamdetails")]
-        public Team TeamDetails(long id)
-        {
-            Team retVal = Uow.Competitors
-                .GetAll(t => ((Team)t).Games)
-                .OfType<Team>()
-                .FirstOrDefault(p => p.CompetitorID == id);
+        //[HttpGet]
+        //[ActionName("teamdetails")]
+        //public Team TeamDetails(long id)
+        //{
+        //    Team retVal = Uow.Competitors
+        //        .GetAll(t => ((Team)t).Games)
+        //        .OfType<Team>()
+        //        .FirstOrDefault(p => p.CompetitorID == id);
 
-            return retVal;
-        }
+        //    return retVal;
+        //}
 
         [HttpGet]
         [ActionName("getteamstats")]

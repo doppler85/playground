@@ -12,6 +12,7 @@ namespace Playground.Data.Contracts
         void Commit();
 
         // Repositories
+        IRepository<Playground.Model.Playground> Playgrounds { get; }
         IRepository<GameCategory> GameCategories { get; }
         IRepository<CompetitionType> CompetitionTypes { get; }
         IRepository<GameCompetitionType> GameCompetitionTypes { get; }
