@@ -10,5 +10,7 @@ namespace Playground.Business.Contracts
     public interface IPlaygroundBusiness
     {
         Result<PagedResult<Playground.Model.Playground>> GetPlaygrounds(int page, int count, bool all);
+
+        Result<Playground.Model.Playground> AddPlayground(Playground.Model.Playground playground);
     }
 }

@@ -11,9 +11,9 @@
                 <th>Creation date</th>
             </tr>
             <tr data-ng-repeat="playground in playgrounds.items">
-                <td data-ng-bind="competitionType.name"></td>
-                <td data-ng-bind="competitorTypes[competitionType.competitorType]"></td>
-                <td data-ng-bind="competitionType.competitorsCount"></td>
+                <td data-ng-bind="playground.name"></td>
+                <td data-ng-bind="playground.address"></td>
+                <td data-ng-bind="playground.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
             </tr>
         </table>
 
@@ -28,5 +28,5 @@
 
     </div>
 </div>
-<a data-ui-sref="competition-type-add" class="btn btn-primary btn-xs">add playground</a>
+<a data-ui-sref="playground-add" class="btn btn-primary btn-xs">add playground</a>
 

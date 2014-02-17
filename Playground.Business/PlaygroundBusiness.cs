@@ -67,5 +67,25 @@ namespace Playground.Business
 
             return retVal;
         }
+
+        public Result<Playground.Model.Playground> AddPlayground(Playground.Model.Playground playground)
+        {
+            Result<Playground.Model.Playground> retVal = null;
+            try
+            {
+                playground.CreationDate = DateTime.Now;
+                Uow.Playgrounds.Add(playground);
+                Uow.Commit();
+
+                retVal = ResultHandler<Playground.Model.Playground>.Sucess(playground);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erorr adding playgorund", ex);
+                retVal = ResultHandler<Playground.Model.Playground>.Erorr("Error adding playground");
+            }
+
+            return retVal;
+        }
     }
 }

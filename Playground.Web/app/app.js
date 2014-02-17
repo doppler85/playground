@@ -11,6 +11,7 @@ var Playground = angular.module('Playground', [
     'Playground.main-menu',
     'Playground.home',
     'Playground.playground-list',
+    'Playground.playground-add',
     'Playground.game-category',
     'Playground.game-edit',
     'Playground.game-details',
@@ -106,6 +107,16 @@ Playground.
                     resolve: {
                         currentUser: function (securityAuthorization) {
                             return securityAuthorization.requireCurrentUser();
+                        }
+                    }
+                }).state('playground-add', {
+                    url: '/playground/add',
+                    templateUrl: 'app/templates/playground/playground-add.tpl.html',
+                    controller: 'PlaygroundAddController',
+                    data: { pageTitle: 'Add playground' },
+                    resolve: {
+                        currentUser: function (securityAuthorization) {
+                            return securityAuthorization.requireAuthenticatedUser();
                         }
                     }
                 }).state('game-categories', {

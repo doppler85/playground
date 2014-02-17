@@ -349,7 +349,6 @@ namespace Playground.Web.Controllers
                 string retUrl = String.Format("{0}{1}", Constants.Images.GamePictureRoot, fileInfo.Name);
 
                 // if all ok update game with image
-
                 Game game = gameBusiness.GetById((int)(long)coords.ID).Data;
                 game.PictureUrl = retUrl;
                 gameBusiness.UpdateGame(game);

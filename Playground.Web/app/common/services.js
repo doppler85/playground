@@ -388,6 +388,12 @@ factory('PlaygroundResource', ['$resource', function (resource) {
             params: {
                 actionname: 'getplaygrounds'
             }
+        },
+        addplayground: {
+            method: 'POST',
+            params: {
+                actionname: 'addplayground'
+            }
         }
     });
 }]);
