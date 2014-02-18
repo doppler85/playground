@@ -394,7 +394,13 @@ factory('PlaygroundResource', ['$resource', function (resource) {
             params: {
                 actionname: 'addplayground'
             }
-        }
+        },
+        removeplayground: {
+            method: 'DELETE',
+            params: {
+                actionname: 'removeplayground'
+            }
+        },
     });
 }]);
 // examples

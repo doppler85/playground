@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Playground.Business.Contracts;
 using Playground.Data.Contracts;
+using Playground.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +69,11 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<Playground.Model.Playground>> FilterByUser(int page, int count, int userID)
+        {
+            throw new NotImplementedException();
+        }
+
         public Result<Playground.Model.Playground> AddPlayground(Playground.Model.Playground playground)
         {
             Result<Playground.Model.Playground> retVal = null;
@@ -77,12 +83,113 @@ namespace Playground.Business
                 Uow.Playgrounds.Add(playground);
                 Uow.Commit();
 
+                PlaygroundUser playgroundUser = new PlaygroundUser()
+                {
+                    UserID = playground.OwnerID,
+                    PlaygroundID = playground.PlaygroundID
+                };
+                AddUserToPlaygroound(playgroundUser);
+
                 retVal = ResultHandler<Playground.Model.Playground>.Sucess(playground);
             }
             catch (Exception ex)
             {
                 log.Error("Erorr adding playgorund", ex);
                 retVal = ResultHandler<Playground.Model.Playground>.Erorr("Error adding playground");
+            }
+
+            return retVal;
+        }
+
+        public bool RemovePlayground(int playgroundID)
+        {
+            bool retVal = true;
+            try
+            {
+                Playground.Model.Playground playgroundToDelete = Uow.Playgrounds.GetById(p => p.PlaygroundID == playgroundID);
+                Uow.PlaygroundUsers.Delete(u => u.UserID == playgroundToDelete.OwnerID);
+                Uow.Playgrounds.Delete(playgroundToDelete);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erorr deleting playgorund", ex);
+                retVal = false;
+            }
+            return retVal;
+        }
+
+        public bool AddGameToPlayGround(PlaygroundGame playgroundGame)
+        {
+            bool retVal = true;
+            try
+            {
+                Uow.PlaygroundGames.Add(playgroundGame);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Erorr adding game to palyground, gameID: {0}, playgroundID: {1}",
+                    playgroundGame.GameID,
+                    playgroundGame.PlaygroundID), ex);
+                retVal = false;
+            }
+
+            return retVal;
+        }
+
+        public bool RemoveGameFromPlayground(PlaygroundGame playgroundGame)
+        {
+            bool retVal = true;
+            try
+            {
+                Uow.PlaygroundGames.Delete(playgroundGame);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Erorr delete game from palyground, gameID: {0}, playgroundID: {1}",
+                    playgroundGame.GameID,
+                    playgroundGame.PlaygroundID), ex);
+                retVal = false;
+            }
+
+            return retVal;
+        }
+
+        public bool AddUserToPlaygroound(PlaygroundUser playgroundUser)
+        {
+            bool retVal = true;
+            try
+            {
+                Uow.PlaygroundUsers.Add(playgroundUser);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Erorr adding user to palyground, userID: {0}, playgroundID: {1}", 
+                    playgroundUser.UserID,
+                    playgroundUser.PlaygroundID), ex);
+                retVal = false;
+            }
+
+            return retVal;
+        }
+
+        public bool RemoveUserFromPlayground(PlaygroundUser playgroundUser)
+        {
+            bool retVal = true;
+            try
+            {
+                Uow.PlaygroundUsers.Delete(playgroundUser);
+                Uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Erorr deleting user from palyground, userID: {0}, playgroundID: {1}",
+                    playgroundUser.UserID,
+                    playgroundUser.PlaygroundID), ex);
+                retVal = false;
             }
 
             return retVal;

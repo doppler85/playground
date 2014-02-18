@@ -134,6 +134,56 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<Game>> SearchAvailableByPlayground(int page, int count, int playgroundID, string search)
+        {
+            Result<PagedResult<Game>> retVal = null;
+            try
+            {
+                List<int> gameIds = Uow.PlaygroundGames
+                    .GetAll()
+                    .Where(pgg => pgg.PlaygroundID == playgroundID)
+                    .Select(g => g.GameID)
+                    .ToList();
+
+                int totalItems = Uow.Games
+                    .GetAll()
+                    .Where(g => !gameIds.Contains(g.GameID) &&
+                                                     (g.Title.Contains(search) ||
+                                                      g.Category.Title.Contains(search)))
+                    .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<Game> games = Uow.Games
+                    .GetAll()
+                    .Where(g => !gameIds.Contains(g.GameID) &&
+                                                     (g.Title.Contains(search) ||
+                                                      g.Category.Title.Contains(search)))
+                    .OrderBy(g => g.Title)
+                    .Skip((page - 1) * count)
+                    .Take(count)
+                    .ToList();
+
+                PagedResult<Game> result = new PagedResult<Game>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = games
+                };
+
+                retVal = ResultHandler<PagedResult<Game>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of available games for playground. playgroundID: {0}, search: {1}", 
+                    playgroundID, search), ex);
+                retVal = ResultHandler<PagedResult<Game>>.Erorr("Error retreiving list of games for category");
+            }
+
+            return retVal;
+        }
+
         public Result<List<Game>> FilterByCategoryAndCompetitionType(int gameCategoryID, CompetitorType competitorType)
         {
             Result<List<Game>> retVal = null;

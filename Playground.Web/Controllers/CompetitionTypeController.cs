@@ -28,7 +28,7 @@ namespace Playground.Web.Controllers
             Result<CompetitionType> res =
                 competitionTypeBusiness.GetById(id);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -43,7 +43,7 @@ namespace Playground.Web.Controllers
             Result<List<CompetitionType>> res =
                 competitionTypeBusiness.GetAllCompetitionTypes();
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -58,7 +58,7 @@ namespace Playground.Web.Controllers
             Result<PagedResult<CompetitionType>> res =
                 competitionTypeBusiness.GetCompetitionTypes(page, count);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -73,7 +73,7 @@ namespace Playground.Web.Controllers
             Result<CompetitionType> res = 
                 competitionTypeBusiness.AddCompetitionType(competitionType);
 
-            HttpResponseMessage response = res.Sucess ? 
+            HttpResponseMessage response = res.Success ? 
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -88,7 +88,7 @@ namespace Playground.Web.Controllers
             Result<CompetitionType> res =
                 competitionTypeBusiness.UpdateCompetitionType(competitionType);
 
-            HttpResponseMessage response = res.Sucess ? 
+            HttpResponseMessage response = res.Success ? 
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 

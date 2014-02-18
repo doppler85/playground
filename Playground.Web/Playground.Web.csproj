@@ -292,6 +292,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdvancedSearchArgs.cs" />
+    <Compile Include="Models\SearchPlaygroundArgs.cs" />
     <Compile Include="Models\SearchArgs.cs" />
     <Compile Include="Models\SearchCompetitorArgs.cs" />
     <Compile Include="Models\UserStats.cs" />
@@ -319,6 +320,7 @@
     <Content Include="app\competition\competitors-list.js" />
     <Content Include="app\lib\angular\angular-google-maps.js" />
     <Content Include="app\lib\underscore.js" />
+    <Content Include="app\playground\playground-edit.js" />
     <Content Include="app\playground\playground-add.js" />
     <Content Include="app\playground\playground-list.js" />
     <Content Include="app\templates\competition\competitors-list.tpl.html" />
@@ -403,6 +405,10 @@
     <Content Include="app\templates\pagination\pager.html" />
     <Content Include="app\templates\pagination\pagination.html" />
     <Content Include="app\templates\competition\players.html" />
+    <Content Include="app\templates\playground\playground-edit-users.tpl.html" />
+    <Content Include="app\templates\playground\playground-edit-games.tpl.html" />
+    <Content Include="app\templates\playground\playground-edit-info.tpl.html" />
+    <Content Include="app\templates\playground\playground-edit.tpl.html" />
     <Content Include="app\templates\playground\playground-add.tpl.html" />
     <Content Include="app\templates\playground\playground-list.tpl.html" />
     <Content Include="app\templates\tabs\tab.html" />

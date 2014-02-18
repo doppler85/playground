@@ -14,7 +14,7 @@ namespace Playground.Business
         {
             return new Result<T>()
             {
-                Sucess = true,
+                Success = true,
                 Data = data
             };
         }
@@ -23,7 +23,7 @@ namespace Playground.Business
         {
             return new Result<T>()
             {
-                Sucess = false,
+                Success = false,
                 Data = default(T),
                 Message = message
             };

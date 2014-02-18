@@ -37,14 +37,14 @@ namespace Playground.Web.Controllers
         {
             Result<Player> playerRes = competitorBusiness.GetPlayerById(id);
             PlayerStats result = null;
-            if (playerRes.Sucess)
+            if (playerRes.Success)
             {
                 result = new PlayerStats(playerRes.Data);
                 result.GameCategory = gameCategoryBusiness.GetByCompetitorId(id);
                 result.TotalMatches = competitorBusiness.TotalMatchesCount(id);
             }
 
-            HttpResponseMessage response = playerRes.Sucess ?
+            HttpResponseMessage response = playerRes.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, result) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, playerRes.Message);
 
@@ -69,14 +69,14 @@ namespace Playground.Web.Controllers
         {
             Result<Team> teamRes = competitorBusiness.GetTeamById(id);
             TeamStats result = null;
-            if (teamRes.Sucess)
+            if (teamRes.Success)
             {
                 result = new TeamStats(teamRes.Data);
                 result.GameCategory = gameCategoryBusiness.GetByCompetitorId(id);
                 result.TotalMatches = competitorBusiness.TotalMatchesCount(id);
             }
 
-            HttpResponseMessage response = teamRes.Sucess ?
+            HttpResponseMessage response = teamRes.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, result) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, teamRes.Message);
 
@@ -89,7 +89,7 @@ namespace Playground.Web.Controllers
         {
             Result<PagedResult<Match>> res = matchBusiness.FilterByCompetitor(page, count, id);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -102,7 +102,7 @@ namespace Playground.Web.Controllers
         {
             Result<PagedResult<Player>> res = competitorBusiness.FilterPlayersByTeam(page, count, id);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -115,7 +115,7 @@ namespace Playground.Web.Controllers
         {
             Result<PagedResult<Team>> res = competitorBusiness.FilterTeamsByPlayer(page, count, id);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -128,7 +128,7 @@ namespace Playground.Web.Controllers
         {
             Result<PagedResult<Player>> res = competitorBusiness.GetPlayers(page, count);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -141,7 +141,7 @@ namespace Playground.Web.Controllers
         {
             Result<PagedResult<Team>> res = competitorBusiness.GetTeams(page, count);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -156,7 +156,7 @@ namespace Playground.Web.Controllers
 
             Result<PagedResult<Competitor>> res = competitorBusiness.GetTopCompetitorsByDate(page, count, startDate);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -171,7 +171,7 @@ namespace Playground.Web.Controllers
 
             Result<PagedResult<Competitor>> res = competitorBusiness.GetBottomCompetitorsByDate(page, count, startDate);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 

@@ -30,7 +30,7 @@ namespace Playground.Web.Controllers
             Result<PagedResult<Match>> res =
                 matchBusiness.FilterByStatus(page, count, MatchStatus.Confirmed);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -42,12 +42,12 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage GetCompetitors(int page, int count)
         {
             Result<PagedResult<Competitor>> res = competitorBusiness.GetCompetitors(page, count);
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.LoadCategories(res.Data.Items);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 

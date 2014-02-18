@@ -19,6 +19,8 @@ namespace Playground.Business.Contracts
 
         Result<List<Game>> FilterByCategoryAndCompetitionType(int gameCategoryID, CompetitorType competitorType);
 
+        Result<PagedResult<Game>> SearchAvailableByPlayground(int page, int count, int playgroundID, string search);
+
         Result<Game> AddGame(Game game);
 
         Result<Game> UpdateGame(Game game);

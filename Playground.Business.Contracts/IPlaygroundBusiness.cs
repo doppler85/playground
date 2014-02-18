@@ -11,6 +11,18 @@ namespace Playground.Business.Contracts
     {
         Result<PagedResult<Playground.Model.Playground>> GetPlaygrounds(int page, int count, bool all);
 
+        Result<PagedResult<Playground.Model.Playground>> FilterByUser(int page, int count, int userID);
+
         Result<Playground.Model.Playground> AddPlayground(Playground.Model.Playground playground);
+
+        bool RemovePlayground(int playgroundID);
+        
+        bool AddGameToPlayGround(PlaygroundGame playgroundGame);
+
+        bool RemoveGameFromPlayground(PlaygroundGame playgroundGame);
+
+        bool AddUserToPlaygroound(PlaygroundUser playgroundUser);
+
+        bool RemoveUserFromPlayground(PlaygroundUser playgroundUser);
     }
 }

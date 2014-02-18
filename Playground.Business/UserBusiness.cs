@@ -285,6 +285,57 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<User>> SearchAvailableByPlayground(int page, int count, int playgroundID, string search)
+        {
+            Result<PagedResult<User>> retVal = null;
+            try
+            {
+                List<int> userIds = Uow.PlaygroundUsers
+                    .GetAll()
+                    .Where(pgu => pgu.PlaygroundID == playgroundID)
+                    .Select(u => u.UserID)
+                    .ToList();
+
+                int totalItems = Uow.Users
+                    .GetAll()
+                    .Where(u => !userIds.Contains(u.UserID) &&
+                                                     (u.FirstName.Contains(search) ||
+                                                      u.LastName.Contains(search)))
+                    .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<User> users = Uow.Users
+                    .GetAll()
+                    .Where(u => !userIds.Contains(u.UserID) &&
+                                                     (u.FirstName.Contains(search) ||
+                                                      u.LastName.Contains(search)))
+                    .OrderBy(u => u.FirstName)
+                    .ThenBy(u => u.LastName)
+                    .Skip((page - 1) * count)
+                    .Take(count)
+                    .ToList();
+
+                PagedResult<User> result = new PagedResult<User>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = users
+                };
+
+                retVal = ResultHandler<PagedResult<User>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of available users for playground. playgroundID: {0}, search: {1}", 
+                    playgroundID, search), ex);
+                retVal = ResultHandler<PagedResult<User>>.Erorr("Error retreiving list of available users for playground");
+            }
+
+            return retVal;
+        }
+
         public Result<User> AddUser(User user)
         {
             Result<User> retVal = null;

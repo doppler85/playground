@@ -20,6 +20,16 @@ namespace Playground.Data
             get { return GetStandardRepo<Playground.Model.Playground>(); }
         }
 
+        public IRepository<PlaygroundUser> PlaygroundUsers
+        {
+            get { return GetStandardRepo<PlaygroundUser>(); }
+        }
+
+        public IRepository<PlaygroundGame> PlaygroundGames
+        {
+            get { return GetStandardRepo<PlaygroundGame>(); }
+        }
+
         public IRepository<GameCategory> GameCategories
         {
             get { return GetStandardRepo<GameCategory>(); }

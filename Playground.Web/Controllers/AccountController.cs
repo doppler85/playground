@@ -378,7 +378,7 @@ namespace Playground.Web.Controllers
 
                 Result<User> res = userBusiness.AddUser(userModel);
 
-                if (!res.Sucess)
+                if (!res.Success)
                 {
                     return InternalServerError(new Exception(res.Message));
                 }
@@ -439,7 +439,7 @@ namespace Playground.Web.Controllers
 
                 Result<User> res = userBusiness.AddUser(userModel);
 
-                if (!res.Sucess)
+                if (!res.Success)
                 {
                     return InternalServerError(new Exception(res.Message));
                 }

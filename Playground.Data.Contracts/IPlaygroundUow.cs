@@ -13,6 +13,8 @@ namespace Playground.Data.Contracts
 
         // Repositories
         IRepository<Playground.Model.Playground> Playgrounds { get; }
+        IRepository<PlaygroundUser> PlaygroundUsers { get; }
+        IRepository<PlaygroundGame> PlaygroundGames { get; }
         IRepository<GameCategory> GameCategories { get; }
         IRepository<CompetitionType> CompetitionTypes { get; }
         IRepository<GameCompetitionType> GameCompetitionTypes { get; }

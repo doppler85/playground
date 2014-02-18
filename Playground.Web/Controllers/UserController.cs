@@ -69,7 +69,7 @@ namespace Playground.Web.Controllers
             Result<PagedResult<User>> res =
                 userBusiness.GetUsers(page, count);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -84,12 +84,12 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
             Result<PagedResult<Player>> res = competitorBusiness.GetPlayersForUser(page, count, currentUser.UserID);
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.LoadCategories(res.Data.Items);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -106,7 +106,7 @@ namespace Playground.Web.Controllers
             player.UserID = currentUser.UserID;
             Result<Player> res = competitorBusiness.AddPlayer(player);
 
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.AssignImage(player,
                     currentUser.UserID,
@@ -116,7 +116,7 @@ namespace Playground.Web.Controllers
                     Constants.Images.PlayerPictureExtension);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -129,7 +129,7 @@ namespace Playground.Web.Controllers
         {
             Result<Player> res = competitorBusiness.UpdatePlayer(player);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -142,7 +142,7 @@ namespace Playground.Web.Controllers
         {
             Result<Player> res = competitorBusiness.GetUpdatePlayer(id);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -169,12 +169,12 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
 
             Result<PagedResult<Team>> res = competitorBusiness.GetTeamsForUser(page, count, currentUser.UserID);
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.LoadCategories(res.Data.Items);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -190,7 +190,7 @@ namespace Playground.Web.Controllers
 
             Result<Team> res = competitorBusiness.AddTeam(team);
 
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.AssignImage(team,
                     currentUser.UserID,
@@ -200,7 +200,7 @@ namespace Playground.Web.Controllers
                     Constants.Images.TeamPictureExtension);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -213,7 +213,7 @@ namespace Playground.Web.Controllers
         {
             Result<Team> res = competitorBusiness.UpdateTeam(team);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -228,13 +228,13 @@ namespace Playground.Web.Controllers
             
             Result<Team> res = competitorBusiness.GetUpdateTeam(id, currentUser.UserID);
             
-            if (res.Sucess)
+            if (res.Success)
             {
                 List<Player> players = res.Data.Players.Select(p => p.Player).ToList();
                 competitorBusiness.LoadUsers(players);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -249,12 +249,12 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<Player> res = competitorBusiness.GetPlayerForGameCategory(currentUser.UserID, gameCategoryID);
 
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.LoadUsers(new List<Player>() { res.Data });
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -274,12 +274,12 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<PagedResult<Player>> res = competitorBusiness.SearchPlayersForGameCategory(args.Page, args.Count, currentUser.UserID, args.GameCategoryID, args.Ids, args.Search);
 
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.LoadUsers(res.Data.Items);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -306,12 +306,12 @@ namespace Playground.Web.Controllers
                 playerIDs,
                 args.Search);
 
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.LoadUsers(res.Data.Items);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -353,7 +353,7 @@ namespace Playground.Web.Controllers
             Result<PagedResult<Match>> res =
                 matchBusiness.FilterByUser(page, count, currentUser.UserID);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -369,7 +369,7 @@ namespace Playground.Web.Controllers
             Result<PagedResult<Match>> res =
                 matchBusiness.FilterByStatusAndUser(page, count, MatchStatus.Confirmed, id);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -384,12 +384,12 @@ namespace Playground.Web.Controllers
             Result<PagedResult<Player>> res =
                 competitorBusiness.GetPlayersForUser(page, count, id);
 
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.LoadUsers(res.Data.Items);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -404,12 +404,12 @@ namespace Playground.Web.Controllers
             Result<PagedResult<Team>> res =
                 competitorBusiness.GetTeamsForUser(page, count, id);
 
-            if (res.Sucess)
+            if (res.Success)
             {
                 competitorBusiness.LoadCategories(res.Data.Items);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -424,7 +424,7 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<List<GameCategory>> res = gameCategoryBusiness.FilterByUser(currentUser.UserID);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -439,7 +439,7 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<List<Competitor>> res = competitorBusiness.FilterByUserAndCategory(currentUser.UserID, gameCategoryID);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -463,7 +463,7 @@ namespace Playground.Web.Controllers
                 (CompetitorType)args.CompetitorType,
                 args.Search);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -483,7 +483,7 @@ namespace Playground.Web.Controllers
                 string userID = User.Identity.GetUserId();
                 Result<User> res = userBusiness.GetUserByExternalId(userID);
 
-                response = res.Sucess ?
+                response = res.Success ?
                     Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                     Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -503,7 +503,7 @@ namespace Playground.Web.Controllers
         {
             Result<User> res = userBusiness.GetUserById(id);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -518,7 +518,7 @@ namespace Playground.Web.Controllers
             UserStats retVal = null;
             Result<User> userRes = userBusiness.GetUserById(id);
 
-            if (userRes.Sucess)
+            if (userRes.Success)
             {
                 retVal = new UserStats(userRes.Data);
 
@@ -537,7 +537,7 @@ namespace Playground.Web.Controllers
         {
             Result<User> res = userBusiness.UpdateUser(user);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
             
@@ -552,7 +552,7 @@ namespace Playground.Web.Controllers
             Result<PagedResult<AutomaticMatchConfirmation>> res = 
                 automaticConfirmationBusiness.FilterByUser(page, count, currentUser.UserID);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -572,7 +572,7 @@ namespace Playground.Web.Controllers
             Result<PagedResult<User>> res =
                 userBusiness.SearchAndExcludeByAutomaticConfirmation(args.Page, args.Count, currentUser.UserID, args.Search);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
                 
@@ -586,7 +586,7 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<AutomaticMatchConfirmation> res = automaticConfirmationBusiness.AddConfirmation(currentUser.UserID, user.UserID);
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -613,7 +613,7 @@ namespace Playground.Web.Controllers
         {
             Result<bool> res = competitorBusiness.ConfirmScore(competitorScore);
 
-            if (res.Sucess && res.Data)
+            if (res.Success && res.Data)
             {
                 int totalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed);
                 Match match = matchBusiness.GetMatchById(competitorScore.MatchID).Data;
@@ -625,7 +625,7 @@ namespace Playground.Web.Controllers
                 LiveScores.Instance.BroadcastTotalMatches(match, totalMatches);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.OK) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, "Error confirming score");
 
@@ -639,7 +639,7 @@ namespace Playground.Web.Controllers
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<Match> res = matchBusiness.AddMatch(currentUser.UserID, match);
 
-            if (res.Sucess && res.Data.Status == MatchStatus.Confirmed)
+            if (res.Success && res.Data.Status == MatchStatus.Confirmed)
             {
                 int totalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed);
                 Match m = matchBusiness.GetMatchById(match.MatchID).Data;
@@ -651,7 +651,7 @@ namespace Playground.Web.Controllers
                 LiveScores.Instance.BroadcastTotalMatches(m, totalMatches);
             }
 
-            HttpResponseMessage response = res.Sucess ?
+            HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :
                 Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
 

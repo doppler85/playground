@@ -29,6 +29,8 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<User>> SearchAndExcludeByAutomaticConfirmation(int page, int count, int userID, string search);
 
+        Result<PagedResult<User>> SearchAvailableByPlayground(int page, int count, int playgroundID, string search);
+
         Result<User> AddUser(User user);
 
         Result<User> UpdateUser(User user);

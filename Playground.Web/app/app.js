@@ -12,6 +12,7 @@ var Playground = angular.module('Playground', [
     'Playground.home',
     'Playground.playground-list',
     'Playground.playground-add',
+    'Playground.playground-edit',
     'Playground.game-category',
     'Playground.game-edit',
     'Playground.game-details',

@@ -13,6 +13,7 @@ angular.module('Playground.playground-list', [
     function ($scope, $stateParams, $rootScope, $state, PlaygroundResource, enums) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.playgrounds = {};
+        $scope.alerts = [];
 
         $scope.loadPlaygrounds = function (page) {
             PlaygroundResource.getplaygrounds({
@@ -23,6 +24,23 @@ angular.module('Playground.playground-list', [
                 $scope.playgrounds = data;
             });
         };
+
+        $scope.deletePlayground = function (playground) {
+            PlaygroundResource.removeplayground({
+                    id: playground.playgroundID
+                },
+                function (data) {
+                    $scope.addAlert($scope.alerts, { type: 'success', msg: "Playground successfully removed" });
+                    $scope.loadPlaygrounds($scope.playgrounds.currentPage);
+                },
+                function (error) {
+                    var msgs = $scope.getErrorsFromResponse(error.data);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                    }
+                }
+            );
+        }
         
         $scope.onPlaygroundPageSelect = function (page) {
             $scope.loadPlaygrounds(page);
