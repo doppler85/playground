@@ -1,3 +1,41 @@
 <div class="col-sm-6">
+    <h3>Games</h3>
+    <table class="table">
+        <tr>
+            <th>Category</th>
+            <th>Game</th>
+        </tr>
+
+        <tr data-ng-repeat="game in games.items">
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;" data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })">
+                        <img data-ng-src="{{game.category.pictureUrl}}" alt="" style="height:30px; width:30px;"/>
+                    </a>
+                </div>
+                &nbsp;
+                <a data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })" href="javascript:;">{{game.category.title}}</a>
+            </td>
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;" data-ui-sref="game-details.info({id: game.gameID })">
+                        <img data-ng-src="{{game.pictureUrl}}" alt="" style="height:30px; width:30px;"/>
+                    </a>
+                </div>
+                &nbsp;
+                <a data-ui-sref="game-category-details.info({id: gameCategory.gameCategoryID })" href="javascript:;">{{game.title}}</a>
+            </td>
+        </tr>
+    </table>
+
+    <pagination 
+        data-ng-show="games.totalPages > 1"
+        total-items="games.totalItems" 
+        page="games.currentPage" 
+        num-page="games.totalPages" 
+        items-per-page="5" 
+        on-select-page="onGamePageSelect(page)">
+    </pagination>
+
     <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
 </div>

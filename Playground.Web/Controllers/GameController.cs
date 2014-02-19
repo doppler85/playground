@@ -243,6 +243,20 @@ namespace Playground.Web.Controllers
             return response;
         }
 
+        // api/game/playgroundgames
+        [HttpGet]
+        [ActionName("playgroundgames")]
+        public HttpResponseMessage GetPlaygroundGames(int page, int count, int id)
+        {
+            Result<PagedResult<Game>> res = gameBusiness.FilterByPlayground(page, count, id);
+
+            HttpResponseMessage response = res.Success ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
         // api/game/teamgames
         [HttpGet]
         [ActionName("teamgames")]

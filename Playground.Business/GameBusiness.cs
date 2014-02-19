@@ -184,6 +184,50 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<PagedResult<Game>> FilterByPlayground(int page, int count, int playgroundID)
+        {
+            Result<PagedResult<Game>> retVal = null;
+            try
+            {
+                int totalItems = Uow.PlaygroundGames
+                    .GetAll()
+                    .Where(g => g.PlaygroundID == playgroundID)
+                    .Count();
+                
+                page = GetPage(totalItems, page, count);
+
+                List<Game> games = Uow.PlaygroundGames
+                    .GetAll()
+                    .Where(g => g.PlaygroundID == playgroundID)
+                    .Select(g => g.Game)
+                    .OrderBy(g => g.Title)
+                    .Skip((page - 1) * count)
+                    .Take(count)
+                    .ToList();
+
+                foreach (Game game in games)
+                {
+                    game.Category = Uow.GameCategories.GetById(game.GameCategoryID);
+                }
+
+                PagedResult<Game> result = new PagedResult<Game>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = games
+                };
+
+                retVal = ResultHandler<PagedResult<Game>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error retreiving list of games for category playground.  playgroundid: {0}", playgroundID), ex);
+                retVal = ResultHandler<PagedResult<Game>>.Erorr("Error retreiving list of games for category playground");
+            }
+            return retVal;
+        }
+
         public Result<List<Game>> FilterByCategoryAndCompetitionType(int gameCategoryID, CompetitorType competitorType)
         {
             Result<List<Game>> retVal = null;

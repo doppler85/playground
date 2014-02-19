@@ -147,6 +147,12 @@ factory('GameResource', ['$resource', function (resource) {
             params: {
                 actionname: 'teamgames'
             }
+        },
+        playgroundgames: {
+            method: 'GET',
+            params: {
+                actionname: 'playgroundgames'
+            }
         }
     });
 }]).

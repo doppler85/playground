@@ -73,29 +73,29 @@ angular.module('Playground.playground-edit', [
     '$state',
     '$stateParams',
     '$rootScope',
-    'GameCategoryResource',
+    'PlaygroundResource',
     'GameResource',
-    function ($scope, $state, $stateParams, $rootScope, GameCategoryResource, GameResource) {
+    function ($scope, $state, $stateParams, $rootScope, PlaygroundResource, GameResource) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'games';
-        //$scope.gameCategoryID = $stateParams.id;
-        //$scope.alerts = [];
+        $scope.playgroundID = $stateParams.id;
+        $scope.alerts = [];
 
-        //$scope.loadGames = function (page) {
-        //    GameCategoryResource.getgames({
-        //            id: $scope.gameCategoryID,
-        //            page: page,
-        //            count: 5
-        //        },
-        //        function (data, status, headers, config) {
-        //            $scope.games = data;
-        //        }
-        //    );
-        //}
+        $scope.loadGames = function (page) {
+            GameResource.playgroundgames({
+                    id: $scope.playgroundID,
+                    page: page,
+                    count: 5
+                },
+                function (data, status, headers, config) {
+                    $scope.games = data;
+                }
+            );
+        }
 
-        //$scope.onGamePageSelect = function (page) {
-        //    $scope.loadGames(page);
-        //}
+        $scope.onGamePageSelect = function (page) {
+            $scope.loadGames(page);
+        }
 
         //$scope.addinggame = false;
         //$scope.newGame = {
@@ -134,7 +134,7 @@ angular.module('Playground.playground-edit', [
         //    });
         //};
 
-        //$scope.loadGames(1);
+        $scope.loadGames(1);
     }])
     .controller('PlaygroundEditUsersController', [
     '$scope',
