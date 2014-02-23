@@ -164,6 +164,11 @@ namespace Playground.Business
                     .Take(count)
                     .ToList();
 
+                foreach (Game game in games)
+                {
+                    game.Category = Uow.GameCategories.GetById(game.GameCategoryID);
+                }
+
                 PagedResult<Game> result = new PagedResult<Game>()
                 {
                     CurrentPage = page,

@@ -368,6 +368,12 @@ factory('UserResource', ['$resource', function (resource) {
             params: {
                 actionname: 'users'
             }
+        },
+        playgroundusers: {
+            method: 'GET',
+            params: {
+                actionname: 'playgroundusers'
+            }
         }
     });
 }]).
@@ -407,6 +413,42 @@ factory('PlaygroundResource', ['$resource', function (resource) {
                 actionname: 'removeplayground'
             }
         },
+        availablegames: {
+            method: 'GET',
+            params: {
+                actionname: 'availablegames'
+            }
+        },
+        addgame: {
+            method: 'POST',
+            params: {
+                actionname: 'addgame'
+            }
+        },
+        removegame: {
+            method: 'DELETE',
+            params: {
+                actionname: 'removegame'
+            }
+        },
+        availableusers: {
+            method: 'GET',
+            params: {
+                actionname: 'availableusers'
+            }
+        },
+        adduser: {
+            method: 'POST',
+            params: {
+                actionname: 'adduser'
+            }
+        },
+        removeuser: {
+            method: 'DELETE',
+            params: {
+                actionname: 'removeuser'
+            }
+        }
     });
 }]);
 // examples

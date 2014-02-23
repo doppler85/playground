@@ -104,7 +104,7 @@ namespace Playground.Web.Controllers
 
         [HttpDelete]
         [ActionName("removegame")]
-        public HttpResponseMessage RemoveeGameFromPlayground(PlaygroundGame playgroundGame)
+        public HttpResponseMessage RemoveeGameFromPlayground([FromUri]PlaygroundGame playgroundGame)
         {
             bool success = playgroundBusiness.RemoveGameFromPlayground(playgroundGame);
 

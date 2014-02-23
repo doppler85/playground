@@ -101,6 +101,47 @@ namespace Playground.Business
 
             return retVal;
         }
+
+        public Result<PagedResult<User>> FilterByPlayground(int page, int count, int playgroundID)
+        {
+            Result<PagedResult<User>> retVal = null;
+            try
+            {
+                int totalItems = Uow.PlaygroundUsers
+                    .GetAll()
+                    .Where(u => u.PlaygroundID == playgroundID)
+                    .Count();
+
+                page = GetPage(totalItems, page, count);
+
+                List<User> users = Uow.PlaygroundUsers
+                    .GetAll()
+                    .Where(u => u.PlaygroundID == playgroundID)
+                    .Select(u => u.User)
+                    .OrderBy(u => u.FirstName)
+                    .ThenBy(u => u.LastName)
+                    .Skip((page - 1) * count)
+                    .Take(count)
+                    .ToList();
+
+                PagedResult<User> result = new PagedResult<User>()
+                {
+                    CurrentPage = page,
+                    TotalPages = (totalItems + count - 1) / count,
+                    TotalItems = totalItems,
+                    Items = users
+                };
+
+                retVal = ResultHandler<PagedResult<User>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Error loading users by playgorund. playgroundID: {0}", playgroundID), ex);
+                retVal = ResultHandler<PagedResult<User>>.Erorr("Error loading users by playgorund");
+            }
+
+            return retVal;
+        }
                 
         public int TotalGamesCount(int userID)
         {

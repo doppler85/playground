@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="span12">
+    <div class="col-sm-6">
         <h3>My automatic confirmations</h3>
         <table class="table">
             <tr>
@@ -32,7 +32,7 @@
             num-page="automaticMatchConfirmations.totalPages"
             items-per-page="5"
             on-select-page="onAutomaticMatchConfirmationsPageSelect(page)">
-    </pagination>
+        </pagination>
         <div class="add-confirmation-wrapp">
             <a href="javascript:;" class="btn btn-primary btn-xs" data-ng-click="toggleAddConfirmation(true)" data-ng-hide="addingconfirmation">add confirmation</a>
             <div class="add-confirmation-inner" data-ng-show="addingconfirmation">

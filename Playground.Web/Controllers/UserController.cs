@@ -470,7 +470,20 @@ namespace Playground.Web.Controllers
             return response;
         }
 
+        // api/user/playgroundusers
+        [HttpGet]
+        [AllowAnonymous]
+        [ActionName("playgroundusers")]
+        public HttpResponseMessage GetPlaygroundGames(int page, int count, int id)
+        {
+            Result<PagedResult<User>> res = userBusiness.FilterByPlayground(page, count, id);
 
+            HttpResponseMessage response = res.Success ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
 
         [HttpGet]
         [AllowAnonymous]

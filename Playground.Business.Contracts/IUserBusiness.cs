@@ -17,6 +17,8 @@ namespace Playground.Business.Contracts
 
         Result<User> GetUserByExternalId(string externalUserID);
 
+        Result<PagedResult<User>> FilterByPlayground(int page, int count, int playgroundID);
+
         int TotalGamesCount(int userID);
 
         int TotalPlayersCount(int userID);
