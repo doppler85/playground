@@ -62,6 +62,7 @@
     <Compile Include="User.cs" />
     <Compile Include="Validation\CompetitionTypeValidator.cs" />
     <Compile Include="Validation\PlayerValidator.cs" />
+    <Compile Include="ViewModel\PlaygroundUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

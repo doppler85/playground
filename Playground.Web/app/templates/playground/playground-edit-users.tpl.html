@@ -1,3 +1,85 @@
 <div class="col-sm-6">
+    <h3>Users</h3>
+    <table class="table">
+        <tr>
+            <th>User</th>
+            <th></th>
+        </tr>
+        <tr data-ng-repeat="user in users.items">
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;"
+                        data-ui-sref="public-profile.info({id: user.userID})">
+                        <img data-ng-src="{{user.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
+                <a href="javascript:;"
+                    data-ui-sref="public-profile.info({id: user.userID})"
+                    data-ng-bind="user | userfull"></a>
+            </td>
+            <td>
+                <button data-ng-show="!user.isOwner"
+                    class="btn btn-primary" 
+                    data-ng-click="deleteUser(user)">remove</button>
+            </td>
+        </tr>
+    </table>
+
+    <pagination 
+        data-ng-show="users.totalPages > 1"
+        total-items="users.totalItems" 
+        page="users.currentPage" 
+        num-page="users.totalPages" 
+        items-per-page="5" 
+        on-select-page="onUsersPageSelect(page)">
+    </pagination>
+
+    <div class="add-user-wrapp">
+        <a href="javascript:;" class="btn btn-primary btn-xs" data-ng-click="addinguser = !addinguser" data-ng-hide="addinguser">add user</a>
+        <div class="add-user-inner" data-ng-show="addinguser">
+            <form class="form-inline"
+                style="margin-bottom:5px;">
+                <label class="sr-only">Search</label>
+                <input type="text" class="form-control" data-ng-model="searchQuery" placeholder="Search users">
+                <button class="btn btn-primary" data-ng-click="searchAvailableUsers(1)">Search</button>
+                <button class="btn btn-primary" data-ng-click="addinguser = !addinguser">cancel</button>
+            </form>
+            <span data-ng-show="availableUsers.items.length > 0">Results</span>
+            <table class="table">
+                <tr>
+                    <th>User</th>
+                    <th></th>
+                </tr>
+                <tr data-ng-repeat="user in availableUsers.items">
+                    <td>
+                        <div class="img-holder">
+                            <a href="javascript:;"
+                                data-ui-sref="public-profile.info({id: user.userID})">
+                                <img data-ng-src="{{user.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;"
+                            data-ui-sref="public-profile.info({id: user.userID})"
+                            data-ng-bind="user | userfull"></a>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" data-ng-click="addUser(user, $index)">add</button>
+                    </td>
+                </tr>
+            </table>
+            
+            <pagination
+                data-ng-show="availableUsers.totalPages > 1"
+                total-items="availableUsers.totalItems"
+                page="availableUsers.currentPage"
+                num-page="availableUsers.totalPages"
+                items-per-page="5"
+                on-select-page="onAvailableUsersPageSelect(page)">
+            </pagination>
+        </div>
+    </div>
+    <br />
     <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
 </div>

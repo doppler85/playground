@@ -36,6 +36,7 @@ angular.module('Playground.match-add', [
     function ($scope, $stateParams, $rootScope, $state, UserResource, enums) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.match = {
+            playgroundID: 6, // TODO: Implement this properly
             date: new Date(),
             scores: []
         };

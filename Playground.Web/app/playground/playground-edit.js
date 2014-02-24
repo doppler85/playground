@@ -173,72 +173,62 @@ angular.module('Playground.playground-edit', [
                     count: 5
                 },
                 function (data, status, headers, config) {
-                    $scope.games = data;
+                    $scope.users = data;
                 }
             );
         }
 
-        $scope.onGamePageSelect = function (page) {
-            $scope.loadGames(page);
+        $scope.onUsersPageSelect = function (page) {
+            $scope.loadUsers(page);
         }
 
+        $scope.searchAvailableUsers = function (page) {
+            PlaygroundResource.availableusers({
+                playgroundId: $scope.playgroundID,
+                search: $scope.searchQuery,
+                page: page,
+                count: 5
+            }, function (data, status, headers, config) {
+                $scope.availableUsers = data;
+            });
+        }
+
+        $scope.onAvailableUsersPageSelect = function (page) {
+            $scope.searchAvailableUsers(page);
+        }
+
+        $scope.addUser = function (user, index) {
+            $scope.alerts = [];
+            PlaygroundResource.adduser({
+                playgroundID: $scope.playgroundID,
+                userID: user.userID
+            },
+                function (data, status, headers, config) {
+                    $scope.availableUsers.items.splice(index, 1);
+                    $scope.loadUsers($scope.users.currentPage);
+                    $scope.addAlert($scope.alerts, { type: 'success', msg: 'User sucessffully added' });
+                }, function (err) {
+                    var msgs = $scope.getErrorsFromResponse(err);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                    }
+                }
+            );
+        }
+
+        $scope.deleteUser = function (user) {
+            PlaygroundResource.removeuser({
+                playgroundID: $scope.playgroundID,
+                userID: user.userID
+            }, function (data, status, headers, config) {
+                $scope.loadUsers($scope.users.currentPage);
+            }, function (err) {
+                var msgs = $scope.getErrorsFromResponse(err);
+                for (var key in msgs) {
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                }
+            });
+        };
+
         $scope.loadUsers(1);
-
-        //$scope.gameCategoryID = $stateParams.id;
-        //$scope.alerts = [];
-
-        //$scope.loadGames = function (page) {
-        //    GameCategoryResource.getgames({
-        //            id: $scope.gameCategoryID,
-        //            page: page,
-        //            count: 5
-        //        },
-        //        function (data, status, headers, config) {
-        //            $scope.games = data;
-        //        }
-        //    );
-        //}
-
-        //$scope.onGamePageSelect = function (page) {
-        //    $scope.loadGames(page);
-        //}
-
-        //$scope.addinggame = false;
-        //$scope.newGame = {
-        //    title: ''
-        //};
-
-        //$scope.toggleAddGame = function (show) {
-        //    $scope.addinggame = show;
-        //    if (!show) {
-        //        $scope.newGame.title = '';
-        //    }
-        //};
-
-        //$scope.addGame = function (gameCategory) {
-        //    $scope.alerts = [];
-        //    $scope.newGame.gameCategoryID = $scope.gameCategoryID;
-
-        //    GameResource.add($scope.newGame,
-        //        function (data, status, headers, config) {
-        //            $state.go('game-edit', { id: data.gameID });
-        //        }, function (err) {
-        //            var msgs = $scope.getErrorsFromResponse(err);
-        //            for (var key in msgs) {
-        //                $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
-        //            }
-        //        });
-        //};
-
-        //$scope.deleteGame = function (game, collection, index) {
-        //    GameResource.remove({
-        //        id: game.gameID
-        //    }, function (data, status, headers, config) {
-        //        collection.splice(index, 1);
-        //    }, function (err) {
-        //        $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error deleting game' });
-        //    });
-        //};
-
-        //$scope.loadGames(1);
     }]);

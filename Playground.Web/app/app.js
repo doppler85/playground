@@ -44,7 +44,8 @@ var Playground = angular.module('Playground', [
 ]);
 
 Playground.constant('settings', {
-    debug: true
+    debug: true,
+    googleMapsAPIkey: 'AIzaSyBpaLafub-KgSATZOdXRai4Bdi7wHmo27U'
 }).constant('enums', {
     competitionType: {
         0: 'Individual',

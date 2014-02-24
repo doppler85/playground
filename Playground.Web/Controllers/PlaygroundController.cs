@@ -61,7 +61,6 @@ namespace Playground.Web.Controllers
         [ActionName("removeplayground")]
         public HttpResponseMessage RemovePlayground(int id)
         {
-
             bool success = playgroundBusiness.RemovePlayground(id);
 
             HttpResponseMessage response = success ?
@@ -148,7 +147,7 @@ namespace Playground.Web.Controllers
 
         [HttpDelete]
         [ActionName("removeuser")]
-        public HttpResponseMessage RemoveeGameFromPlayground(PlaygroundUser playgroundUser)
+        public HttpResponseMessage RemoveeGameFromPlayground([FromUri]PlaygroundUser playgroundUser)
         {
             bool success = playgroundBusiness.RemoveUserFromPlayground(playgroundUser);
 

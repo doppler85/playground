@@ -102,9 +102,9 @@ namespace Playground.Business
             return retVal;
         }
 
-        public Result<PagedResult<User>> FilterByPlayground(int page, int count, int playgroundID)
+        public Result<PagedResult<Playground.Model.ViewModel.PlaygroundUser>> FilterByPlayground(int page, int count, int playgroundID)
         {
-            Result<PagedResult<User>> retVal = null;
+            Result<PagedResult<Playground.Model.ViewModel.PlaygroundUser>> retVal = null;
             try
             {
                 int totalItems = Uow.PlaygroundUsers
@@ -114,7 +114,9 @@ namespace Playground.Business
 
                 page = GetPage(totalItems, page, count);
 
-                List<User> users = Uow.PlaygroundUsers
+                Playground.Model.Playground playground = Uow.Playgrounds.GetById(playgroundID);
+
+                List<Playground.Model.ViewModel.PlaygroundUser> users = Uow.PlaygroundUsers
                     .GetAll()
                     .Where(u => u.PlaygroundID == playgroundID)
                     .Select(u => u.User)
@@ -122,9 +124,16 @@ namespace Playground.Business
                     .ThenBy(u => u.LastName)
                     .Skip((page - 1) * count)
                     .Take(count)
+                    .Select(u => new Playground.Model.ViewModel.PlaygroundUser() {
+                        UserID = u.UserID,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        PictureUrl = u.PictureUrl,
+                        IsOwner = u.UserID == playground.OwnerID
+                    })
                     .ToList();
 
-                PagedResult<User> result = new PagedResult<User>()
+                PagedResult<Playground.Model.ViewModel.PlaygroundUser> result = new PagedResult<Playground.Model.ViewModel.PlaygroundUser>()
                 {
                     CurrentPage = page,
                     TotalPages = (totalItems + count - 1) / count,
@@ -132,12 +141,12 @@ namespace Playground.Business
                     Items = users
                 };
 
-                retVal = ResultHandler<PagedResult<User>>.Sucess(result);
+                retVal = ResultHandler<PagedResult<Playground.Model.ViewModel.PlaygroundUser>>.Sucess(result);
             }
             catch (Exception ex)
             {
                 log.Error(String.Format("Error loading users by playgorund. playgroundID: {0}", playgroundID), ex);
-                retVal = ResultHandler<PagedResult<User>>.Erorr("Error loading users by playgorund");
+                retVal = ResultHandler<PagedResult<Playground.Model.ViewModel.PlaygroundUser>>.Erorr("Error loading users by playgorund");
             }
 
             return retVal;

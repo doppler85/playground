@@ -107,7 +107,7 @@ namespace Playground.Business
             try
             {
                 Playground.Model.Playground playgroundToDelete = Uow.Playgrounds.GetById(p => p.PlaygroundID == playgroundID);
-                Uow.PlaygroundUsers.Delete(u => u.UserID == playgroundToDelete.OwnerID);
+                Uow.PlaygroundUsers.Delete(u => u.UserID == playgroundToDelete.OwnerID && u.PlaygroundID == playgroundID);
                 Uow.Playgrounds.Delete(playgroundToDelete);
                 Uow.Commit();
             }

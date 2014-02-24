@@ -1209,6 +1209,7 @@ namespace Playground.Business
                     .GetAll()
                     .Where(p => p.TeamID == competitorID)
                     .ToList();
+
                 foreach (TeamPlayer player in players)
                 {
                     Uow.TeamPlayers.Delete(player);
@@ -1218,6 +1219,7 @@ namespace Playground.Business
                     .GetAll()
                     .Where(gc => gc.CompetitorID == competitorID)
                     .ToList();
+
                 foreach (GameCompetitor gameCompetitor in gameCompetitors)
                 {
                     Uow.GameCompetitors.Delete(gameCompetitor);
