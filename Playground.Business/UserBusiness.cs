@@ -151,6 +151,21 @@ namespace Playground.Business
 
             return retVal;
         }
+
+        public int TotalUsersCount()
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Users.GetAll().Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting users count", ex);
+            }
+
+            return retVal;
+        }
                 
         public int TotalGamesCount(int userID)
         {

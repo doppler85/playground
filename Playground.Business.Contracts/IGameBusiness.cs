@@ -11,6 +11,8 @@ namespace Playground.Business.Contracts
     {
         Result<Game> GetById(int gameID);
 
+        int TotalGamesCount();
+
         int TotalCompetitorsCount(int gameID);
 
         int TotalMatchesCount(int gameID);

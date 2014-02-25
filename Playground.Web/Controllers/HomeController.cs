@@ -15,12 +15,40 @@ namespace Playground.Web.Controllers
     {
         private IMatchBusiness matchBusiness;
         private ICompetitorBusiness competitorBusiness;
+        private IPlaygroundBusiness playgroundBusiness;
+        private IGameBusiness gameBusiness;
+        private IUserBusiness userBusiness;
 
         public HomeController(IMatchBusiness mBusiness, 
-            ICompetitorBusiness cBusiness)
+            ICompetitorBusiness cBusiness,
+            IPlaygroundBusiness pgBusiness,
+            IGameBusiness gBusiness,
+            IUserBusiness uBusiness)
         {
             this.matchBusiness = mBusiness;
             this.competitorBusiness = cBusiness;
+            this.playgroundBusiness = pgBusiness;
+            this.gameBusiness = gBusiness;
+            this.userBusiness = uBusiness;
+        }
+
+        [HttpGet]
+        [ActionName("getstats")]
+        public HttpResponseMessage GetStats()
+        {
+            Playground.Model.ViewModel.PlaygroundStats res = new Model.ViewModel.PlaygroundStats()
+            {
+                TotalPlaygrounds = playgroundBusiness.TotalPlaygroundsCound(),
+                TotalGames = gameBusiness.TotalGamesCount(),
+                TotalUsers = userBusiness.TotalUsersCount(),
+                TotalPlayers = competitorBusiness.TotalCompetitorsCount(),
+                TotalMatches = matchBusiness.TotalMatchesByStatus(MatchStatus.Confirmed)
+            };
+            
+            
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, res);
+
+            return response;
         }
 
         [HttpGet]

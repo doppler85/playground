@@ -84,6 +84,8 @@ namespace Playground.Business.Contracts
 
         Result<bool> ConfirmScore(CompetitorScore competitorScore);
 
+        int TotalCompetitorsCount();
+
         int TotalMatchesCount(long competitorID);
     }
 }

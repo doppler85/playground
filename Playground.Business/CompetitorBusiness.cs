@@ -1343,6 +1343,21 @@ namespace Playground.Business
             return retVal;
         }
 
+        public int TotalCompetitorsCount()
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Competitors.GetAll().Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting competitors count", ex);
+            }
+
+            return retVal;
+        }
+
         public int TotalMatchesCount(long competitorID)
         {
             int retVal = 0;

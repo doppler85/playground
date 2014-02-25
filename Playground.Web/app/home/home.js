@@ -14,6 +14,8 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
         $scope.competitors = [];
         $scope.hallOfFame = [];
         $scope.hallOfShame = [];
+        $scope.stats = {};
+
         $scope.totalCompetitors = 0;
         $scope.map = {
             center: {
@@ -22,11 +24,18 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
             },
             zoom: 15
         };
-        $scope.dates = [];
-        $scope.addDate = function () {
-            $scope.dates.push(new Date());
+
+        $scope.loadStats = function () {
+            homeResource.getstats(
+                function (data, status, headers, config) {
+                    $scope.stats = data;
+                }
+            );
         }
 
+        $scope.loadStats();
+
+        /*
         $scope.loadMatches = function () {
             homeResource.lastmatches({ page: 1, count: 5 }, function (data, status, headers, config) {
                 $scope.matches = data.items;
@@ -52,11 +61,12 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
                 $scope.hallOfShame = data.items;
             });
         }
-
+        
         $scope.loadMatches();
         $scope.loadCompetitors();
         $scope.loadHallOfFame();
         $scope.loadHallOFShame();
+        */
 
         var hub = $.connection.livescores;
         hub.client.refreshMatches = function (match, totalMathces) {

@@ -60,6 +60,21 @@ namespace Playground.Business
             return retVal;
         }
 
+        public int TotalGamesCount()
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Games.GetAll().Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting games count", ex);
+            }
+
+            return retVal;
+        }
+
         public int TotalCompetitorsCount(int gameID)
         {
             int retVal = 0;

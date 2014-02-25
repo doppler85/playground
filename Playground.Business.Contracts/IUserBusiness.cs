@@ -19,6 +19,8 @@ namespace Playground.Business.Contracts
 
         Result<PagedResult<Playground.Model.ViewModel.PlaygroundUser>> FilterByPlayground(int page, int count, int playgroundID);
 
+        int TotalUsersCount();
+
         int TotalGamesCount(int userID);
 
         int TotalPlayersCount(int userID);

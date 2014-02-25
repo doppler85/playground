@@ -19,6 +19,8 @@ namespace Playground.Business.Contracts
 
         Result<Playground.Model.Playground> UpdatePlayground(Playground.Model.Playground playground);
 
+        int TotalPlaygroundsCound();
+
         bool RemovePlayground(int playgroundID);
         
         bool AddGameToPlayGround(PlaygroundGame playgroundGame);

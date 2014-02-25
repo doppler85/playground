@@ -137,6 +137,21 @@ namespace Playground.Business
             return retVal;
         }
 
+        public int TotalPlaygroundsCound()
+        {
+            int retVal = 0;
+            try
+            {
+                retVal = Uow.Playgrounds.GetAll().Count();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting playgrounds count", ex);
+            }
+
+            return retVal;
+        }
+
         public bool RemovePlayground(int playgroundID)
         {
             bool retVal = true;

@@ -390,6 +390,12 @@ factory('HomeResource', ['$resource', function (resource) {
             params: {
                 actionname: 'competitors'
             }
+        },
+        getstats: {
+            method: 'GET',
+            params: {
+                actionname: 'getstats'
+            }
         }
     });
 }]).
