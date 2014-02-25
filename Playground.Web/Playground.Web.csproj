@@ -293,6 +293,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdvancedSearchArgs.cs" />
+    <Compile Include="Models\SearchAreaArgs.cs" />
     <Compile Include="Models\SearchPlaygroundArgs.cs" />
     <Compile Include="Models\SearchArgs.cs" />
     <Compile Include="Models\SearchCompetitorArgs.cs" />

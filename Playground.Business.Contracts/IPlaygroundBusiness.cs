@@ -1,4 +1,5 @@
 ﻿using Playground.Model;
+using Playground.Model.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace Playground.Business.Contracts
         Result<Playground.Model.Playground> AddPlayground(Playground.Model.Playground playground);
 
         Result<Playground.Model.Playground> UpdatePlayground(Playground.Model.Playground playground);
+
+        Result<List<Playground.Model.Playground>> SearchInArea(Location startLocation, Location endLocation, int maxResults);
 
         int TotalPlaygroundsCound();
 

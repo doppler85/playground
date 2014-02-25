@@ -61,6 +61,7 @@
     <Compile Include="TeamNotification.cs" />
     <Compile Include="TeamPlayer.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Util\Location.cs" />
     <Compile Include="Validation\CompetitionTypeValidator.cs" />
     <Compile Include="Validation\PlayerValidator.cs" />
     <Compile Include="ViewModel\PlaygroundStats.cs" />

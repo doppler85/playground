@@ -3,7 +3,16 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <google-map center="map.center" zoom="map.zoom" draggable="true"></google-map>
+        <google-map 
+            bounds="map.bounds"
+            center="map.center" 
+            zoom="map.zoom" 
+            events="map.events"
+            control="map.control"
+            draggable="true">
+        <markers models="map.playgroundMarkers" coords="'self'" icon="'icon'" click="'onClicked'">
+        </markers>
+        </google-map>
     </div>
 </div>
  <hr />

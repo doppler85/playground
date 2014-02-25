@@ -7,7 +7,8 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
     '$state',
     'HomeResource',
     'CompetitorResource',
-    function ($scope, $stateParams, $rootScope, $state, homeResource, competitorResource) {
+    'PlaygroundResource',
+    function ($scope, $stateParams, $rootScope, $state, homeResource, competitorResource, PlaygroundResource) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.matches = [];
         $scope.totalMatches = 0;
@@ -15,20 +16,61 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
         $scope.hallOfFame = [];
         $scope.hallOfShame = [];
         $scope.stats = {};
+        $scope.alerts = [];
 
-        $scope.totalCompetitors = 0;
         $scope.map = {
+            bounds: {},
+            control: {},
             center: {
                 latitude: 45.254302,
                 longitude: 19.842915
             },
-            zoom: 15
+            zoom: 14,
+            events: {
+                tilesloaded: function (map, eventName, originalEventArgs) {
+                    //console.log('map ', map);
+                    $scope.loadPlaygroundsInArea(map.bounds);
+                },
+                dragend: function (map, eventName, originalEventArgs) {
+                    // console.log('map ', map);
+                    $scope.loadPlaygroundsInArea(map.bounds);
+                }
+            },
+            playgroundMarkers : []
         };
 
         $scope.loadStats = function () {
             homeResource.getstats(
                 function (data, status, headers, config) {
                     $scope.stats = data;
+                }
+            );
+        }
+
+        $scope.loadPlaygroundsInArea = function (bounds) {
+            PlaygroundResource.getplaygroundsinarea({
+                    StartLocationLatitude: bounds.southwest.latitude,
+                    StartLocationLongitude: bounds.southwest.longitude,
+                    EndLocationLatitude: bounds.northeast.latitude,
+                    EndLocationLongitude: bounds.northeast.longitude,
+                    MaxResults: 200
+                },
+                function (data, status, headers, config) {
+                    var markers = [];
+                    for (var i = 0; i < data.length; i++) {
+                        markers.push({
+                            latitude: data[i].latitude,
+                            longitude: data[i].longitude,
+                            title: data[i].name
+                        })
+                    }
+                    $scope.map.playgroundMarkers = markers;
+                },
+                function (err) {
+                    var msgs = $scope.getErrorsFromResponse(err);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                    }
                 }
             );
         }

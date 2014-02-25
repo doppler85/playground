@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Playground.Business.Contracts;
 using Playground.Model;
+using Playground.Model.Util;
 using Playground.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -176,6 +177,30 @@ namespace Playground.Web.Controllers
         public HttpResponseMessage UpdatePlayground(Playground.Model.Playground playground)
         {
             Result<Playground.Model.Playground> res = playgroundBusiness.UpdatePlayground(playground);
+
+            HttpResponseMessage response = res.Success ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        [HttpGet]
+        [ActionName("getplaygroundsinarea")]
+        public HttpResponseMessage GetPlaygroundsInArea([FromUri]SearchAreaArgs args)
+        {
+            Result<List<Playground.Model.Playground>> res = playgroundBusiness.SearchInArea(
+                new Location()
+                {
+                   Latitude = args.StartLocationLatitude,
+                   Longitude = args.StartLocationLongitude
+                }, 
+                new Location()
+                {
+                    Latitude = args.EndLocationLatitude,
+                    Longitude = args.EndLocationLongitude
+                },
+                args.MaxResults);
 
             HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :

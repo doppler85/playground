@@ -468,6 +468,13 @@ factory('PlaygroundResource', ['$resource', function (resource) {
             params: {
                 actionname: 'updateplayground'
             }
+        },
+        getplaygroundsinarea: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                actionname: 'getplaygroundsinarea'
+            }
         }
     });
 }]);

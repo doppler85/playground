@@ -2,6 +2,7 @@
 using Playground.Business.Contracts;
 using Playground.Data.Contracts;
 using Playground.Model;
+using Playground.Model.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -132,6 +133,35 @@ namespace Playground.Business
             {
                 log.Error("Error updating playground", ex);
                 retVal = ResultHandler<Playground.Model.Playground>.Erorr("Error updating playground");
+            }
+
+            return retVal;
+        }
+
+        public Result<List<Playground.Model.Playground>> SearchInArea(Location startLocation, Location endLocation, int maxResults)
+        {
+            Result<List<Playground.Model.Playground>> retVal = null;
+            try
+            {
+                List<Playground.Model.Playground> result = Uow.PlaygroundUsers
+                    .GetAll()
+                    .Where(pgu => pgu.Playground.Latitude >= startLocation.Latitude &&
+                        pgu.Playground.Latitude <= endLocation.Latitude &&
+                        pgu.Playground.Longitude >= startLocation.Longitude &&
+                        pgu.Playground.Longitude <= startLocation.Longitude)
+                    .GroupBy(g => g.Playground)
+                    .Select(pgr => new { Playground = pgr.Key, UserCount = pgr.Count() })
+                    .OrderByDescending(pgr => pgr.UserCount)
+                    .Take(maxResults)
+                    .Select(pgr => pgr.Playground)
+                    .ToList();
+
+                retVal = ResultHandler<List<Playground.Model.Playground>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error searching playgrounds", ex);
+                retVal = ResultHandler<List<Playground.Model.Playground>>.Erorr("Error searching playgrounds");
             }
 
             return retVal;
