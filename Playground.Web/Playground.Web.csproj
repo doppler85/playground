@@ -318,7 +318,7 @@
     <Content Include="app\common\teams.js" />
     <Content Include="app\common\validation.js" />
     <Content Include="app\competition\competitors-list.js" />
-    <Content Include="app\lib\angular\angular-google-maps.js" />
+    <Content Include="app\lib\angular-google-maps.js" />
     <Content Include="app\lib\underscore.js" />
     <Content Include="app\playground\playground-edit.js" />
     <Content Include="app\playground\playground-add.js" />
@@ -568,7 +568,6 @@
     <Content Include="app\lib\angular\angular-cookies.min.js.map" />
     <Content Include="app\lib\angular\angular-animate.min.js.map" />
     <Content Include="app\lib\angular\angular.min.js.map" />
-    <Content Include="app\lib\angular\angular-google-maps.min.js" />
     <None Include="app\lib\jQuery\jquery-2.0.3.intellisense.js" />
     <Content Include="app\lib\jQuery\jquery-2.0.3.js" />
     <Content Include="app\lib\jQuery\jquery-2.0.3.min.js" />

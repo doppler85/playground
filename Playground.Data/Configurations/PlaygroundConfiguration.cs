@@ -15,6 +15,9 @@ namespace Playground.Data.Configurations
                 .WithMany()
                 .HasForeignKey(p => p.OwnerID)
                 .WillCascadeOnDelete(false);
+
+            Property(p => p.Longitude).HasPrecision(18, 15);
+            Property(p => p.Latitude).HasPrecision(18, 15);
         }
     }
 }
