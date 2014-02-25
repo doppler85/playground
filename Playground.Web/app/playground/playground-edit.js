@@ -38,35 +38,93 @@ angular.module('Playground.playground-edit', [
     '$stateParams',
     '$rootScope',
     'PlaygroundResource',
-    function ($scope, $state, $stateParams, $rootScope, GameCategoryResource) {
+    function ($scope, $state, $stateParams, $rootScope, PlaygroundResource) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.$parent.tab = 'info';
-        //$scope.gameCategory = {};
-        //$scope.alerts = [];
+        $scope.playgroundID = $stateParams.id;
+        $scope.playground = {};
+        $scope.alerts = [];
 
-        //$scope.loadGameCategory = function () {
-        //    GameCategoryResource.getcategory({ id: $stateParams.id },
-        //        function (data, status, headers, config) {
-        //            $scope.gameCategory = data;
-        //        },
-        //        function () {
-        //            $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error saving game' });
-        //        }
-        //    );
-        //}
+        $scope.map = {
+            control: {},
+            center: {
+                latitude: 45.254302,
+                longitude: 19.842915
+            },
+            zoom: 15
+        };
 
-        //$scope.updateGameCategory = function () {
-        //    GameCategoryResource.update($scope.gameCategory,
-        //        function (data, status, headers, config) {
-        //            $scope.addAlert($scope.alerts, { type: 'success', msg: 'Game category sucessfully updated' });
-        //        }, function (err) {
-        //            var msg = err.data ? err.data.replace(/"/g, "") : "Error updating game category";
-        //            $scope.addAlert($scope.alerts, { type: 'danger', msg: msg });
-        //        }
-        //    );
-        //};
+        $scope.searchLocationMarker = {
+            coords: {
+                latitude: 45.254302,
+                longitude: 19.842915
+            },
+            options: { draggable: true },
+            events: {
+                dragend: function (marker, eventName, args) {
+                    $scope.playground.latitude = marker.getPosition().lat();
+                    $scope.playground.longitude = marker.getPosition().lng();
 
-        //$scope.loadGameCategory();
+                    $scope.$apply();
+                }
+            }
+        }
+
+        $scope.geocoder = new google.maps.Geocoder();
+
+        $scope.searchAddress = function () {
+            $scope.geocoder.geocode({
+                address: $scope.playground.address
+            },
+                function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        $scope.playground.latitude = results[0].geometry.location.d;
+                        $scope.playground.longitude = results[0].geometry.location.e;
+                        $scope.searchLocationMarker.coords.latitude = results[0].geometry.location.d;
+                        $scope.searchLocationMarker.coords.longitude = results[0].geometry.location.e;
+
+                        $scope.map.control.getGMap().setCenter(results[0].geometry.location);
+
+                        $scope.$apply();
+                    } else {
+                        $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Geocode was not successful for the following reason: ' + status });
+                    }
+                }
+            );
+        }
+
+        $scope.loadPlayground = function () {
+            PlaygroundResource.getupdateplayground({ playgroundID: $scope.playgroundID },
+                function (data, status, headers, config) {
+                    $scope.playground = data;
+
+                    $scope.searchLocationMarker.coords.latitude = data.latitude;
+                    $scope.searchLocationMarker.coords.longitude = data.longitude;
+
+                    var center = new google.maps.LatLng(data.latitude, data.longitude);
+
+                    $scope.map.control.getGMap().setCenter(center);
+                },
+                function () {
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: 'Error loading playground' });
+                }
+            );
+        }
+
+        $scope.updatePlayground = function () {
+            PlaygroundResource.updateplayground($scope.playground,
+                function (data, status, headers, config) {
+                    $scope.addAlert($scope.alerts, { type: 'success', msg: 'Playground sucessfully updated' });
+                }, function (err) {
+                    var msgs = $scope.getErrorsFromResponse(err);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                    }
+                }
+            );
+        };
+
+        $scope.loadPlayground();
     }])
     .controller('PlaygroundEditGamesController', [
     '$scope',

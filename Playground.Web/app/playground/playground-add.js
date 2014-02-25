@@ -14,6 +14,8 @@ angular.module('Playground.playground-add', [
     '$log',
     function ($scope, $stateParams, $rootScope, $state, PlaygroundResource, enums, $log) {
         $scope.pageTitle = $state.current.data.pageTitle;
+        $scope.playground = {};
+        $scope.alerts = [];
 
         $scope.map = {
             control: {},
@@ -23,8 +25,6 @@ angular.module('Playground.playground-add', [
             },
             zoom: 15
         };
-
-        $scope.geocoder = new google.maps.Geocoder();
 
         $scope.searchLocationMarker = {
             coords: {
@@ -42,12 +42,8 @@ angular.module('Playground.playground-add', [
             }
         }
 
-        $scope.playground = {
-
-        };
-
-        $scope.alerts = [];
-
+        $scope.geocoder = new google.maps.Geocoder();
+        
         $scope.searchAddress = function () {
             $scope.geocoder.geocode({
                     address: $scope.playground.address

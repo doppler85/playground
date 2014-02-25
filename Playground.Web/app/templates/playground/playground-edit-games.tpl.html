@@ -1,96 +1,98 @@
-<div class="col-sm-6">
-    <h3>Games</h3>
-    <table class="table">
-        <tr>
-            <th>Category</th>
-            <th>Game</th>
-            <th></th>
-        </tr>
-        <tr data-ng-repeat="game in games.items">
-            <td>
-                <div class="img-holder">
-                    <a href="javascript:;" data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })">
-                        <img data-ng-src="{{game.category.pictureUrl}}" alt="" style="height:30px; width:30px;"/>
-                    </a>
-                </div>
-                &nbsp;
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Games</h3>
+        <table class="table">
+            <tr>
+                <th>Category</th>
+                <th>Game</th>
+                <th></th>
+            </tr>
+            <tr data-ng-repeat="game in games.items">
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;" data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })">
+                            <img data-ng-src="{{game.category.pictureUrl}}" alt="" style="height: 30px; width: 30px;" />
+                        </a>
+                    </div>
+                    &nbsp;
                 <a data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })" href="javascript:;">{{game.category.title}}</a>
-            </td>
-            <td>
-                <div class="img-holder">
-                    <a href="javascript:;" data-ui-sref="game-details.info({id: game.gameID })">
-                        <img data-ng-src="{{game.pictureUrl}}" alt="" style="height:30px; width:30px;"/>
-                    </a>
-                </div>
-                &nbsp;
+                </td>
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;" data-ui-sref="game-details.info({id: game.gameID })">
+                            <img data-ng-src="{{game.pictureUrl}}" alt="" style="height: 30px; width: 30px;" />
+                        </a>
+                    </div>
+                    &nbsp;
                 <a data-ui-sref="game-category-details.info({id: gameCategory.gameCategoryID })" href="javascript:;">{{game.title}}</a>
-            </td>
-            <td>
-                <button class="btn btn-primary" data-ng-click="removeGame(game)">remove</button>
-            </td>
-        </tr>
-    </table>
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="removeGame(game)">remove</button>
+                </td>
+            </tr>
+        </table>
 
-    <pagination 
-        data-ng-show="games.totalPages > 1"
-        total-items="games.totalItems" 
-        page="games.currentPage" 
-        num-page="games.totalPages" 
-        items-per-page="5" 
-        on-select-page="onGamePageSelect(page)">
+        <pagination
+            data-ng-show="games.totalPages > 1"
+            total-items="games.totalItems"
+            page="games.currentPage"
+            num-page="games.totalPages"
+            items-per-page="5"
+            on-select-page="onGamePageSelect(page)">
     </pagination>
 
-    <div class="add-game-wrapp">
-        <a href="javascript:;" class="btn btn-primary btn-xs" data-ng-click="addinggame = !addinggames" data-ng-hide="addinggame">add game</a>
-        <div class="add-confirmation-inner" data-ng-show="addinggame">
-            <form class="form-inline"
-                style="margin-bottom:5px;">
-                <label class="sr-only">Search</label>
-                <input type="text" class="form-control" data-ng-model="searchQuery" placeholder="Search games">
-                <button class="btn btn-primary" data-ng-click="searchAvailableGames(1)">Search</button>
-                <button class="btn btn-primary" data-ng-click="addinggame = !addinggame">cancel</button>
-            </form>
-            <span data-ng-show="availableGames.items.length > 0">Results</span>
-            <table class="table">
-                <tr>
-                    <th>Category</th>
-                    <th>Game</th>
-                    <th></th>
-                </tr>
-                <tr data-ng-repeat="game in availableGames.items">
-                    <td>
-                        <div class="img-holder">
-                            <a href="javascript:;" data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })">
-                                <img data-ng-src="{{game.category.pictureUrl}}" alt="" style="height:30px; width:30px;"/>
-                            </a>
-                        </div>
-                        &nbsp;
+        <div class="add-game-wrapp">
+            <a href="javascript:;" class="btn btn-primary btn-xs" data-ng-click="addinggame = !addinggames" data-ng-hide="addinggame">add game</a>
+            <div class="add-confirmation-inner" data-ng-show="addinggame">
+                <form class="form-inline"
+                    style="margin-bottom: 5px;">
+                    <label class="sr-only">Search</label>
+                    <input type="text" class="form-control" data-ng-model="searchQuery" placeholder="Search games">
+                    <button class="btn btn-primary" data-ng-click="searchAvailableGames(1)">Search</button>
+                    <button class="btn btn-primary" data-ng-click="addinggame = !addinggame">cancel</button>
+                </form>
+                <span data-ng-show="availableGames.items.length > 0">Results</span>
+                <table class="table">
+                    <tr>
+                        <th>Category</th>
+                        <th>Game</th>
+                        <th></th>
+                    </tr>
+                    <tr data-ng-repeat="game in availableGames.items">
+                        <td>
+                            <div class="img-holder">
+                                <a href="javascript:;" data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })">
+                                    <img data-ng-src="{{game.category.pictureUrl}}" alt="" style="height: 30px; width: 30px;" />
+                                </a>
+                            </div>
+                            &nbsp;
                         <a data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })" href="javascript:;">{{game.category.title}}</a>
-                    </td>
-                    <td>
-                        <div class="img-holder">
-                            <a href="javascript:;" data-ui-sref="game-details.info({id: game.gameID })">
-                                <img data-ng-src="{{game.pictureUrl}}" alt="" style="height:30px; width:30px;"/>
-                            </a>
-                        </div>
-                        &nbsp;
+                        </td>
+                        <td>
+                            <div class="img-holder">
+                                <a href="javascript:;" data-ui-sref="game-details.info({id: game.gameID })">
+                                    <img data-ng-src="{{game.pictureUrl}}" alt="" style="height: 30px; width: 30px;" />
+                                </a>
+                            </div>
+                            &nbsp;
                         <a data-ui-sref="game-category-details.info({id: gameCategory.gameCategoryID })" href="javascript:;">{{game.title}}</a>
-                    </td>
-                    <td>
-                        <button class="btn btn-primary" data-ng-click="addGame(game, $index)">add</button>
-                    </td>
-                </tr>
-            </table>
-            <pagination
-                data-ng-show="availableGames.totalPages > 1"
-                total-items="availableGames.totalItems"
-                page="availableGames.currentPage"
-                num-page="availableGames.totalPages"
-                items-per-page="5"
-                on-select-page="onAvailableGamesPageSelect(page)">
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-ng-click="addGame(game, $index)">add</button>
+                        </td>
+                    </tr>
+                </table>
+                <pagination
+                    data-ng-show="availableGames.totalPages > 1"
+                    total-items="availableGames.totalItems"
+                    page="availableGames.currentPage"
+                    num-page="availableGames.totalPages"
+                    items-per-page="5"
+                    on-select-page="onAvailableGamesPageSelect(page)">
             </pagination>
+            </div>
         </div>
+        <br />
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     </div>
-    <br />
-    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
 </div>

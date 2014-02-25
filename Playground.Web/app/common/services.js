@@ -448,6 +448,20 @@ factory('PlaygroundResource', ['$resource', function (resource) {
             params: {
                 actionname: 'removeuser'
             }
+        },
+        getupdateplayground: {
+            method: 'GET',
+            isArray: false,
+            params: {
+                actionname: 'getupdateplayground'
+            }
+        },
+        updateplayground: {
+            method: 'PUT',
+            isArray: false,
+            params: {
+                actionname: 'updateplayground'
+            }
         }
     });
 }]);

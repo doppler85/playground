@@ -19,6 +19,23 @@ namespace Playground.Business
             this.Uow = uow;
         }
 
+        public Result<Playground.Model.Playground> GetById(int playgroundID)
+        {
+            Result<Playground.Model.Playground> retVal = null;
+            try
+            {
+                Playground.Model.Playground playground = Uow.Playgrounds.GetById(playgroundID);
+                retVal = ResultHandler<Playground.Model.Playground>.Sucess(playground);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting playground", ex);
+                retVal = ResultHandler<Playground.Model.Playground>.Erorr("Error loading playgrond");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<Playground.Model.Playground>> GetPlaygrounds(int page, int count, bool all)
         {
             Result<PagedResult<Playground.Model.Playground>> retVal = null;
@@ -96,6 +113,25 @@ namespace Playground.Business
             {
                 log.Error("Erorr adding playgorund", ex);
                 retVal = ResultHandler<Playground.Model.Playground>.Erorr("Error adding playground");
+            }
+
+            return retVal;
+        }
+
+        public Result<Playground.Model.Playground> UpdatePlayground(Playground.Model.Playground playground)
+        {
+            Result<Playground.Model.Playground> retVal = null;
+            try
+            {
+                Uow.Playgrounds.Update(playground, playground.PlaygroundID);
+                Uow.Commit();
+
+                retVal = ResultHandler<Playground.Model.Playground>.Sucess(playground);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error updating playground", ex);
+                retVal = ResultHandler<Playground.Model.Playground>.Erorr("Error updating playground");
             }
 
             return retVal;

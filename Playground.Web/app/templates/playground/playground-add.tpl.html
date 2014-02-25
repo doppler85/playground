@@ -3,13 +3,12 @@
 </div>
 <div class="row">
     <div class="col-sm-6">
-        <google-map 
-            center="map.center" 
-            zoom="map.zoom" 
+        <google-map
+            center="map.center"
+            zoom="map.zoom"
             draggable="true"
             control="map.control">
-             <marker coords="searchLocationMarker.coords" options="searchLocationMarker.options" events="searchLocationMarker.events" >
-        </marker>
+            <marker coords="searchLocationMarker.coords" options="searchLocationMarker.options" events="searchLocationMarker.events" ></marker>
         </google-map>
     </div>
 </div>
@@ -64,8 +63,4 @@
         </form>
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
     </div>
-<!--    <div class="span12">
-        <pre>{{player | json}}</pre>
-        <pre>{{games | json}}</pre>
-    </div>-->
 </div>

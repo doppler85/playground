@@ -157,5 +157,31 @@ namespace Playground.Web.Controllers
 
             return response;
         }
+
+        [HttpGet]
+        [ActionName("getupdateplayground")]
+        public HttpResponseMessage GetUpdatePlayground(int playgroundID)
+        {
+            Result<Playground.Model.Playground> res = playgroundBusiness.GetById(playgroundID);
+
+            HttpResponseMessage response = res.Success ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        [HttpPut]
+        [ActionName("updateplayground")]
+        public HttpResponseMessage UpdatePlayground(Playground.Model.Playground playground)
+        {
+            Result<Playground.Model.Playground> res = playgroundBusiness.UpdatePlayground(playground);
+
+            HttpResponseMessage response = res.Success ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
     }
 }
