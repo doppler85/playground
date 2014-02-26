@@ -16,7 +16,10 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
         $scope.hallOfFame = [];
         $scope.hallOfShame = [];
         $scope.stats = {};
+        $scope.localSearch = false;
+        $scope.search = '';
         $scope.alerts = [];
+        $scope.playgrounds = {};
 
         $scope.map = {
             bounds: {},
@@ -29,11 +32,20 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
             events: {
                 tilesloaded: function (map, eventName, originalEventArgs) {
                     //console.log('map ', map);
-                    $scope.loadPlaygroundsInArea(map.bounds);
+                    //$scope.loadPlaygroundsInArea(map.bounds);
+                    //if (map.bounds.southwest && map.bounds.northeast) {
+                    //    $scope.loadPlaygroundsInArea(map.bounds);
+                    //}
                 },
                 dragend: function (map, eventName, originalEventArgs) {
                     // console.log('map ', map);
-                    $scope.loadPlaygroundsInArea(map.bounds);
+                    //$scope.loadPlaygroundsInArea(map.bounds);
+                },
+                bounds_changed: function (map, eventName, originalEventArgs) {
+                    // console.log('map ', map);
+                    //if (map.bounds.southwest && map.bounds.northeast) {
+                    //    $scope.loadPlaygroundsInArea(map.bounds);
+                    //}
                 }
             },
             playgroundMarkers : []
@@ -45,6 +57,65 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
                     $scope.stats = data;
                 }
             );
+        }
+
+        $scope.searchPlaygrounds = function(page){
+            var searchArgs = {
+                count: 5,
+                page: page || 1,
+                search: $scope.search,
+                globalSearch: !$scope.localSearch,
+                startLocationLatitude: $scope.map.bounds.southwest.latitude,
+                startLocationLongitude: $scope.map.bounds.southwest.longitude,
+                endLocationLatitude: $scope.map.bounds.northeast.latitude,
+                endLocationLongitude: $scope.map.bounds.northeast.longitude
+            };
+
+            PlaygroundResource.searchplaygrounds(searchArgs, 
+                function (data, status, headers, config) {
+                    $scope.playgrounds = data;
+                    var markers = [];
+                    for (var i = 0; i < data.items.length; i++) {
+                        markers.push({
+                            latitude: data.items[i].latitude,
+                            longitude: data.items[i].longitude,
+                            title: data.items[i].name,
+                            address: data.items[i].address
+                        })
+                        data.items[i].marker = markers[i];
+                    }
+                    $scope.map.playgroundMarkers = markers;
+
+                    if (data.items.length > 0) {
+                        $scope.map.control.getGMap().setCenter({
+                            lat: data.items[0].latitude,
+                            lng: data.items[0].longitude
+                        });
+                    }
+                }, 
+                function(err) 
+                {
+                    var msgs = $scope.getErrorsFromResponse(err);
+                    for (var key in msgs) {
+                        $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                    }
+                }
+            )
+        }
+
+        $scope.onPlaygroundPageSelect = function (page) {
+            $scope.searchPlaygrounds(page);
+        }
+
+        $scope.onPlaygroundClick = function (playground) {
+            $scope.map.control.getGMap().setCenter({
+                lat: playground.latitude,
+                lng: playground.longitude
+            });
+            angular.forEach($scope.map.playgroundMarkers, function (marker) {
+                marker.showWindow = false;
+            });
+            playground.marker.showWindow = true;
         }
 
         $scope.loadPlaygroundsInArea = function (bounds) {
@@ -61,7 +132,8 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
                         markers.push({
                             latitude: data[i].latitude,
                             longitude: data[i].longitude,
-                            title: data[i].name
+                            title: data[i].name,
+                            address: data[i].address
                         })
                     }
                     $scope.map.playgroundMarkers = markers;
@@ -76,6 +148,11 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
         }
 
         $scope.loadStats();
+
+        var onMarkerClicked = function (marker) {
+            marker.showWindow = !marker.showWindow;
+            //window.alert("Marker: lat: " + marker.latitude + ", lon: " + marker.longitude + " clicked!!")
+        };
 
         /*
         $scope.loadMatches = function () {

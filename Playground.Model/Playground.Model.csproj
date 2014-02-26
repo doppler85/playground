@@ -61,9 +61,15 @@
     <Compile Include="TeamNotification.cs" />
     <Compile Include="TeamPlayer.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Util\AdvancedSearchArgs.cs" />
     <Compile Include="Util\Location.cs" />
+    <Compile Include="Util\SearchAreaArgs.cs" />
+    <Compile Include="Util\SearchArgs.cs" />
+    <Compile Include="Util\SearchCompetitorArgs.cs" />
+    <Compile Include="Util\SearchPlaygroundArgs.cs" />
     <Compile Include="Validation\CompetitionTypeValidator.cs" />
     <Compile Include="Validation\PlayerValidator.cs" />
+    <Compile Include="ViewModel\Playground.cs" />
     <Compile Include="ViewModel\PlaygroundStats.cs" />
     <Compile Include="ViewModel\PlaygroundUser.cs" />
   </ItemGroup>

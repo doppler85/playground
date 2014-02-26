@@ -6,6 +6,7 @@ using Playground.Model.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -148,7 +149,7 @@ namespace Playground.Business
                     .Where(pgu => pgu.Playground.Latitude >= startLocation.Latitude &&
                         pgu.Playground.Latitude <= endLocation.Latitude &&
                         pgu.Playground.Longitude >= startLocation.Longitude &&
-                        pgu.Playground.Longitude <= startLocation.Longitude)
+                        pgu.Playground.Longitude <= endLocation.Longitude)
                     .GroupBy(g => g.Playground)
                     .Select(pgr => new { Playground = pgr.Key, UserCount = pgr.Count() })
                     .OrderByDescending(pgr => pgr.UserCount)
@@ -162,6 +163,89 @@ namespace Playground.Business
             {
                 log.Error("Error searching playgrounds", ex);
                 retVal = ResultHandler<List<Playground.Model.Playground>>.Erorr("Error searching playgrounds");
+            }
+
+            return retVal;
+        }
+
+        public Result<PagedResult<Playground.Model.ViewModel.Playground>> SearchPlaygrounds(SearchAreaArgs args, int userID)
+        {
+            Result<PagedResult<Playground.Model.ViewModel.Playground>> retVal = null;
+            try
+            {
+                if (args.Search == null)
+                {
+                    args.Search = String.Empty;
+                }
+
+                Expression<Func<Playground.Model.Playground, bool>> where = null;
+                if (args.GlobalSearch)
+                {
+                    where = pg => pg.Name.Contains(args.Search) ||
+                                pg.Games.Any(g => g.Game.Title.Contains(args.Search) ||
+                                             g.Game.Category.Title.Contains(args.Search));
+                }
+                else
+                {
+                    where = pg => (pg.Latitude >= args.StartLocationLatitude &&
+                                    pg.Latitude <= args.EndLocationLatitude &&
+                                    pg.Longitude >= args.StartLocationLongitude &&
+                                    pg.Longitude <= args.EndLocationLongitude) &&
+                                  (pg.Name.Contains(args.Search) ||
+                                                    pg.Games.Any(g => g.Game.Title.Contains(args.Search) ||
+                                                    g.Game.Category.Title.Contains(args.Search)));
+                }
+
+
+                int totalItems = Uow.Playgrounds
+                                            .GetAll()
+                                            .Where(where)
+                                            .Count();
+
+                args.Page = GetPage(totalItems, args.Page, args.Count);
+
+                List<Playground.Model.Playground> playgrounds = Uow.Playgrounds
+                                            .GetAll()
+                                            .Where(where)
+                                            .OrderBy(pg => pg.Name)
+                                            .Skip((args.Page - 1) * args.Count)
+                                            .Take(args.Count)
+                                            .ToList();
+
+                List<Playground.Model.ViewModel.Playground> pgs = new List<Model.ViewModel.Playground>();
+                
+                foreach (Playground.Model.Playground playground in playgrounds) 
+                {
+                    bool isOwner = userID == playground.OwnerID;
+                    bool isMember = Uow.PlaygroundUsers.GetAll().Any(pgu => pgu.PlaygroundID == playground.PlaygroundID &&
+                        pgu.UserID == userID);
+
+                    pgs.Add(new Model.ViewModel.Playground()
+                    {
+                        PlaygroundID = playground.PlaygroundID,
+                        Name = playground.Name,
+                        Address = playground.Address,
+                        Latitude = playground.Latitude,
+                        Longitude = playground.Longitude,
+                        IsMember = isMember,
+                        IsOwner = isOwner
+                    });
+                }
+
+                PagedResult<Playground.Model.ViewModel.Playground> result = new PagedResult<Playground.Model.ViewModel.Playground>()
+                {
+                    CurrentPage = args.Page,
+                    TotalPages = (totalItems + args.Count - 1) / args.Count,
+                    TotalItems = totalItems,
+                    Items = pgs
+                };
+
+                retVal = ResultHandler<PagedResult<Playground.Model.ViewModel.Playground>>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error searching playgrounds", ex);
+                retVal = ResultHandler<PagedResult<Playground.Model.ViewModel.Playground>>.Erorr("Error searching playgrounds");
             }
 
             return retVal;

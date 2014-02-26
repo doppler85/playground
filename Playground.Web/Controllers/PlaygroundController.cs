@@ -200,7 +200,23 @@ namespace Playground.Web.Controllers
                     Latitude = args.EndLocationLatitude,
                     Longitude = args.EndLocationLongitude
                 },
-                args.MaxResults);
+                args.Count);
+
+            HttpResponseMessage response = res.Success ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        [HttpGet]
+        [ActionName("searchplaygrounds")]
+        public HttpResponseMessage SearchPlaygrounds([FromUri]SearchAreaArgs args)
+        {
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
+            int userId = currentUser == null ? 0 : currentUser.UserID;
+
+            Result<PagedResult<Playground.Model.ViewModel.Playground>> res = playgroundBusiness.SearchPlaygrounds(args, userId);
 
             HttpResponseMessage response = res.Success ?
                 Request.CreateResponse(HttpStatusCode.Created, res.Data) :

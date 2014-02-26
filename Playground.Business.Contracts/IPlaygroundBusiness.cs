@@ -22,6 +22,8 @@ namespace Playground.Business.Contracts
 
         Result<List<Playground.Model.Playground>> SearchInArea(Location startLocation, Location endLocation, int maxResults);
 
+        Result<PagedResult<Playground.Model.ViewModel.Playground>> SearchPlaygrounds(SearchAreaArgs args, int userID);
+
         int TotalPlaygroundsCound();
 
         bool RemovePlayground(int playgroundID);

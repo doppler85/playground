@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Playground.Web.Models
+namespace Playground.Model.Util
 {
     public class AdvancedSearchArgs : SearchArgs
     {

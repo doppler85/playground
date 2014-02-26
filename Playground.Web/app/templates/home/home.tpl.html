@@ -11,6 +11,10 @@
             control="map.control"
             draggable="true">
         <markers models="map.playgroundMarkers" coords="'self'" icon="'icon'" click="'onClicked'">
+            <windows show="'showWindow'"  ng-cloak>
+                <p ng-non-bindable>{{title}}</p>
+                <p ng-non-bindable>{{address}}!</p>
+            </windows>
         </markers>
         </google-map>
     </div>
@@ -38,21 +42,52 @@
     <div class="col-sm-12">
         <form class="form-inline" role="form">
             <div class="form-group">
-                <label class="sr-only" for="exampleInputEmail2">Search</label>
-                <input type="text" class="form-control" id="exampleInputEmail2" placeholder="Search">
+                <label class="sr-only" for="searchinput">Search</label>
+                <input type="text" class="form-control" id="searchinput" placeholder="Search" data-ng-model="search">
             </div>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox">
+                    <input type="checkbox" 
+                        data-ng-model="localSearch" 
+                        data-ng-click="localSearch = !localSearch">
                     Current map
                 </label>
             </div>
-            <button type="submit" class="btn btn-default">
+            <button type="submit" class="btn btn-default" data-ng-click="searchPlaygrounds()">
                 <span class="glyphicon glyphicon-search"></span> 
             </button>
         </form>
     </div>
 </div>
+<hr />
+<div class="row" data-ng-show="playgrounds.items.length > 0">
+    <div class="col-sm-6">
+        <h3>Results</h3>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+            <tr data-ng-repeat="playground in playgrounds.items">
+                <td>
+                    <a href="javascript:;" data-ng-click="onPlaygroundClick(playground)">{{playground.name}}</a>
+                </td>
+                <td>
+                    <a href="javascript:;">{{playground.address}}</a>
+                </td>
+            </tr>
+        </table>
+
+        <pagination
+            data-ng-show="playgrounds.totalPages > 1"
+            total-items="playgrounds.totalItems"
+            page="playgrounds.currentPage"
+            num-page="playgrounds.totalPages"
+            items-per-page="5"
+            on-select-page="onPlaygroundPageSelect(page)">
+        </pagination>
+</div>
+
 <!--<div class="row">
     <div class="col-sm-6">
         <h3>Last Matches ({{matches.length}} of: {{totalMatches}})</h3>

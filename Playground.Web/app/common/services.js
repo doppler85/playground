@@ -475,6 +475,12 @@ factory('PlaygroundResource', ['$resource', function (resource) {
             params: {
                 actionname: 'getplaygroundsinarea'
             }
+        },
+        searchplaygrounds: {
+            method: 'GET',
+            params: {
+                actionname: 'searchplaygrounds'
+            }
         }
     });
 }]);
