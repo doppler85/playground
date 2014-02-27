@@ -37,6 +37,9 @@ namespace Playground.Business.Contracts
         bool AddUserToPlaygroound(PlaygroundUser playgroundUser);
 
         bool RemoveUserFromPlayground(PlaygroundUser playgroundUser);
+
+        Result<Playground.Model.ViewModel.PlaygroundStats> GetStats(int playgroundID);
+
     }
 }
 

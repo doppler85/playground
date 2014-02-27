@@ -390,5 +390,60 @@ namespace Playground.Business
 
             return retVal;
         }
+
+        public Result<Playground.Model.ViewModel.PlaygroundStats> GetStats(int playgroundID)
+        {
+            Result<Playground.Model.ViewModel.PlaygroundStats> retVal = null;
+            try
+            {
+                int totalGames = Uow.PlaygroundGames
+                    .GetAll()
+                    .Where(pgg => pgg.PlaygroundID == playgroundID)
+                    .Count();
+
+                int totalUsers = Uow.PlaygroundUsers
+                    .GetAll()
+                    .Where(pgu => pgu.PlaygroundID == playgroundID)
+                    .Count();
+                
+                // TODO : make intercepting collection of user games and playground games
+                // only show players that play gmes of the playground
+                int totalPlayers = Uow.PlaygroundUsers
+                    .GetAll()
+                    .Where(pgu => pgu.PlaygroundID == playgroundID)
+                    .SelectMany(p => p.User.PlayerProfiles)
+                    .Count();
+
+                int totalTeams = Uow.PlaygroundUsers
+                                    .GetAll()
+                                    .Where(pgu => pgu.PlaygroundID == playgroundID)
+                                    .SelectMany(p => p.User.PlayerProfiles)
+                                    .SelectMany(p => p.Teams)
+                                    .Distinct()
+                                    .Count();
+
+                int totalMatches = Uow.Matches
+                    .GetAll()
+                    .Where(m => m.PlaygroundID == playgroundID)
+                    .Count();
+
+                Playground.Model.ViewModel.PlaygroundStats result = new Model.ViewModel.PlaygroundStats()
+                {
+                    TotalGames = totalGames,
+                    TotalUsers = totalUsers,
+                    TotalPlayers = totalPlayers + totalTeams,
+                    TotalMatches = totalMatches
+                };
+
+                retVal = ResultHandler<Playground.Model.ViewModel.PlaygroundStats>.Sucess(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("Erorr loading playground stats. PlaygroundID : {0}",playgroundID), ex);
+                retVal = ResultHandler < Playground.Model.ViewModel.PlaygroundStats>.Erorr("Erorr loading playground stats.");
+            }
+
+            return retVal;
+        }
     }
 }

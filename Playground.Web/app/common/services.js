@@ -494,6 +494,12 @@ factory('PlaygroundResource', ['$resource', function (resource) {
                 actionname: 'joinplayground'
             }
         },
+        getstats: {
+            method: 'GET',
+            params: {
+                actionname: 'getstats'
+            }
+        },
     });
 }]);
 // examples

@@ -257,5 +257,18 @@ namespace Playground.Web.Controllers
 
             return response;
         }
+
+        [HttpGet]
+        [ActionName("getstats")]
+        public HttpResponseMessage GetStats(int id)
+        {
+            Result<Playground.Model.ViewModel.PlaygroundStats> res = playgroundBusiness.GetStats(id);
+
+            HttpResponseMessage response = res.Success ?
+                Request.CreateResponse(HttpStatusCode.OK, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, "Erorr loading playground stats");
+
+            return response;
+        }
     }
 }

@@ -10,13 +10,16 @@ angular.module('Playground.playground-home', [
     '$rootScope',
     '$state',
     'PlaygroundResource',
+    'GameResource',
+    'UserResource',
     'enums',
     '$log',
     'security',
-    function ($scope, $stateParams, $rootScope, $state, PlaygroundResource, enums, $log, security) {
+    function ($scope, $stateParams, $rootScope, $state, PlaygroundResource, GameResource, UserResource, enums, $log, security) {
         $scope.pageTitle = $state.current.data.pageTitle;
         $scope.isAuthenticated = security.isAuthenticated();
-
+        $scope.games = {};
+        $scope.users = {};
         $scope.playground = {
             isMember: true
         };
@@ -47,6 +50,14 @@ angular.module('Playground.playground-home', [
             }
         };
 
+        $scope.loadStats = function () {
+            PlaygroundResource.getstats({id: $stateParams.id},
+                function (data, status, headers, config) {
+                    $scope.stats = data;
+                }
+            );
+        }
+
         $scope.loadPlayground = function () {
             PlaygroundResource.getplayground({ playgroundID: $stateParams.id },
                 function (data, status, headers, config) {
@@ -72,9 +83,11 @@ angular.module('Playground.playground-home', [
         };
 
         $scope.joinPlayground = function () {
-            PlaygroundResource.joinplayground({ playgroundID: $scope.playground.playgroundID },
+            PlaygroundResource.joinplayground({ playgroundID: $stateParams.id },
                 function () {
                     $scope.playground.isMember = true;
+                    $scope.loadPlaygroundUsers();
+                    $scope.loadStats();
                 },
                 function(err) 
                 {
@@ -86,11 +99,32 @@ angular.module('Playground.playground-home', [
         };
 
         $scope.loadPlaygroundGames = function () {
-            // todo
+            GameResource.playgroundgames({
+                count: 5,
+                page: 1,
+                id: $stateParams.id
+            },
+            function (data, status, headers, config) {
+                $scope.games = data;
+            },
+            function (err) {
+                var msgs = $scope.getErrorsFromResponse(err);
+                for (var key in msgs) {
+                    $scope.addAlert($scope.alerts, { type: 'danger', msg: msgs[key] });
+                }
+            });
         };
 
-        $scope.loadPlaygroundCompetitors = function() {
-            // todo
+        $scope.loadPlaygroundUsers = function() {
+            UserResource.playgroundusers({
+                id: $stateParams.id,
+                page: 1,
+                count: 5
+            },
+                function (data, status, headers, config) {
+                    $scope.users = data;
+                }
+            );
         };
 
         $scope.loadPlaygroundMatches = function () {
@@ -98,5 +132,7 @@ angular.module('Playground.playground-home', [
         };
 
         $scope.loadPlayground();
-        
+        $scope.loadStats();
+        $scope.loadPlaygroundGames();
+        $scope.loadPlaygroundUsers();
     }]);
