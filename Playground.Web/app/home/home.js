@@ -31,21 +31,10 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
             zoom: 14,
             events: {
                 tilesloaded: function (map, eventName, originalEventArgs) {
-                    //console.log('map ', map);
-                    //$scope.loadPlaygroundsInArea(map.bounds);
-                    //if (map.bounds.southwest && map.bounds.northeast) {
-                    //    $scope.loadPlaygroundsInArea(map.bounds);
-                    //}
                 },
                 dragend: function (map, eventName, originalEventArgs) {
-                    // console.log('map ', map);
-                    //$scope.loadPlaygroundsInArea(map.bounds);
                 },
                 bounds_changed: function (map, eventName, originalEventArgs) {
-                    // console.log('map ', map);
-                    //if (map.bounds.southwest && map.bounds.northeast) {
-                    //    $scope.loadPlaygroundsInArea(map.bounds);
-                    //}
                 }
             },
             playgroundMarkers : []
@@ -80,7 +69,8 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
                             latitude: data.items[i].latitude,
                             longitude: data.items[i].longitude,
                             title: data.items[i].name,
-                            address: data.items[i].address
+                            address: data.items[i].address,
+                            showWindow: false
                         })
                         data.items[i].marker = markers[i];
                     }

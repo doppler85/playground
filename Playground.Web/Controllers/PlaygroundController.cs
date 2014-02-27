@@ -224,5 +224,38 @@ namespace Playground.Web.Controllers
 
             return response;
         }
+
+        [HttpGet]
+        [ActionName("getplayground")]
+        public HttpResponseMessage GetPlayground(int playgroundID)
+        {
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
+            int userId = currentUser == null ? 0 : currentUser.UserID;
+
+            Result<Playground.Model.ViewModel.Playground> res = playgroundBusiness.GetById(playgroundID, userId);
+
+            HttpResponseMessage response = res.Success ?
+                Request.CreateResponse(HttpStatusCode.Created, res.Data) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return response;
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ActionName("joinplayground")]
+        public HttpResponseMessage JoinPlayground(Playground.Model.PlaygroundUser playgroundUser)
+        {
+            User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
+            playgroundUser.UserID = currentUser == null ? 0 : currentUser.UserID;
+
+            bool res = playgroundBusiness.AddUserToPlaygroound(playgroundUser);
+
+            HttpResponseMessage response = res ?
+                Request.CreateResponse(HttpStatusCode.Created) :
+                Request.CreateResponse(HttpStatusCode.InternalServerError, "Erorr adding user to playground");
+
+            return response;
+        }
     }
 }

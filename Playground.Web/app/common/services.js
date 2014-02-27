@@ -401,6 +401,12 @@ factory('HomeResource', ['$resource', function (resource) {
 }]).
 factory('PlaygroundResource', ['$resource', function (resource) {
     return resource('api/playground/:actionname/:id', {}, {
+        getplayground: {
+            method: 'GET',
+            params: {
+                actionname: 'getplayground'
+            }
+        },
         getplaygrounds: {
             method: 'GET',
             params: {
@@ -481,7 +487,13 @@ factory('PlaygroundResource', ['$resource', function (resource) {
             params: {
                 actionname: 'searchplaygrounds'
             }
-        }
+        },
+        joinplayground: {
+            method: 'POST',
+            params: {
+                actionname: 'joinplayground'
+            }
+        },
     });
 }]);
 // examples

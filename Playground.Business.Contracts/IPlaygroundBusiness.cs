@@ -12,6 +12,8 @@ namespace Playground.Business.Contracts
     {
         Result<Playground.Model.Playground> GetById(int playgroundID);
 
+        Result<Playground.Model.ViewModel.Playground> GetById(int playgroundID, int userID);
+
         Result<PagedResult<Playground.Model.Playground>> GetPlaygrounds(int page, int count, bool all);
 
         Result<PagedResult<Playground.Model.Playground>> FilterByUser(int page, int count, int userID);
@@ -37,3 +39,5 @@ namespace Playground.Business.Contracts
         bool RemoveUserFromPlayground(PlaygroundUser playgroundUser);
     }
 }
+
+

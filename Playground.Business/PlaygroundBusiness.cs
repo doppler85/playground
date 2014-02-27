@@ -38,6 +38,37 @@ namespace Playground.Business
             return retVal;
         }
 
+        public Result<Playground.Model.ViewModel.Playground> GetById(int playgroundID, int userID)
+        {
+            Result<Playground.Model.ViewModel.Playground> retVal = null;
+            try
+            {
+                Playground.Model.Playground playground = Uow.Playgrounds.GetById(playgroundID);
+                bool isOwner = playground.OwnerID == userID;
+                bool isMember = Uow.PlaygroundUsers.GetAll().Any(pgu => pgu.PlaygroundID == playgroundID && pgu.UserID == userID);
+
+                Playground.Model.ViewModel.Playground playgorundVM = new Model.ViewModel.Playground()
+                {
+                    PlaygroundID = playground.PlaygroundID,
+                    Address = playground.Address,
+                    Latitude = playground.Latitude,
+                    Longitude = playground.Longitude,
+                    Name = playground.Name,
+                    IsMember = isMember,
+                    IsOwner = isOwner
+                };
+
+                retVal = ResultHandler<Playground.Model.ViewModel.Playground>.Sucess(playgorundVM);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting playground", ex);
+                retVal = ResultHandler<Playground.Model.ViewModel.Playground>.Erorr("Error loading playgrond");
+            }
+
+            return retVal;
+        }
+
         public Result<PagedResult<Playground.Model.Playground>> GetPlaygrounds(int page, int count, bool all)
         {
             Result<PagedResult<Playground.Model.Playground>> retVal = null;
