@@ -403,7 +403,11 @@
     <Content Include="app\templates\pagination\pager.html" />
     <Content Include="app\templates\pagination\pagination.html" />
     <Content Include="app\templates\competition\players.html" />
-    <Content Include="app\templates\playground\playground-home.tpl.html" />
+    <Content Include="app\templates\playground\playground.matches.tpl.html" />
+    <Content Include="app\templates\playground\playground.users.tpl.html" />
+    <Content Include="app\templates\playground\playground.games.tpl.html" />
+    <Content Include="app\templates\playground\playground.home.tpl.html" />
+    <Content Include="app\templates\playground\playground.tpl.html" />
     <Content Include="app\templates\playground\playground-edit-users.tpl.html" />
     <Content Include="app\templates\playground\playground-edit-games.tpl.html" />
     <Content Include="app\templates\playground\playground-edit-info.tpl.html" />

@@ -1,0 +1,27 @@
+<div class="page-header">
+    <h1>{{pageTitle}} @ <a data-ui-sref="playground.home">{{playground.name}} </a>
+        <button data-ng-show="isAuthenticated && !playground.isMember" 
+            type="button" 
+            class="btn btn-primary"
+            data-ng-click="joinPlayground()">join</button>
+    </h1>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <ul class="nav nav-pills">
+          <li data-ng-class="{active: $state.is('playground.games')}" >
+              <a data-ui-sref="playground.games">Games {{stats.totalGames}}</a>
+          </li>
+          <li data-ng-class="{active: $state.is('playground.users')}" >
+              <a data-ui-sref="playground.users">Users {{stats.totalUsers}}</a>
+          </li>
+          <li data-ng-class="{active: $state.is('playground.matches')}" >
+              <a data-ui-sref="playground.matches">Matches {{stats.totalMatches}}</a>
+          </li>
+        </ul>
+    </div>
+</div>
+<hr />
+<div ui-view="">
+
+</div>

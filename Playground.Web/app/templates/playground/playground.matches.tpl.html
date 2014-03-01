@@ -1,0 +1,109 @@
+<div class="row">
+    <div class="col-sm-6">
+        <google-map
+            bounds="map.bounds"
+            center="map.center"
+            zoom="map.zoom"
+            events="map.events"
+            control="map.control"
+            draggable="true">
+            <marker coords="map.playgroundMarker">
+                <window coords="map.playgroundMarker" show="false" ng-cloak>
+                    <p >{{map.playgroundMarker.title}}</p>
+                    <p >{{map.playgroundMarker.address}}</p>
+                </window>
+            </marker>
+        </google-map>
+    </div>
+    <div class="col-sm-6">
+        <h3>Last Matches ({{matches.length}} of: {{totalMatches}})</h3>
+        <table class="table">
+            <tr>
+                <th>Game
+                </th>
+                <th>Date
+                </th>
+                <th>Winner
+                </th>
+            </tr>
+            <tbody data-ng-repeat="match in matches">
+                <tr data-ng-repeat="score in match.scores">
+                    <td>
+                        <div class="img-holder"
+                            data-ng-show="$index == 0">
+                            <a href="javascript:;"
+                                data-ui-sref="game-details.info({id: match.gameID})">
+                                <img data-ng-src="{{match.game.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;"
+                            data-ui-sref="game-details.info({id: match.gameID})"
+                            data-ng-show="$index == 0"
+                            data-ng-bind="match.game.title"></a>
+                    </td>
+                    <td>{{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
+                    <td data-ng-class="{winner : score.competitorID == match.winnerID}">
+                        <div class="img-holder"
+                            data-ng-show="score.competitor.competitorType == 0">
+                            <a href="javascript:;"
+                                data-ui-sref="player-profile.info({id: score.competitor.competitorID})">
+                                <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;"
+                            data-ui-sref="player-profile.info({id: score.competitor.competitorID})"
+                            data-ng-show="score.competitor.competitorType == 0"
+                            data-ng-bind="score.competitor.name"></a>
+                        <div class="img-holder"
+                            data-ng-show="score.competitor.competitorType == 1">
+                            <a href="javascript:;"
+                                data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
+                                <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;"
+                            data-ui-sref="team-profile.info({id: score.competitor.competitorID})"
+                            data-ng-show="score.competitor.competitorType == 1"
+                            data-ng-bind="score.competitor.name"></a>
+                    </td>
+                    <td>{{score.score}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            pagination here
+        </p>
+    </div> 
+</div>
+<hr />
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Match details</h3>
+    </div>
+    <div class="col-sm-2">
+        Competitor 1 + picture + score
+    </div>
+    <div class="col-sm-2">
+        Competitor 2 + picture + score
+    </div>
+    <div class="col-sm-2">
+        Competitor 3 + picture + score
+    </div>
+    <div class="col-sm-2">
+        Competitor 4 + picture + score
+    </div>
+    <div class="col-sm-2">
+        Competitor 5 + picture + score
+    </div>
+    <div class="col-sm-2">
+        Competitor 6 + picture + score
+    </div>
+    <div class="col-sm-2">
+        Competitor 7 + picture + score
+    </div>
+</div>

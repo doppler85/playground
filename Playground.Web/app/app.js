@@ -103,7 +103,7 @@ Playground.
                     }
                 }).
                 state('playground-home', {
-                    url: '/playground/:id',
+                    url: '/playground/{id:[0-9]*}',
                     templateUrl: 'app/templates/playground/playground-home.tpl.html',
                     controller: 'PlaygroundHomeController',
                     data: { pageTitle: 'Playground' },

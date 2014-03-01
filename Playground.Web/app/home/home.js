@@ -16,10 +16,11 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
         $scope.hallOfFame = [];
         $scope.hallOfShame = [];
         $scope.stats = {};
-        $scope.localSearch = false;
+        $scope.localSearch = true;
         $scope.search = '';
         $scope.alerts = [];
         $scope.playgrounds = {};
+        $scope.intialSearchPerformed = false;
 
         $scope.map = {
             bounds: {},
@@ -30,12 +31,6 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
             },
             zoom: 14,
             events: {
-                tilesloaded: function (map, eventName, originalEventArgs) {
-                },
-                dragend: function (map, eventName, originalEventArgs) {
-                },
-                bounds_changed: function (map, eventName, originalEventArgs) {
-                }
             },
             playgroundMarkers : []
         };
@@ -138,6 +133,14 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
         }
 
         $scope.loadStats();
+
+        // when bounds changed load current playgrounds on the map
+        $scope.$watch('map.bounds', function () {
+            if (!$scope.intialSearchPerformed && $scope.map.bounds.northeast && $scope.map.bounds.southwest) {
+                $scope.intialSearchPerformed = true;
+                $scope.searchPlaygrounds(1);
+            }
+        }, true);
 
         var onMarkerClicked = function (marker) {
             marker.showWindow = !marker.showWindow;

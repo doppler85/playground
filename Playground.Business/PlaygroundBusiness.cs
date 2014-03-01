@@ -406,22 +406,6 @@ namespace Playground.Business
                     .Where(pgu => pgu.PlaygroundID == playgroundID)
                     .Count();
                 
-                // TODO : make intercepting collection of user games and playground games
-                // only show players that play gmes of the playground
-                int totalPlayers = Uow.PlaygroundUsers
-                    .GetAll()
-                    .Where(pgu => pgu.PlaygroundID == playgroundID)
-                    .SelectMany(p => p.User.PlayerProfiles)
-                    .Count();
-
-                int totalTeams = Uow.PlaygroundUsers
-                                    .GetAll()
-                                    .Where(pgu => pgu.PlaygroundID == playgroundID)
-                                    .SelectMany(p => p.User.PlayerProfiles)
-                                    .SelectMany(p => p.Teams)
-                                    .Distinct()
-                                    .Count();
-
                 int totalMatches = Uow.Matches
                     .GetAll()
                     .Where(m => m.PlaygroundID == playgroundID)
@@ -431,7 +415,6 @@ namespace Playground.Business
                 {
                     TotalGames = totalGames,
                     TotalUsers = totalUsers,
-                    TotalPlayers = totalPlayers + totalTeams,
                     TotalMatches = totalMatches
                 };
 

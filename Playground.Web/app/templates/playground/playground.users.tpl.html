@@ -1,0 +1,140 @@
+<div class="row">
+    <div class="col-sm-6">
+        <google-map
+            bounds="map.bounds"
+            center="map.center"
+            zoom="map.zoom"
+            events="map.events"
+            control="map.control"
+            draggable="true">
+            <marker coords="map.playgroundMarker">
+                <window coords="map.playgroundMarker" show="false" ng-cloak>
+                    <p >{{map.playgroundMarker.title}}</p>
+                    <p >{{map.playgroundMarker.address}}</p>
+                </window>
+            </marker>
+        </google-map>
+    </div>
+    <div class="col-sm-6">
+        <h3>Users ({{matches.length}} of: {{totalMatches}})</h3>
+        <table class="table">
+            <tr>
+                <th>User
+                </th>
+            </tr>
+            <tbody data-ng-repeat="match in matches">
+                <tr data-ng-repeat="score in match.scores">
+                    <td>
+                        <div class="img-holder"
+                            data-ng-show="$index == 0">
+                            <a href="javascript:;"
+                                data-ui-sref="game-details.info({id: match.gameID})">
+                                <img data-ng-src="{{match.game.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;"
+                            data-ui-sref="game-details.info({id: match.gameID})"
+                            data-ng-show="$index == 0"
+                            data-ng-bind="match.game.title"></a>
+                    </td>
+                    <td>{{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
+                    <td data-ng-class="{winner : score.competitorID == match.winnerID}">
+                        <div class="img-holder"
+                            data-ng-show="score.competitor.competitorType == 0">
+                            <a href="javascript:;"
+                                data-ui-sref="player-profile.info({id: score.competitor.competitorID})">
+                                <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;"
+                            data-ui-sref="player-profile.info({id: score.competitor.competitorID})"
+                            data-ng-show="score.competitor.competitorType == 0"
+                            data-ng-bind="score.competitor.name"></a>
+                        <div class="img-holder"
+                            data-ng-show="score.competitor.competitorType == 1">
+                            <a href="javascript:;"
+                                data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
+                                <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;"
+                            data-ui-sref="team-profile.info({id: score.competitor.competitorID})"
+                            data-ng-show="score.competitor.competitorType == 1"
+                            data-ng-bind="score.competitor.name"></a>
+                    </td>
+                    <td>{{score.score}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            pagination here
+        </p>
+    </div> 
+</div>
+<hr />
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Cometitors ({{games.items.length}} of: {{games.totalItems}})</h3>
+        <table class="table">
+            <tr>
+                <th>Category</th>
+                <th>Game</th>
+            </tr>
+            <tr data-ng-repeat="game in games.items">
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;" data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })">
+                            <img data-ng-src="{{game.category.pictureUrl}}" alt="" style="height: 30px; width: 30px;" />
+                        </a>
+                    </div>
+                    &nbsp;
+                <a data-ui-sref="game-category-details.info({id: game.category.gameCategoryID })" href="javascript:;">{{game.category.title}}</a>
+                </td>
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;" data-ui-sref="game-details.info({id: game.gameID })">
+                            <img data-ng-src="{{game.pictureUrl}}" alt="" style="height: 30px; width: 30px;" />
+                        </a>
+                    </div>
+                    &nbsp;
+                <a data-ui-sref="game-category-details.info({id: gameCategory.gameCategoryID })" href="javascript:;">{{game.title}}</a>
+                </td>
+            </tr>
+        </table>
+        <p>
+            pagination here
+        </p>
+    </div>
+    <div class="col-sm-6">
+        <h3>Last mathces of selected user here ({{users.items.length}} of: {{users.totalItems}})</h3>
+        <table class="table">
+            <tr>
+                <th>Competitor</th>
+                <th>Game</th>
+                <th>Date</th>
+            </tr>
+            <tr data-ng-repeat="user in users.items">
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;"
+                            data-ui-sref="public-profile.info({id: user.userID})">
+                            <img data-ng-src="{{user.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                <a href="javascript:;"
+                    data-ui-sref="public-profile.info({id: user.userID})"
+                    data-ng-bind="user | userfull"></a>
+                </td>
+            </tr>
+        </table>
+        <p>
+            <a href="javascript:;" data-ui-sref="competitors-list">More users</a>
+        </p>
+    </div>
+</div>

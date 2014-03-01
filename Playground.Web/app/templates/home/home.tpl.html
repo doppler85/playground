@@ -2,7 +2,7 @@
     <h1>{{pageTitle}}</h1>
 </div>
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-6">
         <google-map
             bounds="map.bounds"
             center="map.center"
@@ -18,22 +18,19 @@
         </markers>
         </google-map>
     </div>
-</div>
-<hr />
-<div class="row">
-    <div class="col-sm-2">
+    <div class="col-sm-6">
         <h5>Total playgrounds: {{stats.totalPlaygrounds}} </h5>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-6">
         <h5>Total games {{stats.totalGames}}</h5>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-6">
         <h5>Total users {{stats.totalUsers}}</h5>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-6">
         <h5>Total players {{stats.totalPlayers}}</h5>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-6">
         <h5>Total matches {{stats.totalMatches}}</h5>
     </div>
 </div>
@@ -70,7 +67,7 @@
             </tr>
             <tr data-ng-repeat="playground in playgrounds.items">
                 <td>
-                    <a href="javascript:;" data-ui-sref="playground-home({id: playground.playgroundID})">{{playground.name}}</a>
+                    <a href="javascript:;" data-ui-sref="playground.home({id: playground.playgroundID})">{{playground.name}}</a>
                 </td>
                 <td>
                     <a href="javascript:;" data-ng-click="onPlaygroundClick(playground)">{{playground.address}}</a>
