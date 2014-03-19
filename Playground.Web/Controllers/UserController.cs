@@ -19,6 +19,7 @@ using Playground.Web.Hubs;
 using Playground.Business.Contracts;
 using Playground.Common;
 using Playground.Model.Util;
+using System.Configuration;
 
 namespace Playground.Web.Controllers
 {
@@ -719,9 +720,10 @@ namespace Playground.Web.Controllers
                     retUrl = String.Format("{0}{1}", Constants.Images.PlayerPictureRoot, fileInfo.Name);
                 }
 
+                string baseUrl = ConfigurationManager.AppSettings[Constants.WebConfig.BaseUrl];
                 return new HttpResponseMessage()
                 {
-                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                    Content = new StringContent(String.Format("{0}{1}?nocache={2}", baseUrl, retUrl, DateTime.Now.Ticks))
                 };
             }
             catch (System.Exception e)
@@ -769,10 +771,11 @@ namespace Playground.Web.Controllers
                     player.PictureUrl = retUrl;
                     competitorBusiness.UpdatePlayer(player);
                 }
-
+                
+                string baseUrl = ConfigurationManager.AppSettings[Constants.WebConfig.BaseUrl];
                 return new HttpResponseMessage()
                 {
-                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                    Content = new StringContent(String.Format("{0}{1}?nocache={2}", baseUrl, retUrl, DateTime.Now.Ticks))
                 };
             }
             catch (System.Exception e)
@@ -832,9 +835,10 @@ namespace Playground.Web.Controllers
                     retUrl = String.Format("{0}{1}", Constants.Images.TeamPictureRoot, fileInfo.Name);
                 }
 
+                string baseUrl = ConfigurationManager.AppSettings[Constants.WebConfig.BaseUrl];
                 return new HttpResponseMessage()
                 {
-                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                    Content = new StringContent(String.Format("{0}{1}?nocache={2}", baseUrl, retUrl, DateTime.Now.Ticks))
                 };
             }
             catch (System.Exception e)
@@ -883,9 +887,10 @@ namespace Playground.Web.Controllers
                     competitorBusiness.UpdateTeam(team);
                 }
 
+                string baseUrl = ConfigurationManager.AppSettings[Constants.WebConfig.BaseUrl];
                 return new HttpResponseMessage()
                 {
-                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                    Content = new StringContent(String.Format("{0}{1}?nocache={2}", baseUrl, retUrl, DateTime.Now.Ticks))
                 };
             }
             catch (System.Exception e)
@@ -938,9 +943,10 @@ namespace Playground.Web.Controllers
                     retUrl = String.Format("{0}{1}", Constants.Images.ProfilePictureRoot, fileInfo.Name);
                 }
 
+                string baseUrl = ConfigurationManager.AppSettings[Constants.WebConfig.BaseUrl];
                 return new HttpResponseMessage()
                 {
-                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                    Content = new StringContent(String.Format("{0}{1}?nocache={2}", baseUrl, retUrl, DateTime.Now.Ticks))
                 };
             }
             catch (System.Exception e)
@@ -983,9 +989,10 @@ namespace Playground.Web.Controllers
                 currentUser.PictureUrl = retUrl;
                 userBusiness.UpdateUser(currentUser);
 
+                string baseUrl = ConfigurationManager.AppSettings[Constants.WebConfig.BaseUrl];
                 return new HttpResponseMessage()
                 {
-                    Content = new StringContent(String.Format("{0}?nocache={1}", retUrl, DateTime.Now.Ticks))
+                    Content = new StringContent(String.Format("{0}{1}?nocache={2}", baseUrl, retUrl, DateTime.Now.Ticks))
                 };
             }
             catch (System.Exception e)

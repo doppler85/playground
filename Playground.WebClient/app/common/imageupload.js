@@ -1,7 +1,13 @@
 'use strict';
 angular.module('Playground.imageupload', [])
 
-    .controller('ImageUploadController', ['$http', '$scope', '$attrs', '$parse', '$interpolate', function ($http, $scope, $attrs, $parse, $interpolate) {
+    .controller('ImageUploadController', ['$http',
+        '$scope',
+        '$attrs',
+        '$parse',
+        '$interpolate',
+        'settings',
+        function ($http, $scope, $attrs, $parse, $interpolate, settigns) {
         $scope.changePicturePhase = 'initial';
         $scope.cropingArgs = null;
 
@@ -15,7 +21,7 @@ angular.module('Playground.imageupload', [])
                 $http(
                 {
                     method: 'POST',
-                    url: $attrs.uploadUrl,
+                    url: settigns.apiUrl + $attrs.uploadUrl,
                     data: formData,
                     headers: {
                         'Content-Type': undefined
@@ -38,7 +44,7 @@ angular.module('Playground.imageupload', [])
                     $http(
                     {
                         method: 'POST',
-                        url: $attrs.cropUrl,
+                        url: settigns.apiUrl + $attrs.cropUrl,
                         data: $scope.cropingArgs,
                     }).success(function (data, status, headers, config) {
                         $scope.croppingUrl = '';
