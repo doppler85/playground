@@ -19,6 +19,11 @@ namespace Playground.Common
             public static string AdminPass = "pass*123";
         }
 
+        public static class WebConfig
+        {
+            public static string BaseUrl = "baseUrl";
+        }
+
         public static class Images
         {
             public static string ProfilePictureRoot = "/Images/Profile/";

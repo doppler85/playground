@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Business.Contrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Common", "Playground.Common\Playground.Common.csproj", "{74C5CE9B-4193-4F4D-A06E-B7D005C29286}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.WebAPI", "Playground.WebAPI\Playground.WebAPI.csproj", "{EF1CF70E-CAB0-476C-8AC8-301E83E8D45E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.WebClient", "Playground.WebClient\Playground.WebClient.csproj", "{5B78C052-CDEF-46DA-8C05-0DEEE07A1E6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +51,10 @@ Global
 		{74C5CE9B-4193-4F4D-A06E-B7D005C29286}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74C5CE9B-4193-4F4D-A06E-B7D005C29286}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74C5CE9B-4193-4F4D-A06E-B7D005C29286}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF1CF70E-CAB0-476C-8AC8-301E83E8D45E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF1CF70E-CAB0-476C-8AC8-301E83E8D45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF1CF70E-CAB0-476C-8AC8-301E83E8D45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF1CF70E-CAB0-476C-8AC8-301E83E8D45E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B78C052-CDEF-46DA-8C05-0DEEE07A1E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B78C052-CDEF-46DA-8C05-0DEEE07A1E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B78C052-CDEF-46DA-8C05-0DEEE07A1E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B78C052-CDEF-46DA-8C05-0DEEE07A1E6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

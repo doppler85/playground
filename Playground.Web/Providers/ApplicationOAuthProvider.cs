@@ -82,8 +82,12 @@ namespace Playground.Web.Providers
             if (context.ClientId == _publicClientId)
             {
                 Uri expectedRootUri = new Uri(context.Request.Uri, "/");
+                
+                // ADD SOMTHING SMARTHER HERE!!!
+                Uri allowedAlternateRootUri = new Uri("http://localhost:59335");
 
-                if (expectedRootUri.AbsoluteUri == context.RedirectUri)
+                if (expectedRootUri.AbsoluteUri == context.RedirectUri ||
+                    allowedAlternateRootUri.AbsoluteUri == context.RedirectUri)
                 {
                     context.Validated();
                 }

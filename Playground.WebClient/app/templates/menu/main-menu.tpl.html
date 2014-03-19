@@ -1,0 +1,27 @@
+<ul class="nav navbar-inverse navbar-nav">
+    <li data-ng-class="{active: IsActive('playground-list')}">
+        <a data-ui-sref="playground-list">Playgrounds</a>
+    </li>
+    <li data-ng-class="{active: IsActive('home')}">
+        <a data-ui-sref="home">Home</a>
+    </li>
+    <li data-ng-show="isAuthenticated" data-ng-class="{active: IsActive('user-list')}">
+        <a data-ui-sref="user-list">Users</a>
+    </li>
+    <li data-ng-show="isAuthenticated" data-ng-class="{active: IsActive('game-categories')}">
+        <a data-ui-sref="game-categories">Games</a>
+    </li>
+    <li data-ng-show="isAuthenticated" data-ng-class="{active: IsActive('competition-types')}">
+        <a data-ui-sref="competition-types">Competition types</a>
+    </li>
+    <li data-ng-class="{active: IsActive('competitors-list')}">
+        <a data-ui-sref="competitors-list">Competitors</a>
+    </li>
+    <li data-ng-class="{active: IsActive('match-list')}">
+        <a data-ui-sref="match-list">Matches</a>
+    </li>
+</ul>
+<div 
+    data-ng-include="'app/templates/user/user-status.tpl.html'" 
+    data-ng-controller="UserStatusController">
+</div>

@@ -1,0 +1,27 @@
+/*----------  icons
+------------------------------------------------------------------------------*/
+
+.ico {
+	display: inline-block;
+	float: left;
+	&.logout-grey {
+		@include sprite('ico-logout-grey');
+		margin: 15px 4px 0 0;
+	}
+	&.notifications-grey {
+		@include sprite('ico-notifications-grey');
+		margin: 16px 0 0 0;
+	}
+	&.darts {
+		@include sprite('ico-darts');
+	}
+	&.snooker {
+		@include sprite('ico-snooker');
+	}
+	&.basketball {
+		@include sprite('ico-basketball');
+	}
+	&.table-tennis {
+		@include sprite('ico-table-tennis');
+	}
+}

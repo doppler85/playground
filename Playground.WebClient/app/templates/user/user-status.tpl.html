@@ -1,0 +1,36 @@
+<ul class="nav navbar-nav navbar-right" data-ng-show="isAuthenticated">
+    <li data-ng-class="{active: IsActive('profile')}">
+        <span class="img-holder">
+            <img data-ng-src="{{profile.pictureUrl || ''}}" alt="{{profile.lastName}}" />
+        </span>
+    </li>
+    <li data-ng-class="{active: IsActive('profile')}">
+        <a data-ui-sref="profile.info" alt="Go to your profile" title="Go to your profile">
+            {{profile.firstName}} {{profile.lastName}} 
+        </a>
+    </li>
+    <li class="dropdown">
+        <a href="javascript:;" class="show-notifications" alt="Notifications" title="Notifications" data-toggle="dropdown">
+            <span class="label label-danger">3</span>
+        </a>
+        <div class="dropdown-menu notifictions">
+            <a href="#" class="list-group-item">Dummy notification #1 </a>
+            <a href="#" class="list-group-item">Dummy notification #1 </a>
+            <a href="#" class="list-group-item">Dummy notification #1 </a>
+        </div>
+    </li>
+    <li>
+        <a href="javascript:;" alt="Log Out" title="Log Out" data-ng-click="logout()">Log out
+            <i data-ng-click="logout()" class="ico logout-grey"></i>
+        </a>
+    </li>
+</ul>
+<ul class="nav navbar-nav navbar-right" data-ng-show="!isAuthenticated">
+    <li>
+        <a data-ui-sref="login">Login</a>
+    </li>
+    <li>
+        <a data-ui-sref="register">Register</a>
+    </li>
+</ul>
+

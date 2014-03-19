@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http.Dependencies;
 
-namespace Playground.Web.App_Start
+namespace Playground.Web
 {
     public class IoCContainer : ScopeContainer, IDependencyResolver
     {

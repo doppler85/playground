@@ -1,0 +1,64 @@
+﻿.img-holder img {
+          width: 30px;
+          height: 30px;
+          display: block;
+}
+.nav .img-holder img {
+    margin-top: 10px;
+    
+}
+td .img-holder {
+    float:left;
+}
+
+.table td.winner {
+    background-color: #D9EDF7;
+}
+
+.winner {
+    background-color: #D9EDF7;
+}
+
+.profile-list {
+    list-style: none; 
+    margin-top:20px;
+}
+
+.profile-list img {
+    height:130px; 
+    width:130px;
+}
+
+.dropdown-menu.notifictions {
+    padding: 0 0 0 0;
+    min-width: 220px;
+}
+.angular-google-map-container { height: 200px; }
+
+
+
+.animate.ng-enter, 
+.animate.ng-leave
+{ 
+    -webkit-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    position: relative;
+    display: block;
+} 
+ 
+.animate.ng-leave.animate.ng-leave-active,
+.animate.ng-enter {
+    opacity: 1;
+    left: 0;
+    height: 30px;
+}
+ 
+.animate.ng-enter.ng-enter-active, 
+.animate.ng-leave {
+    opacity: 0;
+    left: -100px;
+    height: 0px;
+}

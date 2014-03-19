@@ -11,14 +11,16 @@ using System.Web.Http.Dispatcher;
 using Playground.Business.Contracts;
 using Playground.Business;
 
-namespace Playground.Web.App_Start
+namespace Playground.Web
 {
     public class IocConfig
     {
         public static void RegisterIoc(HttpConfiguration config)
         {
-            var unityContainer = new UnityContainer();
+            string path = HttpRuntime.AppDomainAppPath;
 
+            var unityContainer = new UnityContainer();
+            
             unityContainer.RegisterType<IPlaygroundBusiness, PlaygroundBusiness>();
 
             unityContainer.RegisterType<IUserBusiness, UserBusiness>();

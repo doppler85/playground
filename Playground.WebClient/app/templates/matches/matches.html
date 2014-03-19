@@ -1,0 +1,92 @@
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                Game
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Competitor
+            </th>
+            <th>
+                Score
+            </th>
+            <th data-ng-show="showStatusCol">
+                Status
+            </th>
+            <th data-ng-show="showConfirmButton">
+                Confirmation
+            </th>
+        </tr>
+        <tbody data-ng-repeat="match in matches.items">
+            <tr data-ng-repeat="score in match.scores">
+                <td>
+                    <div class="img-holder"
+                        data-ng-show="$index == 0" >
+                        <a href="javascript:;" 
+                            data-ui-sref="game-details.info({id: match.gameID})">
+                            <img data-ng-src="{{match.game.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="game-details.info({id: match.gameID})" 
+                        data-ng-show="$index == 0" 
+                        data-ng-bind="match.game.title"></a>
+                </td>
+                <td>
+                    {{$index == 0 ? match.date : '' | date:'yyyy-MM-dd HH:mm:ss'}}
+                </td>
+                <td data-ng-class="{winner : score.competitorID == match.winnerID}">
+                    <div class="img-holder"
+                        data-ng-show="score.competitor.competitorType == 0" >
+                        <a href="javascript:;" 
+                            data-ui-sref="player-profile.info({id: score.competitor.competitorID})">
+                            <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="player-profile.info({id: score.competitor.competitorID})" 
+                        data-ng-show="score.competitor.competitorType == 0" 
+                        data-ng-bind="score.competitor.name">
+                    </a>
+                    <div class="img-holder"
+                        data-ng-show="score.competitor.competitorType == 1" >
+                        <a href="javascript:;" 
+                            data-ui-sref="team-profile.info({id: score.competitor.competitorID})">
+                            <img data-ng-src="{{score.competitor.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    <a href="javascript:;" 
+                        data-ui-sref="team-profile.info({id: score.competitor.competitorID})" 
+                        data-ng-show="score.competitor.competitorType == 1" 
+                        data-ng-bind="score.competitor.name">
+                    </a>
+                </td>
+                <td>
+                    {{score.score}}
+                </td>
+                <td data-ng-show="showStatusCol"> 
+                    {{$index == 0 ? matchStatuses[match.status] : ''}}
+                </td>
+                <td data-ng-show="showConfirmButton">
+                    <button class="btn btn-primary btn-small" 
+                            data-ng-show="!score.confirmed && score.competitor.isCurrentUserCompetitor"
+                            data-ng-click="confirmScore(match, score,  $index, teamAlerts);">confirm</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination 
+        data-ng-show="matches.totalPages > 1"
+        total-items="matches.totalItems" 
+        page="matches.currentPage" 
+        num-page="matches.totalPages" 
+        items-per-page="5" 
+        on-select-page="onMatchPageSelect(page)">
+    </pagination>
+</div>

@@ -5,6 +5,7 @@ using Playground.Data.Contracts;
 using Playground.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Playground.Business
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ICompetitorBusiness competitorBusiness; 
+        private ICompetitorBusiness competitorBusiness;
 
         public UserBusiness(IPlaygroundUow uow,
             ICompetitorBusiness cBusiness)
@@ -36,6 +37,22 @@ namespace Playground.Business
                     Constants.Images.DefaultProfileMale :
                     Constants.Images.DefaultProfileFemale;
             }
+            user.PictureUrl = String.Format("{0}/{1}", baseUrl, user.PictureUrl);
+        }
+
+        public void SetUserPictureUrl(Playground.Model.ViewModel.PlaygroundUser user)
+        {
+            if (!String.IsNullOrEmpty(user.PictureUrl))
+            {
+                user.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+            }
+            else
+            {
+                user.PictureUrl = user.Gender == Gender.Male ?
+                    Constants.Images.DefaultProfileMale :
+                    Constants.Images.DefaultProfileFemale;
+            }
+            user.PictureUrl = String.Format("{0}/{1}", baseUrl, user.PictureUrl);
         }
 
         public Result<User> GetUserByEmail(string email)
@@ -129,9 +146,15 @@ namespace Playground.Business
                         FirstName = u.FirstName,
                         LastName = u.LastName,
                         PictureUrl = u.PictureUrl,
-                        IsOwner = u.UserID == playground.OwnerID
+                        IsOwner = u.UserID == playground.OwnerID,
+                        Gender = u.Gender
                     })
                     .ToList();
+
+                foreach (Playground.Model.ViewModel.PlaygroundUser user in users)
+                {
+                    SetUserPictureUrl(user);
+                }
 
                 PagedResult<Playground.Model.ViewModel.PlaygroundUser> result = new PagedResult<Playground.Model.ViewModel.PlaygroundUser>()
                 {
@@ -269,16 +292,7 @@ namespace Playground.Business
 
                 foreach (User user in users)
                 {
-                    if (!String.IsNullOrEmpty(user.PictureUrl))
-                    {
-                        user.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
-                    }
-                    else
-                    {
-                        user.PictureUrl = user.Gender == Gender.Male ?
-                            Constants.Images.DefaultProfileMale :
-                            Constants.Images.DefaultProfileFemale;
-                    }
+                    SetUserPictureUrl(user);
                 }
 
                 PagedResult<User> result = new PagedResult<User>()
@@ -330,6 +344,11 @@ namespace Playground.Business
                     .Take(count)
                     .ToList();
 
+                foreach (User user in users)
+                {
+                    SetUserPictureUrl(user);
+                }
+
                 PagedResult<User> result = new PagedResult<User>()
                 {
                     CurrentPage = page,
@@ -380,6 +399,11 @@ namespace Playground.Business
                     .Skip((page - 1) * count)
                     .Take(count)
                     .ToList();
+
+                foreach (User user in users)
+                {
+                    SetUserPictureUrl(user);
+                }
 
                 PagedResult<User> result = new PagedResult<User>()
                 {

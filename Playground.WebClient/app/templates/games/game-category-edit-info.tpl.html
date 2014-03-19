@@ -1,0 +1,30 @@
+<div class="col-sm-6">
+    <form name="gameCategoryForm" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="logo">Logo</label>
+            <div class="col-sm-6">
+                <image-upload
+                    data-object-id="gameCategory.gameCategoryID"
+                    data-img-src="gameCategory.pictureUrl"
+                    data-upload-url="api/gamecategory/uploadgamecategorypicture"
+                    data-crop-url="api/gamecategory/cropgamecategorypicture"
+                    data-on-image-cropped="onImageCropped(data);" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="title">Title</label>
+            <div class="col-sm-6">
+                <input id="title" type="text" class="form-control" data-ng-model="gameCategory.title" name="title" data-required="true">
+                <span data-ng-show="showError(gameCategoryForm.title, 'required')" class="help-inline">This field is required</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary" data-ng-click="updateGameCategory()" data-ng-disabled="!canSave(gameCategoryForm)">save</button>
+                <a href="javascript:;" class="btn btn-primary" data-ui-sref="game-categories">back to games</a>
+            </div>
+        </div>
+    </form>
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
+</div>

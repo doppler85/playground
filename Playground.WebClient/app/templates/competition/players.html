@@ -1,0 +1,49 @@
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                User
+            </th>
+            <th>
+                Player nick
+            </th>
+            <th>Creation date</th>
+            <th></th>
+        </tr>
+        <tr data-ng-repeat="player in players.items">
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="public-profile.info({id: player.userID})">
+                        <img data-ng-src="{{player.user.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
+                <a href="javascript:;" 
+                    data-ui-sref="public-profile.info({id: player.userID})" 
+                    data-ng-bind="player.user| userfull"></a>
+            </td>
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="player-profile.info({id: player.competitorID})"">
+                        <img data-ng-src="{{player.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
+                <a href="javascript:;" 
+                    data-ui-sref="player-profile.info({id: player.competitorID})" 
+                    data-ng-bind="player.name"></a>
+            </td>
+            <td data-ng-bind="player.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+        </tr>
+    </table>
+    <pagination 
+        data-ng-show="players.totalPages > 1"
+        total-items="players.totalItems" 
+        page="players.currentPage" 
+        num-page="players.totalPages" 
+        items-per-page="5" 
+        on-select-page="onPlayerPageSelect(page)">
+    </pagination>
+</div>

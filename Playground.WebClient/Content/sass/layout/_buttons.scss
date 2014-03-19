@@ -1,0 +1,38 @@
+/*----------  button
+------------------------------------------------------------------------------*/
+
+.btn {
+
+	//Sizes
+	&.small {
+
+	}
+	&.big {
+
+	}
+	&.medium {
+
+	}
+
+	//Styles 
+
+	&.pink {
+		@include background(linear-gradient($pink-light, $pink)); 
+		@include filter-gradient($pink-light, $pink);
+		@include single-text-shadow(#3f421a, 1px -1px 2px); 
+		@include border-radius (4px);
+		border: 1px solid #4e502e; 
+		height: 40px;
+		line-height: 40px;
+		padding: 0 20px;
+		display: inline-block;
+		font-size: 18px;
+		font-weight: bold;
+		color: #222;
+		
+		&:hover {
+			background: $pink;
+		}
+	}
+}
+

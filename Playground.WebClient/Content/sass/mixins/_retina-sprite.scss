@@ -1,0 +1,11 @@
+/*----------  mixins
+------------------------------------------------------------------------------*/
+
+//retina sprite
+// if you don't need retina display icons, exclude @media part of code
+
+@mixin sprite($sprite) {
+	background: sprite-url($icons) no-repeat sprite-position($icons, $sprite);
+	height: image-height(sprite-file($icons, $sprite));
+	width: image-width(sprite-file($icons, $sprite));
+}

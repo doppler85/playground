@@ -29,16 +29,24 @@ namespace Playground.Business
             return retVal;
         }
 
+        private void SetGameCategoryPictureUrl(GameCategory gameCategory)
+        {
+            if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
+            {
+                gameCategory.PictureUrl = String.Format("{0}/{1}?nocache={2}",
+                    baseUrl,
+                    gameCategory.PictureUrl,
+                    DateTime.Now.Ticks);
+            }
+        }
+
         public Result<GameCategory> GetById(int id)
         {
             Result<GameCategory> retVal = null;
             try
             {
                 GameCategory gameCategory = Uow.GameCategories.GetById(id);
-                if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
-                {
-                    gameCategory.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
-                }
+                SetGameCategoryPictureUrl(gameCategory);
                 retVal = ResultHandler<GameCategory>.Sucess(gameCategory);
             }
             catch (Exception ex)
@@ -112,6 +120,8 @@ namespace Playground.Business
                     .SelectMany(c => c.Games)
                     .Select(g => g.Game.Category)
                     .FirstOrDefault();
+            
+            SetGameCategoryPictureUrl(retVal);
 
             return retVal;
         }
@@ -136,10 +146,7 @@ namespace Playground.Business
 
                 foreach (GameCategory gameCategory in categories)
                 {
-                    if (!String.IsNullOrEmpty(gameCategory.PictureUrl))
-                    {
-                        gameCategory.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
-                    }
+                    SetGameCategoryPictureUrl(gameCategory);
                 }
 
                 PagedResult<GameCategory> result = new PagedResult<GameCategory>()
@@ -172,6 +179,11 @@ namespace Playground.Business
                     .Distinct()
                     .ToList();
 
+                foreach (GameCategory gameCategory in categories)
+                {
+                    SetGameCategoryPictureUrl(gameCategory);
+                }
+
                 retVal = ResultHandler<List<GameCategory>>.Sucess(categories);
             }
             catch (Exception ex)
@@ -195,6 +207,11 @@ namespace Playground.Business
                                             .Select(g => g.Game.Category)
                                             .Distinct()
                                             .ToList();
+
+                foreach (GameCategory gameCategory in categories)
+                {
+                    SetGameCategoryPictureUrl(gameCategory);
+                }
 
                 retVal = ResultHandler<List<GameCategory>>.Sucess(categories);
             }

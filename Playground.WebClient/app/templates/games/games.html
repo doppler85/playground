@@ -1,0 +1,30 @@
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                Game
+            </th>
+        </tr>
+        <tr data-ng-repeat="game in games.items">
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="game-details.info({id: game.gameID})">
+                        <img data-ng-src="{{game.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
+                <a href="javascript:;" 
+                    data-ui-sref="game-details.info({id: game.gameID})" 
+                    data-ng-bind="game.title"></a>
+            </td>
+        </tr>
+    </table>
+    <pagination 
+        data-ng-show="games.totalPages > 1"
+        total-items="games.totalItems" 
+        page="games.currentPage" 
+        num-page="games.totalPages" 
+        items-per-page="5" 
+        on-select-page="onGamePageSelect(page)"></pagination>
+</div>

@@ -1,0 +1,25 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+<div class="row">
+    <ul class="nav nav-tabs">
+      <li data-ng-class="{active: tab == 'info'}">
+          <a href="javascript:;" data-ui-sref="game-category-details.info">Info</a>
+      </li>
+      <li data-ng-class="{active: tab == 'games'}">
+          <a href="javascript:;" data-ui-sref="game-category-details.games">Games</a>
+      </li>
+      <li data-ng-class="{active: tab == 'players'}">
+          <a href="javascript:;" data-ui-sref="game-category-details.players">Players</a>
+      </li>
+      <li data-ng-class="{active: tab == 'teams'}">
+          <a href="javascript:;" data-ui-sref="game-category-details.teams">Teams</a>
+      </li>
+      <li data-ng-class="{active: tab == 'matches'}">
+          <a href="javascript:;" data-ui-sref="game-category-details.matches">Matches</a>
+      </li>
+    </ul>
+    <div class="row" ui-view="">
+
+    </div>
+</div>

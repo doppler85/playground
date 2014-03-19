@@ -1,0 +1,61 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="logo">Player picture</label>
+                <div class="col-sm-6">
+                    <image-upload 
+                        data-object-id="player.competitorID"
+                        data-img-src="player.pictureUrl"
+                        data-upload-url="api/user/uploadplayerpicture"
+                        data-crop-url="api/user/cropplayerpicture"
+                        data-on-image-cropped="onImageCropped(data);"
+                        />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Player nick</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" data-ng-model="player.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Game category</label>
+                <div class="col-sm-6">
+                    <select class="form-control" 
+                        data-ng-model="selectedCategory" 
+                        data-ng-change="categoryChanged()"
+                        data-ng-options="category as category.title for category in categories" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Games</label>
+                <div class="col-sm-6">
+                    <label class="checkbox" data-ng-repeat="game in games">
+                        <input 
+                            type="checkbox" 
+                            value="game.gameid" 
+                            data-ng-checked="game.checked"
+                            data-ng-click="toggleGame(game)"/> 
+                        {{game.title}} 
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" data-ng-click="addPlayer()">Save</button>
+                    <button class="btn btn-primary" data-ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
+    </div>
+<!--    <div class="span12">
+        <pre>{{player | json}}</pre>
+        <pre>{{games | json}}</pre>
+    </div>-->
+</div>

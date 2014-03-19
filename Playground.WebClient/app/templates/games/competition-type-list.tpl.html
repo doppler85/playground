@@ -1,0 +1,37 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table">
+            <tr>
+                <th>Title</th>
+                <th>Competititor type</th>
+                <th>Competitors count</th>
+                <th></th>
+            </tr>
+            <tr data-ng-repeat="competitionType in competitionTypes.items">
+                <td data-ng-bind="competitionType.name"></td>
+                <td data-ng-bind="competitorTypes[competitionType.competitorType]"></td>
+                <td data-ng-bind="competitionType.competitorsCount"></td>
+                <td>
+                    <button class="btn btn-primary" data-ui-sref="competition-type-edit({id : competitionType.competitionTypeID })">edit</button>
+                    <button class="btn btn-primary" data-ng-click="deleteCompetitionType(competitionType);">delete</button>
+                </td>
+            </tr>
+        </table>
+
+        <pagination 
+            data-ng-show="competitionTypes.totalPages > 1"
+            total-items="competitionTypes.totalItems" 
+            page="competitionTypes.currentPage" 
+            num-page="competitionTypes.totalPages" 
+            items-per-page="5" 
+            on-select-page="onCompetitionTypePageSelect(page)">
+        </pagination>
+
+    </div>
+</div>
+<a data-ui-sref="competition-type-add" class="btn btn-primary btn-xs">add competition type</a>
+

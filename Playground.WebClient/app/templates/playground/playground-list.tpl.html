@@ -1,0 +1,37 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Creation date</th>
+                <th></th>
+            </tr>
+            <tr data-ng-repeat="playground in playgrounds.items">
+                <td data-ng-bind="playground.name"></td>
+                <td data-ng-bind="playground.address"></td>
+                <td data-ng-bind="playground.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                <td>
+                    <a class="btn btn-primary" href="javascript:;" data-ui-sref="playground-edit.info({id: playground.playgroundID })">edit</a>
+                    <a class="btn btn-primary" href="javascript:;" data-ng-click="deletePlayground(playground);">delete</a>
+                </td>
+            </tr>
+        </table>
+
+        <pagination 
+            data-ng-show="playgrounds.totalPages > 1"
+            total-items="playgrounds.totalItems" 
+            page="playgrounds.currentPage" 
+            num-page="playgrounds.totalPages" 
+            items-per-page="5" 
+            on-select-page="onPlaygroundPageSelect(page)">
+        </pagination>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
+    </div>
+</div>
+<a data-ui-sref="playground-add" class="btn btn-primary btn-xs">add playground</a>
+

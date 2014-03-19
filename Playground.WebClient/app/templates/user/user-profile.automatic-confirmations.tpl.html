@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-sm-6">
+        <h3>My automatic confirmations</h3>
+        <table class="table">
+            <tr>
+                <th>User
+                </th>
+                <th></th>
+            </tr>
+            <tr data-ng-repeat="confirmation in automaticMatchConfirmations.items">
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;"
+                            data-ui-sref="public-profile.info({id: confirmation.confirmeeID})">
+                            <img data-ng-src="{{confirmation.confirmee.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                <a href="javascript:;"
+                    data-ui-sref="public-profile.info({id: confirmation.confirmeeID})"
+                    data-ng-bind="confirmation.confirmee | userfull"></a>
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="deleteAutomaticConfirmation(confirmation.confirmee, $index)">remove</button>
+                </td>
+            </tr>
+        </table>
+        <pagination
+            data-ng-show="automaticMatchConfirmations.totalPages > 1"
+            total-items="automaticMatchConfirmations.totalItems"
+            page="automaticMatchConfirmations.currentPage"
+            num-page="automaticMatchConfirmations.totalPages"
+            items-per-page="5"
+            on-select-page="onAutomaticMatchConfirmationsPageSelect(page)">
+        </pagination>
+        <div class="add-confirmation-wrapp">
+            <a href="javascript:;" class="btn btn-primary btn-xs" data-ng-click="toggleAddConfirmation(true)" data-ng-hide="addingconfirmation">add confirmation</a>
+            <div class="add-confirmation-inner" data-ng-show="addingconfirmation">
+                <form class="form-inline"
+                    style="margin-bottom:5px;">
+                    <label class="sr-only">Search</label>
+                    <input type="text" class="form-control" data-ng-model="searchQuery" placeholder="Search users">
+                    <button class="btn btn-primary" data-ng-click="searchAutomaticConfirmationUsers(1)">Search</button>
+                    <button class="btn btn-primary" data-ng-click="toggleAddConfirmation(false)">cancel</button>
+                </form>
+                <span data-ng-show="automaticMatchConfirmationsUsers.items.length > 0">Results</span>
+                <table class="table" style="margin-top:5px;">
+                    <tr data-ng-repeat="user in automaticMatchConfirmationsUsers.items">
+                        <td>
+                            <div class="img-holder">
+                                <a href="javascript:;"
+                                    data-ui-sref="public-profile.info({id: user.userID})">
+                                    <img data-ng-src="{{user.pictureUrl}}" alt="" />
+                                </a>
+                            </div>
+                            &nbsp;
+                        <a href="javascript:;"
+                            data-ui-sref="public-profile.info({id: user.userID})"
+                            data-ng-bind="user | userfull"></a>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-ng-click="addAutomaticConfirmation(user, $index)">add</button>
+                        </td>
+                    </tr>
+                </table>
+                <pagination
+                    data-ng-show="automaticMatchConfirmationsUsers.totalPages > 1"
+                    total-items="automaticMatchConfirmationsUsers.totalItems"
+                    page="automaticMatchConfirmationsUsers.currentPage"
+                    num-page="automaticMatchConfirmationsUsers.totalPages"
+                    items-per-page="5"
+                    on-select-page="onUsersPageSelect(page)">
+            </pagination>
+            </div>
+        </div>
+    </div>
+</div>

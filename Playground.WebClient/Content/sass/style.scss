@@ -1,0 +1,320 @@
+/*----------  libraries
+------------------------------------------------------------------------------*/
+
+@import "compass";
+@import "config/reset";
+@import "config/variables";
+@import "rgbapng";
+
+/*----------  mixins
+------------------------------------------------------------------------------*/
+
+@import "mixins/breakpoint";
+@import "mixins/font-smoothing";
+@import "mixins/ie-gradient";
+@import "mixins/retina-sprite";
+
+/*----------  base
+------------------------------------------------------------------------------*/
+
+@import "base/typography";
+@import "base/layout";
+
+/*----------  helpers
+------------------------------------------------------------------------------*/
+
+@import "helpers/helpers";
+@import "helpers/ie";
+
+/*----------  layout
+------------------------------------------------------------------------------*/
+
+@import "layout/buttons";
+@import "layout/icons";
+@import "layout/forms";
+@import "layout/lists";
+
+/*----------  partials
+------------------------------------------------------------------------------*/
+
+@import "partials/header";
+@import "partials/footer";
+
+
+/*----------  styles
+------------------------------------------------------------------------------*/
+
+.content {
+	width: 100%;
+	float: left;
+}
+.time {
+	display: block;
+	float: left;
+	color: #8A8A8A;
+}
+
+/*----------  homepage
+------------------------------------------------------------------------------*/
+
+.last-matches {
+	width: 100%;
+	float: left;
+	padding: 30px 0;
+	h2 {
+		margin-bottom: 15px;
+		text-align: center;
+		text-transform: uppercase;
+	}
+	table {
+		margin: 0 auto;
+		td {
+			
+		}
+	}
+	.game {
+		display: block;
+		float: left;
+	}
+	.player {
+		float: left;
+		a {
+			display: block;
+			float: left;
+			height: 43px;
+			line-height: 43px;
+			font-family: $font;
+			font-size: 14px;
+			color: $green-dark;
+			padding-right: 10px;
+			.img-holder {
+				display: block;
+				float: left;
+				width: 43px;
+				height: 43px;
+				overflow: hidden;
+				margin-right: 10px;
+				img {
+					display: block;
+					width: 100%;
+				}
+			}
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+		&.winner {
+			a {
+				background: $green-light;
+			}
+		}
+	}
+	.score {
+		float: left;
+		margin: 0 20px 10px 20px;
+		span {
+			display: block;
+			float: left;
+			height: 41px;
+			line-height: 41px;
+			&.number {
+				border: 1px solid $grey;
+				font-family: $font;
+				width: 43px;
+				text-align: center;
+				font-size: 14px;
+			}
+			&.divider {
+				margin: 0 5px;
+			}
+		}
+	}
+	.time {
+		height: 43px;
+		line-height: 43px;
+		margin-left: 10px;
+	}
+}
+.last-players, .game-categories {
+	width: 100%;
+	float: left;
+	padding: 30px 0;
+	h2 {
+		margin-bottom: 15px;
+	}
+	ul {
+		width: 100%;
+		float: left;
+		li {
+			width: 100%;
+			float: left;
+			@include box-sizing(border-box);
+			padding: 0 20px 8px 20px;
+			margin-bottom: 8px;
+			border-bottom: 1px dotted $grey;
+			&.last {
+				padding-bottom: 0;
+				margin-bottom: 0;
+				border-bottom: 0;
+			}
+			.img-holder {
+				display: block;
+				float: left;
+				margin-right: 10px;
+				width: 50px;
+				height: 50px;
+				overflow: hidden;
+				img {
+					width: 100%;
+					display: block;
+				}
+			}
+			a {
+				color: $green-dark;
+				display: block;
+				float: left;
+				font-family: $font;
+				font-size: 14px;
+				margin: 0 10px 0 0;
+				line-height: 50px;
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+			.time {
+				line-height: 50px;
+			}
+		}
+	}
+}
+.top-list {
+	width: 100%;
+	float: left;
+	h2 {
+		text-align: center;
+		font-size: 28px;
+		line-height: 30px;
+		margin-bottom: 20px;
+	}
+	.list {
+		width: 50%;
+		float: left;
+		@include box-sizing(border-box);
+		border-right: 1px solid $grey-lighter;
+		&.last {
+			border-right: 0;
+		}
+		ul {
+			padding: 0 20px;
+			width: 100%;
+			float: left;
+			@include box-sizing(border-box);
+			li {
+				width: 100%;
+				float: left;
+				margin-bottom: 8px;
+				font-family: $font;
+				border-bottom: 1px dotted $grey;
+				padding-bottom: 8px;
+				.ordinal {
+					display: block;
+					float: left;
+					height: 50px;
+					line-height: 50px;
+					width: 23px;
+					font-size: 22px;
+				}
+				.img-holder {
+					width: 50px;
+					height: 50px;
+					float: left;
+					overflow: hidden;
+					margin-right: 10px;
+					img {
+						display: block;
+						width: 100%;
+					}
+				}
+				a {
+					color: $green-dark;
+					line-height: 50px;
+					font-size: 14px;
+					text-transform: uppercase;
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+			}
+		}
+	}
+}
+
+.transform-boxes {
+	li {
+		float: left;
+		margin: 24px 8px;
+		width: 100px;
+		height: 60px;
+		border: 2px solid $black;
+		background-color: $white;
+		line-height: 60px;
+		text-align: center;
+		cursor: pointer;
+		@include transition( all 1s ease-in-out);
+		&.slideright {
+			&:hover {
+				@include translate(-3em, 0);
+			}
+		}
+		&.rotate {
+			@include single-box-shadow(inset, $black, 0, 0, 6px);
+			border-width: 1px;
+			height: 62px;
+			&:hover {
+				@include rotate(30deg);
+			}
+		}
+		&.slideleft {
+			@include border-radius(10px);
+			&:hover{
+				@include translate(-3em, 1em);
+			}
+		}
+		&.scale {
+			&:hover{
+				@include scale(2);
+			}
+		}
+		&.circle {
+			width: 60px;
+			&:hover {
+				@include scale(2);
+				border-color: $pink;
+				@include border-radius(30px);
+			}
+		}
+	}
+}
+.transparent-bg {
+	width: 100%;
+	float: left;
+	@include box-sizing(border-box);
+	*behavior: url(../img/boxsizing.htc);
+	padding: 15px;
+	background: url(../img/content/transparent-box-bg.png) repeat-x 0 0;
+	.inner {
+		width: 100%;
+		float: left;
+		@include box-sizing(border-box);
+		*behavior: url(../img/boxsizing.htc);
+		padding: 15px;
+		@include rgba-background(rgba(164,1,249,0.5));
+		height: 50px;
+		color: $white;
+		font-size: 16px;
+		text-align: center;
+		&:hover {
+			@include rgba-background(rgba(164,1,249,0.7));
+		}
+	}
+}

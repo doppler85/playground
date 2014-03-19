@@ -102,7 +102,6 @@ namespace Playground.Web.Controllers
         [ActionName("addplayer")]
         public HttpResponseMessage AddPlayer(Player player)
         {
-
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             player.UserID = currentUser.UserID;
             Result<Player> res = competitorBusiness.AddPlayer(player);
@@ -271,7 +270,6 @@ namespace Playground.Web.Controllers
             {
                 args.Search = String.Empty;
             }
-
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<PagedResult<Player>> res = competitorBusiness.SearchPlayersForGameCategory(args.Page, args.Count, currentUser.UserID, args.GameCategoryID, args.Ids, args.Search);
 
@@ -500,7 +498,6 @@ namespace Playground.Web.Controllers
                 response = res.Success ?
                     Request.CreateResponse(HttpStatusCode.OK, res.Data) :
                     Request.CreateResponse(HttpStatusCode.InternalServerError, res.Message);
-
             }
             else
             {
@@ -581,7 +578,6 @@ namespace Playground.Web.Controllers
             {
                 args.Search = String.Empty;
             }
-
             User currentUser = userBusiness.GetUserByExternalId(User.Identity.GetUserId()).Data;
             Result<PagedResult<User>> res =
                 userBusiness.SearchAndExcludeByAutomaticConfirmation(args.Page, args.Count, currentUser.UserID, args.Search);

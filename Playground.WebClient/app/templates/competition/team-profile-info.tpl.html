@@ -1,0 +1,20 @@
+<div class="col-sm-6">
+    <h3>Team info</h3>
+    <ul class="profile-list">
+        <li>
+            <img data-ng-src="{{teamStats.pictureUrl}}" alt="" class="img-rounded"/>
+        </li>
+        <li>
+            <h4>Nick: {{teamStats.name}}</h4>
+        </li>
+        <li>
+            <h4>Game category: <a href="javascript:;" data-ui-sref="game-category-details.info({id: teamStats.gameCategory.gameCategoryID})">{{teamStats.gameCategory.title}}</a></h4>
+        </li>
+        <li>
+            <h4>Total matches: {{teamStats.totalMatches}}</h4>
+        </li>
+        <li>
+            <h4>Creation date: {{teamStats.creationDate | date: 'dd-MM-yyyy'}}</h4>
+        </li>
+    </ul>
+</div>

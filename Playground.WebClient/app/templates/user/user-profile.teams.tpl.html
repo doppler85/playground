@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="span12">
+        <h3>My teams</h3>
+        <table class="table">
+            <tr>
+                <th>Game
+                </th>
+                <th>Team nick
+                </th>
+                <th>Creation date</th>
+                <th></th>
+            </tr>
+            <tr data-ng-repeat="team in teams.items">
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;"
+                            data-ui-sref="game-category-details.info({id: team.games[0].game.category.gameCategoryID})">
+                            <img data-ng-src="{{team.games[0].game.category.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                <a href="javascript:;"
+                    data-ui-sref="game-category-details.info({id: team.games[0].game.category.gameCategoryID})"
+                    data-ng-bind="team.games[0].game.category.title"></a>
+                </td>
+                <td>
+                    <div class="img-holder">
+                        <a href="javascript:;"
+                            data-ui-sref="player-profile.info({id: team.competitorID})">
+                            <img data-ng-src="{{team.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                <a href="javascript:;"
+                    data-ui-sref="team-profile({id: team.competitorID})"
+                    data-ng-bind="team.name"></a>
+                </td>
+                <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                <td>
+                    <a class="btn btn-primary" href="javascript:;" data-ui-sref="team-edit({id: team.competitorID})">edit</a>
+                    <button class="btn btn-primary" data-ng-click="deleteTeam(team);">delete</button>
+                </td>
+            </tr>
+        </table>
+        <pagination
+            data-ng-show="tams.totalPages > 1"
+            total-items="teams.totalItems"
+            page="teams.currentPage"
+            num-page="teams.totalPages"
+            items-per-page="5"
+            on-select-page="onTeamPageSelect(page)">
+    </pagination>
+
+        <a data-ui-sref="team-add" class="btn btn-primary btn-xs">add team</a>
+        <alert ng-repeat="alert in teamAlerts" type="alert.type" close="closeAlert(teamAlerts, $index)">{{alert.msg}}</alert>
+    </div>
+</div>

@@ -1,0 +1,174 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <form class="form-horizontal">
+            <div  class="form-group">
+                <label class="col-sm-3 control-label" >Date</label>
+                <div class="col-sm-6">
+                    <div class="dropdown">
+                      <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:;">
+                        <div class="input-append">
+                            <input type="text" class="form-control" data-ng-model="match.date">
+                            <span class="add-on"><i class="icon-calendar"></i></span>
+                        </div>
+                      </a>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker data-ng-model="match.date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+            <div  class="form-group">
+                <label class="col-sm-3 control-label" >Game</label>
+                <div class="col-sm-6">
+                    <select 
+                        class="form-control" 
+                        data-ng-model="selectedCategory" 
+                        data-ng-change="categoryChanged()"
+                        data-ng-options="category as category.title for category in categories" />
+                </div>
+            </div>
+            <div  class="form-group">
+                <label class="col-sm-3 control-label" >My competitors</label>
+                <div class="col-sm-6">
+                    <select 
+                        class="form-control" 
+                        data-ng-model="selectedCompetitor" 
+                        data-ng-change="competitorChanged()"
+                        data-ng-options="competitor as competitor.name for competitor in myCompetitors" />
+                </div>
+            </div>
+            <div  class="form-group">
+                <label class="col-sm-3 control-label" >Games</label>
+                <div class="col-sm-6">
+                    <label class="radio" data-ng-repeat="game in games">
+                        <input 
+                            type="radio"
+                            name="radioGames" 
+                            value="game.gameid" 
+                            data-ng-checked="selectedGame.gameID == game.gameID"
+                            data-ng-click="toggleGame(game)"/> 
+                        {{game.game.title}} 
+                    </label>
+                </div>
+            </div>
+            <div  class="form-group">
+                <label class="col-sm-3 control-label" >Competition type</label>
+                <div class="col-sm-6">
+                    <select 
+                        class="form-control" 
+                        data-ng-model="match.competitionTypeID" 
+                        data-ng-change="competitionTypeChanged()"
+                        data-ng-options="competitionType.competitionType.competitionTypeID as competitionType | competitiontypefull for competitionType in availableCometitionTypes" />
+                </div>
+            </div>
+            <div  class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" data-ng-click="addMatch()">Save</button>
+                    <button class="btn btn-primary" data-ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+    </div>
+    <div class="col-sm-6">
+        <span data-ng-show="competitorScores.length > 0">
+            Competitors
+        </span>
+        <table class="table">
+            <tr data-ng-repeat="competitorScore in competitorScores">
+                <td>
+                    <div class="img-holder"
+                        data-ng-show="competitorScore.competitor.competitorType == 0" >
+                        <a href="javascript:;" 
+                            data-ui-sref="player-profile.info({id: competitorScore.competitor.competitorID})">
+                            <img class="img-rounded" data-ng-src="{{competitorScore.competitor.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    <div class="img-holder"
+                        data-ng-show="competitorScore.competitor.competitorType == 1" >
+                        <a href="javascript:;" 
+                            data-ui-sref="team-profile.info({id: competitorScore.competitor.competitorID})">
+                            <img data-ng-src="{{competitorScore.competitor.pictureUrl}}" alt="" />
+                        </a>
+                    </div>
+                    &nbsp;
+                    {{competitorScore.competitor.name}}
+                </td>
+                <td>
+                    <input 
+                        class="form-control" 
+                        type="text" 
+                        data-ng-model="competitorScore.score" />
+                </td>
+                <td>
+                    <button class="btn btn-primary" 
+                        data-ng-show="competitorScore.competitor.competitorID != selectedCompetitor.competitorID"
+                        data-ng-click="removeCompetitor($index)">remove</button>
+                </td>
+            </tr>
+        </table>
+        <form class="form-inline"
+              style="margin-bottom:5px;" >
+            <input type="text" class="form-control" data-ng-model="searchQuery" placeholder="Search players">
+            <button class="btn btn-primary" data-ng-disabled="!selectedGame.gameID" data-ng-click="searchPlayers(1)">Search</button>
+        </form>
+            <span data-ng-show="availableCompetitors.items.length > 0">Results</span>
+            <table class="table" style="margin-top:5px;">
+                <tr data-ng-repeat="competitor in availableCompetitors.items">
+                    <td>
+                        <div class="img-holder"
+                            data-ng-show="competitor.competitorType == 0" >
+                            <a href="javascript:;" 
+                                data-ui-sref="player-profile.info({id: competitor.competitorID})">
+                                <img data-ng-src="{{competitor.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;" 
+                            data-ui-sref="player-profile.info({id: competitor.competitorID})" 
+                            data-ng-show="competitor.competitorType == 0" 
+                            data-ng-bind="competitor.name">
+                        </a>
+                        <div class="img-holder"
+                            data-ng-show="competitor.competitorType == 1" >
+                            <a href="javascript:;" 
+                                data-ui-sref="team-profile.info({id: competitor.competitorID})">
+                                <img data-ng-src="{{competitor.pictureUrl}}" alt="" />
+                            </a>
+                        </div>
+                        &nbsp;
+                        <a href="javascript:;" 
+                            data-ui-sref="team-profile.info({id: competitor.competitorID})" 
+                            data-ng-show="competitor.competitorType == 1" 
+                            data-ng-bind="competitor.name">
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" data-ng-click="addCompetitor(competitor, $index)">add</button>
+                    </td>
+                </tr>
+            </table>
+            <pagination 
+                data-ng-show="availableCompetitors.totalPages > 1"
+                total-items="availableCompetitors.totalItems" 
+                page="availableCompetitors.currentPage" 
+                num-page="availableCompetitors.totalPages" 
+                items-per-page="5" 
+                on-select-page="onAvailableCompetitorsPageSelect(page)">
+            </pagination>
+    </div>
+    
+<!--    <div class="span12">
+        match
+        <pre>{{match | json}}</pre>
+        selected competitor
+        <pre>{{selectedCompetitor | json}}</pre>
+        selected game
+        <pre>{{selectedGame | json}}</pre>
+
+    </div>-->
+</div>

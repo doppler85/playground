@@ -1,0 +1,110 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="logo">Logo</label>
+                <div class="col-sm-6">
+                    <image-upload 
+                        data-object-id="team.competitorID"
+                        data-img-src="team.pictureUrl"
+                        data-upload-url="api/user/uploadteampicture"
+                        data-crop-url="api/user/cropteampicture"
+                        data-on-image-cropped="onImageCropped(data);"
+                        />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Team nick</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" data-ng-model="team.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Game</label>
+                <div class="col-sm-6">
+                    <select 
+                        class="form-control" 
+                        data-ng-model="selectedCategory" 
+                        data-ng-change="categoryChanged()"
+                        data-ng-options="category as category.title for category in categories" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">My pleya</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" data-ng-model="myplayer.name" data-ng-disabled="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Games</label>
+                <div class="col-sm-6">
+                    <label class="checkbox" data-ng-repeat="game in games">
+                        <input class="checkbox"
+                            type="checkbox" 
+                            value="game.gameid" 
+                            data-ng-checked="game.checked"
+                            data-ng-click="toggleGame(game)"/> 
+                        {{game.title}} 
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" data-ng-click="addTeam()">Save</button>
+                    <button class="btn btn-primary" data-ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alerts, $index)">{{alert.msg}}</alert>
+    </div>
+    <div class="col-sm-6">
+        <span data-ng-show="players.length > 0">
+            Team members
+        </span>
+        <table class="table">
+            <tr data-ng-repeat="teamPlayer in players">
+                <td data-ng-bind="teamPlayer.player | playeruserfull"></td>
+                <td data-ng-bind="teamPlayer.player.name"></td>
+                <td>
+                    <button class="btn btn-primary" 
+                        data-ng-show="teamPlayer.playerID != myplayer.competitorID"
+                        data-ng-click="removePlayer(player, $index)">remove</button>
+                </td>
+            </tr>
+        </table>
+        <form class="form-inline"
+              style="margin-bottom:5px;"
+              data-ng-show="players.length > 0">
+            <input type="text" class="form-control" data-ng-model="searchQuery" placeholder="Search players">
+            <button class="btn btn-primary" data-ng-disabled="!selectedCategory.gameCategoryID" data-ng-click="searchPlayers(1, 5)">Search</button>
+        </form>
+        <span data-ng-show="availablePlayers.items.length > 0">
+            Results
+        </span>
+        <table class="table" style="margin-top:5px;">
+            <tr data-ng-repeat="player in availablePlayers.items">
+                <td data-ng-bind="player | playeruserfull"></td>
+                <td data-ng-bind="player.name"></td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="addPlayer(player, $index)">add</button>
+                </td>
+            </tr>
+        </table>
+        <pagination 
+            data-ng-show="availablePlayers.totalPages > 1"
+            total-items="availablePlayers.totalItems" 
+            page="availablePlayers.currentPage" 
+            num-page="availablePlayers.totalPages" 
+            items-per-page="5" 
+            on-select-page="onAvailablePlayersPageSelect(page)">
+        </pagination>
+
+    </div>
+<!--    <div class="span12">
+        <pre>{{team | json}}</pre>
+    </div>-->
+</div>

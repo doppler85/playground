@@ -1,0 +1,50 @@
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                <span>
+                    Game category
+                </span>
+            </th>
+            <th>
+                Team nick
+            </th>
+            <th>Creation date</th>
+        </tr>
+        <tr data-ng-repeat="team in teams.items">
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="game-category-details.info({id: team.games[0].game.gameCategoryID})">
+                        <img data-ng-src="{{team.games[0].game.category.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
+                <a href="javascript:;" 
+                    data-ui-sref="game-category-details.info({id: team.games[0].game.gameCategoryID})" 
+                    data-ng-bind="team.games[0].game.category.title"></a>
+            </td>
+            <td>
+                <div class="img-holder">
+                    <a href="javascript:;" 
+                        data-ui-sref="team-profile.info({id: team.competitorID})">
+                        <img data-ng-src="{{team.pictureUrl}}" alt="" />
+                    </a>
+                </div>
+                &nbsp;
+                <a href="javascript:;" 
+                    data-ui-sref="team-profile.info({id: team.competitorID})" 
+                    data-ng-bind="team.name"></a>
+            </td>
+            <td data-ng-bind="team.creationDate | date:'yyyy-MM-dd HH:mm:ss'"></td>
+        </tr>
+    </table>
+    <pagination 
+        data-ng-show="teams.totalPages > 1"
+        total-items="teams.totalItems" 
+        page="players.currentPage" 
+        num-page="teams.totalPages" 
+        items-per-page="5" 
+        on-select-page="onTeamPageSelect(page)">
+    </pagination>
+</div>

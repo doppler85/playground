@@ -1,0 +1,87 @@
+<div class="page-header">
+    <h1>{{pageTitle}}</h1>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <google-map
+            bounds="map.bounds"
+            center="map.center"
+            zoom="map.zoom"
+            events="map.events"
+            control="map.control"
+            draggable="true">
+        <markers models="map.playgroundMarkers" coords="'self'" icon="'icon'" click="'onClicked'">
+            <windows show="'showWindow'" closeClick="'closeClick'" ng-cloak>
+                <p ng-non-bindable>{{title}}</p>
+                <p ng-non-bindable>{{address}}</p>
+            </windows>
+        </markers>
+        </google-map>
+    </div>
+    <div class="col-sm-6">
+        <h5>Total playgrounds: {{stats.totalPlaygrounds}} </h5>
+    </div>
+    <div class="col-sm-6">
+        <h5>Total games {{stats.totalGames}}</h5>
+    </div>
+    <div class="col-sm-6">
+        <h5>Total users {{stats.totalUsers}}</h5>
+    </div>
+    <div class="col-sm-6">
+        <h5>Total players {{stats.totalPlayers}}</h5>
+    </div>
+    <div class="col-sm-6">
+        <h5>Total matches {{stats.totalMatches}}</h5>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <label class="sr-only" for="searchinput">Search</label>
+                <input type="text" class="form-control" id="searchinput" placeholder="Search" data-ng-model="search">
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"
+                        data-ng-model="localSearch"
+                        data-ng-click="localSearch = !localSearch">
+                    Current map
+                </label>
+            </div>
+            <button type="submit" class="btn btn-default" data-ng-click="searchPlaygrounds()">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </form>
+    </div>
+</div>
+<hr />
+<div class="row" data-ng-show="playgrounds.items.length > 0">
+    <div class="col-sm-6">
+        <h3>Results</h3>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+            <tr data-ng-repeat="playground in playgrounds.items">
+                <td>
+                    <a href="javascript:;" data-ui-sref="playground.home({id: playground.playgroundID})">{{playground.name}}</a>
+                </td>
+                <td>
+                    <a href="javascript:;" data-ng-click="onPlaygroundClick(playground)">{{playground.address}}</a>
+                </td>
+            </tr>
+        </table>
+
+        <pagination
+            data-ng-show="playgrounds.totalPages > 1"
+            total-items="playgrounds.totalItems"
+            page="playgrounds.currentPage"
+            num-page="playgrounds.totalPages"
+            items-per-page="5"
+            on-select-page="onPlaygroundPageSelect(page)">
+        </pagination>
+    </div>
+</div>

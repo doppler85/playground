@@ -42,6 +42,7 @@ namespace Playground.Web
 
         public void ConfigureAuth(IAppBuilder app)
         {
+            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             // app.UseCookieAuthentication(new CookieAuthenticationOptions());
@@ -52,6 +53,7 @@ namespace Playground.Web
             app.UseFacebookAuthentication(
                 appId: "218341994993669",
                 appSecret: "c31faa6c516a06f5c616ee0827828e67");
+            
         }
     }
 }

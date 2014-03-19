@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 
-namespace Playground.Web.App_Start
+namespace Playground.Web
 {
     public class UnityHttpControllerActivator : IHttpControllerActivator
     {

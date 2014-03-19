@@ -18,12 +18,15 @@ using Playground.Web.Providers;
 using Playground.Business.Contracts;
 using Playground.Model;
 using Playground.Common;
+using System.Web.Http.Cors;
+using System.Configuration;
 
 namespace Playground.Web.Controllers
 {
 
         [Authorize]
         [RoutePrefix("api/Account")]
+        [EnableCors("*", "*", "*")]
         public class AccountController : ApiBaseController
         {
             private const string LocalLoginProvider = "Local";
@@ -317,18 +320,18 @@ namespace Playground.Web.Controllers
                 {
                     state = null;
                 }
-
+                string baseUrl = ConfigurationManager.AppSettings[Constants.WebConfig.BaseUrl];
                 foreach (AuthenticationDescription description in descriptions)
                 {
                     ExternalLoginViewModel login = new ExternalLoginViewModel
                     {
                         Name = description.Caption,
-                        Url = Url.Route("ExternalLogin", new
+                        Url = baseUrl + Url.Route("ExternalLogin", new
                         {
                             provider = description.AuthenticationType,
                             response_type = "token",
                             client_id = Startup.PublicClientId,
-                            redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
+                            redirect_uri = "http://localhost:59335/", // new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
                             state = state
                         }),
                         State = state
