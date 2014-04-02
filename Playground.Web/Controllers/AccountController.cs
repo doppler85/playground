@@ -65,7 +65,7 @@ namespace Playground.Web.Controllers
             }
 
             // GET api/Account/UserInfo
-            [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
+            [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
             [Route("UserInfo")]
             public UserInfoViewModel GetUserInfo()
             {

@@ -49,10 +49,12 @@ angular.module('Playground.playground-home', [
     '$state',
     '$stateParams',
     'PlaygroundResource',
+    'UserResource',
     'security',
-        function ($scope, $rootScope, $state, $stateParams, PlaygroundResource, security) {
+        function ($scope, $rootScope, $state, $stateParams, PlaygroundResource, UserResource, security) {
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
+            $scope.users = {};
 
             $scope.isAuthenticated = security.isAuthenticated();
             $scope.playground = {
@@ -116,12 +118,26 @@ angular.module('Playground.playground-home', [
                     });
             };
 
+            $scope.loadPlaygroundUsers = function () {
+                UserResource.playgroundusers({
+                    id: $stateParams.id,
+                    page: 1,
+                    count: 5
+                },
+                    function (data, status, headers, config) {
+                        $scope.users = data;
+                    }
+                );
+            };
+
             $scope.joinPlayground = function () {
                 PlaygroundResource.joinplayground({ playgroundID: $stateParams.id },
                     function () {
                         $scope.playground.isMember = true;
                         $scope.loadPlaygroundUsers();
                         $scope.loadStats();
+
+                        //$scope.$broadcast("userJoined", { state: page.$pristine });
                     },
                     function (err) {
                         var msgs = $scope.getErrorsFromResponse(err);
@@ -149,7 +165,6 @@ angular.module('Playground.playground-home', [
     function ($scope, $stateParams, $rootScope, $state, PlaygroundResource, GameResource, UserResource, enums, $log) {
         $scope.$parent.pageTitle = $state.current.data.pageTitle;
         $scope.games = {};
-        $scope.users = {};
         $scope.alerts = [];
 
         $scope.loadPlaygroundGames = function () {
@@ -169,17 +184,17 @@ angular.module('Playground.playground-home', [
             });
         };
 
-        $scope.loadPlaygroundUsers = function() {
-            UserResource.playgroundusers({
-                id: $stateParams.id,
-                page: 1,
-                count: 5
-            },
-                function (data, status, headers, config) {
-                    $scope.users = data;
-                }
-            );
-        };
+        //$scope.loadPlaygroundUsers = function() {
+        //    UserResource.playgroundusers({
+        //        id: $stateParams.id,
+        //        page: 1,
+        //        count: 5
+        //    },
+        //        function (data, status, headers, config) {
+        //            $scope.users = data;
+        //        }
+        //    );
+        //};
 
         $scope.loadPlaygroundGames();
         $scope.loadPlaygroundUsers();

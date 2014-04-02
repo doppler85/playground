@@ -99,7 +99,6 @@ namespace Playground.Business
                     .Skip((page - 1) * count)
                     .Take(count);
 
-
                 PagedResult<Playground.Model.Playground> result = new PagedResult<Playground.Model.Playground>()
                 {
                     CurrentPage = page,

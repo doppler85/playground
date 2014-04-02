@@ -180,6 +180,7 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
         $scope.loadHallOFShame();
         */
 
+        /* fix this for mobile device / crossdomain
         var hub = $.connection.livescores;
         hub.client.refreshMatches = function (match, totalMathces) {
             $scope.totalMatches = totalMathces;
@@ -205,4 +206,5 @@ angular.module('Playground.home', ['ngResource', 'ui.router', 'google-maps', 'ng
         }).fail(function () {
             console.log('failure starting hub');
         });
+        */
     }]);

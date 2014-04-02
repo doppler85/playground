@@ -47,8 +47,8 @@ var Playground = angular.module('Playground', [
 Playground.constant('settings', {
     debug: true,
     googleMapsAPIkey: 'AIzaSyBpaLafub-KgSATZOdXRai4Bdi7wHmo27U',
-    // apiUrl: 'http://localhost:51929'
-    apiUrl: 'http://192.168.1.2:7777'
+    apiUrl: 'http://localhost:51929'
+    //apiUrl: 'http://192.168.1.3:7777'
 }).constant('enums', {
     competitionType: {
         0: 'Individual',

@@ -63,8 +63,8 @@ Playground.constant('settings', {
     }
 });
 
-Playground.
-    config([
+Playground
+    .config([
         '$stateProvider',
         '$urlRouterProvider',
         '$routeProvider',
@@ -279,8 +279,8 @@ Playground.
                         }
                     }
                 });
-           }]).
-    run([
+        }])
+    .run([
         '$rootScope',
         '$state',
         '$window',
