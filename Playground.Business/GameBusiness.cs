@@ -33,6 +33,17 @@ namespace Playground.Business
             return retVal;
         }
 
+        private void SetGamePictureUrl(Game game)
+        {
+            if (!String.IsNullOrEmpty(game.PictureUrl))
+            {
+                game.PictureUrl = String.Format("{0}/{1}?nocache={2}",
+                    baseUrl,
+                    game.PictureUrl,
+                    DateTime.Now.Ticks);
+            }
+        }
+
         public Result<Game> GetById(int gameID)
         {
             Result<Game> retVal = null;
@@ -130,7 +141,7 @@ namespace Playground.Business
                                             .Skip((page - 1) * count)
                                             .Take(count)
                                             .ToList();
-
+                
                 PagedResult<Game> result = new PagedResult<Game>()
                 {
                     CurrentPage = page,
@@ -354,27 +365,35 @@ namespace Playground.Business
             return retVal;
         }
 
+        // TODO: solve this on different way please
         public void LoadImages(List<Game> games)
         {
             try
             {
-                int gmaeCategoryID = games.FirstOrDefault().GameCategoryID;
+                int gameCategoryID = games.FirstOrDefault().GameCategoryID;
 
-                GameCategory category = Uow.GameCategories.GetById(gmaeCategoryID);
+                GameCategory category = Uow.GameCategories.GetById(gameCategoryID);
 
-                string gameCategoryPictureUrl = !String.IsNullOrEmpty(category.PictureUrl) ?
-                    category.PictureUrl + String.Format("?nocache={0}", DateTime.Now.Ticks) :
-                    String.Empty;
+                if (!String.IsNullOrEmpty(category.PictureUrl))
+                {
+                    category.PictureUrl = String.Format("{0}/{1}?nocache={2}",
+                        baseUrl,
+                        category.PictureUrl,
+                        DateTime.Now.Ticks);
+                } 
 
                 foreach (Game game in games)
                 {
                     if (!String.IsNullOrEmpty(game.PictureUrl))
                     {
-                        game.PictureUrl += String.Format("?nocache={0}", DateTime.Now.Ticks);
+                        game.PictureUrl = String.Format("{0}/{1}?nocache={2}",
+                            baseUrl,
+                            game.PictureUrl,
+                            DateTime.Now.Ticks);
                     }
                     else
                     {
-                        game.PictureUrl = gameCategoryPictureUrl;
+                        game.PictureUrl = category.PictureUrl;
                     }
                 }
             }

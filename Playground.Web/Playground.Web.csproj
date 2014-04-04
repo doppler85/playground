@@ -311,7 +311,6 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\UsersDbContext.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
-    <Compile Include="Util\Extensions.cs" />
     <Compile Include="Util\ImageUtil.cs" />
   </ItemGroup>
   <ItemGroup>

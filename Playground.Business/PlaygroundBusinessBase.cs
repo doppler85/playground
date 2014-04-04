@@ -15,6 +15,11 @@ namespace Playground.Business
 
         protected string baseUrl = ConfigurationManager.AppSettings[Constants.WebConfig.BaseUrl];
 
+        public PlaygroundBusinessBase() 
+        {
+            baseUrl = baseUrl.StripSlash();
+        }
+
         protected int GetPage(int totalItems, int page, int count)
         {
             if (totalItems < page * count)

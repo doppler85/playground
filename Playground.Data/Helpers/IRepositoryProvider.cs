@@ -16,6 +16,6 @@ namespace Playground.Data.Helpers
 
         T GetRepository<T>(Func<DbContext, object> factory = null) where T : class;
 
-        void SetRepository<T>(T repository);
+        // void SetRepository<T>(T repository);
     }
 }
