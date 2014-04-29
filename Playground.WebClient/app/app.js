@@ -1,6 +1,6 @@
 /// <reference path="lib/angular/angular.js" />
 
-// TODO: Too many modules
+// TODO: Too many modules another one to bite the dust
 'use strict';
 var Playground = angular.module('Playground', [ 
     'ng',
