@@ -1,6 +1,8 @@
 /// <reference path="lib/angular/angular.js" />
+
+// TODO: Too many modules
 'use strict';
-var Playground = angular.module('Playground', [
+var Playground = angular.module('Playground', [ 
     'ng',
     'ui.router',
     'Playground.imageupload',
